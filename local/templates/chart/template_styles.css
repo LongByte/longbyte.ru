@@ -85,14 +85,47 @@ body.hideComment .comment {
 .help table tr td:first-child {
   text-align: right;
 }
+.lb-spoiler.spoiler-type > .spoiler-title {
+  width: 100%;
+  max-width: 800px;
+  padding: 20px;
+  border: 1px dashed;
+  border-radius: 10px;
+  font-size: 20px;
+}
+.lb-spoiler.spoiler-desc {
+  max-width: 800px;
+}
+.lb-spoiler.spoiler-desc > .spoiler-title {
+  color: #8888FF;
+  border-bottom: 1px dashed #8888FF;
+}
+.lb-spoiler.spoiler-filter > .spoiler-title {
+  border-bottom: 1px dashed black;
+}
+.btn-wrapper {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 20px;
+}
+.btn-wrapper .filter-call {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background: #00c800;
+}
+font > table > tbody > tr > td {
+  width: auto !important;
+}
+nobr {
+  white-space: normal;
+}
 @media (max-width: 720px) {
   .intel,
   .amd,
   .nvidia {
     display: block;
-  }
-  nobr {
-    white-space: normal;
   }
   font > table {
     display: block;
@@ -107,6 +140,7 @@ body.hideComment .comment {
   }
   font > table > tbody > tr > td {
     display: block;
+    width: auto !important;
     padding: 0 !important;
     border: 0 !important;
   }

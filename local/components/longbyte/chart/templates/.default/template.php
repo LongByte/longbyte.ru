@@ -202,95 +202,85 @@ unset($arTestType);
 ?>
     ];</script>
 
-
-<div class="mode" data-active="all">
-    <a href="#" data-filter="all">Все</a>
-    <? foreach ($arResult['TEST_TYPES'] as &$arTestType): ?>
-        <a href="#" data-filter="<?= $arTestType['TYPE'] ?>"><?= $arTestType['NAME'] ?></a>
-    <? endforeach; ?>
-    <a href="#" data-filter="SUMMARY">Итоги</a>
-    <a href="#" onclick="return OpenFilter()">Фильтр</a>
-</div>
-<div class="ilex-dialog" id="filter">
-    <div class="dialog-content">
-        <input type="checkbox" name="hide" value="hideOc" id="filterHideOc" autocomplete="off">
-        <label for="filterHideOc">Скрыть % разгона</label><br>
-        <input type="checkbox" name="hide" value="hideComment" id="filterHideComment" autocomplete="off">
-        <label for="filterHideComment">Скрыть тайминги, напряжения и прочую фигню</label><br>
-        <?
-        $arFilter = array();
-        foreach ($arResult['TEST_TYPES'] as &$arTestType) {
+<? foreach ($arResult['TEST_TYPES'] as &$arTestType) { ?>
+    <div class="ilex-dialog" id="filter-<?= $arTestType['TYPE'] ?>">
+        <div class="dialog-content">
+            <input type="checkbox" name="hide" value="hideOc" id="filterHideOc" autocomplete="off">
+            <label for="filterHideOc">Скрыть % разгона</label><br>
+            <input type="checkbox" name="hide" value="hideComment" id="filterHideComment" autocomplete="off">
+            <label for="filterHideComment">Скрыть тайминги, напряжения и прочую фигню</label><br>
+            <?
+            $arFilter = array();
             foreach ($arTestType['TESTS'] as $i => &$arTest) {
                 foreach ($arTest["ITEMS"] as $j => &$arItem) {
                     if (floatval($arItem['RESULT']) == 0.0)
                         continue;
-                    $arFilter[$arTestType['TYPE']][preg_replace('/ title="[^"]+"/', '', $arItem["NAME"])] = $arItem['SYSTEM']['ID'];
+                    $arFilter[preg_replace('/ title="[^"]+"/', '', $arItem["NAME"])] = $arItem['SYSTEM']['ID'];
                 }
                 unset($arItem);
             }
             unset($arTest);
-        }
-        unset($arTestType);
-        foreach ($arResult['TEST_TYPES'] as &$arTestType) {
             ?>
-            <div class="lb-spoiler">
-                <div class="spoiler-title">
-                    <?= $arTestType['NAME'] ?>
-                </div>
-                <div class="spoiler-text">
-                    <input type="checkbox" autocomplete="off" checked name="line-all" value="<?= $arTestType['TYPE'] . '_all' ?>" id="filter<?= $arTestType['TYPE'] . '_all' ?>">
-                    <label for="filter<?= $arTestType['TYPE'] . '_all' ?>">Все</label><br>
-                    <?
-                    ksort($arFilter[$arTestType['TYPE']]);
-                    foreach ($arFilter[$arTestType['TYPE']] as $name => $number) {
-                        ?>
-                        <input type="checkbox" autocomplete="off" checked name="line" value="<?= $arTestType['TYPE'] . '_' . $number ?>" id="filter<?= $arTestType['TYPE'] . '_' . $number ?>">
-                        <label for="filter<?= $arTestType['TYPE'] . '_' . $number ?>"><?= $name ?></label><br>
-                        <?
-                    }
-                    ?>
-                </div>
-            </div>
+            <input type="checkbox" autocomplete="off" checked name="line-all" value="<?= $arTestType['TYPE'] . '_all' ?>" id="filter<?= $arTestType['TYPE'] . '_all' ?>">
+            <label for="filter<?= $arTestType['TYPE'] . '_all' ?>">Все</label><br>
             <?
-        }
-        unset($arTestType);
-        ?>
+            ksort($arFilter);
+            foreach ($arFilter as $name => $number) {
+                ?>
+                <input type="checkbox" autocomplete="off" checked name="line" value="<?= $arTestType['TYPE'] . '_' . $number ?>" id="filter<?= $arTestType['TYPE'] . '_' . $number ?>">
+                <label for="filter<?= $arTestType['TYPE'] . '_' . $number ?>"><?= $name ?></label><br>
+                <?
+            }
+            ?>
+        </div>
     </div>
-</div>
-<?
+    <?
+}
+unset($arTestType);
 $i = 0;
 foreach ($arResult['TEST_TYPES'] as &$arTestType):
-    foreach ($arTestType['TESTS'] as &$arTest):
-        ?>
-        <div class="graphic <?= $arTestType["TYPE"] ?> <?= strpos($arTest["NAME"], "Итог") !== false ? "SUMMARY" : "" ?>">
-            <center>
-                <br>
-                <h3><?= $arTest["NAME"] ?></h3>
-                <? if (!empty($arTest['DESCRIPTION'])): ?>
-                    <div class="lb-spoiler">
-                        <div class="spoiler-title">Описание теста</div>
-                        <div class="spoiler-text">
-                            <?= $arTest['DESCRIPTION'] ?>
-                        </div>
-                    </div>
-                <? endif; ?>
-                <font color="#800000" id="c<?= $i ?>"><br><br><b>---</b><br></font>
-                <script language="javascript">chartdraw(<?= $i ?>, window.innerWidth > 420 ? 400 : window.innerWidth - 20, {
-                        axisMin: 0,
-                        type: 3,
-                        padding1: 1,
-                        padding2: 0,
-                        dataBorder: true,
-                        fontSize: 14,
-                        srt: true,
+    ?>
+    <div class="lb-spoiler spoiler-type">
+        <div class="spoiler-title" data-filter="<?= $arTestType['TYPE'] ?>"><?= $arTestType['NAME'] ?></div>
+        <div class="spoiler-text">
+            <div class="btn-wrapper">
+                <a class="filter-call" href="#" onclick="return OpenFilter('<?= $arTestType['TYPE'] ?>')">Фильтр</a>
+            </div>
+            <?
+            foreach ($arTestType['TESTS'] as &$arTest):
+                ?>
+                <div class="graphic <?= $arTestType["TYPE"] ?> <?= strpos($arTest["NAME"], "Итог") !== false ? "SUMMARY" : "" ?>">
+                    <center>
+                        <h3><?= $arTest["NAME"] . ($arTest['UNITS'] ? ', ' . $arTest['UNITS'] : '') . ($arTest['LESS_BETTER'] ? ' (меньше - лучше)' : '') ?></h3>
+                        <? if (!empty($arTest['DESCRIPTION'])): ?>
+                            <div class="lb-spoiler spoiler-desc">
+                                <div class="spoiler-title">Описание теста</div>
+                                <div class="spoiler-text">
+                                    <?= $arTest['DESCRIPTION'] ?>
+                                </div>
+                            </div>
+                        <? endif; ?>
+                        <font color="#800000" id="c<?= $i ?>"><br><br><b>---</b><br></font>
+                        <script language="javascript">chartdraw(<?= $i ?>, window.innerWidth > 420 ? 400 : window.innerWidth - 20, {
+                                axisMin: 0,
+                                type: 3,
+                                padding1: 1,
+                                padding2: 0,
+                                dataBorder: true,
+                                fontSize: 14,
+                                srt: true,
         <? if ($arTest['LESS_BETTER']): ?> srtAsc: true,<? endif; ?>
-                    });</script>
-            </center>
+                            });</script>
+                    </center>
+                </div>
+                <?
+                $i++;
+            endforeach;
+            unset($arTest);
+            ?>
         </div>
-        <?
-        $i++;
-    endforeach;
-    unset($arTest);
+    </div>
+    <?
 endforeach;
 unset($arTestType);
 ?>
