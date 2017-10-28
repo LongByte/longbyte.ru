@@ -1,0 +1,27 @@
+.lb-spoiler
+{
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 0 20px;
+    text-align: center;
+}
+
+.lb-spoiler > .spoiler-title
+{
+    display: inline-block;
+    cursor: pointer;
+    color: #8888FF;
+    border-bottom: 1px dashed #8888FF;
+}
+
+.lb-spoiler > .spoiler-text
+{
+    display: none;
+    
+    text-align: left;
+}
+
+.lb-spoiler.open > .spoiler-text
+{
+    display: block;
+}

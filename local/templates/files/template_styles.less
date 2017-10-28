@@ -1,0 +1,82 @@
+@import 'global.less';
+
+body,
+html
+{
+    font-family: Arial;
+    font-size: 14px;
+}
+
+*
+{
+    .border-box;
+}
+
+a
+{
+    color: inherit;
+}
+
+h1
+{
+    .tcenter;
+}
+
+.table
+{
+    display: table;
+}
+
+.cell-middle
+{
+    display: table-cell;
+    vertical-align: middle;
+}
+
+div.list
+{
+    text-align: justify;
+    -webkit-text-align-last: justify;
+    -moz-text-align-last: justify;
+    -ms-text-align-last: justify;
+    -o-text-align-last: justify;
+    text-align-last: justify;
+
+    .item
+    {
+        display: inline-block;
+        .size(250px, 250px);
+        margin: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        -webkit-text-align-last: initial;
+        -moz-text-align-last: initial;
+        -ms-text-align-last: initial;
+        -o-text-align-last: initial;
+        text-align-last: initial;
+        .tcenter;
+        text-decoration: none;
+        vertical-align: top;
+        overflow: hidden;
+
+        &:hover
+            {
+            border-color: black;
+        }
+
+        .img
+        {
+            .size(100%, 190px);
+            background: no-repeat center center;
+        }
+        
+        .name,
+        .size
+        {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}
