@@ -1,9 +1,11 @@
+/**
+ * ILexDialogs by LongByte
+ * ilex.chesnokov@gmail.com
+ * version 2.1.3
+ */
 $(document).ready(function () {
     ILexDialogs.initDialogs();
 });
-/*-----------------------------------------------*/
-/*--------Диалоги--------------------------------*/
-/*-----------------------------------------------*/
 
 var ILexDialogs = {
     DialogStack: [],
@@ -58,8 +60,12 @@ var ILexDialogs = {
             $(this)
                 .unbind('click')
                 .click(function () {
-                    ILex_OpenDialog($(this).data('ilex-dialog'))
+                    return ILex_OpenDialog($(this).data('ilex-dialog'))
                 });
+        });
+
+        $('body').on('click', function (e) {
+            ILexDialogs.checkOuterClick(e.target);
         });
     },
     recalcZIndex: function () {
@@ -215,6 +221,17 @@ var ILexDialogs = {
                 'margin-left': '0px'
             });
         }
+    },
+    checkOuterClick: function (sender) {
+        if (ILexDialogs.DialogStack.length > 0) {
+            for (var i = 0; i < ILexDialogs.DialogStack.length; i++) {
+                var dialog = $(ILexDialogs.DialogStack[i]);
+                var options = dialog.data('options');
+                if (options.closeOnOuterClick && $(sender).closest(dialog).length == 0) {
+                    ILex_CloseDialog(dialog);
+                }
+            }
+        }
     }
 };
 //
@@ -225,12 +242,11 @@ function ILex_OpenDialog(dialog, options) {
     if ($(dialog).length == 0)
         return false;
     dialog = $(dialog).first();
-    if ($.inArray('#' + dialog.attr('id'), ILexDialogs.DialogStack) !== -1)
-        return false;
     if (options === undefined) {
         options = dialog.data('dialog-options');
     }
     options = options || {};
+
     if (options.onBeforeShow !== undefined) {
         var newOptions = options.onBeforeShow(dialog);
         if (newOptions != undefined)
@@ -238,9 +254,15 @@ function ILex_OpenDialog(dialog, options) {
     }
 
     options.disableScroll = !(options.disableScroll === false);
-    options.showClose = !(options.showClose || false);
+    options.showClose = !(options.showClose === false);
     options.showOverlay = !(options.showOverlay === false);
-    options.title = options.title || '';
+    if (!options.showOverlay) {
+        options.closeOnOuterClick = options.closeOnOuterClick === true;
+        options.toggle = options.toggle === true;
+    } else {
+        options.closeOnOuterClick = false;
+        options.toggle = false;
+    }
     options.width = options.width || 0;
     options.position = options.position || 'fixed';
     if (options.position == 'absolute') {
@@ -253,6 +275,16 @@ function ILex_OpenDialog(dialog, options) {
         options.pos.target = options.pos.target || 'body';
     }
     dialog.data('options', options);
+
+    if ($.inArray('#' + dialog.attr('id'), ILexDialogs.DialogStack) !== -1) {
+        if (!options.toggle) {
+            return false;
+        } else {
+            ILex_CloseDialog(dialog);
+            return false;
+        }
+    }
+
     ILexDialogs.enable_scroll();
     if (options.disableScroll != false) {
         $(document).on('mousewheel', ILexDialogs.disable_scroll);
@@ -298,7 +330,7 @@ function ILex_OpenDialog(dialog, options) {
     }
 
     //применение параметров
-    dialog.outerWidth(options.width);
+    dialog.width(options.width);
     //позиционирование диалога
     ILexDialogs.positionDialog(dialog);
     if (options.showOverlay) {
@@ -338,7 +370,7 @@ function ILex_CloseDialog(dialog) {
     var dialog_index = $.inArray('#' + $(dialog).attr('id'), ILexDialogs.DialogStack);
     //удаляем именно ее
     ILexDialogs.DialogStack.splice(dialog_index, 1);
-    //утрамбомываем z-indexы диалогов, что бы небыло пробелов
+    //утрамбомываем z-indexы диалогов, что бы небыло пробелов     
     ILexDialogs.recalcZIndex();
     //ну это не то что бы каунт, это скорее id последнего
     var countVisibleDialog = ILexDialogs.DialogStack.length - 1;
