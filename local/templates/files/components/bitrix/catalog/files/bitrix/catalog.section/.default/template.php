@@ -20,7 +20,7 @@ if (!empty($arResult['ITEMS'])) {
         $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], $strElementDelete, $arElementDeleteParams);
         $strMainID = $this->GetEditAreaId($arItem['ID']);
         ?>
-            <a class="item" href="<?= $arItem['FILE']['SRC'] ?>" <? if ($arItem['IS_IMG']): ?>rel="prettyPhoto[gal]"<? endif; ?> id="<?= $strMainID; ?>">
+            <a class="item" href="<?= $arItem['FILE']['SRC'] ?>" <? if ($arItem['IS_IMG']): ?>rel="prettyPhoto[gal]" title="<a href='<?= $arItem['FILE']['SRC'] ?>'>Прямая ссылка</a>"<? endif; ?> id="<?= $strMainID; ?>">
                 <div class="img table">
                     <div class="cell-middle">
                         <img src="<?= $arItem['PREVIEW_PICTURE']['SRC'] ?>" alt="<?= $arItem['NAME'] ?>">
