@@ -74,7 +74,8 @@ h2 {
 
 .service {
     position: relative;
-    min-height: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
     background: no-repeat center center scroll;
     .bg-cover;
 
@@ -119,9 +120,50 @@ h2 {
             .h100;
         }
     }
-
 }
 
 .row:after {
     .clear;
+}
+
+.form {
+    display: none;
+    position: relative;
+    
+    &:before {
+        content: '';
+        .pos(0,0);
+        z-index: 1;
+        .size(100%, 100%);
+        background: fade(black, 60);
+    }
+    
+    > * {
+        position: relative;
+        z-index: 2;
+    }
+}
+
+body.service-1 {
+    height: auto;
+    background: url(../images/1c-cloud.jpg) no-repeat center center fixed;
+    .bg-cover;
+}
+
+body.service-2 {
+    height: auto;
+    background: url(../images/remote.jpg) no-repeat right bottom fixed;
+    .bg-cover;
+}
+
+body.service-3 {
+    height: auto;
+    background: url(../images/cloud.jpg) no-repeat center bottom fixed;
+    .bg-cover;
+}
+
+body.service-4 {
+    height: auto;
+    background: url(../images/webserver.jpg) no-repeat left center fixed;
+    .bg-cover;
 }
