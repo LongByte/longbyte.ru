@@ -10,7 +10,7 @@
         <script src="js/script.js"></script>
     </head>
     <body>
-        <div class="container-fluid h100">
+        <div class="container-fluid h100 main">
             <div class="row h100">
                 <div class="col-xs-12 col-sm-6 item" data-block="service-1">
                     <div class="as-table">
@@ -45,6 +45,7 @@
         </div>
         <? // <editor-fold defaultstate="collapsed" desc="1C Cloud"> ?>
         <div class="container-fluid service" style="display: none" id="service-1">
+            <a href="#" class="sprite back"></a>
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12">
@@ -60,7 +61,7 @@
                         <div class="col-xs-12 col-sm-6 col-md-4">
                             <table>
                                 <tr>
-                                    <td>icon</td>
+                                    <td><div class="sprite backup"></div></td>
                                     <td>
                                         Ежедневное резервное копирование Вашей базы данных на нашем, защищенном от возможной вирусной активности кластере серверов.
                                     </td>
@@ -70,7 +71,7 @@
                         <div class="col-xs-12 col-sm-6 col-md-4">
                             <table>
                                 <tr>
-                                    <td>icon</td>
+                                    <td><div class="sprite restore"></div></td>
                                     <td>
                                         Возможностью оперативного восстановления данных из резервной копии.
                                     </td>
@@ -80,7 +81,7 @@
                         <div class="col-xs-12 col-sm-6 col-md-4">
                             <table>
                                 <tr>
-                                    <td>icon</td>
+                                    <td><div class="sprite update"></div></td>
                                     <td>
                                         Периодические бесплатные обновления платформы 1С.
                                     </td>
@@ -90,7 +91,7 @@
                         <div class="col-xs-12 col-sm-6 col-md-4">
                             <table>
                                 <tr>
-                                    <td>icon</td>
+                                    <td><div class="sprite fulltime"></div></td>
                                     <td>
                                         Доступность сервисов 1С-Бухгалтерии для Вашей компании 365 дней в году 24 часа 7 дней в неделю с любой точки земного шара где есть доступ к сети Интернет.
                                     </td>
@@ -100,7 +101,7 @@
                         <div class="col-xs-12 col-sm-6 col-md-4">
                             <table>
                                 <tr>
-                                    <td>icon</td>
+                                    <td><div class="sprite secure"></div></td>
                                     <td>
                                         Защищенный канал связи с нашим дата-центром, для обеспечения защиты Ваших финансовых данных.
                                     </td>
@@ -110,7 +111,7 @@
                         <div class="col-xs-12 col-sm-6 col-md-4">
                             <table>
                                 <tr>
-                                    <td>icon</td>
+                                    <td><div class="sprite mobile"></div></td>
                                     <td>
                                         Возможность получения защищенного доступа к 1C-Бухгалтерии с помощью устройств на базе Android и IOS.
                                     </td>
@@ -126,19 +127,18 @@
                             После обращения к нам за получением услуги, мы заключаем с Вами договор на оказание услуг. Затем, в течении трех суток мы организуем для Вас сервер терминалов (удаленных рабочих столов). Вам будут предоставлены реквизиты для доступа для каждого сотрудника Вашей компании. В случае необходимости мы сможем помочь Вам подобрать, поставить, осуществить установку и настройку необходимого Вам для работы программного обеспечения и оборудования.
                         </p>
                     </div>
-                    тут будут иконки:
                     <div class="col-xs-12 flex">
-                        <div class="step">обращение</div>
-                        <div class="arrow">></div>
-                        <div class="step">договор</div>
-                        <div class="arrow">></div>
-                        <div class="step">3 дня</div>
-                        <div class="arrow">></div>
-                        <div class="step">сервер</div>
-                        <div class="arrow">></div>
-                        <div class="step">настройка</div>
-                        <div class="arrow">></div>
-                        <div class="step">готово</div>
+                        <div class="step"><div class="sprite request"></div></div>
+                        <div class="arrow"><div class="sprite arrow"></div></div>
+                        <div class="step"><div class="sprite document"></div></div>
+                        <div class="arrow"><div class="sprite arrow"></div></div>
+                        <div class="step"><div class="sprite day3"></div></div>
+                        <div class="arrow"><div class="sprite arrow"></div></div>
+                        <div class="step"><div class="sprite server"></div></div>
+                        <div class="arrow"><div class="sprite arrow"></div></div>
+                        <div class="step"><div class="sprite settings"></div></div>
+                        <div class="arrow"><div class="sprite arrow"></div></div>
+                        <div class="step"><div class="sprite done"></div></div>
                     </div>
                 </div>
             </div>

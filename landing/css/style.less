@@ -22,6 +22,64 @@ body {
     .clear;
 }
 
+.sprite,
+.sprite-before:before,
+.sprite-after:after {
+    content: '';
+    display: inline-block;
+    .size(60px, 60px);
+    background: url(../images/sprite.svg) no-repeat;
+    vertical-align: middle;
+}
+
+.sprite {
+    &.back {
+        .bg-pos(0, 0);
+    }
+
+    &.backup {
+        .bg-pos(300px, 0);
+    }
+    &.restore {
+        .bg-pos(420px, 0);
+    }
+    &.update {
+        .bg-pos(360px, 0);
+    }
+    &.fulltime {
+        .bg-pos(240px, 60px);
+    }
+    &.secure {
+        .bg-pos(60px, 0px);
+    }
+    &.mobile {
+        .bg-pos(0px, 60px);
+    }
+
+    &.request {
+        .bg-pos(60px, 60px);
+    }
+    &.document {
+        .bg-pos(180px, 0);
+    }
+    &.day3 {
+        .bg-pos(120px, 0);
+    }
+    &.server {
+        .bg-pos(180px, 60px);
+    }
+    &.settings {
+        .bg-pos(120px, 60px);
+    }
+    &.done {
+        .bg-pos(240px, 0px);
+    }
+
+    &.arrow {
+        .bg-pos(300px, 60px);
+    }
+}
+
 .item {
     background: fade(black, 60);
     height: 50%;
@@ -72,6 +130,12 @@ h2 {
     .tcenter;
 }
 
+.back {
+    position: absolute !important;
+    .pos(15px, 15px);
+    min-height: 0 !important;
+}
+
 .service {
     position: relative;
     padding-top: 20px;
@@ -103,6 +167,10 @@ h2 {
     table {
         td {
             padding: 4px;
+
+            &:first-child {
+                width: 90px;
+            }
         }
     }
 
@@ -129,7 +197,7 @@ h2 {
 .form {
     display: none;
     position: relative;
-    
+
     &:before {
         content: '';
         .pos(0,0);
@@ -137,7 +205,7 @@ h2 {
         .size(100%, 100%);
         background: fade(black, 60);
     }
-    
+
     > * {
         position: relative;
         z-index: 2;
