@@ -57,6 +57,7 @@ body {
     }
 
     &.request {
+        width: 55px;
         .bg-pos(60px, 60px);
     }
     &.document {
@@ -138,6 +139,7 @@ h2 {
 
 .service {
     position: relative;
+    min-height: 100%;
     padding-top: 20px;
     padding-bottom: 20px;
     background: no-repeat center center scroll;
@@ -188,50 +190,62 @@ h2 {
             .h100;
         }
     }
+    
+    .how {
+        flex-wrap: wrap;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        .tcenter;
+        
+        > div {
+            padding: 8px 0;
+        }
+        
+        .sprite {
+            display: block;
+            .mcenter;
+            margin-bottom: 8px;
+        }
+    }
 }
 
 .row:after {
     .clear;
 }
 
-.form {
-    display: none;
-    position: relative;
-
-    &:before {
-        content: '';
-        .pos(0,0);
-        z-index: 1;
-        .size(100%, 100%);
-        background: fade(black, 60);
-    }
-
-    > * {
-        position: relative;
-        z-index: 2;
-    }
-}
-
 body.service-1 {
-    height: auto;
     background: url(../images/1c-cloud.jpg) no-repeat center center fixed;
     .bg-cover;
 }
 
 body.service-2 {
-    height: auto;
     background: url(../images/remote.jpg) no-repeat right bottom fixed;
     .bg-cover;
 }
 
 body.service-3 {
-    height: auto;
     background: url(../images/cloud.jpg) no-repeat center bottom fixed;
     .bg-cover;
 }
 
 body.service-4 {
-    height: auto;
     background: url(../images/webserver.jpg) no-repeat left center fixed;
     .bg-cover;
+}
+
+button {
+    display: block;
+    height: 39px;
+    line-height: 39px;
+    margin: 20px auto;
+    padding: 0 18px;
+    border: 0;
+    outline: 0;
+    background: rgb(59, 200, 245);
+    color: rgb(255, 255, 255);
+    font-size: 14px;
+    text-transform: uppercase;
+    text-shadow: none;
+    vertical-align: middle;
+    cursor: pointer;
 }

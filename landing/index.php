@@ -120,6 +120,22 @@
                         </div>
                     </div>
                     <div class="col-xs-12">
+                        <h2>Пять шагов к облачной 1С:</h2>
+                    </div>
+                    <div class="col-xs-12 flex how">
+                        <div class="step"><div class="sprite request"></div>Обращение</div>
+                        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
+                        <div class="step"><div class="sprite document"></div>Заключение<br> договора</div>
+                        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
+                        <div class="step"><div class="sprite day3"></div>Ожидание<br> 3 дня</div>
+                        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
+                        <div class="step"><div class="sprite server"></div>Готовый<br> сервер</div>
+                        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
+                        <div class="step"><div class="sprite settings"></div>Настройка ПО<br> и оборудования</div>
+                        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
+                        <div class="step"><div class="sprite done"></div>Все готово</div>
+                    </div>
+                    <div class="col-xs-12">
                         <p>
                             Как будет выглядеть услуга на практике:
                         </p>
@@ -127,18 +143,26 @@
                             После обращения к нам за получением услуги, мы заключаем с Вами договор на оказание услуг. Затем, в течении трех суток мы организуем для Вас сервер терминалов (удаленных рабочих столов). Вам будут предоставлены реквизиты для доступа для каждого сотрудника Вашей компании. В случае необходимости мы сможем помочь Вам подобрать, поставить, осуществить установку и настройку необходимого Вам для работы программного обеспечения и оборудования.
                         </p>
                     </div>
-                    <div class="col-xs-12 flex">
-                        <div class="step"><div class="sprite request"></div></div>
-                        <div class="arrow"><div class="sprite arrow"></div></div>
-                        <div class="step"><div class="sprite document"></div></div>
-                        <div class="arrow"><div class="sprite arrow"></div></div>
-                        <div class="step"><div class="sprite day3"></div></div>
-                        <div class="arrow"><div class="sprite arrow"></div></div>
-                        <div class="step"><div class="sprite server"></div></div>
-                        <div class="arrow"><div class="sprite arrow"></div></div>
-                        <div class="step"><div class="sprite settings"></div></div>
-                        <div class="arrow"><div class="sprite arrow"></div></div>
-                        <div class="step"><div class="sprite done"></div></div>
+                    <div class="col-xs-12">
+                        <script id="bx24_form_button" data-skip-moving="true">
+                            (function (w, d, u, b) {
+                                w['Bitrix24FormObject'] = b;
+                                w[b] = w[b] || function () {
+                                    arguments[0].ref = u;
+                                    (w[b].forms = w[b].forms || []).push(arguments[0])
+                                };
+                                if (w[b]['forms'])
+                                    return;
+                                s = d.createElement('script');
+                                r = 1 * new Date();
+                                s.async = 1;
+                                s.src = u + '?' + r;
+                                h = d.getElementsByTagName('script')[0];
+                                h.parentNode.insertBefore(s, h);
+                            })(window, document, 'https://longbyte.bitrix24.ru/bitrix/js/crm/form_loader.js', 'b24form');
+
+                            b24form({"id": "7", "lang": "ru", "sec": "oaynr4", "type": "button", "click": ""});
+                        </script><button class="b24-web-form-popup-btn-7">Оставить заявку</button>
                     </div>
                 </div>
             </div>
@@ -260,6 +284,27 @@
                         <div class="arrow">></div>
                         <div class="step">готово</div>
                     </div>
+                    <div class="col-xs-12">
+                        <script id="bx24_form_button" data-skip-moving="true">
+                            (function (w, d, u, b) {
+                                w['Bitrix24FormObject'] = b;
+                                w[b] = w[b] || function () {
+                                    arguments[0].ref = u;
+                                    (w[b].forms = w[b].forms || []).push(arguments[0])
+                                };
+                                if (w[b]['forms'])
+                                    return;
+                                s = d.createElement('script');
+                                r = 1 * new Date();
+                                s.async = 1;
+                                s.src = u + '?' + r;
+                                h = d.getElementsByTagName('script')[0];
+                                h.parentNode.insertBefore(s, h);
+                            })(window, document, 'https://longbyte.bitrix24.ru/bitrix/js/crm/form_loader.js', 'b24form');
+
+                            b24form({"id": "7", "lang": "ru", "sec": "oaynr4", "type": "button", "click": ""});
+                        </script><button class="b24-web-form-popup-btn-7">Оставить заявку</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -307,6 +352,27 @@
                         <div class="step">настройка</div>
                         <div class="arrow">></div>
                         <div class="step">готово</div>
+                    </div>
+                    <div class="col-xs-12">
+                        <script id="bx24_form_button" data-skip-moving="true">
+                            (function (w, d, u, b) {
+                                w['Bitrix24FormObject'] = b;
+                                w[b] = w[b] || function () {
+                                    arguments[0].ref = u;
+                                    (w[b].forms = w[b].forms || []).push(arguments[0])
+                                };
+                                if (w[b]['forms'])
+                                    return;
+                                s = d.createElement('script');
+                                r = 1 * new Date();
+                                s.async = 1;
+                                s.src = u + '?' + r;
+                                h = d.getElementsByTagName('script')[0];
+                                h.parentNode.insertBefore(s, h);
+                            })(window, document, 'https://longbyte.bitrix24.ru/bitrix/js/crm/form_loader.js', 'b24form');
+
+                            b24form({"id": "7", "lang": "ru", "sec": "oaynr4", "type": "button", "click": ""});
+                        </script><button class="b24-web-form-popup-btn-7">Оставить заявку</button>
                     </div>
                 </div>
             </div>
@@ -358,44 +424,30 @@
                         <div class="arrow">></div>
                         <div class="step">готово</div>
                     </div>
+                    <div class="col-xs-12">
+                        <script id="bx24_form_button" data-skip-moving="true">
+                            (function (w, d, u, b) {
+                                w['Bitrix24FormObject'] = b;
+                                w[b] = w[b] || function () {
+                                    arguments[0].ref = u;
+                                    (w[b].forms = w[b].forms || []).push(arguments[0])
+                                };
+                                if (w[b]['forms'])
+                                    return;
+                                s = d.createElement('script');
+                                r = 1 * new Date();
+                                s.async = 1;
+                                s.src = u + '?' + r;
+                                h = d.getElementsByTagName('script')[0];
+                                h.parentNode.insertBefore(s, h);
+                            })(window, document, 'https://longbyte.bitrix24.ru/bitrix/js/crm/form_loader.js', 'b24form');
 
-
+                            b24form({"id": "7", "lang": "ru", "sec": "oaynr4", "type": "button", "click": ""});
+                        </script><button class="b24-web-form-popup-btn-7">Оставить заявку</button>
+                    </div>
                 </div>
             </div>
         </div>
         <? // </editor-fold> ?>
-        <div class="container-fluid form">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-2 hidden-xs"></div>
-                    <div class="col-md-1 hidden-xs hidden-sm"></div>
-                    <div class="col-xs-12 col-sm-8 col-md-6">
-                        <div class="form">
-                            <script id="bx24_form_inline" data-skip-moving="true">
-                                (function (w, d, u, b) {
-                                    w['Bitrix24FormObject'] = b;
-                                    w[b] = w[b] || function () {
-                                        arguments[0].ref = u;
-                                        (w[b].forms = w[b].forms || []).push(arguments[0])
-                                    };
-                                    if (w[b]['forms'])
-                                        return;
-                                    s = d.createElement('script');
-                                    r = 1 * new Date();
-                                    s.async = 1;
-                                    s.src = u + '?' + r;
-                                    h = d.getElementsByTagName('script')[0];
-                                    h.parentNode.insertBefore(s, h);
-                                })(window, document, 'https://longbyte.bitrix24.ru/bitrix/js/crm/form_loader.js', 'b24form');
-
-                                b24form({"id": "7", "lang": "ru", "sec": "oaynr4", "type": "inline"});
-                            </script>
-                        </div>
-                    </div>
-                    <div class="col-sm-2 hidden-xs"></div>
-                    <div class="col-md-1 hidden-xs hidden-sm"></div>
-                </div>
-            </div>
-        </div>
     </body>
 </html>
