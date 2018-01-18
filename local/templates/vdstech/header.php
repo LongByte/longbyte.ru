@@ -20,6 +20,7 @@
         <?
         $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/jquery-1.12.4.min.js');
         $APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH . '/css/bootstrap.css');
+        $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/script.js');
         $APPLICATION->ShowHead();
         ?>
         <meta name="yandex-verification" content="24b0dd305f34da8b" />
