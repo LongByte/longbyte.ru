@@ -5,7 +5,7 @@ body {
 }
 body {
   min-height: 100%;
-  background: url(images/00620488.jpg) no-repeat center center;
+  background: url(images/00620488.jpg) no-repeat fixed center center;
   background-size: 100%;
   background-size: cover;
   color: white;
@@ -121,11 +121,7 @@ a {
 .shadow {
   box-shadow: inset 0 0 6px 0px rgba(255, 255, 255, 0.3);
 }
-.item {
-  background: rgba(0, 0, 0, 0.3);
-}
 a.item {
-  height: calc(50% - 40px);
   box-shadow: inset 0 0 6px 0px rgba(255, 255, 255, 0.3);
   -webkit-transition: all 0.2s linear 0s;
   -moz-transition: all 0.2s linear 0s;
@@ -151,11 +147,6 @@ div.item {
 div.item h1 {
   margin: auto;
 }
-@media (max-width: 768px) {
-  .item {
-    height: 100%;
-  }
-}
 .as-table {
   display: table;
   width: 100%;
@@ -170,6 +161,7 @@ div.item h1 {
 .flex {
   float: none;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
 }
 h2 {
@@ -181,6 +173,7 @@ header {
   background: rgba(0, 0, 0, 0.3);
 }
 main {
+  position: relative;
   min-height: calc(100% - 325px);
 }
 main .container {
@@ -210,26 +203,6 @@ footer {
   background: no-repeat center center scroll;
   background-size: 100%;
   background-size: cover;
-}
-.service:before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.3);
-}
-.service > * {
-  display: flex;
-  position: relative;
-  z-index: 2;
-  min-height: 100%;
-}
-.service > * > .row {
-  margin-top: auto;
-  margin-bottom: auto;
 }
 .service table td {
   padding: 4px;
@@ -268,26 +241,6 @@ footer {
   content: "";
   display: block;
   clear: both;
-}
-body.service-1 {
-  background: url(images/1c-cloud.jpg) no-repeat center center fixed;
-  background-size: 100%;
-  background-size: cover;
-}
-body.service-2 {
-  background: url(images/remote.jpg) no-repeat right bottom fixed;
-  background-size: 100%;
-  background-size: cover;
-}
-body.service-3 {
-  background: url(images/cloud.jpg) no-repeat center bottom fixed;
-  background-size: 100%;
-  background-size: cover;
-}
-body.service-4 {
-  background: url(images/webserver.jpg) no-repeat left center fixed;
-  background-size: 100%;
-  background-size: cover;
 }
 button,
 .button {

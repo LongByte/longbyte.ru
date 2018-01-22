@@ -26,7 +26,7 @@
         <meta name="yandex-verification" content="24b0dd305f34da8b" />
         <meta name="interkassa-verification" content="2f5c5c35b213665e15b166aff131e72c" />
     </head>
-    <body>
+    <body style="<? $APPLICATION->ShowProperty('body_style') ?>">
         <!-- Yandex.Metrika counter -->
         <script type="text/javascript" >
             (function (d, w, c) {
@@ -92,3 +92,5 @@
                 </div>
             </div>
         </header>
+        <main class="fade-bg shadow">
+            <div class="container">
