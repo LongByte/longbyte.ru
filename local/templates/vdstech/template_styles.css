@@ -8,9 +8,13 @@ body {
   background: url(images/00620488.jpg) no-repeat fixed center center;
   background-size: 100%;
   background-size: cover;
-  color: white;
   font-family: 'PT Sans', Arial, sans-serif;
   font-size: 16px;
+}
+header,
+main,
+footer {
+  color: white;
 }
 .h100 {
   height: 100%;

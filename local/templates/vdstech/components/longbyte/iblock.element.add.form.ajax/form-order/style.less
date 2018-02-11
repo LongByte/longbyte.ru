@@ -1,0 +1,37 @@
+@import '../../../../global.less';
+
+form.iblock-element-add-form-ajax.form-order {
+    margin: 20px 0;
+    padding: 20px;
+    border-radius: 10px;
+    background: white;
+    color: black;
+    
+    label,
+    textarea,
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"],
+    select {
+        width: 100%;
+    }
+    
+    label {
+        i {
+            color: red;
+        }
+    }
+    
+    textarea,
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"] {
+        padding: 4px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        
+        &:focus {
+            border-color: @blue;
+        }
+    }
+}

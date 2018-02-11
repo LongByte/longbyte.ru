@@ -1,0 +1,32 @@
+form.iblock-element-add-form-ajax.form-order {
+  margin: 20px 0;
+  padding: 20px;
+  border-radius: 10px;
+  background: white;
+  color: black;
+}
+form.iblock-element-add-form-ajax.form-order label,
+form.iblock-element-add-form-ajax.form-order textarea,
+form.iblock-element-add-form-ajax.form-order input[type="text"],
+form.iblock-element-add-form-ajax.form-order input[type="tel"],
+form.iblock-element-add-form-ajax.form-order input[type="email"],
+form.iblock-element-add-form-ajax.form-order select {
+  width: 100%;
+}
+form.iblock-element-add-form-ajax.form-order label i {
+  color: red;
+}
+form.iblock-element-add-form-ajax.form-order textarea,
+form.iblock-element-add-form-ajax.form-order input[type="text"],
+form.iblock-element-add-form-ajax.form-order input[type="tel"],
+form.iblock-element-add-form-ajax.form-order input[type="email"] {
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+form.iblock-element-add-form-ajax.form-order textarea:focus,
+form.iblock-element-add-form-ajax.form-order input[type="text"]:focus,
+form.iblock-element-add-form-ajax.form-order input[type="tel"]:focus,
+form.iblock-element-add-form-ajax.form-order input[type="email"]:focus {
+  border-color: #3bc8f5;
+}

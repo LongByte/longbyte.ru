@@ -20,6 +20,18 @@
         <?
         $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/jquery-1.12.4.min.js');
         $APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH . '/css/bootstrap.css');
+
+        $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/simple-validate/simple-validate.js');
+        $APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH . '/js/simple-validate/simple-validate.css');
+
+        $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/dialogs-2.0/jquery.mousewheel.min.js');
+        $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/dialogs-2.0/dialogs.js');
+        $APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH . '/js/dialogs-2.0/dialogs.css');
+        
+        $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/select2_40/js/select2.full.min.js');
+        $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/select2_40/js/i18n/ru.js');
+        $APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH . '/js/select2_40/css/select2.min.css');
+
         $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/script.js');
         $APPLICATION->ShowHead();
         ?>

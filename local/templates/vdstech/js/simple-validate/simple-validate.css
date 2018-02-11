@@ -1,0 +1,41 @@
+input.error,
+textarea.error,
+div.dropdown-block.bx-ui-sls-input-block.error
+{
+    border: 1px solid red !important;
+    color: red !important;
+}
+
+label.error
+{
+    color: red !important;
+}
+
+.error-text {
+    display: none;
+    color: red;
+}
+
+input.error::-webkit-input-placeholder,
+textarea.error::-webkit-input-placeholder
+{
+   color: rgb(255, 120, 124);
+}
+
+input.error:-moz-placeholder,
+textarea.error:-moz-placeholder
+{ /* Firefox 18- */
+   color: rgb(255, 120, 124);  
+}
+
+input.error::-moz-placeholder,
+textarea.error::-moz-placeholder
+{  /* Firefox 19+ */
+   color: rgb(255, 120, 124);  
+}
+
+input.error:-ms-input-placeholder,
+textarea.error:-ms-input-placeholder
+{  
+   color: rgb(255, 120, 124);  
+}

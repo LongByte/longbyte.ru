@@ -26,4 +26,9 @@ $(function () {
         $('body').removeClass().addClass(curBlock);
         $('#' + curBlock).show();
     }
+
+    $('select.js-select2').select2({
+        minimumResultsForSearch: Infinity,
+        width: 'element'
+    });
 });
