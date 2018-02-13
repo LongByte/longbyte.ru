@@ -79,21 +79,49 @@ if (strlen($arResult["MESSAGE"]) > 0):
                     unset($arEnum);
                     ?>
                 </select>
-            </p>                                                    
+            </p>        
+            <label>Желаемая конфигурация сервера</label>
+            <div class="row">
+                <div class="col-xs-12 col-sm-9">
+                    <textarea disabled name="PROPERTY[DETAIL_TEXT][0]" class="config"></textarea>
+                </div>
+                <div class="col-xs-12 col-sm-3">
+                    <a href="#" class="button" data-ilex-dialog="#dialog-calc" style="margin: 0">Выбрать</a>
+                </div>
+                <div class="ilex-dialog" id="dialog-calc">
+                    <?
+                    $APPLICATION->IncludeComponent(
+                        "bitrix:main.include", "", Array(
+                        "AREA_FILE_RECURSIVE" => "Y",
+                        "AREA_FILE_SHOW" => "file",
+                        "EDIT_TEMPLATE" => "",
+                        "PATH" => "/include/calculate.php"
+                        )
+                    );
+                    ?>
+                    <div class="text-center">
+                        <a href="#" class="button save-config inline-block">Выбрать</a>
+                    </div>
+                </div>
+            </div>
 
             <p>
                 <input type="hidden" name="captcha_sid" value="<?= $arResult["CAPTCHA_CODE"] ?>" />
-                <span style="display: flex; justify-content: space-between;">
+                <span class="captcha-line">
                     <span>
                         <label>Защитный код <i>*</i></label>
                     </span>
                     <span>
-                        <img src="/bitrix/tools/captcha.php?captcha_sid=<?= $arResult["CAPTCHA_CODE"] ?>" align="absmiddle" />
+                        <img class="captcha-img" src="/bitrix/tools/captcha.php?captcha_sid=<?= $arResult["CAPTCHA_CODE"] ?>" align="absmiddle" />
                     </span>
                     <span>
                         <input name="captcha_word" type="text" style="width: auto">
                     </span>
                 </span>
+            </p>
+            <p class="popd">
+                Нажимая кнопку «Отправить», я даю свое согласие на обработку моих персональных данных, в соответствии с Федеральным законом от 27.07.2006 года №152-ФЗ 
+                «О персональных данных», на условиях и для целей, определенных в <a href="/popd/" target="_blank" rel="nofollow">Согласии на обработку персональных данных</a>.
             </p>
             <p>
                 <button value="Отправить" type="submit" name="iblock_submit">Отправить</button>
@@ -160,8 +188,12 @@ if ($arParams['USE_CAPTCHA'] == 'Y') {
                             var errors = arResult.ERRORS.join("<br>");
                             errors = errors.replace("'", "");
                             ILex_OpenErrorDialog(errors);
+                            if (arResult.CAPTCHA_CODE != undefined) {
+                                $("form.iblock-element-add-form-ajax.<?= $this->__name ?> input[name=captcha_sid]").val(arResult.CAPTCHA_CODE);
+                                $("form.iblock-element-add-form-ajax.<?= $this->__name ?> img.captcha-img").attr('src', '/bitrix/tools/captcha.php?captcha_sid=' + arResult.CAPTCHA_CODE);
+                            }
                         } else {
-                            ILex_OpenMessageDialog(arResult.MESSAGE);
+                            ILex_OpenMessageDialog('Спасибо за заявку.<br>Мы свяжемся с Вами в ближайшее время.');
                         }
                     }
                 });

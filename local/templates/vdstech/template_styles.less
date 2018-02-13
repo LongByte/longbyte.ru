@@ -188,7 +188,11 @@ div.item {
     justify-content: space-between;
 }
 
-h2 {
+h1,
+.h1,
+h2,
+.h2
+{
     font-size: 24px;
     .tcenter;
 }
@@ -196,6 +200,32 @@ h2 {
 header {
     height: 125px;
     .fade-bg;
+
+    .logo {
+        font-size: 2em;
+        .bold;
+        margin: 0.67em 0;
+    }
+
+    .lk-wrapper {
+        text-align: right;
+    }
+}
+
+@media (max-width: 767px) {
+    header {
+        .logo {
+            margin: 0; 
+        }
+
+        .lk-wrapper {
+            .tcenter;
+
+            .button {
+                margin: 0;
+            }
+        }
+    }
 }
 
 main {
@@ -215,9 +245,14 @@ footer {
 }
 
 .back {
-    position: absolute !important;
     .pos(15px, 15px);
     min-height: 0 !important;
+}
+
+@media (max-width: 767px) {
+    .back {
+        position: static;
+    }
 }
 
 .main {
@@ -291,6 +326,7 @@ button,
     background: @blue;
     color: rgb(255, 255, 255);
     font-size: 14px;
+    .tcenter;
     text-transform: uppercase;
     text-shadow: none;
     vertical-align: middle;
@@ -306,4 +342,8 @@ table.visual {
         padding: 2px 4px;
         border: 1px solid fade(white, 50);
     }
+}
+
+#message-dialog {
+    font-size: 24px;
 }

@@ -168,13 +168,35 @@ div.item h1 {
   flex-wrap: wrap;
   justify-content: space-between;
 }
-h2 {
+h1,
+.h1,
+h2,
+.h2 {
   font-size: 24px;
   text-align: center;
 }
 header {
   height: 125px;
   background: rgba(0, 0, 0, 0.3);
+}
+header .logo {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0.67em 0;
+}
+header .lk-wrapper {
+  text-align: right;
+}
+@media (max-width: 767px) {
+  header .logo {
+    margin: 0;
+  }
+  header .lk-wrapper {
+    text-align: center;
+  }
+  header .lk-wrapper .button {
+    margin: 0;
+  }
 }
 main {
   position: relative;
@@ -190,11 +212,15 @@ footer {
   background: rgba(0, 0, 0, 0.3);
 }
 .back {
-  position: absolute !important;
   position: absolute;
   left: 15px;
   top: 15px;
   min-height: 0 !important;
+}
+@media (max-width: 767px) {
+  .back {
+    position: static;
+  }
 }
 .main {
   height: calc(-325px + 100vh);
@@ -258,6 +284,7 @@ button,
   background: #3bc8f5;
   color: #ffffff;
   font-size: 14px;
+  text-align: center;
   text-transform: uppercase;
   text-shadow: none;
   vertical-align: middle;
@@ -269,4 +296,7 @@ button,
 table.visual td {
   padding: 2px 4px;
   border: 1px solid rgba(255, 255, 255, 0.5);
+}
+#message-dialog {
+  font-size: 24px;
 }

@@ -6,7 +6,7 @@ form.iblock-element-add-form-ajax.form-order {
     border-radius: 10px;
     background: white;
     color: black;
-    
+
     label,
     textarea,
     input[type="text"],
@@ -15,13 +15,13 @@ form.iblock-element-add-form-ajax.form-order {
     select {
         width: 100%;
     }
-    
+
     label {
         i {
             color: red;
         }
     }
-    
+
     textarea,
     input[type="text"],
     input[type="tel"],
@@ -29,9 +29,48 @@ form.iblock-element-add-form-ajax.form-order {
         padding: 4px;
         border: 1px solid #ccc;
         border-radius: 4px;
-        
+
         &:focus {
             border-color: @blue;
+        }
+    }
+
+    .captcha-line {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        line-height: 40px;
+
+        input {
+            width: auto;
+            height: 40px;
+            vertical-align: middle;
+        }
+    }
+
+    .popd {
+        font-size: 10px;
+        line-height: 12px;
+    }
+
+    .config {
+        height: 39px;
+        resize: none;
+        font-size: 13px;
+        line-height: 1em;
+        vertical-align: middle;
+    }
+}
+
+#dialog-calc {
+    width: 100%;
+    max-width: 990px;
+}
+
+@media (max-width: 767px) {
+    form.iblock-element-add-form-ajax.form-order {
+        .captcha-line {
+            justify-content: center;
         }
     }
 }

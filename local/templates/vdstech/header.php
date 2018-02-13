@@ -91,14 +91,14 @@
                 <div class="row">
                     <div class="col-sm-2 hidden-xs"></div>
                     <div class="col-xs-12 col-sm-8 text-center">
-                        <h1>
+                        <div class="logo">
                             <a href="/">
                                 <img src="/android-chrome-192x192.png" width="80">
-                                VDSTech - облачные технологии
+                                VDSTech<span class="hidden-xs"> - облачные технологии</span>
                             </a>
-                        </h1>
+                        </div>
                     </div>
-                    <div class="col-xs-12 col-sm-2 text-right">
+                    <div class="col-xs-12 col-sm-2 lk-wrapper">
                         <a href="https://billing.vdstech.ru/" target="_blank" class="button inline-block">Личный кабинет</a>
                     </div>
                 </div>

@@ -517,6 +517,7 @@ if ($bAllowAccess) {
         if ($arParams["USE_CAPTCHA"] == "Y" && $arParams["ID"] <= 0) {
             if (!$APPLICATION->CaptchaCheckCode($_REQUEST["captcha_word"], $_REQUEST["captcha_sid"])) {
                 $arResult["ERRORS"][] = GetMessage("IBLOCK_FORM_WRONG_CAPTCHA");
+                $arResult["CAPTCHA_CODE"] = htmlspecialcharsbx($APPLICATION->CaptchaGetCode());
             }
         }
 
