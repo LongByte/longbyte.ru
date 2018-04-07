@@ -1,7 +1,7 @@
 /**
  * ILexDialogs by LongByte
  * ilex.chesnokov@gmail.com
- * version 2.1.3
+ * version 2.1.5
  */
 $(document).ready(function () {
     ILexDialogs.initDialogs();
@@ -166,48 +166,63 @@ var ILexDialogs = {
                     .off('touchstart touchmove mousewheel');
             }
         } else if (options.position == 'absolute') {
-            var target = $(options.pos.target);
+            var target, targetX, targetY;
+            
+            target = $(options.pos.target);
             if (!(target.length > 0))   //при некоторых селекторах нету атрибута length
                 target = $('body');
+            
+            if (options.pos.targetX != undefined && options.pos.targetX != null) {
+                targetX = $(options.pos.targetX);
+            }
+            if (targetX == undefined || !(targetX.length > 0))
+                targetX = target;
+            
+            if (options.pos.targetY != undefined && options.pos.targetY != null) {
+                targetY = $(options.pos.targetY);
+            }
+            if (targetY == undefined || !(targetY.length > 0))
+                targetY = target;
+            
             var coords = {
                 x: 0,
                 y: 0
             };
             switch (options.pos.alignX) {
                 case 'left':
-                    coords.x = target.offset().left;
+                    coords.x = targetX.offset().left;
                     break;
                 case 'outerLeft':
-                    coords.x = target.offset().left - dialog.outerWidth();
+                    coords.x = targetX.offset().left - dialog.outerWidth();
                     break;
                 case 'right':
-                    coords.x = target.offset().left + target.outerWidth() - dialog.outerWidth();
+                    coords.x = targetX.offset().left + targetX.outerWidth() - dialog.outerWidth();
                     break;
                 case 'outerRight':
-                    coords.x = target.offset().left + target.outerWidth();
+                    coords.x = targetX.offset().left + targetX.outerWidth();
                     break;
                 case 'center':
                 default :
-                    coords.x = target.offset().left + (target.outerWidth() - dialog.outerWidth()) / 2;
+                    coords.x = targetX.offset().left + (targetX.outerWidth() - dialog.outerWidth()) / 2;
                     break;
             }
 
             switch (options.pos.alignY) {
                 case 'top':
-                    coords.y = target.offset().top;
+                    coords.y = targetY.offset().top;
                     break;
                 case 'outerTop':
-                    coords.y = target.offset().top - dialog.outerHeight();
+                    coords.y = targetY.offset().top - dialog.outerHeight();
                     break;
                 case 'bottom':
-                    coords.y = target.offset().top + target.outerHeight() - dialog.outerHeight();
+                    coords.y = targetY.offset().top + targetY.outerHeight() - dialog.outerHeight();
                     break;
                 case 'outerBottom':
-                    coords.y = target.offset().top + target.outerHeight();
+                    coords.y = targetY.offset().top + targetY.outerHeight();
                     break;
                 case 'center':
                 default :
-                    coords.y = target.offset().top + (target.outerHeight() - dialog.outerHeight()) / 2;
+                    coords.y = targetY.offset().top + (targetY.outerHeight() - dialog.outerHeight()) / 2;
                     break;
             }
 
@@ -290,6 +305,7 @@ function ILex_OpenDialog(dialog, options) {
         $(document).on('mousewheel', ILexDialogs.disable_scroll);
     }
 
+    dialog.prop('style', '');
     if (options.width == 0)
         options.width = $(dialog).outerWidth();
     //создание заголовка
@@ -330,7 +346,13 @@ function ILex_OpenDialog(dialog, options) {
     }
 
     //применение параметров
-    dialog.width(options.width);
+    if (dialog.css('box-sizing') == 'content-box') {
+        dialog.outerWidth(options.width
+            - parseInt(dialog.css('padding-left')) - parseInt(dialog.css('padding-right'))
+            - parseInt(dialog.css('border-left-width')) - parseInt(dialog.css('border-right-width')));
+    } else {
+        dialog.outerWidth(options.width);
+    }
     //позиционирование диалога
     ILexDialogs.positionDialog(dialog);
     if (options.showOverlay) {

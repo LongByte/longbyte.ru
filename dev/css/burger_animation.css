@@ -1,0 +1,38 @@
+.header-burger {
+    float: left;
+    width: 18px;
+    height: 12px;
+    margin: 34px 24px 34px 0;
+    cursor: pointer;
+}
+
+.header-burger > div {
+    width: 100%;
+    height: 2px;
+    margin-bottom: 3px;
+    background: #B4892E;
+    opacity: 1;
+    transform-origin: left center;
+    transform: rotate(0deg) translateY(0);
+    transition: all 0.3s linear;
+}
+
+.header-burger.open .header-burger .c1 {
+    transform-origin: left center;
+    transform: rotate(45deg) translateY(-2px);
+}
+.header-burger.open .header-burger .c2 {
+    opacity: 0;
+}
+.header-burger.open .header-burger .c3 {
+    transform-origin: left center;
+    transform: rotate(-45deg) translateY(2px);
+}
+
+/*
+<div class="header-burger">
+    <div class="c1"></div>
+    <div class="c2"></div>
+    <div class="c3"></div>
+</div>
+*/
