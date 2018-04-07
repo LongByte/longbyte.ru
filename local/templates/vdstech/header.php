@@ -27,7 +27,7 @@
         $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/dialogs-2.0/jquery.mousewheel.min.js');
         $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/dialogs-2.0/dialogs.js');
         $APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH . '/js/dialogs-2.0/dialogs.css');
-        
+
         $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/select2_40/js/select2.full.min.js');
         $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/select2_40/js/i18n/ru.js');
         $APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH . '/js/select2_40/css/select2.min.css');
@@ -93,8 +93,12 @@
                     <div class="col-xs-12 col-sm-8 text-center">
                         <div class="logo">
                             <a href="/">
-                                <img src="/android-chrome-192x192.png" width="80">
-                                VDSTech<span class="hidden-xs"> - облачные технологии</span>
+                                <img src="/android-chrome-192x192.png" width="80" alt="VDSTech">
+                                <? if ($APPLICATION->GetCurPage() == '/') { ?>
+                                    <h1>VDSTech<span class="hidden-xs"> - облачные технологии</span></h1>
+                                <? } else { ?>
+                                    VDSTech<span class="hidden-xs"> - облачные технологии</span>
+                                <? } ?>
                             </a>
                         </div>
                     </div>
