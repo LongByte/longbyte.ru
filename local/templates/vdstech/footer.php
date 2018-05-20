@@ -5,9 +5,9 @@
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-4">
                 <?
-                $APPLICATION->IncludeComponent("bitrix:menu", "top", Array(
-                    "COMPONENT_TEMPLATE" => ".default",
-                    "ROOT_MENU_TYPE" => "top", // Тип меню для первого уровня
+                $APPLICATION->IncludeComponent("bitrix:menu", "bottom", Array(
+                    "COMPONENT_TEMPLATE" => "bottom",
+                    "ROOT_MENU_TYPE" => "bottom", // Тип меню для первого уровня
                     "MENU_CACHE_TYPE" => "A", // Тип кеширования
                     "MENU_CACHE_TIME" => "86400", // Время кеширования (сек.)
                     "MENU_CACHE_USE_GROUPS" => "Y", // Учитывать права доступа

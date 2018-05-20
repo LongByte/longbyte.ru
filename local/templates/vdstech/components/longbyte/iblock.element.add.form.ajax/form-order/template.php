@@ -80,30 +80,36 @@ if (strlen($arResult["MESSAGE"]) > 0):
                     ?>
                 </select>
             </p>        
-            <label>Желаемая конфигурация сервера</label>
-            <div class="row">
-                <div class="col-xs-12 col-sm-9">
-                    <textarea disabled name="PROPERTY[DETAIL_TEXT][0]" class="config"></textarea>
-                </div>
-                <div class="col-xs-12 col-sm-3">
-                    <a href="#" class="button" data-ilex-dialog="#dialog-calc" style="margin: 0">Выбрать</a>
-                </div>
-                <div class="ilex-dialog" id="dialog-calc">
-                    <?
-                    $APPLICATION->IncludeComponent(
-                        "bitrix:main.include", "", Array(
-                        "AREA_FILE_RECURSIVE" => "Y",
-                        "AREA_FILE_SHOW" => "file",
-                        "EDIT_TEMPLATE" => "",
-                        "PATH" => "/include/calculate.php"
-                        )
-                    );
-                    ?>
-                    <div class="text-center">
-                        <a href="#" class="button save-config inline-block">Выбрать</a>
+            <?
+            if (in_array('DETAIL_TEXT', $arParams["PROPERTY_CODES"])) {
+                ?>
+                <label>Желаемая конфигурация сервера</label>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-9">
+                        <textarea disabled name="PROPERTY[DETAIL_TEXT][0]" class="config"></textarea>
+                    </div>
+                    <div class="col-xs-12 col-sm-3">
+                        <a href="#" class="button" data-ilex-dialog="#dialog-calc" style="margin: 0">Выбрать</a>
+                    </div>
+                    <div class="ilex-dialog" id="dialog-calc">
+                        <?
+                        $APPLICATION->IncludeComponent(
+                            "bitrix:main.include", "", Array(
+                            "AREA_FILE_RECURSIVE" => "Y",
+                            "AREA_FILE_SHOW" => "file",
+                            "EDIT_TEMPLATE" => "",
+                            "PATH" => "/include/calculate.php"
+                            )
+                        );
+                        ?>
+                        <div class="text-center">
+                            <a href="#" class="button save-config inline-block">Выбрать</a>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <?
+            }
+            ?>
 
             <p>
                 <input type="hidden" name="captcha_sid" value="<?= $arResult["CAPTCHA_CODE"] ?>" />
