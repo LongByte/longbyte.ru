@@ -1,0 +1,20 @@
+.lb-spoiler
+{
+
+}
+
+.lb-spoiler > .spoiler-title
+{
+    display: block;
+    cursor: pointer;
+}
+
+.lb-spoiler > .spoiler-text
+{
+    display: none;
+}
+
+.lb-spoiler.open > .spoiler-text
+{
+    display: block;
+}

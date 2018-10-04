@@ -1,0 +1,45 @@
+@import '../global.less';
+
+.cpu-chart {
+    > div {
+        height: 1em;
+        background: rgb(127, 184, 232);
+    }
+}
+
+.row {
+    > div {
+        min-height: 24px;
+    }
+
+    &.border {
+        margin-bottom: 8px;
+        border: 1px solid rgb(127, 184, 232);
+        border-radius: 8px;
+    }
+
+    &:after {
+        .clear;
+    }
+}
+
+.ui-widget-content {
+    margin-top: 4px;
+}
+
+button {
+    display: block;
+    height: 39px;
+    line-height: 39px;
+    margin: 20px auto;
+    padding: 0 18px;
+    border: 0;
+    outline: 0;
+    background: rgb(59, 200, 245);
+    color: rgb(255, 255, 255);
+    font-size: 14px;
+    text-transform: uppercase;
+    text-shadow: none;
+    vertical-align: middle;
+    cursor: pointer;
+}

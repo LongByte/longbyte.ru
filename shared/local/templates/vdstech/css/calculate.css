@@ -1,0 +1,36 @@
+.cpu-chart > div {
+  height: 1em;
+  background: #7fb8e8;
+}
+.row > div {
+  min-height: 24px;
+}
+.row.border {
+  margin-bottom: 8px;
+  border: 1px solid #7fb8e8;
+  border-radius: 8px;
+}
+.row:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.ui-widget-content {
+  margin-top: 4px;
+}
+button {
+  display: block;
+  height: 39px;
+  line-height: 39px;
+  margin: 20px auto;
+  padding: 0 18px;
+  border: 0;
+  outline: 0;
+  background: #3bc8f5;
+  color: #ffffff;
+  font-size: 14px;
+  text-transform: uppercase;
+  text-shadow: none;
+  vertical-align: middle;
+  cursor: pointer;
+}

@@ -1,0 +1,48 @@
+#ilex-dialog-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0.3;
+}
+.ilex-dialog {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    padding: 20px;
+    line-height: normal;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.ilex-dialog .dialog-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 11px;
+    height: 10px;
+    cursor: pointer;
+    background: transparent url('images/close.svg') no-repeat left top;
+}
+.ilex-dialog .dialog-title {
+    margin-bottom: 10px;
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+}
+.ilex-dialog textarea {
+    resize: none;
+}
+#error-dialog.ilex-dialog,
+#message-dialog.ilex-dialog {
+    z-index: 501;
+}

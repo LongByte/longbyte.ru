@@ -1,0 +1,305 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  background: url(images/00620488.jpg) no-repeat fixed center center;
+  background-size: 100%;
+  background-size: cover;
+  font-family: 'PT Sans', Arial, sans-serif;
+  font-size: 16px;
+}
+header,
+main,
+footer {
+  color: white;
+}
+.h100 {
+  height: 100%;
+}
+.clearfix:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+a {
+  color: inherit;
+}
+.logo h1 {
+  display: inline-block;
+}
+.sprite,
+.sprite-before:before,
+.sprite-after:after {
+  content: '';
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  background: url(images/sprite.svg) no-repeat;
+  vertical-align: middle;
+}
+.sprite.back {
+  background-position: 0 0;
+}
+.sprite.secure {
+  background-position: -60px 0;
+}
+.sprite.day3 {
+  background-position: -120px 0;
+}
+.sprite.document {
+  background-position: -180px 0;
+}
+.sprite.done {
+  background-position: -240px 0;
+}
+.sprite.backup {
+  background-position: -300px 0;
+}
+.sprite.update {
+  background-position: -360px 0;
+}
+.sprite.restore {
+  background-position: -420px 0;
+}
+.sprite.mobile {
+  background-position: 0px -60px;
+}
+.sprite.request {
+  width: 55px;
+  background-position: -60px -60px;
+}
+.sprite.settings {
+  background-position: -120px -60px;
+}
+.sprite.server {
+  background-position: -180px -60px;
+}
+.sprite.fulltime {
+  background-position: -240px -60px;
+}
+.sprite.cpu {
+  background-position: -360px -60px;
+}
+.sprite.exchange {
+  background-position: -420px -60px;
+}
+.sprite.world {
+  background-position: 0px -120px;
+}
+.sprite.new {
+  background-position: -60px -120px;
+}
+.sprite.computer {
+  background-position: -120px -120px;
+}
+.sprite.windows {
+  background-position: -180px -120px;
+}
+.sprite.setup {
+  background-position: -240px -120px;
+}
+.sprite.support {
+  background-position: -300px -120px;
+}
+.sprite.hdd {
+  background-position: -360px -120px;
+}
+.sprite.speed {
+  background-position: -420px -120px;
+}
+.sprite.sale {
+  background-position: 0px -180px;
+}
+.sprite.day30 {
+  background-position: -60px -180px;
+}
+.sprite.protect {
+  background-position: -120px -180px;
+}
+.sprite.arrow {
+  background-position: -300px -60px;
+}
+.fade-bg {
+  background: rgba(0, 0, 0, 0.3);
+}
+.shadow {
+  box-shadow: inset 0 0 6px 0px rgba(255, 255, 255, 0.3);
+}
+a.item {
+  box-shadow: inset 0 0 6px 0px rgba(255, 255, 255, 0.3);
+  -webkit-transition: all 0.2s linear 0s;
+  -moz-transition: all 0.2s linear 0s;
+  -o-transition: all 0.2s linear 0s;
+  transition: all 0.2s linear 0s;
+}
+a.item:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+a.item .cell-middle {
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
+}
+a.item .cell-middle span {
+  font-size: 18px;
+}
+div.item {
+  display: flex;
+  height: 160px;
+  text-align: center;
+}
+div.item h1 {
+  margin: auto;
+}
+.as-table {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+.cell-middle {
+  display: table-cell;
+  width: 100%;
+  height: 100%;
+  vertical-align: middle;
+}
+.flex {
+  float: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+h1,
+.h1,
+h2,
+.h2 {
+  font-size: 24px;
+  text-align: center;
+}
+header {
+  height: 125px;
+  background: rgba(0, 0, 0, 0.3);
+}
+header .logo {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0.67em 0;
+}
+header .lk-wrapper {
+  text-align: right;
+}
+@media (max-width: 767px) {
+  header .logo {
+    margin: 0;
+  }
+  header .lk-wrapper {
+    text-align: center;
+  }
+  header .lk-wrapper .button {
+    margin: 0;
+  }
+}
+main {
+  position: relative;
+  min-height: calc(100% - 325px);
+}
+main .container {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+footer {
+  padding: 16px 0;
+  height: 200px;
+  background: rgba(0, 0, 0, 0.3);
+}
+.back {
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  min-height: 0 !important;
+}
+@media (max-width: 767px) {
+  .back {
+    position: static;
+  }
+}
+.main {
+  height: calc(-325px + 100vh);
+}
+.service {
+  position: relative;
+  min-height: 100%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background: no-repeat center center scroll;
+  background-size: 100%;
+  background-size: cover;
+}
+.service table td {
+  padding: 4px;
+}
+.service table td:first-child {
+  width: 90px;
+}
+.service .agvantages {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  clear: both;
+}
+.service .agvantages > div {
+  float: none !important;
+}
+.service .agvantages table {
+  height: 100%;
+}
+.service .how {
+  flex-wrap: wrap;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  text-align: center;
+}
+.service .how > div {
+  padding: 8px 0;
+}
+.service .how .sprite {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 8px;
+}
+.row:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+button,
+.button {
+  display: block;
+  height: 39px;
+  line-height: 39px;
+  margin: 20px auto;
+  padding: 0 18px;
+  border: 0;
+  outline: 0;
+  background: #3bc8f5;
+  color: #ffffff;
+  font-size: 14px;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: none;
+  vertical-align: middle;
+  cursor: pointer;
+}
+.inline-block {
+  display: inline-block;
+}
+table.visual td {
+  padding: 2px 4px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+#message-dialog {
+  font-size: 24px;
+}

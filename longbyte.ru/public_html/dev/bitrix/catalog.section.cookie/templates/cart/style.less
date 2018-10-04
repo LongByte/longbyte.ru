@@ -1,0 +1,141 @@
+@import '../../../../global.less';
+
+div.catalog-section-cookie.cart
+{
+    width: 860px;
+    .mcenter;
+    color: @brown;
+    font-size: 24px;
+
+    .item
+    {
+        display: table;
+        height: 300px;
+        padding: 30px 0;
+        border-bottom: 3px dotted @brown;
+
+        > *
+        {
+            display: table-cell;
+            vertical-align: middle;
+            border-right: 3px dotted @brown;
+            text-align: center;
+        }
+
+        > div:first-child,
+            > div:last-child
+            {
+            border-right: 0;
+        }
+
+        .number
+        {
+            width: 40px;
+        }
+
+        .picture
+        {
+            width: 200px;
+            background: no-repeat center center;
+        }
+
+        .name
+        {
+            width: 260px;
+            padding: 0 35px;
+            text-align: left;
+            
+            span
+            {
+                .title-style;
+            }
+        }
+
+        .quantity
+        {
+            width: 140px;
+            padding: 0 35px;
+            
+            input
+            {
+                background: transparent;
+                border-width: 1px;
+                font: inherit;
+                text-align: center;
+            }
+        }
+
+        .price
+        {
+            width: 160px;
+            padding: 0 15px;
+            .title-style;
+            text-align: right;
+        }
+
+        .del
+        {
+            width: 60px;
+            text-align: right;
+            
+            a
+            {
+                display: inline-block;
+                width: 28px;
+                height: 22px;
+                border: 0;
+                background-position: -193px 0;
+            }
+            
+        }
+
+    }
+
+    .item.head 
+    {
+        height: auto;
+        
+        > *
+        {
+            border-right: 0;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+    }
+    
+    .summary
+    {
+        padding: 30px 60px;
+        margin: 35px 0;
+        background: @white;
+        text-align: right;
+        .title-style;
+        
+        .price
+        {
+            span
+            {
+                margin-right: 90px;
+            }
+        }
+        
+        button
+        {
+            height: 66px;
+            padding: 0 40px;
+            border: 8px solid @brown;
+            background: transparent;
+            font: inherit;
+            text-transform: uppercase;
+            opacity: 1;
+            cursor: pointer;
+        }
+        
+        button:hover
+            {
+            opacity: 0.6;
+            .transition(opacity 0.5s);
+        }
+        
+    }
+}

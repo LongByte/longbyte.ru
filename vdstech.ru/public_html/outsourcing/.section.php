@@ -1,0 +1,6 @@
+<?
+$sSectionName = "Outsourcing";
+$arDirProperties = Array(
+
+);
+?>

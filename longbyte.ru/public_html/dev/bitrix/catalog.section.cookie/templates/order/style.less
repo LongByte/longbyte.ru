@@ -1,0 +1,263 @@
+@import '../../../../global.less';
+
+div.catalog-section-cookie.order
+{
+    width: 860px;
+    .mcenter;
+    color: @brown;
+    font-size: 24px;
+
+    .top-wrapper
+    {
+        display: table;
+        width: 100%;
+        padding: 10px 0;
+        border-top: 3px dotted @brown;
+        border-bottom: 3px dotted @brown;
+
+        .fleft
+        {
+            display: table-cell;
+            width: 565px;
+            padding-right: 10px;
+            border-right: 3px dotted @brown;
+            text-align: left;
+            vertical-align: top;
+
+            .title
+            {
+                padding: 0;
+                margin: 0;
+                text-align: left;
+                border-bottom: 3px dotted @brown;
+            }
+
+            .item
+            {
+                display: table;
+                padding: 10px 0;
+                border-bottom: 3px dotted @brown;
+
+                .name
+                {
+                    display: table-cell;
+                    width: 420px;
+                    padding: 10px 10px 10px 0;
+                    border-right: 3px dotted @brown;
+                }
+
+                .price
+                {
+                    display: table-cell;
+                    width: 130px;
+                    padding: 10px 20px;
+                }
+            }
+
+            .item:last-child
+                {
+                border-bottom: 0;
+            }
+
+        }
+
+        .fright
+        {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+            .title-style;
+
+            span
+            {
+                font-size: 83px;
+            }
+        }
+    }
+
+    .edit 
+    {
+        text-align: right;
+
+        a
+        {
+            display: inline-block;
+            position: relative;
+            margin: 20px 40px;
+            font-size: 21px;
+            color: inherit;
+            border-color: @brown;
+        }
+
+        a:after
+            {
+            content: "";
+            display: block;
+            position: absolute;
+            right: -34px;
+            top: -4px;
+            width: 26px;
+            height: 33px;
+            background-position: -161px -99px;
+        }
+
+    }
+
+    .description
+    {
+        text-align: left;
+    }
+
+    .order-form
+    {
+        .form-order-form
+        {
+            padding: 45px 0;
+            margin-bottom: 50px;
+            background: @white;
+            text-align: left;
+
+            .inner
+            {
+                width: 625px;
+                .mcenter;
+            }
+
+            .fleft
+            {
+                float: left;
+                width: 265px;
+            }
+
+            .fright
+            {
+                float: right;
+                width: 325px;
+            }
+
+            .input-outer
+            {
+                position: relative;
+                margin-bottom: 20px;
+            }
+
+            .input-outer:last-child
+                {
+                margin-bottom: 0;
+                line-height: 1.6em;
+            }
+
+            .input-outer:before
+                {
+                position: absolute;
+                left: -15px;
+            }
+
+            .input-outer.num1:before                {                content: "1";            }
+            .input-outer.num2:before                {                content: "2";            }
+            .input-outer.num3:before                {                content: "3";            }
+            .input-outer.num4:before                {                content: "4";            }
+            .input-outer.num5:before                {                content: "5";            }
+
+            .captcha-word
+            {
+                display: inline-block;
+                width: 200px;
+                height: 55px;
+                background: @brown;
+                color: @white;
+            }
+
+            .captcha-input
+            {
+                display: inline-block;
+                width: 110px;
+                height: 55px;
+                margin-left: 10px;
+                font-size: 12px;
+                vertical-align: top;
+            }
+
+            .do-order
+            {
+                margin-top: 30px;
+                text-align: right;
+
+                button
+                {
+                    height: 66px;
+                    padding: 0 40px;
+                    border: 8px solid @brown;
+                    background: transparent;
+                    font-family: inherit;
+                    .title-style;
+                    text-transform: uppercase;
+                    opacity: 1;
+                    cursor: pointer;
+                }
+
+                button:hover
+                    {
+                    opacity: 0.6;
+                    .transition(opacity 0.5s);
+                }
+            }
+
+            .select2-container--default .select2-selection--single
+            {
+                height: 37px;
+                border-width: 4px;
+            }
+
+            .select2-container--default .select2-selection--single .select2-selection__arrow
+            {
+                top: 6px;
+                right: 6px;
+            }
+        }
+    }
+
+}
+
+#complite-order
+{
+    width: 940px;
+    padding: 50px;
+
+    .fleft
+    {
+        float: left;
+        width: 230px;
+        .title-style;
+        color: @beige;
+    }
+
+    .fright
+    {
+        float: right;
+        width: 590px;
+
+        .text1
+        {
+            .title-style;
+            border-bottom: 2px dotted @brown;
+
+            .order-num
+            {
+                padding: 0 7px;
+                background: @beige;
+            }
+        }
+
+        .text2
+        {
+            padding: 30px 0;
+            font-size: 21px;
+        }
+
+        .text3
+        {
+            .title-style;
+        }
+    }
+}
