@@ -88,6 +88,9 @@
                     if (!empty($arSystem['PROP_CPU_VCORE'])) {
                         $arItem["NAME"] .= '<span class="comment">' . $arSystem['PROP_CPU_VCORE'] . 'V</span>';
                     }
+                    if (!empty($arSystem['PROP_CPU_CONFIG'])) {
+                        $arItem["NAME"] .= '<span class="comment">' . $arSystem['PROP_CPU_CONFIG'] . '</span>';
+                    }
                     $arItem["NAME"] .= '</span>, ';
 
                     $arItem["NAME"] .= $arSystem['PROP_RAM'];
@@ -135,6 +138,9 @@
                     }
                     if (!empty($arSystem['PROP_CPU_VCORE'])) {
                         $arItem["NAME"] .= '<span class="comment">' . $arSystem['PROP_CPU_VCORE'] . 'V</span>';
+                    }
+                    if (!empty($arSystem['PROP_CPU_CONFIG'])) {
+                        $arItem["NAME"] .= '<span class="comment">' . $arSystem['PROP_CPU_CONFIG'] . '</span>';
                     }
                     $arItem["NAME"] .= '</span>, ';
 
