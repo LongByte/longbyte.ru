@@ -13,6 +13,7 @@
 /luminad-dev.longbyte.ru/
 /shared/bitrix/
 /shared/upload/
+/disallow
 cgi-bin/
 document_errors/
 logs/
