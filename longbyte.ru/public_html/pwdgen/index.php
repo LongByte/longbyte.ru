@@ -7,7 +7,7 @@ $APPLICATION->SetTitle("генератор паролей");
 <script>
     function generatePassword() {
         var length = $('#length').val(),
-            charset = $('charlist').val(),
+            charset = $('#charlist').val(),
             retVal = "";
         for (var i = 0, n = charset.length; i < length; ++i) {
             retVal += charset.charAt(Math.floor(Math.random() * n));
