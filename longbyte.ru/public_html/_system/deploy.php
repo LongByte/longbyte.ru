@@ -7,6 +7,10 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.
 $obContext = \Bitrix\Main\Application::getInstance()->getContext();
 $obRequest = $obContext->getRequest();
 $strData = $obRequest->getInput();
-$arData = json_decode($strData);
+$obData = json_decode($strData);
 
-file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/_system/input.log', print_r($arData, true));
+if ($obData->pullrequest->destination->branch->name == 'master') {
+    
+}
+
+//file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/_system/input.log', print_r($arData, true));
