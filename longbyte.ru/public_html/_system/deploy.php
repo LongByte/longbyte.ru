@@ -12,5 +12,3 @@ $obData = json_decode($strData);
 if ($obData->pullrequest->destination->branch->name == 'master') {
     
 }
-
-//file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/_system/input.log', print_r($arData, true));
