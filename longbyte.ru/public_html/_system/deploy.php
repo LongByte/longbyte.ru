@@ -10,5 +10,7 @@ $strData = $obRequest->getInput();
 $obData = json_decode($strData);
 
 if ($obData->pullrequest->destination->branch->name == 'master') {
-    
+    shell_exec('~/deploy.sh');
 }
+
+?>
