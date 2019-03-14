@@ -3,7 +3,11 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 $APPLICATION->SetTitle("Outsourcing");
 ?>
 
-<a href="/" class="sprite back"></a>
+<a href="/" class="icon icon--white back">
+    <svg>
+    <use xlink:href="#icon-back"/>
+    </svg>
+</a>
 <div class="row service">
     <div class="col-xs-12">
         <h1>Outsourcing</h1>

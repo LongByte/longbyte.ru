@@ -5,7 +5,7 @@ $APPLICATION->SetPageProperty("body_style", "background-image: url(/local/templa
 $APPLICATION->SetTitle("Облачная 1С-Бухгалтерия");
 ?>
 
-<a href="/" class="sprite back"></a>
+<a href="/" class="icon back"><svg><use xlink:href="#icon-back"/></svg></a>
 <div class="row service">
     <div class="col-xs-12">
         <h1>Облачная 1С-Бухгалтерия</h1>
@@ -20,7 +20,7 @@ $APPLICATION->SetTitle("Облачная 1С-Бухгалтерия");
         <div class="col-xs-12 col-sm-6 col-md-4">
             <table>
                 <tr>
-                    <td><div class="sprite backup"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-backup"/></svg></div></td>
                     <td>
                         Ежедневное резервное копирование Вашей базы данных на нашем, защищенном от возможной вирусной активности кластере серверов.
                     </td>
@@ -30,7 +30,7 @@ $APPLICATION->SetTitle("Облачная 1С-Бухгалтерия");
         <div class="col-xs-12 col-sm-6 col-md-4">
             <table>
                 <tr>
-                    <td><div class="sprite restore"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-restore"/></svg></div></td>
                     <td>
                         Возможностью оперативного восстановления данных из резервной копии.
                     </td>
@@ -40,7 +40,7 @@ $APPLICATION->SetTitle("Облачная 1С-Бухгалтерия");
         <div class="col-xs-12 col-sm-6 col-md-4">
             <table>
                 <tr>
-                    <td><div class="sprite update"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-update"/></svg></div></td>
                     <td>
                         Периодические бесплатные обновления платформы 1С.
                     </td>
@@ -50,7 +50,7 @@ $APPLICATION->SetTitle("Облачная 1С-Бухгалтерия");
         <div class="col-xs-12 col-sm-6 col-md-4">
             <table>
                 <tr>
-                    <td><div class="sprite fulltime"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-fulltime"/></svg></div></td>
                     <td>
                         Доступность сервисов 1С-Бухгалтерии для Вашей компании 365 дней в году 24 часа 7 дней в неделю с любой точки земного шара где есть доступ к сети Интернет.
                     </td>
@@ -60,7 +60,7 @@ $APPLICATION->SetTitle("Облачная 1С-Бухгалтерия");
         <div class="col-xs-12 col-sm-6 col-md-4">
             <table>
                 <tr>
-                    <td><div class="sprite secure"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-secure"/></svg></div></td>
                     <td>
                         Защищенный канал связи с нашим дата-центром, для обеспечения защиты Ваших финансовых данных.
                     </td>
@@ -70,7 +70,7 @@ $APPLICATION->SetTitle("Облачная 1С-Бухгалтерия");
         <div class="col-xs-12 col-sm-6 col-md-4">
             <table>
                 <tr>
-                    <td><div class="sprite mobile"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-mobile"/></svg></div></td>
                     <td>
                         Возможность получения защищенного доступа к 1C-Бухгалтерии с помощью устройств на базе Android и IOS.
                     </td>
@@ -82,17 +82,17 @@ $APPLICATION->SetTitle("Облачная 1С-Бухгалтерия");
         <h2>Пять шагов к облачной 1С:</h2>
     </div>
     <div class="col-xs-12 flex how">
-        <div class="step"><div class="sprite request"></div>Обращение</div>
-        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
-        <div class="step"><div class="sprite document"></div>Заключение<br> договора</div>
-        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
-        <div class="step"><div class="sprite day3"></div>Ожидание<br> 3 дня</div>
-        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
-        <div class="step"><div class="sprite server"></div>Готовый<br> сервер</div>
-        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
-        <div class="step"><div class="sprite settings"></div>Настройка ПО<br> и оборудования</div>
-        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
-        <div class="step"><div class="sprite done"></div>Все готово</div>
+        <div class="step"><div class="icon"><svg><use xlink:href="#icon-request"/></svg></div>Обращение</div>
+        <div class="hidden-xs"><div class="icon arrow"><svg><use xlink:href="#icon-arrow"/></svg></div></div>
+        <div class="step"><div class="icon"><svg><use xlink:href="#icon-document"/></svg></div>Заключение<br> договора</div>
+        <div class="hidden-xs"><div class="icon arrow"><svg><use xlink:href="#icon-arrow"/></svg></div></div>
+        <div class="step"><div class="icon"><svg><use xlink:href="#icon-day3"/></svg></div>Ожидание<br> 3 дня</div>
+        <div class="hidden-xs"><div class="icon arrow"><svg><use xlink:href="#icon-arrow"/></svg></div></div>
+        <div class="step"><div class="icon"><svg><use xlink:href="#icon-server"/></svg></div>Готовый<br> сервер</div>
+        <div class="hidden-xs"><div class="icon arrow"><svg><use xlink:href="#icon-arrow"/></svg></div></div>
+        <div class="step"><div class="icon"><svg><use xlink:href="#icon-settings"/></svg></div>Настройка ПО<br> и оборудования</div>
+        <div class="hidden-xs"><div class="icon arrow"><svg><use xlink:href="#icon-arrow"/></svg></div></div>
+        <div class="step"><div class="icon"><svg><use xlink:href="#icon-done"/></svg></div>Все готово</div>
     </div>
     <div class="col-xs-12">
         <p>

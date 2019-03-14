@@ -86,6 +86,46 @@
             gtag('config', 'UA-107013758-3');
         </script>
         <? $APPLICATION->ShowPanel(); ?>
+        <?
+        $APPLICATION->IncludeComponent(
+            "realweb:realweb.csscompiler", "", array(
+            "PATH_TO_FILES" => SITE_TEMPLATE_PATH . "/", // Путь к папке с файлами, которые нужно компилировать
+            "FILES" => array(// Список файлов для компиляции, которые будут подключаться в начале
+                0 => "global.less",
+                1 => "css/template_styles.less",
+                2 => "css/calculate.less",
+            ),
+            'FILES_MASK' => array(// Список имен ФАЙЛОВ для компиляции, которые будут подключаться в том числе рекурсивно
+            ),
+            "PATH_CSS" => SITE_TEMPLATE_PATH . "/css/", // Путь к папке, куда складывать скомпилированный css
+            "COMPILER" => "Less", // SASS/Less
+            "USE_SETADDITIONALCSS" => "Y", // Подключать скомпилированный css файл через Asset::getInstance()->addCss()?
+            "REMOVE_OLD_CSS_FILES" => "Y", // Удалять старые скомпилированные css файлы?
+            "TMP_FILE_MASK" => "tmp_%s.less", // Маска файла для записи временого файла. (%s обязателен, он заменится на таймштамп файла)
+            "TARGET_FILE_MASK" => "styles_%s.less.css" // Маска файла для записи css файла. (%s обязателен, он заменится на таймштамп файла)
+            ), false, array(
+            "HIDE_ICONS" => "Y"
+            )
+        );
+        ?>
+        <?
+        $APPLICATION->IncludeComponent(
+            "realweb:realweb.spritecompiler", "", array(
+            "PATH_TO_FILES" => SITE_TEMPLATE_PATH . "/images/vector/", // Путь к папке с файлами, которые нужно компилировать
+            "FILES" => array(// Список файлов для компиляции, которые будут подключаться в начале
+            ),
+            'FILES_MASK' => array(// Список имен ФАЙЛОВ для компиляции, которые будут подключаться в том числе рекурсивно
+                0 => "*", //Доступна *, чтобы брать все файлы
+            ),
+            'ID_PREFIX' => 'icon-', //префикс для id самих иконок
+            "PATH_TO_FILES_SPRITE" => SITE_TEMPLATE_PATH . "/images/svg/", // Путь к папке, куда складывать скомпилированный спрайт
+            "REMOVE_OLD_SPRITE_FILES" => "Y", // Удалять старые скомпилированные svg файлы?
+            "TARGET_FILE_MASK" => "sprite-%s.compiled.svg" // Маска файла для записи svg файла. (%s обязателен, он заменится на таймштамп файла)
+            ), false, array(
+            "HIDE_ICONS" => "Y"
+            )
+        );
+        ?>
         <header>
             <div class="container-fluid main">
                 <div class="row">

@@ -3,7 +3,11 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 $APPLICATION->SetTitle("Шифрованный VPN-канал");
 ?>
 
-<a href="/" class="sprite back"></a>
+<a href="/" class="icon back">
+    <svg>
+    <use xlink:href="#icon-back"/>
+    </svg>
+</a>
 <div class="row service">
     <div class="col-xs-12">
         <h1>Шифрованный VPN-канал</h1>
