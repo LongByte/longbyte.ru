@@ -5,7 +5,7 @@ $APPLICATION->SetTitle("Облачное рабочее место руково�
 $APPLICATION->SetPageProperty("body_style", "background-image: url(/local/templates/vdstech/images/cloud.jpg);");
 ?>
 
-<a href="/" class="sprite back"></a>
+<a href="/" class="icon back"><svg><use xlink:href="#icon-back"/></svg></a>
 <div class="row service">
     <div class="col-xs-12">
         <h1>Облачное рабочее место руководителя</h1>
@@ -20,7 +20,7 @@ $APPLICATION->SetPageProperty("body_style", "background-image: url(/local/templa
         <div class="col-xs-12 col-sm-6 col-md-4">
             <table>
                 <tr>
-                    <td><div class="sprite computer"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-computer"/></svg></div></td>
                     <td>
                         Мощный ПК для Ваших потребностей
                     </td>
@@ -30,7 +30,7 @@ $APPLICATION->SetPageProperty("body_style", "background-image: url(/local/templa
         <div class="col-xs-12 col-sm-6 col-md-4">
             <table>
                 <tr>
-                    <td><div class="sprite world"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-world"/></svg></div></td>
                     <td>
                         Удаленный доступ с любых* устройств
                     </td>
@@ -40,7 +40,7 @@ $APPLICATION->SetPageProperty("body_style", "background-image: url(/local/templa
         <div class="col-xs-12 col-sm-6 col-md-4">
             <table>
                 <tr>
-                    <td><div class="sprite windows"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-windows"/></svg></div></td>
                     <td>
                         Привычная Вам операционная система
                     </td>
@@ -50,7 +50,7 @@ $APPLICATION->SetPageProperty("body_style", "background-image: url(/local/templa
         <div class="col-xs-12 col-sm-6 col-md-4">
             <table>
                 <tr>
-                    <td><div class="sprite setup"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-setup"/></svg></div></td>
                     <td>
                         Возможность установки любых приложений
                     </td>
@@ -60,7 +60,7 @@ $APPLICATION->SetPageProperty("body_style", "background-image: url(/local/templa
         <div class="col-xs-12 col-sm-6 col-md-4">
             <table>
                 <tr>
-                    <td><div class="sprite hdd"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-hdd"/></svg></div></td>
                     <td>
                         Доступность локальных устройств в облаке
                     </td>
@@ -70,7 +70,7 @@ $APPLICATION->SetPageProperty("body_style", "background-image: url(/local/templa
         <div class="col-xs-12 col-sm-6 col-md-4">
             <table>
                 <tr>
-                    <td><div class="sprite support"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-support"/></svg></div></td>
                     <td>
                         Грамотная техническая поддержка
                     </td>
@@ -82,17 +82,17 @@ $APPLICATION->SetPageProperty("body_style", "background-image: url(/local/templa
         <h2>Пять шагов к облачному рабочему месту руководителя:</h2>
     </div>
     <div class="col-xs-12 flex how">
-        <div class="step"><div class="sprite request"></div>Обращение</div>
-        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
-        <div class="step"><div class="sprite document"></div>Заключение<br> договора</div>
-        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
-        <div class="step"><div class="sprite day3"></div>Ожидание<br> 3 дня</div>
-        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
-        <div class="step"><div class="sprite server"></div>Готовый<br> сервер</div>
-        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
-        <div class="step"><div class="sprite settings"></div>Настройка ПО<br> и оборудования</div>
-        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
-        <div class="step"><div class="sprite done"></div>Все готово</div>
+        <div class="step"><div class="icon"><svg><use xlink:href="#icon-request"/></svg></div>Обращение</div>
+        <div class="hidden-xs"><div class="icon arrow"><svg><use xlink:href="#icon-arrow"/></svg></div></div>
+        <div class="step"><div class="icon"><svg><use xlink:href="#icon-document"/></svg></div>Заключение<br> договора</div>
+        <div class="hidden-xs"><div class="icon arrow"><svg><use xlink:href="#icon-arrow"/></svg></div></div>
+        <div class="step"><div class="icon"><svg><use xlink:href="#icon-day3"/></svg></div>Ожидание<br> 3 дня</div>
+        <div class="hidden-xs"><div class="icon arrow"><svg><use xlink:href="#icon-arrow"/></svg></div></div>
+        <div class="step"><div class="icon"><svg><use xlink:href="#icon-server"/></svg></div>Готовый<br> сервер</div>
+        <div class="hidden-xs"><div class="icon arrow"><svg><use xlink:href="#icon-arrow"/></svg></div></div>
+        <div class="step"><div class="icon"><svg><use xlink:href="#icon-settings"/></svg></div>Настройка ПО<br> и оборудования</div>
+        <div class="hidden-xs"><div class="icon arrow"><svg><use xlink:href="#icon-arrow"/></svg></div></div>
+        <div class="step"><div class="icon"><svg><use xlink:href="#icon-done"/></svg></div>Все готово</div>
     </div>
     <div class="col-xs-12">
         <p>

@@ -5,7 +5,7 @@ $APPLICATION->SetTitle("Сервер терминалов");
 $APPLICATION->SetPageProperty("body_style", "background-image: url(/local/templates/vdstech/images/remote.jpg);");
 ?>
 
-<a href="/" class="sprite back"></a>
+<a href="/" class="icon back"><svg><use xlink:href="#icon-back"/></svg></a>
 <div class="row service">
     <div class="col-xs-12">
         <h1>Сервер терминалов (удаленных рабочих столов)</h1>
@@ -20,7 +20,7 @@ $APPLICATION->SetPageProperty("body_style", "background-image: url(/local/templa
         <div class="col-xs-12 col-sm-6 col-md-6">
             <table>
                 <tr>
-                    <td><div class="sprite world"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-world"/></svg></div></td>
                     <td>
                         Удаленный доступ для сотрудников Вашей компании к своему рабочему месту из любой точки земного шара при наличии доступа к сети Интернет 365 дней в году 24 часа 7 дней в неделю.
                     </td>
@@ -30,7 +30,7 @@ $APPLICATION->SetPageProperty("body_style", "background-image: url(/local/templa
         <div class="col-xs-12 col-sm-6 col-md-6">
             <table>
                 <tr>
-                    <td><div class="sprite backup"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-backup"/></svg></div></td>
                     <td>
                         Еженедельное резервное копирование виртуального сервера на случай повышенной вирусной активности, и потери данных с возможностью безусловного оперативного возврата на точку резервного копирования при невозможности восстановить работу.
                     </td>
@@ -40,7 +40,7 @@ $APPLICATION->SetPageProperty("body_style", "background-image: url(/local/templa
         <div class="col-xs-12 col-sm-6 col-md-6">
             <table>
                 <tr>
-                    <td><div class="sprite exchange"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-exchange"/></svg></div></td>
                     <td>
                         Единое рабочее пространство, удобный обмен рабочей информацией между сотрудниками, в том числе работающим на основе аутсорсинга.
                     </td>
@@ -50,7 +50,7 @@ $APPLICATION->SetPageProperty("body_style", "background-image: url(/local/templa
         <div class="col-xs-12 col-sm-6 col-md-6">
             <table>
                 <tr>
-                    <td><div class="sprite cpu"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-cpu"/></svg></div></td>
                     <td>
                         Оперативное выделение необходимых ресурсов конкретному сотруднику.
                     </td>
@@ -60,7 +60,7 @@ $APPLICATION->SetPageProperty("body_style", "background-image: url(/local/templa
         <div class="col-xs-12 col-sm-6 col-md-6">
             <table>
                 <tr>
-                    <td><div class="sprite protect"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-protect"/></svg></div></td>
                     <td>
                         Отсутствие необходимости постоянного контроля за IT инфраструктурой клиента.
                     </td>
@@ -70,7 +70,7 @@ $APPLICATION->SetPageProperty("body_style", "background-image: url(/local/templa
         <div class="col-xs-12 col-sm-6 col-md-6">
             <table>
                 <tr>
-                    <td><div class="sprite new"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-new"/></svg></div></td>
                     <td>
                         Возможность оперативной организации рабочего места при появлении новых сотрудников.
                     </td>
@@ -80,7 +80,7 @@ $APPLICATION->SetPageProperty("body_style", "background-image: url(/local/templa
         <div class="col-xs-12 col-sm-6 col-md-6">
             <table>
                 <tr>
-                    <td><div class="sprite secure"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-secure"/></svg></div></td>
                     <td>
                         Защищенный канал передачи данных между местом, где находится в данный момент сотрудник Вашей компании до нашего центра обработки данных.
                     </td>
@@ -90,7 +90,7 @@ $APPLICATION->SetPageProperty("body_style", "background-image: url(/local/templa
         <div class="col-xs-12 col-sm-6 col-md-6">
             <table>
                 <tr>
-                    <td><div class="sprite mobile"></div></td>
+                    <td><div class="icon"><svg><use xlink:href="#icon-mobile"/></svg></div></td>
                     <td>
                         Возможность получения защищенного доступа к рабочему месту с помощью устройств на базе Android и IOS.
                     </td>
@@ -102,17 +102,17 @@ $APPLICATION->SetPageProperty("body_style", "background-image: url(/local/templa
         <h2>Пять шагов к серверу терминалов:</h2>
     </div>
     <div class="col-xs-12 flex how">
-        <div class="step"><div class="sprite request"></div>Обращение</div>
-        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
-        <div class="step"><div class="sprite document"></div>Заключение<br> договора</div>
-        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
-        <div class="step"><div class="sprite day3"></div>Ожидание<br> 3 дня</div>
-        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
-        <div class="step"><div class="sprite server"></div>Готовый<br> сервер</div>
-        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
-        <div class="step"><div class="sprite settings"></div>Настройка ПО<br> и оборудования</div>
-        <div class="arrow hidden-xs"><div class="sprite arrow"></div></div>
-        <div class="step"><div class="sprite done"></div>Все готово</div>
+        <div class="step"><div class="icon"><svg><use xlink:href="#icon-request"/></svg></div>Обращение</div>
+        <div class="hidden-xs"><div class="icon arrow"><svg><use xlink:href="#icon-arrow"/></svg></div></div>
+        <div class="step"><div class="icon"><svg><use xlink:href="#icon-document"/></svg></div>Заключение<br> договора</div>
+        <div class="hidden-xs"><div class="icon arrow"><svg><use xlink:href="#icon-arrow"/></svg></div></div>
+        <div class="step"><div class="icon"><svg><use xlink:href="#icon-day3"/></svg></div>Ожидание<br> 3 дня</div>
+        <div class="hidden-xs"><div class="icon arrow"><svg><use xlink:href="#icon-arrow"/></svg></div></div>
+        <div class="step"><div class="icon"><svg><use xlink:href="#icon-server"/></svg></div>Готовый<br> сервер</div>
+        <div class="hidden-xs"><div class="icon arrow"><svg><use xlink:href="#icon-arrow"/></svg></div></div>
+        <div class="step"><div class="icon"><svg><use xlink:href="#icon-settings"/></svg></div>Настройка ПО<br> и оборудования</div>
+        <div class="hidden-xs"><div class="icon arrow"><svg><use xlink:href="#icon-arrow"/></svg></div></div>
+        <div class="step"><div class="icon"><svg><use xlink:href="#icon-done"/></svg></div>Все готово</div>
     </div>
     <div class="col-xs-12">
         <p>

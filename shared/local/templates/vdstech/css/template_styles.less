@@ -1,5 +1,3 @@
-@import "global.less";
-
 html,
 body {
     width: 100%;
@@ -8,7 +6,7 @@ body {
 
 body {
     min-height: 100%;
-    background: url(images/00620488.jpg) no-repeat fixed center center;
+    background: url(../images/00620488.jpg) no-repeat fixed center center;
     .bg-cover;
     font-family: 'PT Sans', Arial, sans-serif;
     font-size: 16px;
@@ -36,104 +34,20 @@ a {
     display: inline-block;
 }
 
-.sprite,
-.sprite-before:before,
-.sprite-after:after {
-    content: '';
-    display: inline-block;
+.icon {
     .size(60px, 60px);
-    background: url(images/sprite.svg) no-repeat;
-    vertical-align: middle;
-}
-
-.sprite {
-    &.back {
-        .bg-pos(0, 0);
-    }
-
-    &.secure {
-        .bg-pos(60px, 0);
-    }
-    &.day3 {
-        .bg-pos(120px, 0);
-    }
-    &.document {
-        .bg-pos(180px, 0);
-    }
-    &.done {
-        .bg-pos(240px, 0);
-    }
-    &.backup {
-        .bg-pos(300px, 0);
-    }
-    &.update {
-        .bg-pos(360px, 0);
-    }
-    &.restore {
-        .bg-pos(420px, 0);
-    }
-
-    &.mobile {
-        .bg-pos(0px, 60px);
-    }
-    &.request {
-        width: 55px;
-        .bg-pos(60px, 60px);
-    }
-    &.settings {
-        .bg-pos(120px, 60px);
-    }
-    &.server {
-        .bg-pos(180px, 60px);
-    }
-    &.fulltime {
-        .bg-pos(240px, 60px);
-    }
-    &.cpu {
-        .bg-pos(360px, 60px);
-    }
-    &.exchange {
-        .bg-pos(420px, 60px);
-    }
-
-    &.world {
-        .bg-pos(0px, 120px);
-    }
-    &.new {
-        .bg-pos(60px, 120px);
-    }
-    &.computer {
-        .bg-pos(120px, 120px);
-    }
-    &.windows {
-        .bg-pos(180px, 120px);
-    }
-    &.setup {
-        .bg-pos(240px, 120px);
-    }
-    &.support {
-        .bg-pos(300px, 120px);
-    }
-    &.hdd {
-        .bg-pos(360px, 120px);
-    }
-    &.speed {
-        .bg-pos(420px, 120px);
-    }
-
-    &.sale {
-        .bg-pos(0px, 180px);
-    }
-    &.day30 {
-        .bg-pos(60px, 180px);
-    }
-    &.protect {
-        .bg-pos(120px, 180px);
-    }
+    .mcenter;
 
     &.arrow {
-        .bg-pos(300px, 60px);
+        .size(45px, 45px);
     }
+    
+    svg {
+        .size(100%, 100%);
+        fill: white;
+        stroke: white;
+    }
+
 }
 
 .fade-bg {

@@ -32,3 +32,4 @@ dat.html
 1.php
 2.php
 *.less.css
+*.compiled.svg
