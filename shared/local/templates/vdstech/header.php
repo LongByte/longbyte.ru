@@ -95,7 +95,6 @@
                 1 => "css/template_styles.less",
                 2 => "css/calculate.less",
             ),
-                'SHOW_ERRORS_IN_DISPLAY' => 'Y',
             'FILES_MASK' => array(// Список имен ФАЙЛОВ для компиляции, которые будут подключаться в том числе рекурсивно
             ),
             "PATH_CSS" => SITE_TEMPLATE_PATH . "/css/", // Путь к папке, куда складывать скомпилированный css
