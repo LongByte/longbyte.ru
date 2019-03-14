@@ -14,7 +14,7 @@
         <? $APPLICATION->ShowPanel(); ?>
         <?
         $APPLICATION->IncludeComponent(
-            "realweb:realweb.csscompiler", "", array(
+            "longbyte:longbyte.csscompiler", "", array(
             "PATH_TO_FILES" => SITE_TEMPLATE_PATH . "/", // Путь к папке с файлами, которые нужно компилировать
             "FILES" => array(// Список файлов для компиляции, которые будут подключаться в начале
                 0 => "global.less",

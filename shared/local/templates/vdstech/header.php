@@ -88,13 +88,14 @@
         <? $APPLICATION->ShowPanel(); ?>
         <?
         $APPLICATION->IncludeComponent(
-            "realweb:realweb.csscompiler", "", array(
+            "longbyte:longbyte.csscompiler", "", array(
             "PATH_TO_FILES" => SITE_TEMPLATE_PATH . "/", // Путь к папке с файлами, которые нужно компилировать
             "FILES" => array(// Список файлов для компиляции, которые будут подключаться в начале
                 0 => "global.less",
                 1 => "css/template_styles.less",
                 2 => "css/calculate.less",
             ),
+                'SHOW_ERRORS_IN_DISPLAY' => 'Y',
             'FILES_MASK' => array(// Список имен ФАЙЛОВ для компиляции, которые будут подключаться в том числе рекурсивно
             ),
             "PATH_CSS" => SITE_TEMPLATE_PATH . "/css/", // Путь к папке, куда складывать скомпилированный css
@@ -110,7 +111,7 @@
         ?>
         <?
         $APPLICATION->IncludeComponent(
-            "realweb:realweb.spritecompiler", "", array(
+            "longbyte:longbyte.spritecompiler", "", array(
             "PATH_TO_FILES" => SITE_TEMPLATE_PATH . "/images/vector/", // Путь к папке с файлами, которые нужно компилировать
             "FILES" => array(// Список файлов для компиляции, которые будут подключаться в начале
             ),
