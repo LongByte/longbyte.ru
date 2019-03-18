@@ -14,9 +14,7 @@ Loader::registerAutoLoadClasses(null, array(
     '\Realweb\Builder\HLBuilder' => '/local/php_interface/classes/Realweb/Builder/HLBuilder.php',
 ));
 
-EventManager::getInstance()->addEventHandler('main', 'OnPageStart', 'onPageStart');
+EventManager::getInstance()->addEventHandler('main', 'OnPageStart', array('Site', 'onPageStart'));
 EventManager::getInstance()->addEventHandler('iblock', 'OnIBlockPropertyBuildList', array('PageType', 'GetUserTypeDescription'));
-
-function onPageStart() {
-    Site::definders();
-}
+EventManager::getInstance()->addEventHandler('main', 'onEpilog', array('Site', 'onEpilog'));
+EventManager::getInstance()->addEventHandler('main', 'OnEndBufferContent', array('Site', 'OnEndBufferContent'));
