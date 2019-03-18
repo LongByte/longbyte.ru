@@ -1,12 +1,14 @@
 <?php
 
-use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\Loader;
+use Bitrix\Main\Page\Asset;
 
 Bitrix\Main\Localization\Loc::loadMessages(__FILE__);
 
 class Site {
 
     public static $IS_PRINT;
+    public static $enableBabel = false;
 
     public static function IsDevelop() {
         $APPLICATION_ENV = getenv('APPLICATION_ENV');
@@ -30,22 +32,27 @@ class Site {
         return static::$IS_PRINT;
     }
 
+    public static function isIE() {
+        return strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false || strpos($_SERVER['HTTP_USER_AGENT'], 'rv:11.0') !== false;
+    }
+
     public static function Definders() {
 
-        \Bitrix\Main\Loader::includeModule('iblock');
+        if (Loader::includeModule('iblock')) {
 
-        $result = \Bitrix\Iblock\IblockTable::getList(array(
-                'select' => array('ID', 'IBLOCK_TYPE_ID', 'CODE'),
-        ));
-        while ($row = $result->fetch()) {
-            $row['CODE'] = str_replace('-', '_', $row['CODE']);
-            $CONSTANT = ToUpper(implode('_', array('IBLOCK', $row['IBLOCK_TYPE_ID'], $row['CODE'])));
-            if (!defined($CONSTANT)) {
-                define($CONSTANT, $row['ID']);
+            $result = \Bitrix\Iblock\IblockTable::getList(array(
+                    'select' => array('ID', 'IBLOCK_TYPE_ID', 'CODE'),
+            ));
+            while ($row = $result->fetch()) {
+                $row['CODE'] = str_replace('-', '_', $row['CODE']);
+                $CONSTANT = ToUpper(implode('_', array('IBLOCK', $row['IBLOCK_TYPE_ID'], $row['CODE'])));
+                if (!defined($CONSTANT)) {
+                    define($CONSTANT, $row['ID']);
+                }
             }
         }
 
-        if (\Bitrix\Main\Loader::includeModule('form')) {
+        if (Loader::includeModule('form')) {
 
             $result = CForm::GetList($by, $order, [], $is_filtered);
 
@@ -71,6 +78,26 @@ class Site {
         $params = array("replace_space" => "-", "replace_other" => "-");
         $result = CUtilEx::translit($STRING, "ru", $params);
         return $result;
+    }
+
+    public static function onPageStart() {
+        self::definders();
+    }
+
+    public static function onEpilog() {
+        if (self::$enableBabel) {
+            if (Site::isIE()) {
+                Asset::getInstance()->addString('<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>');
+            } else {
+                Asset::getInstance()->addString('<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>');
+            }
+        }
+    }
+
+    public static function OnEndBufferContent(&$content) {
+        if (self::isIE() && self::$enableBabel) {
+            $content = preg_replace('/(<script\s+type="text\/)javascript("\s+src="\/bitrix\/cache\/js\/' . SITE_ID . '\/' . SITE_TEMPLATE_ID . '\/template_[^"]+\.js\?\d+"><\/script>)/i', '$1babel$2', $content);
+        }
     }
 
 }
