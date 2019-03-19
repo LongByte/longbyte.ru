@@ -1,4 +1,5 @@
 $(function () {
     const getMessage = () => "Hello World";
-    document.getElementById('output').innerHTML = getMessage();
+    if (document.getElementById('output'))
+        document.getElementById('output').innerHTML = getMessage();
 });
