@@ -33,3 +33,4 @@ dat.html
 2.php
 *.less.css
 *.compiled.svg
+/node_modules

@@ -9,6 +9,7 @@ class Site {
 
     public static $IS_PRINT;
     public static $enableBabel = false;
+    public static $babelMode = 'none'; //client/server
 
     public static function IsDevelop() {
         $APPLICATION_ENV = getenv('APPLICATION_ENV');
@@ -85,7 +86,7 @@ class Site {
     }
 
     public static function onEpilog() {
-        if (self::$enableBabel) {
+        if (self::$enableBabel && self::$babelMode == 'client') {
             if (Site::isIE()) {
                 Asset::getInstance()->addString('<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>');
             } else {
@@ -95,8 +96,22 @@ class Site {
     }
 
     public static function OnEndBufferContent(&$content) {
-        if (self::isIE() && self::$enableBabel) {
+        if (self::$enableBabel && self::$babelMode == 'client' && self::isIE()) {
             $content = preg_replace('/(<script\s+type="text\/)javascript("\s+src="\/bitrix\/cache\/js\/' . SITE_ID . '\/' . SITE_TEMPLATE_ID . '\/template_[^"]+\.js\?\d+"><\/script>)/i', '$1babel$2', $content);
+            $content = preg_replace('/(<script\s+type="text\/)javascript("\s+src="\/bitrix\/cache\/js\/' . SITE_ID . '\/' . SITE_TEMPLATE_ID . '\/page_[^"]+\.js\?\d+"><\/script>)/i', '$1babel$2', $content);
+        }
+
+        if (self::$enableBabel && self::$babelMode == 'server') {
+            preg_match_all('/<script\s+type="text\/javascript"\s+src="(\/bitrix\/cache\/js\/' . SITE_ID . '\/' . SITE_TEMPLATE_ID . '\/(template|page)_[^"]+\.js)\?\d+"><\/script>/i', $content, $arMatches);
+            foreach ($arMatches[1] as $match) {
+                $sourceFile = $_SERVER['DOCUMENT_ROOT'] . $match;
+                $destFile = str_replace('.js', '.es.js', $sourceFile);
+                $cmd = 'npx babel ' . $sourceFile . ' --out-file ' . $destFile;
+                $res = exec($cmd);
+                echo '<pre>';
+                var_dump($cmd, $res);
+                echo '</pre>';
+            }
         }
     }
 
