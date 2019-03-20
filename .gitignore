@@ -26,7 +26,6 @@ sitemap*.xml
 .htaccess
 robots.txt
 yandex*.html
-urlrewrite.php
 test.php
 dat.html
 1.php
@@ -34,3 +33,4 @@ dat.html
 *.less.css
 *.compiled.svg
 /node_modules
+/package-lock.json

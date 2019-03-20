@@ -3,12 +3,14 @@
 use Bitrix\Main\Context;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Page\Asset;
+use Bitrix\Iblock\IblockTable;
 
 Bitrix\Main\Localization\Loc::loadMessages(__FILE__);
 
 class Site {
 
     public static $IS_PRINT;
+    public static $rootDir = '~/web/'; //not document root
     public static $enableBabel = false;
     public static $babelMode = 'none'; //client/server
 
@@ -23,7 +25,7 @@ class Site {
     public static function IsPrint() {
         if (is_null(static::$IS_PRINT)) {
             $IS_PRINT = false;
-            $request = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
+            $request = Context::getCurrent()->getRequest();
             $PRINT = $request->get("PRINT");
             if ($PRINT == 'Y') {
                 $IS_PRINT = true;
@@ -42,7 +44,7 @@ class Site {
 
         if (Loader::includeModule('iblock')) {
 
-            $result = \Bitrix\Iblock\IblockTable::getList(array(
+            $result = IblockTable::getList(array(
                     'select' => array('ID', 'IBLOCK_TYPE_ID', 'CODE'),
             ));
             while ($row = $result->fetch()) {
@@ -83,7 +85,7 @@ class Site {
     }
 
     public static function onPageStart() {
-        self::definders();
+        self::Definders();
     }
 
     public static function onEpilog() {
@@ -111,7 +113,11 @@ class Site {
                     $sourceFile = $match;
                     $destFile = str_replace('.js', '.es.js', $sourceFile);
                     if (!file_exists($obServer->getDocumentRoot() . $destFile)) {
-                        $cmd = 'npx babel ' . $obServer->getDocumentRoot() . $sourceFile . ' --out-file ' . $obServer->getDocumentRoot() . $destFile;
+                        /*
+                         * Предварительно в папке self::$rootDir надо выполнить:
+                         * npm install --save-dev babel-cli babel-preset-env
+                         */
+                        $cmd = 'cd ' . self::$rootDir . ' && npx babel ' . $obServer->getDocumentRoot() . $sourceFile . ' --presets babel-preset-env --out-file ' . $obServer->getDocumentRoot() . $destFile;
                         shell_exec($cmd);
                     }
                     $content = str_replace($sourceFile, $destFile, $content);

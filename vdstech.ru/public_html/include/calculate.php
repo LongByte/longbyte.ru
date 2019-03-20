@@ -23,13 +23,13 @@ $APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH . '/css/calculate.css');
           <div class="" style="width: 38%" title="Наглядное сравнение производительности серверов"></div>
           </div> */ ?>
         <div class="col-xs-12 col-sm-10">
-            <input type="radio" name="server" value="1" id="server1"><label for="server1">2 x Xeon L5520 (4 ядра, 8 потоков, 2.48ГГц)</label><Br>
+            <input type="radio" name="server" value="1" id="server1"><label for="server1">2 x Xeon X5670 (6 ядер, 12 потоков)</label><Br>
         </div>
         <div class="col-sm-2 hidden-xs cpu-chart">
-            <div class="" style="width: 51%" title="Наглядное сравнение производительности серверов"></div>
+            <div class="" style="width: 76%" title="Наглядное сравнение производительности серверов"></div>
         </div>
         <div class="col-xs-12 col-sm-10">
-            <input type="radio" name="server" value="2" id="server2"><label for="server2">2 x Xeon E5-2620 v2 (6 ядра, 12 потоков, 2.6ГГц)</label>
+            <input type="radio" name="server" value="2" id="server2"><label for="server2">2 x Xeon E5-2620 v2 (6 ядра, 12 потоков)</label>
         </div>
         <div class="col-sm-2 hidden-xs cpu-chart">
             <div class="" style="width: 100%" title="Наглядное сравнение производительности серверов"></div>

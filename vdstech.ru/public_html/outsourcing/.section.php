@@ -1,6 +1,0 @@
-<?
-$sSectionName = "Outsourcing";
-$arDirProperties = Array(
-
-);
-?>
