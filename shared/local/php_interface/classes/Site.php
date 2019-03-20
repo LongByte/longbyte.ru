@@ -1,5 +1,6 @@
 <?php
 
+use Bitrix\Main\Context;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Page\Asset;
 
@@ -102,15 +103,19 @@ class Site {
         }
 
         if (self::$enableBabel && self::$babelMode == 'server') {
-            preg_match_all('/<script\s+type="text\/javascript"\s+src="(\/bitrix\/cache\/js\/' . SITE_ID . '\/' . SITE_TEMPLATE_ID . '\/(template|page)_[^"]+\.js)\?\d+"><\/script>/i', $content, $arMatches);
-            foreach ($arMatches[1] as $match) {
-                $sourceFile = $_SERVER['DOCUMENT_ROOT'] . $match;
-                $destFile = str_replace('.js', '.es.js', $sourceFile);
-                $cmd = 'npx babel ' . $sourceFile . ' --out-file ' . $destFile;
-                $res = exec($cmd);
-                echo '<pre>';
-                var_dump($cmd, $res);
-                echo '</pre>';
+
+            $obServer = Context::getCurrent()->getServer();
+
+            if (preg_match_all('/<script\s+type="text\/javascript"\s+src="(\/bitrix\/cache\/js\/' . SITE_ID . '\/' . SITE_TEMPLATE_ID . '\/(template|page)_[^"]+\.js)\?\d+"><\/script>/i', $content, $arMatches)) {
+                foreach ($arMatches[1] as $match) {
+                    $sourceFile = $match;
+                    $destFile = str_replace('.js', '.es.js', $sourceFile);
+                    if (!file_exists($obServer->getDocumentRoot() . $destFile)) {
+                        $cmd = 'npx babel ' . $obServer->getDocumentRoot() . $sourceFile . ' --out-file ' . $obServer->getDocumentRoot() . $destFile;
+                        shell_exec($cmd);
+                    }
+                    $content = str_replace($sourceFile, $destFile, $content);
+                }
             }
         }
     }
