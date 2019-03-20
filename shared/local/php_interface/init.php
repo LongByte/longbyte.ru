@@ -6,6 +6,9 @@ use \Bitrix\Main\EventManager;
 Loader::registerAutoLoadClasses(null, array(
     '\LongByte\Wakeup' => '/local/php_interface/lib/Wakeup.php',
     'Site' => '/local/php_interface/classes/Site.php',
+    //PageType
+    'PageType' => '/local/php_interface/classes/PageType.php',
+    //Migration
     '\Realweb\Migration\Iblock' => '/local/php_interface/classes/Migration/Iblock.php',
     '\Realweb\Builder\IblockBuilder' => '/local/php_interface/classes/Realweb/Builder/IblockBuilder.php',
     '\Realweb\Builder\UserField' => '/local/php_interface/classes/Realweb/Builder/UserField.php',

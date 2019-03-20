@@ -3,6 +3,7 @@
 use Bitrix\Main\Context;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Page\Asset;
+use Bitrix\Iblock\IblockTable;
 
 Bitrix\Main\Localization\Loc::loadMessages(__FILE__);
 
@@ -24,7 +25,7 @@ class Site {
     public static function IsPrint() {
         if (is_null(static::$IS_PRINT)) {
             $IS_PRINT = false;
-            $request = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
+            $request = Context::getCurrent()->getRequest();
             $PRINT = $request->get("PRINT");
             if ($PRINT == 'Y') {
                 $IS_PRINT = true;
@@ -43,7 +44,7 @@ class Site {
 
         if (Loader::includeModule('iblock')) {
 
-            $result = \Bitrix\Iblock\IblockTable::getList(array(
+            $result = IblockTable::getList(array(
                     'select' => array('ID', 'IBLOCK_TYPE_ID', 'CODE'),
             ));
             while ($row = $result->fetch()) {
@@ -84,7 +85,7 @@ class Site {
     }
 
     public static function onPageStart() {
-        self::definders();
+        self::Definders();
     }
 
     public static function onEpilog() {
