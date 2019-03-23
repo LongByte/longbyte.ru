@@ -255,7 +255,7 @@ var ILexDialogs = {
 //
 // Открытие диалога
 //
-ILex_OpenDialog = (dialog, options) => {
+var ILex_OpenDialog = (dialog, options) => {
 
     if ($(dialog).length == 0)
         return false;
@@ -379,7 +379,7 @@ ILex_OpenDialog = (dialog, options) => {
 //
 // Закрытие диалога
 //
-ILex_CloseDialog = (dialog) => {
+var ILex_CloseDialog = (dialog) => {
     let overlay = $('#ilex-dialog-overlay');
     if (dialog === undefined) {
         dialog = $(ILexDialogs.DialogStack[ILexDialogs.DialogStack.length - 1]);
@@ -436,7 +436,7 @@ ILex_CloseDialog = (dialog) => {
 //
 // Открывает диалог ошибки
 //
-ILex_OpenErrorDialog = (content, options) => {
+var ILex_OpenErrorDialog = (content, options) => {
     let dialog = $('#error-dialog.ilex-dialog');
     if (dialog.length <= 0) {
         $('body').append('<div class="ilex-dialog" id="error-dialog"></div>');
@@ -454,7 +454,7 @@ ILex_OpenErrorDialog = (content, options) => {
 //
 // Открывает диалог сообщения
 //
-ILex_OpenMessageDialog = (content, options) => {
+var ILex_OpenMessageDialog = (content, options) => {
     let dialog = $('#message-dialog.ilex-dialog');
     if (dialog.length == 0) {
         $('body').append('<div class="ilex-dialog" id="message-dialog"></div>');

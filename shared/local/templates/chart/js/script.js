@@ -64,7 +64,7 @@ $(function () {
     $(document).tooltip();
 });
 
-OpenFilter = (type) => {
+var OpenFilter = (type) => {
     ILex_CloseDialog();
     ILex_OpenDialog('#filter-' + type, {
         width: window.innerWidth > 990 ? 990 : window.innerWidth
@@ -72,8 +72,8 @@ OpenFilter = (type) => {
     return false;
 }
 
-UrlGenerate = () => {
-    GetUnique = (inputArray) => {
+var UrlGenerate = () => {
+    let GetUnique = (inputArray) => {
         var outputArray = [];
         for (let i = 0; i < inputArray.length; i++)
         {
