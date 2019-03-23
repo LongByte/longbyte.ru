@@ -1,5 +1,7 @@
+'use strict';
+
 $(function () {
-    $("[data-filter]").click(function () {
+    $("[data-filter]").click(() => {
         UrlGenerate();
         return false;
     });
@@ -23,7 +25,7 @@ $(function () {
             target.show();
         } else {
             target.hide();
-            var all = $(this).siblings('[name=line-all]:checked');
+            let all = $(this).siblings('[name=line-all]:checked');
             if (all.length)
                 all.prop('checked', false);
         }
@@ -36,24 +38,24 @@ $(function () {
     });
 
     var params = window.location.hash.substr(1);
-    if (params != '') {
+    if (!!params) {
         var arParams = params.split(';');
-        if (arParams[0] != '') {
+        if (!!arParams[0]) {
             arParams[0] = arParams[0].split(',');
-            for (var i in arParams[0]) {
+            for (let i in arParams[0]) {
                 $('.lb-spoiler.spoiler-type > .spoiler-title[data-filter=' + arParams[0][i] + ']').click();
             }
         }
-        if (arParams[1] != '') {
+        if (!!arParams[1]) {
             arParams[1] = arParams[1].split(',');
-            for (var i in arParams[1]) {
+            for (let i in arParams[1]) {
                 $('[id^=filter] [name=hide]').filter('[value=hideOc], [value=hideComment]').filter('[value=' + arParams[1][i] + ']').first().click();
             }
         }
-        if (arParams[2] != '') {
+        if (!!arParams[2]) {
             arParams[2] = arParams[2].split(',');
             $('[id^=filter] input').not('[value=hideOc], [value=hideComment]').prop('checked', false).change();
-            for (var i in arParams[2]) {
+            for (let i in arParams[2]) {
                 $('[id^=filter] input').not('[value=hideOc], [value=hideComment]').filter('[value=' + arParams[2][i] + ']').prop('checked', true).change();
             }
         }
@@ -62,7 +64,7 @@ $(function () {
     $(document).tooltip();
 });
 
-function OpenFilter(type) {
+OpenFilter = (type) => {
     ILex_CloseDialog();
     ILex_OpenDialog('#filter-' + type, {
         width: window.innerWidth > 990 ? 990 : window.innerWidth
@@ -70,10 +72,10 @@ function OpenFilter(type) {
     return false;
 }
 
-function UrlGenerate() {
-    function GetUnique(inputArray) {
+UrlGenerate = () => {
+    GetUnique = (inputArray) => {
         var outputArray = [];
-        for (var i = 0; i < inputArray.length; i++)
+        for (let i = 0; i < inputArray.length; i++)
         {
             if (($.inArray(inputArray[i], outputArray)) == -1)
             {
@@ -87,7 +89,7 @@ function UrlGenerate() {
     var mode = $('.lb-spoiler.spoiler-type.open > .spoiler-title');
 
     if (mode.length > 0) {
-        for (var i = 0; i < mode.length; i++) {
+        for (let i = 0; i < mode.length; i++) {
             if (i > 0)
                 url += ',';
             url += mode.eq(i).data('filter');
@@ -98,7 +100,7 @@ function UrlGenerate() {
     var hide = $('[id^=filter] [name=hide]:checked').filter('[value=hideOc], [value=hideComment]');
     var arHide = [];
 
-    for (var i = 0; i < hide.length; i++) {
+    for (let i = 0; i < hide.length; i++) {
         arHide.push(hide.eq(i).val());
     }
 
@@ -109,10 +111,10 @@ function UrlGenerate() {
     var spoilers = $('[id^=filter]');
     var arFilter = [];
 
-    for (var i = 0; i < spoilers.length; i++) {
+    for (let i = 0; i < spoilers.length; i++) {
         var spoiler = spoilers.eq(i);
         var filter = $('input:checked', spoiler).not('[value=hideOc], [value=hideComment]');
-        for (var j = 0; j < filter.length; j++) {
+        for (let j = 0; j < filter.length; j++) {
             if (filter.eq(j).attr('name') == 'line-all')
                 break;
             arFilter.push(filter.eq(j).val());

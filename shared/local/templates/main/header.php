@@ -4,8 +4,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 
 use Bitrix\Main\Page\Asset;
 
-Site::$enableBabel = true;
-Site::$babelMode = 'server';
+Site::$babelMode = Site::BABEL_SERVER_CLIENT;
 ?>
 
 <html>

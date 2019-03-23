@@ -1,3 +1,7 @@
+<?
+Site::$babelMode = Site::BABEL_SERVER_CLIENT;
+?>
+
 <html>
     <head>
         <title><? $APPLICATION->ShowTitle(); ?></title>

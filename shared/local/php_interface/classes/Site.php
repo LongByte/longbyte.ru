@@ -9,10 +9,14 @@ Bitrix\Main\Localization\Loc::loadMessages(__FILE__);
 
 class Site {
 
+    const BABEL_DISABLE = 0;
+    const BABEL_CLIENT = 1;
+    const BABEL_SERVER = 2;
+    const BABEL_SERVER_CLIENT = 3;
+
     public static $IS_PRINT;
     public static $rootDir = '~/web/'; //not document root
-    public static $enableBabel = false;
-    public static $babelMode = 'none'; //client/server
+    public static $babelMode = self::BABEL_DISABLE;
 
     public static function IsDevelop() {
         $APPLICATION_ENV = getenv('APPLICATION_ENV');
@@ -89,7 +93,7 @@ class Site {
     }
 
     public static function onEpilog() {
-        if (self::$enableBabel && self::$babelMode == 'client') {
+        if (self::$babelMode == self::BABEL_CLIENT) {
             if (Site::isIE()) {
                 Asset::getInstance()->addString('<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>');
             } else {
@@ -99,14 +103,16 @@ class Site {
     }
 
     public static function OnEndBufferContent(&$content) {
-        if (self::$enableBabel && self::$babelMode == 'client' && self::isIE()) {
+        if (self::$babelMode == self::BABEL_CLIENT && self::isIE()) {
             $content = preg_replace('/(<script\s+type="text\/)javascript("\s+src="\/bitrix\/cache\/js\/' . SITE_ID . '\/' . SITE_TEMPLATE_ID . '\/template_[^"]+\.js\?\d+"><\/script>)/i', '$1babel$2', $content);
             $content = preg_replace('/(<script\s+type="text\/)javascript("\s+src="\/bitrix\/cache\/js\/' . SITE_ID . '\/' . SITE_TEMPLATE_ID . '\/page_[^"]+\.js\?\d+"><\/script>)/i', '$1babel$2', $content);
         }
 
-        if (self::$enableBabel && self::$babelMode == 'server') {
+        if (self::$babelMode == self::BABEL_SERVER || self::$babelMode == self::BABEL_SERVER_CLIENT) {
 
             $obServer = Context::getCurrent()->getServer();
+            $arReplaces = array();
+            $bSuccess = true;
 
             if (preg_match_all('/<script\s+type="text\/javascript"\s+src="(\/bitrix\/cache\/js\/' . SITE_ID . '\/' . SITE_TEMPLATE_ID . '\/(template|page)_[^"]+\.js)\?\d+"><\/script>/i', $content, $arMatches)) {
                 foreach ($arMatches[1] as $match) {
@@ -117,13 +123,34 @@ class Site {
                          * Предварительно в папке self::$rootDir надо выполнить:
                          * npm install --save-dev babel-cli babel-preset-env
                          */
-                        $cmd = 'cd ' . self::$rootDir . ' && npx babel ' . $obServer->getDocumentRoot() . $sourceFile . ' --presets babel-preset-env --out-file ' . $obServer->getDocumentRoot() . $destFile;
-                        shell_exec($cmd);
+                        $cmd = 'cd ' . self::$rootDir . ' && npx babel ' . $obServer->getDocumentRoot() . $sourceFile . ' --presets babel-preset-env --out-file ' . $obServer->getDocumentRoot() . $destFile . '';
+                        exec($cmd);
                     }
-                    $content = str_replace($sourceFile, $destFile, $content);
+                    if (file_exists($obServer->getDocumentRoot() . $destFile)) {
+                        $arReplaces[$sourceFile] = $destFile;
+                    } else {
+                        $bSuccess = false;
+                        if (self::$babelMode == self::BABEL_SERVER_CLIENT) {
+                            self::emergencyEnableClientBabel($content);
+                        }
+                        break;
+                    }
                 }
             }
+
+            if ($bSuccess && count($arReplaces) > 0) {
+                $content = str_replace(array_keys($arReplaces), array_values($arReplaces), $content);
+            }
         }
+    }
+
+    private static function emergencyEnableClientBabel(&$content) {
+        if (Site::isIE()) {
+            $content = str_replace('</body>', '<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script></body>', $content);
+        } else {
+            $content = str_replace('</body>', '<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script></body>', $content);
+        }
+        $content = str_replace('</body>', '<script>console.log(\'Babel не смог отработать на сервере, включена клиентская версия\');</script></body>', $content);
     }
 
 }

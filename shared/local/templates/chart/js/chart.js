@@ -164,8 +164,8 @@ function augment(oSelf, oOther) {
 
 function chartdraw(i, width, o) {
 //Номер группы, куда входит график
-    axisDefault = true;
-    gnum = -1;
+    var axisDefault = true;
+    var gnum = -1;
     for (j = 0; j < groups.length; j++)
         for (k = 0; k < groups[j].length; k++)
             if (groups[j][k] == i) {
