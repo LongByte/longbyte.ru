@@ -132,6 +132,8 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
      */
     public function executeComponent() {
 
+        global $APPLICATION;
+        
         try {
 
             $this->checkModules();
@@ -154,6 +156,17 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
             }
             foreach ($this->arParams['FILES_MASK'] as $strOcssFile) {
                 $this->getFilesFromPath($_SERVER['DOCUMENT_ROOT'] . $this->arParams['PATH_TO_FILES'], $strOcssFile);
+            }
+
+            $jsonStylesToCompile = $APPLICATION->GetProperty('STYLE_TO_COMPILER', '');
+            if ($jsonStylesToCompile == '') {
+                $arStylesToCompile = array();
+            } else {
+                $arStylesToCompile = json_decode($jsonStylesToCompile, true);
+            }
+
+            foreach ($arStylesToCompile as $strAdditionalFile) {
+                $this->arOCssFiles[] = $_SERVER['DOCUMENT_ROOT'] . $strAdditionalFile;
             }
 
             foreach ($this->arOCssFiles as $file) {

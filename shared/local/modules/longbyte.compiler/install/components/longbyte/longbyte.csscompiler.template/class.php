@@ -9,10 +9,10 @@ class LongbyteCSSCompilerTemplateComponent extends CBitrixComponent {
      * Prepare Component Params
      */
     public function onPrepareComponentParams($params) {
-        if (preg_match('/\/local\//', $params['TEMPLATE_PATH'])) {
-            $params['TEMPLATE_PATH'] = preg_replace('/^.*\/local\//', '/local/', $params['TEMPLATE_PATH']);
-        } elseif (preg_match('/\/bitrix\//', $params['TEMPLATE_PATH'])) {
-            $params['TEMPLATE_PATH'] = preg_replace('/^.*\/bitrix\//', '/bitrix/', $params['TEMPLATE_PATH']);
+        if (preg_match('/\\' . DIRECTORY_SEPARATOR . 'local' . DIRECTORY_SEPARATOR . '\\/', $params['TEMPLATE_PATH'])) {
+            $params['TEMPLATE_PATH'] = preg_replace('/^.*\\' . DIRECTORY_SEPARATOR . 'local\\' . DIRECTORY_SEPARATOR . '/', '/local/', $params['TEMPLATE_PATH']);
+        } elseif (preg_match('/\\' . DIRECTORY_SEPARATOR . 'bitrix\\' . DIRECTORY_SEPARATOR . '/', $params['TEMPLATE_PATH'])) {
+            $params['TEMPLATE_PATH'] = preg_replace('/^.*\\' . DIRECTORY_SEPARATOR . 'bitrix\\' . DIRECTORY_SEPARATOR . '/', '/bitrix/', $params['TEMPLATE_PATH']);
         }
 
         return $params;
