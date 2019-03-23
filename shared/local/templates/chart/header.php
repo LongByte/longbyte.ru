@@ -1,3 +1,10 @@
+<?
+if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
+    die();
+
+LongByte\Babel::includeBabel(LongByte\Babel::BABEL_SERVER_CLIENT);
+?>
+
 <html>
     <head>
         <title><? $APPLICATION->ShowTitle(); ?></title>

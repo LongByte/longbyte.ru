@@ -1,14 +1,7 @@
-div.portfolio {
-    display: flex;
-    padding-top: 16px;
+.portfolio-item {
     padding-bottom: 16px;
-    flex-wrap: wrap;
 
-    > div {
-        padding-bottom: 16px;
-    }
-
-    .item {
+    .inner {
         display: flex;
         height: 100%;
         padding: 8px;
@@ -38,7 +31,7 @@ div.portfolio {
         .preview-text {
             line-height: 1.2em;
         }
-        
+
         .years {
             font-weight: bold;
         }
@@ -59,14 +52,6 @@ div.portfolio {
         .tags {
             font-size: 12px;
             padding-top: 4px;
-
-            span {
-                display: inline-block;
-                padding: 4px;
-                margin-top: 4px;
-                background: #eee;
-                border-radius: 5px;
-            }
         }
     }
 }

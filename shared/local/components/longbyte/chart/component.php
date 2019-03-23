@@ -1,12 +1,15 @@
 <?
 
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
+    die();
+
 use Bitrix\Main\Loader;
 use Bitrix\Iblock\SectionTable;
 //use Bitrix\Iblock\ElementTable;
 use Bitrix\Iblock\PropertyTable;
 use AB\Iblock\Element;
 
-if($this->startResultCache(60*60)) {
+if ($this->startResultCache(60 * 60)) {
 
     $iblockSystem = 1;
     $iblockFirm = 2;
