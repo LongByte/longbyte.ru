@@ -1,5 +1,8 @@
 <?
-Site::$babelMode = Site::BABEL_SERVER_CLIENT;
+if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
+    die();
+
+LongByte\Babel::includeBabel(LongByte\Babel::BABEL_SERVER_CLIENT);
 ?>
 
 <html>

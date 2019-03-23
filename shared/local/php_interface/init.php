@@ -1,10 +1,11 @@
 <?
 
-use \Bitrix\Main\Loader;
-use \Bitrix\Main\EventManager;
+use Bitrix\Main\Loader;
+use Bitrix\Main\EventManager;
 
 Loader::registerAutoLoadClasses(null, array(
     '\LongByte\Wakeup' => '/local/php_interface/classes/Wakeup.php',
+    '\LongByte\Babel' => '/local/php_interface/classes/Babel.php',
     'Site' => '/local/php_interface/classes/Site.php',
     //PageType
     'PageType' => '/local/php_interface/classes/PageType.php',
