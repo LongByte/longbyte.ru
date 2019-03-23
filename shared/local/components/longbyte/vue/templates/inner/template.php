@@ -1,6 +1,5 @@
 <?
-if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
-    die();
+if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 /** @var array $arParams */
 /** @var array $arResult */
 /** @global CMain $APPLICATION */
@@ -14,6 +13,4 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 ?>
-<script>
-    window.vueData.portfolio = <?= CUtil::PhpToJSObject($arResult['VUE'], false, false, true) ?>;
-</script>
+inner
