@@ -1,6 +1,6 @@
 <?php
 
-namespace Realweb\Builder;
+namespace Longbyte\Builder;
 
 class FormBuilder extends \WS\ReduceMigrations\Builder\FormBuilder {
 

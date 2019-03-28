@@ -34,7 +34,7 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
      * Prepare Component Params
      */
     public function onPrepareComponentParams($params) {
-        $params['USE_SET_ADDITIONAL_CSS'] = ($params['USE_SETADDITIONALCSS'] == 'Y');
+        $params['USE_SETADDITIONALCSS'] = ($params['USE_SETADDITIONALCSS'] == 'Y');
 
         $params['ADD_CSS_TO_THE_END'] = isset($params['ADD_CSS_TO_THE_END']) && ($params['ADD_CSS_TO_THE_END'] == 'Y');
 

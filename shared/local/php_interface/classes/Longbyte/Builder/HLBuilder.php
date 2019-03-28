@@ -1,6 +1,6 @@
 <?php
 
-namespace Realweb\Builder;
+namespace Longbyte\Builder;
 
 class HLBuilder extends \WS\ReduceMigrations\Builder\HighLoadBlockBuilder {
 
