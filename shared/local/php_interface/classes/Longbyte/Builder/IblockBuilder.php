@@ -1,6 +1,6 @@
 <?php
 
-namespace Realweb\Builder;
+namespace Longbyte\Builder;
 
 class IblockBuilder extends \WS\ReduceMigrations\Builder\IblockBuilder {
 

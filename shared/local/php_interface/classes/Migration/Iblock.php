@@ -1,6 +1,6 @@
 <?php
 
-namespace Realweb\Migration;
+namespace Longbyte\Migration;
 
 use Bitrix\Iblock\PropertyEnumerationTable;
 use Bitrix\Main\Entity\Query;

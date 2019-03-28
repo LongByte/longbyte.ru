@@ -1,6 +1,6 @@
 <?php
 
-use Realweb\Builder\IblockBuilder;
+use Longbyte\Builder\IblockBuilder;
 use WS\ReduceMigrations\Builder\Entity\Iblock;
 
 /**
