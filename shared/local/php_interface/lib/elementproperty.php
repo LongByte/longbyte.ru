@@ -84,11 +84,11 @@ class ElementPropertyTable extends Main\Entity\DataManager {
                 'title' => Loc::getMessage('ELEMENT_PROPERTY_ENTITY_DESCRIPTION_FIELD'),
             ),
             'IBLOCK_ELEMENT' => array(
-                'data_type' => 'Bitrix\Iblock\IblockElement',
+                'data_type' => 'Bitrix\Iblock\ElementTable',
                 'reference' => array('=this.IBLOCK_ELEMENT_ID' => 'ref.ID'),
             ),
             'IBLOCK_PROPERTY' => array(
-                'data_type' => 'Bitrix\Iblock\IblockProperty',
+                'data_type' => 'Bitrix\Iblock\PropertyTable',
                 'reference' => array('=this.IBLOCK_PROPERTY_ID' => 'ref.ID'),
             ),
         );

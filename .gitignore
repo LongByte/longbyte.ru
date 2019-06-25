@@ -34,3 +34,4 @@ dat.html
 *.compiled.svg
 /node_modules
 /package-lock.json
+*.log
