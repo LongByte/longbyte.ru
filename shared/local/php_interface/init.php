@@ -1,22 +1,29 @@
 <?
 
-use \Bitrix\Main\Loader;
-use \Bitrix\Main\EventManager;
+use Bitrix\Main\Loader;
+use Bitrix\Main\EventManager;
 
 Loader::registerAutoLoadClasses(null, array(
-    '\LongByte\Wakeup' => '/local/php_interface/lib/Wakeup.php',
+    '\LongByte\Wakeup' => '/local/php_interface/classes/Wakeup.php',
+    '\LongByte\Babel' => '/local/php_interface/classes/Babel.php',
     'Site' => '/local/php_interface/classes/Site.php',
-    '\Realweb\Migration\Iblock' => '/local/php_interface/classes/Migration/Iblock.php',
-    '\Realweb\Builder\IblockBuilder' => '/local/php_interface/classes/Realweb/Builder/IblockBuilder.php',
-    '\Realweb\Builder\UserField' => '/local/php_interface/classes/Realweb/Builder/UserField.php',
-    '\Realweb\Builder\EventsBuilder' => '/local/php_interface/classes/Realweb/Builder/EventsBuilder.php',
-    '\Realweb\Builder\FormBuilder' => '/local/php_interface/classes/Realweb/Builder/FormBuilder.php',
-    '\Realweb\Builder\HLBuilder' => '/local/php_interface/classes/Realweb/Builder/HLBuilder.php',
+    //PageType
+    'PageType' => '/local/php_interface/classes/PageType.php',
+    //Migration
+    '\Longbyte\Migration\Iblock' => '/local/php_interface/classes/Migration/Iblock.php',
+    '\Longbyte\Builder\IblockBuilder' => '/local/php_interface/classes/Longbyte/Builder/IblockBuilder.php',
+    '\Longbyte\Builder\UserField' => '/local/php_interface/classes/Longbyte/Builder/UserField.php',
+    '\Longbyte\Builder\EventsBuilder' => '/local/php_interface/classes/Longbyte/Builder/EventsBuilder.php',
+    '\Longbyte\Builder\FormBuilder' => '/local/php_interface/classes/Longbyte/Builder/FormBuilder.php',
+    '\Longbyte\Builder\HLBuilder' => '/local/php_interface/classes/Longbyte/Builder/HLBuilder.php',
+    //orm
+    '\Bitrix\Iblock\ElementPropertyTable' => '/local/php_interface/lib/elementproperty.php',
+    //telegram
+    '\LongByte\Telegram\SessionTable' => '/local/php_interface/classes/Telegram/SessionTable.php',
+    '\LongByte\Telegram\Bot' => '/local/php_interface/classes/Telegram/Bot.php',
 ));
 
-EventManager::getInstance()->addEventHandler('main', 'OnPageStart', 'onPageStart');
+EventManager::getInstance()->addEventHandler('main', 'OnPageStart', array('Site', 'onPageStart'));
 EventManager::getInstance()->addEventHandler('iblock', 'OnIBlockPropertyBuildList', array('PageType', 'GetUserTypeDescription'));
-
-function onPageStart() {
-    Site::definders();
-}
+EventManager::getInstance()->addEventHandler('main', 'onEpilog', array('Site', 'onEpilog'));
+EventManager::getInstance()->addEventHandler('main', 'OnEndBufferContent', array('Site', 'OnEndBufferContent'));

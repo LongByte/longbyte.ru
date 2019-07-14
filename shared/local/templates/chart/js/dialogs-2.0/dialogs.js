@@ -1,9 +1,12 @@
 /**
  * ILexDialogs by LongByte
  * ilex.chesnokov@gmail.com
- * version 2.1.3
+ * version 2.2.0b
  */
-$(document).ready(function () {
+
+'use strict';
+
+$(function () {
     ILexDialogs.initDialogs();
 });
 
@@ -12,15 +15,15 @@ var ILexDialogs = {
     oldXT: 0, //Old X Touch
     oldYT: 0, //Old Y Touch
     oldYD: 0, //Old Y Desktop (scroll)
-    enable_scroll: function () {
+    enable_scroll() {
         $(document).off('mousewheel', ILexDialogs.disable_scroll);
     },
-    disable_scroll: function (e) {
+    disable_scroll(e) {
         e.preventDefault();
         e.stopPropagation();
         return false;
     },
-    bindTouchEvents: function (target, dialog) {
+    bindTouchEvents(target, dialog) {
         $(target)
             .on('touchstart', ILexDialogs.onTouchStart)
             .on('touchmove', ILexDialogs.onTouchMove)
@@ -29,21 +32,21 @@ var ILexDialogs = {
                 return false;
             });
     },
-    initGlobalScrollHandler: function () {
+    initGlobalScrollHandler() {
         if (ILexDialogs.DialogStack.length > 0) {
-            var delta = ILexDialogs.oldYD - $(window).scrollTop();
+            let delta = ILexDialogs.oldYD - $(window).scrollTop();
             if (delta != 0) {
                 ILexDialogs.scrollDialog(ILexDialogs.DialogStack[ILexDialogs.DialogStack.length - 1], {x: 0, y: delta}, 1);
             }
         }
         ILexDialogs.oldYD = $(window).scrollTop();
     },
-    replaceDialogs: function () {
+    replaceDialogs() {
         $('.ilex-dialog').each(function () {
             $(this).appendTo('body');
         });
     },
-    initDialogs: function () {
+    initDialogs() {
         ILexDialogs.replaceDialogs();
         //закрытие диалога по ESC
         $(document).keyup(function (event) {
@@ -68,24 +71,24 @@ var ILexDialogs = {
             ILexDialogs.checkOuterClick(e.target);
         });
     },
-    recalcZIndex: function () {
+    recalcZIndex() {
         $('.ilex-dialog:visible').each(function () {
-            var dialog_index = $.inArray('#' + $(this).attr('id'), ILexDialogs.DialogStack);
+            let dialog_index = $.inArray('#' + $(this).attr('id'), ILexDialogs.DialogStack);
             $(this).css('z-index', 1100 + 100 * dialog_index);
         });
         $('#ilex-dialog-overlay').css('z-index', 1050 + 100 * (ILexDialogs.DialogStack.length - 1));
     },
-    onTouchStart: function (event) {
+    onTouchStart(event) {
         ILexDialogs.oldXT = event.originalEvent.touches[0].pageX;
         ILexDialogs.oldYT = event.originalEvent.touches[0].pageY;
     },
-    onTouchMove: function (event) {
+    onTouchMove(event) {
         if (event.originalEvent.touches.length > 1)
             return true;
         event.preventDefault();
-        var dialog = ILexDialogs.DialogStack[ILexDialogs.DialogStack.length - 1];
-        var left = event.originalEvent.touches[0].pageX;
-        var top = event.originalEvent.touches[0].pageY;
+        let dialog = ILexDialogs.DialogStack[ILexDialogs.DialogStack.length - 1];
+        let left = event.originalEvent.touches[0].pageX;
+        let top = event.originalEvent.touches[0].pageY;
         ILexDialogs.scrollDialog(dialog, {
             x: left - ILexDialogs.oldXT,
             y: top - ILexDialogs.oldYT
@@ -93,17 +96,17 @@ var ILexDialogs = {
         ILexDialogs.oldXT = left;
         ILexDialogs.oldYT = top;
     },
-    scrollDialog: function (dialog, delta, multi) {
-        var options = $(dialog).data('options');
+    scrollDialog(dialog, delta, multi) {
+        let options = $(dialog).data('options');
         if (options.disableScroll == false)
             return true;
         multi = multi || 10; //Сила скролла
-        var width = $(dialog).outerWidth();
-        var wndwidth = window.innerWidth ? window.innerWidth : $(window).width(); //оставил по подобию высоты
-        var height = $(dialog).outerHeight();
-        var wndheight = window.innerHeight ? window.innerHeight : $(window).height(); //Фикс высоты экрана мобильных устройств
-        var left = parseInt($(dialog).css('left'), 10);
-        var top = parseInt($(dialog).css('top'), 10);
+        let width = $(dialog).outerWidth();
+        let wndwidth = window.innerWidth ? window.innerWidth : $(window).width(); //оставил по подобию высоты
+        let height = $(dialog).outerHeight();
+        let wndheight = window.innerHeight ? window.innerHeight : $(window).height(); //Фикс высоты экрана мобильных устройств
+        let left = parseInt($(dialog).css('left'), 10);
+        let top = parseInt($(dialog).css('top'), 10);
         delta.x *= multi;
         delta.y *= multi;
 
@@ -137,13 +140,13 @@ var ILexDialogs = {
             }
         }
     },
-    positionDialog: function (dialog) {
+    positionDialog(dialog) {
         dialog = $(dialog);
-        var options = dialog.data('options');
-        var height = dialog.outerHeight();
-        var width = dialog.outerWidth();
-        var wndwidth = window.innerWidth ? window.innerWidth : $(window).width(); //оставил по подобию высоты
-        var wndheight = window.innerHeight ? window.innerHeight : $(window).height(); //Фикс высота экрана мобильных устройств
+        let options = dialog.data('options');
+        let height = dialog.outerHeight();
+        let width = dialog.outerWidth();
+        let wndwidth = window.innerWidth ? window.innerWidth : $(window).width(); //оставил по подобию высоты
+        let wndheight = window.innerHeight ? window.innerHeight : $(window).height(); //Фикс высота экрана мобильных устройств
 
         if (options.position == 'fixed') {
             dialog.css({
@@ -166,48 +169,63 @@ var ILexDialogs = {
                     .off('touchstart touchmove mousewheel');
             }
         } else if (options.position == 'absolute') {
-            var target = $(options.pos.target);
+            let target, targetX, targetY;
+
+            target = $(options.pos.target);
             if (!(target.length > 0))   //при некоторых селекторах нету атрибута length
                 target = $('body');
-            var coords = {
+
+            if (options.pos.targetX != undefined && options.pos.targetX != null) {
+                targetX = $(options.pos.targetX);
+            }
+            if (targetX == undefined || !(targetX.length > 0))
+                targetX = target;
+
+            if (options.pos.targetY != undefined && options.pos.targetY != null) {
+                targetY = $(options.pos.targetY);
+            }
+            if (targetY == undefined || !(targetY.length > 0))
+                targetY = target;
+
+            let coords = {
                 x: 0,
                 y: 0
             };
             switch (options.pos.alignX) {
                 case 'left':
-                    coords.x = target.offset().left;
+                    coords.x = targetX.offset().left;
                     break;
                 case 'outerLeft':
-                    coords.x = target.offset().left - dialog.outerWidth();
+                    coords.x = targetX.offset().left - dialog.outerWidth();
                     break;
                 case 'right':
-                    coords.x = target.offset().left + target.outerWidth() - dialog.outerWidth();
+                    coords.x = targetX.offset().left + targetX.outerWidth() - dialog.outerWidth();
                     break;
                 case 'outerRight':
-                    coords.x = target.offset().left + target.outerWidth();
+                    coords.x = targetX.offset().left + targetX.outerWidth();
                     break;
                 case 'center':
                 default :
-                    coords.x = target.offset().left + (target.outerWidth() - dialog.outerWidth()) / 2;
+                    coords.x = targetX.offset().left + (targetX.outerWidth() - dialog.outerWidth()) / 2;
                     break;
             }
 
             switch (options.pos.alignY) {
                 case 'top':
-                    coords.y = target.offset().top;
+                    coords.y = targetY.offset().top;
                     break;
                 case 'outerTop':
-                    coords.y = target.offset().top - dialog.outerHeight();
+                    coords.y = targetY.offset().top - dialog.outerHeight();
                     break;
                 case 'bottom':
-                    coords.y = target.offset().top + target.outerHeight() - dialog.outerHeight();
+                    coords.y = targetY.offset().top + targetY.outerHeight() - dialog.outerHeight();
                     break;
                 case 'outerBottom':
-                    coords.y = target.offset().top + target.outerHeight();
+                    coords.y = targetY.offset().top + targetY.outerHeight();
                     break;
                 case 'center':
                 default :
-                    coords.y = target.offset().top + (target.outerHeight() - dialog.outerHeight()) / 2;
+                    coords.y = targetY.offset().top + (targetY.outerHeight() - dialog.outerHeight()) / 2;
                     break;
             }
 
@@ -222,11 +240,11 @@ var ILexDialogs = {
             });
         }
     },
-    checkOuterClick: function (sender) {
+    checkOuterClick(sender) {
         if (ILexDialogs.DialogStack.length > 0) {
-            for (var i = 0; i < ILexDialogs.DialogStack.length; i++) {
-                var dialog = $(ILexDialogs.DialogStack[i]);
-                var options = dialog.data('options');
+            for (let i = 0; i < ILexDialogs.DialogStack.length; i++) {
+                let dialog = $(ILexDialogs.DialogStack[i]);
+                let options = dialog.data('options');
                 if (options.closeOnOuterClick && $(sender).closest(dialog).length == 0) {
                     ILex_CloseDialog(dialog);
                 }
@@ -237,7 +255,7 @@ var ILexDialogs = {
 //
 // Открытие диалога
 //
-function ILex_OpenDialog(dialog, options) {
+var ILex_OpenDialog = (dialog, options) => {
 
     if ($(dialog).length == 0)
         return false;
@@ -247,8 +265,8 @@ function ILex_OpenDialog(dialog, options) {
     }
     options = options || {};
 
-    if (options.onBeforeShow !== undefined) {
-        var newOptions = options.onBeforeShow(dialog);
+    if (typeof (options.onBeforeShow) == 'function') {
+        let newOptions = options.onBeforeShow(dialog);
         if (newOptions != undefined)
             options = newOptions;
     }
@@ -286,23 +304,25 @@ function ILex_OpenDialog(dialog, options) {
     }
 
     ILexDialogs.enable_scroll();
-    if (options.disableScroll != false) {
+    if (options.disableScroll) {
         $(document).on('mousewheel', ILexDialogs.disable_scroll);
     }
 
+    dialog.prop('style', '');
     if (options.width == 0)
         options.width = $(dialog).outerWidth();
     //создание заголовка
-    if (options.title !== false) {
+    if (!options.title) {
+        $('.dialog-title', dialog).remove();
+    } else {
         if ($('.dialog-title', dialog).length == 0) {
             dialog.prepend('<div class="dialog-title"></div>');
         }
-        if (dialog.data('dialog-title') !== undefined)
+        if (dialog.data('dialog-title') !== undefined) {
             $(".dialog-title", dialog).text(dialog.data('dialog-title'));
-        else if (options.title != '')
+        } else if (options.title) {
             $('.dialog-title', dialog).text(options.title);
-    } else {
-        $('.dialog-title', dialog).remove();
+        }
     }
 
     //создание оверлея
@@ -313,7 +333,7 @@ function ILex_OpenDialog(dialog, options) {
         overlay = $('#ilex-dialog-overlay');
     }
 
-    var countVisibleDialog = ILexDialogs.DialogStack.length;
+    let countVisibleDialog = ILexDialogs.DialogStack.length;
     overlay.css('z-index', 1050 + 100 * countVisibleDialog);
     dialog.css('z-index', 1100 + 100 * countVisibleDialog);
     ILexDialogs.DialogStack.push('#' + $(dialog).attr('id'));
@@ -322,7 +342,7 @@ function ILex_OpenDialog(dialog, options) {
         if ($('.dialog-close', dialog).length == 0) {
             $(dialog).prepend('<div class="dialog-close" title="Закрыть"></div>');
         }
-        $('.dialog-close', dialog).unbind('click').click(function () {
+        $('.dialog-close', dialog).unbind('click').click(() => {
             ILex_CloseDialog(dialog, options);
         });
     } else {
@@ -330,7 +350,13 @@ function ILex_OpenDialog(dialog, options) {
     }
 
     //применение параметров
-    dialog.width(options.width);
+    if (dialog.css('box-sizing') == 'content-box') {
+        dialog.outerWidth(options.width
+            - parseInt(dialog.css('padding-left')) - parseInt(dialog.css('padding-right'))
+            - parseInt(dialog.css('border-left-width')) - parseInt(dialog.css('border-right-width')));
+    } else {
+        dialog.outerWidth(options.width);
+    }
     //позиционирование диалога
     ILexDialogs.positionDialog(dialog);
     if (options.showOverlay) {
@@ -343,7 +369,7 @@ function ILex_OpenDialog(dialog, options) {
         overlay.show();
     }
     dialog.show();
-    if (options.onAfterShow !== undefined) {
+    if (typeof (options.onAfterShow) == 'function') {
         options.onAfterShow(dialog);
     }
 
@@ -353,12 +379,12 @@ function ILex_OpenDialog(dialog, options) {
 //
 // Закрытие диалога
 //
-function ILex_CloseDialog(dialog) {
-    var overlay = $('#ilex-dialog-overlay');
+var ILex_CloseDialog = (dialog) => {
+    let overlay = $('#ilex-dialog-overlay');
     if (dialog === undefined) {
         dialog = $(ILexDialogs.DialogStack[ILexDialogs.DialogStack.length - 1]);
     }
-    var closeDialogoOptions = $(dialog).data('options');
+    let closeDialogoOptions = $(dialog).data('options');
     if (typeof (closeDialogoOptions) == 'undefined') {
         closeDialogoOptions = {};
     }
@@ -367,20 +393,20 @@ function ILex_CloseDialog(dialog) {
     }
     $(dialog).hide();
     //получаем позицию закрываемого диалога в стеке
-    var dialog_index = $.inArray('#' + $(dialog).attr('id'), ILexDialogs.DialogStack);
+    let dialog_index = $.inArray('#' + $(dialog).attr('id'), ILexDialogs.DialogStack);
     //удаляем именно ее
     ILexDialogs.DialogStack.splice(dialog_index, 1);
     //утрамбомываем z-indexы диалогов, что бы небыло пробелов     
     ILexDialogs.recalcZIndex();
     //ну это не то что бы каунт, это скорее id последнего
-    var countVisibleDialog = ILexDialogs.DialogStack.length - 1;
+    let countVisibleDialog = ILexDialogs.DialogStack.length - 1;
     if (closeDialogoOptions.showOverlay) {
         $(overlay).on('click', function () {
             ILex_CloseDialog(ILexDialogs.DialogStack[countVisibleDialog]);
         });
     }
 
-    var options = $(dialog).data('options');
+    let options = $(dialog).data('options');
     if (typeof (options) == 'undefined') {
         options = {};
     }
@@ -388,15 +414,15 @@ function ILex_CloseDialog(dialog) {
         options.onClose(dialog);
     }
 
-    var newLastDialog = ILexDialogs.DialogStack[ILexDialogs.DialogStack.length - 1];
+    let newLastDialog = ILexDialogs.DialogStack[ILexDialogs.DialogStack.length - 1];
     if (newLastDialog) {
         ILexDialogs.positionDialog(newLastDialog);
 
-        var options = $(newLastDialog).data('options');
-        if (options.disableScroll != false) {
-            $(document).on('mousewheel', ILexDialogs.disable_scroll);
-        } else {
+        options = $(newLastDialog).data('options');
+        if (options.disableScroll) {
             ILexDialogs.enable_scroll();
+        } else {
+            $(document).on('mousewheel', ILexDialogs.disable_scroll);
         }
     }
 
@@ -410,8 +436,8 @@ function ILex_CloseDialog(dialog) {
 //
 // Открывает диалог ошибки
 //
-function ILex_OpenErrorDialog(content, options) {
-    var dialog = $('#error-dialog.ilex-dialog');
+var ILex_OpenErrorDialog = (content, options) => {
+    let dialog = $('#error-dialog.ilex-dialog');
     if (dialog.length <= 0) {
         $('body').append('<div class="ilex-dialog" id="error-dialog"></div>');
         dialog = $('#error-dialog.ilex-dialog');
@@ -428,8 +454,8 @@ function ILex_OpenErrorDialog(content, options) {
 //
 // Открывает диалог сообщения
 //
-function ILex_OpenMessageDialog(content, options) {
-    var dialog = $('#message-dialog.ilex-dialog');
+var ILex_OpenMessageDialog = (content, options) => {
+    let dialog = $('#message-dialog.ilex-dialog');
     if (dialog.length == 0) {
         $('body').append('<div class="ilex-dialog" id="message-dialog"></div>');
         dialog = $('#message-dialog.ilex-dialog');

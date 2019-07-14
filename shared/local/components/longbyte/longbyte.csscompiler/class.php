@@ -34,7 +34,7 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
      * Prepare Component Params
      */
     public function onPrepareComponentParams($params) {
-        $params['USE_SET_ADDITIONAL_CSS'] = ($params['USE_SETADDITIONALCSS'] == 'Y');
+        $params['USE_SETADDITIONALCSS'] = ($params['USE_SETADDITIONALCSS'] == 'Y');
 
         $params['ADD_CSS_TO_THE_END'] = isset($params['ADD_CSS_TO_THE_END']) && ($params['ADD_CSS_TO_THE_END'] == 'Y');
 
@@ -132,6 +132,8 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
      */
     public function executeComponent() {
 
+        global $APPLICATION;
+        
         try {
 
             $this->checkModules();
@@ -154,6 +156,17 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
             }
             foreach ($this->arParams['FILES_MASK'] as $strOcssFile) {
                 $this->getFilesFromPath($_SERVER['DOCUMENT_ROOT'] . $this->arParams['PATH_TO_FILES'], $strOcssFile);
+            }
+
+            $jsonStylesToCompile = $APPLICATION->GetProperty('STYLE_TO_COMPILER', '');
+            if ($jsonStylesToCompile == '') {
+                $arStylesToCompile = array();
+            } else {
+                $arStylesToCompile = json_decode($jsonStylesToCompile, true);
+            }
+
+            foreach ($arStylesToCompile as $strAdditionalFile) {
+                $this->arOCssFiles[] = $_SERVER['DOCUMENT_ROOT'] . $strAdditionalFile;
             }
 
             foreach ($this->arOCssFiles as $file) {

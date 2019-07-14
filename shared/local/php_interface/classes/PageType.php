@@ -182,58 +182,58 @@ class PageType {
                 <tbody>
                     <tr>
                         <td>
-                            <select size="<?php echo $size; ?>" name="" id="<?php echo $SELECT_ID; ?>">
-                                <?php foreach ($arValues as $arValue): ?>
-                                    <?php if ($arValue['TYPE'] == 'option'): ?>
-                                        <?php
+                            <select size="20" name="" id="<?= $SELECT_ID; ?>">
+                                <? foreach ($arValues as $arValue): ?>
+                                    <? if ($arValue['TYPE'] == 'option'): ?>
+                                        <?
                                         $selected = "";
                                         if ($value['VALUE']['TYPE'] == $arValue['VALUE']) {
                                             $selected = ' selected="selected"';
                                         }
                                         ?>
-                                        <option value="<?php echo $arValue['VALUE']; ?>"<?php echo $selected; ?>><?php echo $arValue['LABEL']; ?></option>
-                                    <?php elseif ($arValue['TYPE'] == 'optgroup'): ?>
-                                        <optgroup label="<?php echo $arValue['LABEL']; ?>">
-                                            <?php foreach ($arValue['VALUES'] as $arValueValue): ?>
-                                                <?php
+                                        <option value="<?= $arValue['VALUE']; ?>"<?= $selected; ?>><?= $arValue['LABEL']; ?></option>
+                                    <? elseif ($arValue['TYPE'] == 'optgroup'): ?>
+                                        <optgroup label="<?= $arValue['LABEL']; ?>">
+                                            <? foreach ($arValue['VALUES'] as $arValueValue): ?>
+                                                <?
                                                 $selected = "";
                                                 if ($value['VALUE']['TYPE'] == 'COMPONENT' && $value['VALUE']['COMPONENT_NAME'] == $arValueValue['VALUE']) {
                                                     $selected = ' selected="selected"';
                                                 }
                                                 ?>
-                                                <option value="<?php echo $arValueValue['VALUE']; ?>"<?php echo $selected; ?>><?php echo $arValueValue['LABEL']; ?></option>
-                                            <?php endforeach; ?>
+                                                <option value="<?= $arValueValue['VALUE']; ?>"<?= $selected; ?>><?= $arValueValue['LABEL']; ?></option>
+                                            <? endforeach; ?>
                                         </optgroup>
-                                    <?php endif; ?>
+                                    <? endif; ?>
 
-                                <?php endforeach; ?>
+                                <? endforeach; ?>
                             </select>
-                            <input name="<?php echo $strHTMLControlName['VALUE']; ?>" value='<?php echo serialize($value['VALUE']); ?>' id="<?php echo $strHTMLControlName['VALUE']; ?>" type="hidden"/>
-                            <input name="<?php echo $JSON_DATA_NAME; ?>" id="<?php echo $JSON_DATA_NAME; ?>" value='<?php echo $JSON_DATA; ?>' type="hidden"/>
-                            <input name="<?php echo $strHTMLControlName['DESCRIPTION']; ?>" value='<?php echo $TYPE; ?>' id="<?php echo $strHTMLControlName['DESCRIPTION']; ?>" type="hidden"/>
+                            <input name="<?= $strHTMLControlName['VALUE']; ?>" value='<?= serialize($value['VALUE']); ?>' id="<?= $strHTMLControlName['VALUE']; ?>" type="hidden"/>
+                            <input name="<?= $JSON_DATA_NAME; ?>" id="<?= $JSON_DATA_NAME; ?>" value='<?= $JSON_DATA; ?>' type="hidden"/>
+                            <input name="<?= $strHTMLControlName['DESCRIPTION']; ?>" value='<?= $TYPE; ?>' id="<?= $strHTMLControlName['DESCRIPTION']; ?>" type="hidden"/>
                         </td>
                         <td style="text-align: left; padding-left: 20px;vertical-align: top;">
-                            <?php if (isset($value['VALUE']['TYPE'])): ?>
-                                <?php if ($value['VALUE']['TYPE'] == 'EXTERNAL_LINK'): ?>
-                                    <?php if (isset($value['VALUE']['LINK'])): ?>
-                                        <b><?php echo $value['VALUE']['LINK']; ?></b>
-                                    <?php endif; ?>
-                                <?php elseif ($value['VALUE']['TYPE'] == 'COMPONENT'): ?>
-                                    <b>Компонент</b>: <?php echo $value['VALUE']['COMPONENT_NAME']; ?><br> 
-                                    <b>Шаблон</b>: <?php echo $value['VALUE']['TEMPLATE']; ?>
-                                    <?php if (isset($arTemplatesDesc[$value['VALUE']['TEMPLATE']])): ?>
+                            <? if (isset($value['VALUE']['TYPE'])): ?>
+                                <? if ($value['VALUE']['TYPE'] == 'EXTERNAL_LINK'): ?>
+                                    <? if (isset($value['VALUE']['LINK'])): ?>
+                                        <b><?= $value['VALUE']['LINK']; ?></b>
+                                    <? endif; ?>
+                                <? elseif ($value['VALUE']['TYPE'] == 'COMPONENT'): ?>
+                                    <b>Компонент</b>: <?= $value['VALUE']['COMPONENT_NAME']; ?><br> 
+                                    <b>Шаблон</b>: <?= $value['VALUE']['TEMPLATE']; ?>
+                                    <? if (isset($arTemplatesDesc[$value['VALUE']['TEMPLATE']])): ?>
                                         <br>
-                                        <i><?php echo $arTemplatesDesc[$value['VALUE']['TEMPLATE']]['TITLE']; ?></i>
-                                    <?php endif; ?>
-                                <?php endif; ?>
+                                        <i><?= $arTemplatesDesc[$value['VALUE']['TEMPLATE']]['TITLE']; ?></i>
+                                    <? endif; ?>
+                                <? endif; ?>
 
-                            <?php endif; ?>
+                            <? endif; ?>
                         </td>
                     </tr>
                 </tbody>
             </table>
 
-            <?php
+            <?
             $html = ob_get_contents();
             ob_end_clean();
             return $html . self::GetScript($strHTMLControlName, $SELECT_ID, $JSON_DATA_NAME, $JSON_COMPONENTS, $arProperty, $TEMPLATE);
@@ -250,44 +250,44 @@ class PageType {
         ?>
         <script>
             BX.ready(function () {
-                var components = <?php echo json_encode($JSON_COMPONENTS); ?>;
-                BX.bind(BX('<?php echo $SELECT_ID; ?>'), 'dblclick', function () {
-                    value = BX('<?php echo $SELECT_ID; ?>').value;
+                var components = <?= json_encode($JSON_COMPONENTS); ?>;
+                BX.bind(BX('<?= $SELECT_ID; ?>'), 'dblclick', function () {
+                    value = BX('<?= $SELECT_ID; ?>').value;
                     if (components[value]) {
                         content_url = '/bitrix/admin/component_props_db_components.php?IBLOCK_EDIT=Y&component_name=' +
-                                components[value] +
-                                '&component_template=<?php echo $TEMPLATE; ?>' +
-                                '&template_id=<?php echo $arProperty["USER_TYPE_SETTINGS"]["TEMPLATE_ID"]; ?>' +
-                                '&FORM_NAME=<?php echo $strHTMLControlName['FORM_NAME']; ?>' +
-                                '&PROPERTY_INPUT=<?php echo $strHTMLControlName['VALUE']; ?>' +
-                                '&JSON_INPUT=<?php echo $JSON_DATA_NAME; ?>' +
-                                ''
-                                ;
+                            components[value] +
+                            '&component_template=<?= $TEMPLATE; ?>' +
+                            '&template_id=<?= $arProperty["USER_TYPE_SETTINGS"]["TEMPLATE_ID"]; ?>' +
+                            '&FORM_NAME=<?= $strHTMLControlName['FORM_NAME']; ?>' +
+                            '&PROPERTY_INPUT=<?= $strHTMLControlName['VALUE']; ?>' +
+                            '&JSON_INPUT=<?= $JSON_DATA_NAME; ?>' +
+                            ''
+                            ;
                         pop_up = (new BX.CDialog({'content_url': content_url, 'width': '1430', 'height': '851'}));
                         pop_up.Show();
                     } else if (value == 'EXTERNAL_LINK') {
                         content_url = '/bitrix/admin/external_link_pop_up.php?' +
-                                'FORM_NAME=<?php echo $strHTMLControlName['FORM_NAME']; ?>' +
-                                '&PROPERTY_INPUT=<?php echo $strHTMLControlName['VALUE']; ?>' +
-                                '&JSON_INPUT=<?php echo $JSON_DATA_NAME; ?>' +
-                                ''
-                                ;
+                            'FORM_NAME=<?= $strHTMLControlName['FORM_NAME']; ?>' +
+                            '&PROPERTY_INPUT=<?= $strHTMLControlName['VALUE']; ?>' +
+                            '&JSON_INPUT=<?= $JSON_DATA_NAME; ?>' +
+                            ''
+                            ;
                         pop_up = (new BX.CDialog({'content_url': content_url, 'width': '600', 'height': '100'}));
                         pop_up.Show();
                     }
                 });
-                BX.bind(BX('<?php echo $SELECT_ID; ?>'), 'click', function () {
-                    value = BX('<?php echo $SELECT_ID; ?>').value;
+                BX.bind(BX('<?= $SELECT_ID; ?>'), 'click', function () {
+                    value = BX('<?= $SELECT_ID; ?>').value;
                     if (components[value]) {
-                        BX('<?php echo $strHTMLControlName['DESCRIPTION']; ?>').value = 'COMPONENT/' + components[value];
+                        BX('<?= $strHTMLControlName['DESCRIPTION']; ?>').value = 'COMPONENT/' + components[value];
                     } else {
-                        BX('<?php echo $strHTMLControlName['DESCRIPTION']; ?>').value = value;
+                        BX('<?= $strHTMLControlName['DESCRIPTION']; ?>').value = value;
                     }
                 });
             });
         </script>
 
-        <?php
+        <?
         $script = ob_get_contents();
         ob_end_clean();
         return $script;

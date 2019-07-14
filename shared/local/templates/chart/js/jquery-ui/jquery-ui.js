@@ -686,7 +686,7 @@
             }
 
             hasOptions = !$.isEmptyObject(options);
-            options.complete = callback;
+//            options.complete = callback;
 
             if (options.delay) {
                 element.delay(options.delay);

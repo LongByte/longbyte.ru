@@ -1,3 +1,12 @@
+<?
+if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
+    die();
+
+use Bitrix\Main\Page\Asset;
+
+LongByte\Babel::includeBabel(LongByte\Babel::BABEL_SERVER_CLIENT);
+?>
+
 <html>
     <head>
         <title><? $APPLICATION->ShowTitle(); ?></title>
@@ -20,16 +29,16 @@
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
         <meta name="theme-color" content="#ffffff">
         <?
-        $APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH . '/js/dialogs-2.0/dialogs.css');
-        $APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH . '/js/spoiler/spoiler.css');
-        $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/jquery-1.11.1.min.js');
-        $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/dialogs-2.0/dialogs.js');
-        $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/dialogs-2.0/jquery.mousewheel.min.js');
-        $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/spoiler/spoiler.js');
-        $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/chart.js');
-        $APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH . '/js/jquery-ui/jquery-ui.min.css');
-        $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/jquery-ui/jquery-ui.js');
-        $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/script.js');
+        Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . '/js/dialogs-2.0/dialogs.css');
+        Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . '/js/spoiler/spoiler.css');
+        Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/jquery-1.11.1.min.js');
+        Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/dialogs-2.0/dialogs.js');
+        Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/dialogs-2.0/jquery.mousewheel.min.js');
+        Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/spoiler/spoiler.js');
+        Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/chart.js');
+        Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . '/js/jquery-ui/jquery-ui.min.css');
+        Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/jquery-ui/jquery-ui.js');
+        Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/script.js');
         $APPLICATION->ShowHead();
         ?>
     </head>

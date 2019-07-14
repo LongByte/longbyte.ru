@@ -1,6 +1,9 @@
 <?php
 
-use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\Context;
+use Bitrix\Main\Loader;
+use Bitrix\Main\Page\Asset;
+use Bitrix\Iblock\IblockTable;
 
 Bitrix\Main\Localization\Loc::loadMessages(__FILE__);
 
@@ -19,7 +22,7 @@ class Site {
     public static function IsPrint() {
         if (is_null(static::$IS_PRINT)) {
             $IS_PRINT = false;
-            $request = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
+            $request = Context::getCurrent()->getRequest();
             $PRINT = $request->get("PRINT");
             if ($PRINT == 'Y') {
                 $IS_PRINT = true;
@@ -30,22 +33,27 @@ class Site {
         return static::$IS_PRINT;
     }
 
+    public static function isIE() {
+        return strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false || strpos($_SERVER['HTTP_USER_AGENT'], 'rv:11.0') !== false;
+    }
+
     public static function Definders() {
 
-        \Bitrix\Main\Loader::includeModule('iblock');
+        if (Loader::includeModule('iblock')) {
 
-        $result = \Bitrix\Iblock\IblockTable::getList(array(
-                'select' => array('ID', 'IBLOCK_TYPE_ID', 'CODE'),
-        ));
-        while ($row = $result->fetch()) {
-            $row['CODE'] = str_replace('-', '_', $row['CODE']);
-            $CONSTANT = ToUpper(implode('_', array('IBLOCK', $row['IBLOCK_TYPE_ID'], $row['CODE'])));
-            if (!defined($CONSTANT)) {
-                define($CONSTANT, $row['ID']);
+            $result = IblockTable::getList(array(
+                    'select' => array('ID', 'IBLOCK_TYPE_ID', 'CODE'),
+            ));
+            while ($row = $result->fetch()) {
+                $row['CODE'] = str_replace('-', '_', $row['CODE']);
+                $CONSTANT = ToUpper(implode('_', array('IBLOCK', $row['IBLOCK_TYPE_ID'], $row['CODE'])));
+                if (!defined($CONSTANT)) {
+                    define($CONSTANT, $row['ID']);
+                }
             }
         }
 
-        if (\Bitrix\Main\Loader::includeModule('form')) {
+        if (Loader::includeModule('form')) {
 
             $result = CForm::GetList($by, $order, [], $is_filtered);
 
@@ -71,6 +79,18 @@ class Site {
         $params = array("replace_space" => "-", "replace_other" => "-");
         $result = CUtilEx::translit($STRING, "ru", $params);
         return $result;
+    }
+
+    public static function onPageStart() {
+        self::Definders();
+    }
+
+    public static function includeVueJS() {
+        if (self::IsDevelop()) {
+            Asset::getInstance()->addString('<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>');
+        } else {
+            Asset::getInstance()->addString('<script src="https://cdn.jsdelivr.net/npm/vue"></script>');
+        }
     }
 
 }

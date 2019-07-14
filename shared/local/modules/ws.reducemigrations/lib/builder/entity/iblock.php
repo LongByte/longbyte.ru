@@ -86,6 +86,7 @@ class Iblock  extends Base {
         return array(
             'name' => 'NAME',
             'code' => 'CODE',
+            'xmlId' => 'XML_ID',
             'iblockType' => 'IBLOCK_TYPE_ID',
             'sort' => 'SORT',
             'siteId' => 'SITE_ID',
