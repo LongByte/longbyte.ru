@@ -1,9 +1,11 @@
 <?php
 
-use \Bitrix\Main;
-use \Bitrix\Main\Localization\Loc as Loc;
-use \Bitrix\Main\SystemException as SystemException;
-use \Padaliyajay\PHPAutoprefixer\Autoprefixer;
+use Bitrix\Main;
+use Bitrix\Main\Application;
+use Bitrix\Main\Localization\Loc as Loc;
+use Bitrix\Main\SystemException as SystemException;
+use Padaliyajay\PHPAutoprefixer\Autoprefixer;
+use Bitrix\Main\IO;
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
     die();
@@ -32,6 +34,8 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
 
     /**
      * Prepare Component Params
+     * @param array $params
+     * @return array
      */
     public function onPrepareComponentParams($params) {
         $params['USE_SET_ADDITIONAL_CSS'] = ($params['USE_SETADDITIONALCSS'] == 'Y');
@@ -94,46 +98,63 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
         return $compiler;
     }
 
-    /*
+    /**
      * Check the directory needed for component
+     * @throws SystemException
      */
-
     protected function checkDirs() {
-        if (!is_readable($_SERVER['DOCUMENT_ROOT'] . $this->arParams['PATH_TO_FILES'])) {
+        if (!is_readable(Application::getDocumentRoot() . $this->arParams['PATH_TO_FILES'])) {
             throw new SystemException(Loc::getMessage('OCSS_ERROR_DIR_NOT_AVAILABLE', array('#DIR#' => $this->arParams['PATH_TO_FILES'])));
         }
 
-        if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $this->arParams['PATH_TO_FILES_CSS'])) {
-            mkdir($_SERVER['DOCUMENT_ROOT'] . $this->arParams['PATH_TO_FILES_CSS'], BX_DIR_PERMISSIONS, true);
+        $obTargetDir = new IO\Directory(Application::getDocumentRoot() . $this->arParams['PATH_TO_FILES_CSS']);
+        if (!$obTargetDir->isExists()) {
+            $obTargetDir->create();
         }
 
-        if (!is_readable($_SERVER['DOCUMENT_ROOT'] . $this->arParams['PATH_TO_FILES_CSS'])) {
+        if (!is_readable(Application::getDocumentRoot() . $this->arParams['PATH_TO_FILES_CSS'])) {
             throw new SystemException(Loc::getMessage('OCSS_ERROR_DIR_NOT_AVAILABLE', array('#DIR#' => $this->arParams['PATH_TO_FILES_CSS'])));
-        } elseif (!is_writable($_SERVER['DOCUMENT_ROOT'] . $this->arParams['PATH_TO_FILES_CSS'])) {
+        } elseif (!is_writable(Application::getDocumentRoot() . $this->arParams['PATH_TO_FILES_CSS'])) {
             throw new SystemException(Loc::getMessage('OCSS_ERROR_DIR_NOT_WRITABLE', array('#DIR#' => $this->arParams['PATH_TO_FILES_CSS'])));
         }
     }
 
+    /**
+     * Сбор файлов рекурсивно
+     * @param string $strPath
+     * @param string $strSearchFileName
+     */
     private function getFilesFromPath($strPath, $strSearchFileName) {
 
-        $arGlob = glob($strPath . '*');
-        foreach ($arGlob as $strFilePath) {
-            $strFileName = preg_replace('/^.*\//', '', $strFilePath);
-            if ($strFileName == $strSearchFileName) {
-                $this->arOCssFiles[] = $strFilePath;
-            } elseif (is_dir($strFilePath)) {
-                $this->getFilesFromPath($strFilePath . '/', $strSearchFileName);
+        $obDir = new IO\Directory($strPath);
+        $arFiles = $obDir->getChildren();
+        foreach ($arFiles as $obChildren) {
+            if ($obChildren->isFile()) {
+                $strFileName = $obChildren->getName();
+                $bMatch = false;
+                if (strpos($strSearchFileName, '*') !== false) {
+                    $regex = '/' . str_replace(array('.', '*', '/'), array('\.', '.*', '\/'), $strSearchFileName) . '/i';
+                    $bMatch = preg_match($regex, $strFileName);
+                } else {
+                    $bMatch = strpos($strFileName, $strSearchFileName) !== false;
+                }
+                if ($bMatch) {
+                    $this->arOCssFiles[] = $obChildren->getPath();
+                }
+            } elseif ($obChildren->isDirectory()) {
+                $this->getFilesFromPath($obChildren->getPath() . '/', $strSearchFileName);
             }
         }
     }
 
     /**
      * Start Component
+     * @global \CMain $APPLICATION
      */
     public function executeComponent() {
 
         global $APPLICATION;
-        
+
         try {
 
             $this->checkModules();
@@ -152,10 +173,10 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
             $modified = 0;
 
             foreach ($this->arParams['FILES'] as $strOcssFile) {
-                $this->arOCssFiles[] = $_SERVER['DOCUMENT_ROOT'] . $this->arParams['PATH_TO_FILES'] . $strOcssFile;
+                $this->arOCssFiles[] = Application::getDocumentRoot() . (strpos($strOcssFile, '/') === 0 ? '' : $this->arParams['PATH_TO_FILES']) . $strOcssFile;
             }
             foreach ($this->arParams['FILES_MASK'] as $strOcssFile) {
-                $this->getFilesFromPath($_SERVER['DOCUMENT_ROOT'] . $this->arParams['PATH_TO_FILES'], $strOcssFile);
+                $this->getFilesFromPath(Application::getDocumentRoot() . $this->arParams['PATH_TO_FILES'], $strOcssFile);
             }
 
             $jsonStylesToCompile = $APPLICATION->GetProperty('STYLE_TO_COMPILER', '');
@@ -166,14 +187,13 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
             }
 
             foreach ($arStylesToCompile as $strAdditionalFile) {
-                $this->arOCssFiles[] = $_SERVER['DOCUMENT_ROOT'] . $strAdditionalFile;
+                $this->arOCssFiles[] = Application::getDocumentRoot() . $strAdditionalFile;
             }
 
             foreach ($this->arOCssFiles as $file) {
 
-                $file = new SplFileInfo($file);
-                /** @var \SplFileInfo $file */
-                if ($file->isFile() && $file->isReadable() && $file->getExtension() === $extCompiler && ($lastModified = $file->getMTime()) > $modified) {
+                $obFile = new IO\File($file);
+                if ($obFile->isFile() && $obFile->isReadable() && ($lastModified = $obFile->getModificationTime()) > $modified) {
                     $modified = $lastModified;
                 }
             }
@@ -181,23 +201,23 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
             if ($modified)
                 $lastModified = $modified;
 
-            $target = $this->arParams['PATH_TO_FILES_CSS'] . sprintf($this->arParams['TARGET_FILE_MASK'], $lastModified);
-
-            if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $target)) {
+            $obTargetFile = new IO\File(Application::getDocumentRoot() . $this->arParams['PATH_TO_FILES_CSS'] . sprintf($this->arParams['TARGET_FILE_MASK'], $lastModified));
+            if (!$obTargetFile->isExists()) {
 
                 /** @var \Longbyte\Csscompiler\Compiler $compiler */
                 $compiler = $this->getCompiler();
 
                 $ocss = Loc::getMessage('OCSS_FILE_AUTO_GENERATED', array('#PATH#' => $this->arParams['PATH_TO_FILES']));
                 foreach ($this->arOCssFiles as $file) {
-                    $ocss .= file_get_contents($file) . "\n";
+                    $obFile = new IO\File($file);
+                    $ocss .= $obFile->getContents() . "\n";
                 }
 
-                $strTmpFileName = $_SERVER['DOCUMENT_ROOT'] . $this->arParams['PATH_TO_FILES_CSS'] . sprintf($this->arParams['TMP_FILE_MASK'], $lastModified);
-                file_put_contents($strTmpFileName, $ocss);
+                $obTmpFile = new IO\File(Application::getDocumentRoot() . $this->arParams['PATH_TO_FILES_CSS'] . sprintf($this->arParams['TMP_FILE_MASK'], $lastModified));
+                $obTmpFile->putContents($ocss);
                 //компиляция препроцессором
-                $css = $compiler->toCss($strTmpFileName);
-                unlink($strTmpFileName);
+                $css = $compiler->toCss($obTmpFile->getPath());
+                $obTmpFile->delete();
 
                 //постпроцессор автопрефиксер
                 $obAutoprefixer = new Autoprefixer($css);
@@ -207,12 +227,12 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
                 $css = preg_replace('/(\n|\r\|\s{2,}|\t)/', '', $css);
 
                 if (!empty($css)) {
-                    $compiler->saveToFile($_SERVER['DOCUMENT_ROOT'] . $target, $css);
+                    $compiler->saveToFile($obTargetFile->getPath(), $css);
                 }
 
                 if ($this->arParams['REMOVE_OLD_CSS_FILES']) {
                     $compiler->removeOldCss(
-                        $_SERVER['DOCUMENT_ROOT'] . $this->arParams['PATH_TO_FILES_CSS'] . sprintf($this->arParams['TARGET_FILE_MASK'], '*'), sprintf($this->arParams['TARGET_FILE_MASK'], $lastModified)
+                        Application::getDocumentRoot() . $this->arParams['PATH_TO_FILES_CSS'] . sprintf($this->arParams['TARGET_FILE_MASK'], '*'), sprintf($this->arParams['TARGET_FILE_MASK'], $lastModified)
                     );
                 }
 
@@ -221,6 +241,7 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
                 }
             }
 
+            $target = str_replace(Application::getDocumentRoot(), '', $obTargetFile->getPath());
             if ($this->arParams['USE_SETADDITIONALCSS']) {
                 Main\Page\Asset::getInstance()->addCss($target, $this->arParams['ADD_CSS_TO_THE_END']);
             } else {

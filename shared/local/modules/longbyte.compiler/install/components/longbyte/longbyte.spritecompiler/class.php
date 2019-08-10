@@ -33,6 +33,8 @@ class LongbyteSpriteCompilerComponent extends CBitrixComponent {
 
     /**
      * Prepare Component Params
+     * @param array $params
+     * @return array
      */
     public function onPrepareComponentParams($params) {
         $params['FILES'] = is_array($params['FILES']) ? $params['FILES'] : array();
@@ -53,10 +55,10 @@ class LongbyteSpriteCompilerComponent extends CBitrixComponent {
         return $params;
     }
 
-    /*
+    /**
      * Check the directory needed for component
+     * @throws SystemException
      */
-
     protected function checkDirs() {
         if (!is_readable(Application::getDocumentRoot() . $this->arParams['PATH_TO_FILES'])) {
             throw new SystemException(Loc::getMessage('SPRITE_ERROR_DIR_NOT_AVAILABLE', array('#DIR#' => $this->arParams['PATH_TO_FILES'])));
@@ -74,6 +76,10 @@ class LongbyteSpriteCompilerComponent extends CBitrixComponent {
         }
     }
 
+    /**
+     * Сбор файлов рекурсивно
+     * @param string $strPath
+     */
     private function getFilesFromPath($strPath) {
 
         $obDir = new IO\Directory($strPath);

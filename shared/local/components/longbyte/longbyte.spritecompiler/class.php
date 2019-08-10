@@ -1,8 +1,10 @@
 <?php
 
-use \Bitrix\Main;
-use \Bitrix\Main\Localization\Loc as Loc;
-use \Bitrix\Main\SystemException as SystemException;
+use Bitrix\Main\Loader;
+use Bitrix\Main\Application;
+use Bitrix\Main\Localization\Loc as Loc;
+use Bitrix\Main\SystemException as SystemException;
+use Bitrix\Main\IO;
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
     die();
@@ -16,7 +18,7 @@ class LongbyteSpriteCompilerComponent extends CBitrixComponent {
      * @throws Exception
      */
     protected function checkModules() {
-        if (!Main\Loader::includeModule('longbyte.compiler')) {
+        if (!Loader::includeModule('longbyte.compiler')) {
             throw new SystemException(Loc::getMessage('CVP_LONGBYTE_COMPILER_MODULE_NOT_INSTALLED'));
         }
     }
@@ -31,6 +33,8 @@ class LongbyteSpriteCompilerComponent extends CBitrixComponent {
 
     /**
      * Prepare Component Params
+     * @param array $params
+     * @return array
      */
     public function onPrepareComponentParams($params) {
         $params['FILES'] = is_array($params['FILES']) ? $params['FILES'] : array();
@@ -51,35 +55,42 @@ class LongbyteSpriteCompilerComponent extends CBitrixComponent {
         return $params;
     }
 
-    /*
+    /**
      * Check the directory needed for component
+     * @throws SystemException
      */
-
     protected function checkDirs() {
-        if (!is_readable($_SERVER['DOCUMENT_ROOT'] . $this->arParams['PATH_TO_FILES'])) {
+        if (!is_readable(Application::getDocumentRoot() . $this->arParams['PATH_TO_FILES'])) {
             throw new SystemException(Loc::getMessage('SPRITE_ERROR_DIR_NOT_AVAILABLE', array('#DIR#' => $this->arParams['PATH_TO_FILES'])));
         }
 
-        if (!file_exists($_SERVER['PATH_TO_FILES_SPRITE'] . $this->arParams['PATH_TO_FILES_SPRITE'])) {
-            mkdir($_SERVER['DOCUMENT_ROOT'] . $this->arParams['PATH_TO_FILES_SPRITE'], BX_DIR_PERMISSIONS, true);
+        $obTargetDir = new IO\Directory(Application::getDocumentRoot() . $this->arParams['PATH_TO_FILES_SPRITE']);
+        if (!$obTargetDir->isExists()) {
+            $obTargetDir->create();
         }
 
-        if (!is_readable($_SERVER['DOCUMENT_ROOT'] . $this->arParams['PATH_TO_FILES_SPRITE'])) {
+        if (!is_readable(Application::getDocumentRoot() . $this->arParams['PATH_TO_FILES_SPRITE'])) {
             throw new SystemException(Loc::getMessage('SPRITE_ERROR_DIR_NOT_AVAILABLE', array('#DIR#' => $this->arParams['PATH_TO_FILES_CSS'])));
-        } elseif (!is_writable($_SERVER['DOCUMENT_ROOT'] . $this->arParams['PATH_TO_FILES_SPRITE'])) {
+        } elseif (!is_writable(Application::getDocumentRoot() . $this->arParams['PATH_TO_FILES_SPRITE'])) {
             throw new SystemException(Loc::getMessage('SPRITE_ERROR_DIR_NOT_WRITABLE', array('#DIR#' => $this->arParams['PATH_TO_FILES_CSS'])));
         }
     }
 
-    private function getFilesFromPath($strPath, $strSearchFileName) {
+    /**
+     * Сбор файлов рекурсивно
+     * @param string $strPath
+     */
+    private function getFilesFromPath($strPath) {
 
-        $arGlob = glob($strPath . '*');
-        foreach ($arGlob as $strFilePath) {
-            $strFileName = preg_replace('/^.*\//', '', $strFilePath);
-            if ($strFileName == $strSearchFileName || $strSearchFileName == '*') {
-                $this->arSVGFiles[] = $strFilePath;
-            } elseif (is_dir($strFilePath)) {
-                $this->getFilesFromPath($strFilePath . '/', $strSearchFileName);
+        $obDir = new IO\Directory($strPath);
+        $arFiles = $obDir->getChildren();
+        foreach ($arFiles as $obChildren) {
+            if ($obChildren->isFile()) {
+                if ($obChildren->getExtension() == 'svg') {
+                    $this->arSVGFiles[] = $obChildren->getPath();
+                }
+            } elseif ($obChildren->isDirectory()) {
+                $this->getFilesFromPath($obChildren->getPath() . '/');
             }
         }
     }
@@ -100,17 +111,16 @@ class LongbyteSpriteCompilerComponent extends CBitrixComponent {
             $modified = 0;
 
             foreach ($this->arParams['FILES'] as $strSVGFile) {
-                $this->arSVGFiles[] = $_SERVER['DOCUMENT_ROOT'] . $this->arParams['PATH_TO_FILES'] . $strSVGFile;
+                $this->arSVGFiles[] = Application::getDocumentRoot() . $this->arParams['PATH_TO_FILES'] . $strSVGFile;
             }
             foreach ($this->arParams['FILES_MASK'] as $strSVGFile) {
-                $this->getFilesFromPath($_SERVER['DOCUMENT_ROOT'] . $this->arParams['PATH_TO_FILES'], $strSVGFile);
+                $this->getFilesFromPath(Application::getDocumentRoot() . $this->arParams['PATH_TO_FILES']);
             }
 
             foreach ($this->arSVGFiles as $file) {
 
-                $file = new SplFileInfo($file);
-                /** @var \SplFileInfo $file */
-                if ($file->isFile() && $file->isReadable() && $file->getExtension() === 'svg' && ($lastModified = $file->getMTime()) > $modified) {
+                $obFile = new IO\File($file);
+                if ($obFile->isFile() && $obFile->isReadable() && $obFile->getExtension() == 'svg' && $obFile->getModificationTime() > $modified) {
                     $modified = $lastModified;
                 }
             }
@@ -120,13 +130,15 @@ class LongbyteSpriteCompilerComponent extends CBitrixComponent {
 
             $target = $this->arParams['PATH_TO_FILES_SPRITE'] . sprintf($this->arParams['TARGET_FILE_MASK'], $lastModified);
 
-            if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $target)) {
+            $obTargetFile = new IO\File(Application::getDocumentRoot() . $target);
+            if (!$obTargetFile->isExists()) {
 
                 $sprire = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="0" height="0" style="position:absolute">' . "\n\n";
 
                 foreach ($this->arSVGFiles as $file) {
                     $strFileName = preg_replace('/^.*\/(.+).svg$/', '$1', $file);
-                    $svg = file_get_contents($file);
+                    $obSvgFile = new IO\File($file);
+                    $svg = $obSvgFile->getContents();
                     //получаем viewbox
                     preg_match('/<svg[^>]*(viewBox="[^"]+")[^>]*>/', $svg, $arMathes);
                     $strViewBox = $arMathes[1];
@@ -141,19 +153,19 @@ class LongbyteSpriteCompilerComponent extends CBitrixComponent {
                 }
 
                 $sprire .= '</svg>';
-                file_put_contents($_SERVER['DOCUMENT_ROOT'] . $target, $sprire);
+                $obTargetFile->putContents($sprire);
 
                 if ($this->arParams['REMOVE_OLD_SPRITE_FILES']) {
-
-                    foreach (glob($_SERVER['DOCUMENT_ROOT'] . $this->arParams['PATH_TO_FILES_SPRITE'] . sprintf($this->arParams['TARGET_FILE_MASK'], '*')) as $filename) {
-                        if (is_file($filename) && $filename != $_SERVER['DOCUMENT_ROOT'] . $target) {
-                            @ unlink($filename);
+                    foreach (glob(Application::getDocumentRoot() . $this->arParams['PATH_TO_FILES_SPRITE'] . sprintf($this->arParams['TARGET_FILE_MASK'], '*')) as $filename) {
+                        $obOldFile = new IO\File($filename);
+                        if ($obOldFile->isFile() && $obOldFile->getPath() != $obTargetFile->getPath()) {
+                            $obOldFile->delete();
                         }
                     }
                 }
             }
 
-            echo file_get_contents($_SERVER['DOCUMENT_ROOT'] . $target);
+            echo $obTargetFile->getContents();
         } catch (SystemException $e) {
             if ($this->arParams['SHOW_ERRORS_IN_DISPLAY']) {
                 ShowError($e->getMessage());
