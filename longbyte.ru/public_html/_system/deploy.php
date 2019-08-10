@@ -15,6 +15,8 @@ $strData = $obRequest->getInput();
 $obData = json_decode($strData);
 
 $obLogFile = new IO\File(Application::getDocumentRoot() . '/_system/deploy.log');
+$obDebugFile = new IO\File(Application::getDocumentRoot() . '/_system/debug.log');
+$obDebugFile->putContents(print_r($obData, true) . PHP_EOL, IO\File::APPEND);
 
 if (isset($obData->push)) {
     foreach ($obData->push->changes as $obChange) {
