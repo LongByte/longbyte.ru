@@ -106,7 +106,7 @@ foreach ($arResult['TEST_TYPES'] as &$arTestType) {
                     }
                     $arItem['NAME'] .= '<a name="' . $arTestType['TYPE'] . '_' . $arSystem['ID'] . '"></a>';
 
-                    if ($arSystem['PROP_ACTIAL']) {
+                    if (empty($arSystem['PROP_ACTUAL_FOR']) && $arSystem['PROP_ACTUAL'] || !empty($arSystem['PROP_ACTUAL_FOR']) && in_array($arTestType['ID'], $arSystem['PROP_ACTUAL_FOR'])) {
                         $color = $arSystem['PROP_GPU_FIRM_ACTIVE_COLOR'];
                     } else {
                         $color = $arSystem['PROP_GPU_FIRM_PASSIVE_COLOR'];
@@ -157,7 +157,7 @@ foreach ($arResult['TEST_TYPES'] as &$arTestType) {
                     }
                     $arItem['NAME'] .= '<a name="' . $arTestType['TYPE'] . '_' . $arSystem['ID'] . '"></a>';
 
-                    if ($arSystem['PROP_ACTIAL']) {
+                    if (empty($arSystem['PROP_ACTUAL_FOR']) && $arSystem['PROP_ACTUAL'] || !empty($arSystem['PROP_ACTUAL_FOR']) && in_array($arTestType['ID'], $arSystem['PROP_ACTUAL_FOR'])) {
                         $color = $arSystem['PROP_CPU_FIRM_ACTIVE_COLOR'];
                     } else {
                         $color = $arSystem['PROP_CPU_FIRM_PASSIVE_COLOR'];
@@ -172,7 +172,7 @@ foreach ($arResult['TEST_TYPES'] as &$arTestType) {
 
                     $arItem['NAME'] .= '<a name="' . $arTestType['TYPE'] . '_' . $arSystem['ID'] . '"></a>';
 
-                    if ($arSystem['PROP_ACTIAL']) {
+                    if (empty($arSystem['PROP_ACTUAL_FOR']) && $arSystem['PROP_ACTUAL'] || !empty($arSystem['PROP_ACTUAL_FOR']) && in_array($arTestType['ID'], $arSystem['PROP_ACTUAL_FOR'])) {
                         $color = $arSystem['PROP_HD_FIRM_ACTIVE_COLOR'];
                     } else {
                         $color = $arSystem['PROP_HD_FIRM_PASSIVE_COLOR'];
@@ -194,7 +194,12 @@ foreach ($arResult['TEST_TYPES'] as &$arTestType) {
                 $arDataItem[] = (int) trim($colorPart);
             }
             foreach ($arRes as $oneRes) {
-                $arDataItem[] = (int) $oneRes;
+                if ((int) $oneRes == $oneRes) {
+                    $oneRes = (int) $oneRes;
+                } else {
+                    $oneRes = (float) $oneRes;
+                }
+                $arDataItem[] = $oneRes;
             }
             $arDataTests[] = $arDataItem;
         }

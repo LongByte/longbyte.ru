@@ -5,7 +5,6 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
 
 use Bitrix\Main\Loader;
 use Bitrix\Iblock\SectionTable;
-//use Bitrix\Iblock\ElementTable;
 use Bitrix\Iblock\PropertyTable;
 use AB\Iblock\Element;
 
@@ -59,34 +58,55 @@ if ($this->startResultCache(60 * 60)) {
 
     $arSystems = array();
 
-    $arFilter = array(
+    $arSelect = array(
         'ID',
         'NAME',
     );
 
+    $arSystemProps = array();
     $rsProps = PropertyTable::getList(array(
             'filter' => array('IBLOCK_ID' => $iblockSystem, 'ACTIVE' => 'Y'),
-            'select' => array('CODE', 'PROPERTY_TYPE')
+            'select' => array('ID', 'CODE', 'PROPERTY_TYPE', 'MULTIPLE')
     ));
 
     while ($arProp = $rsProps->fetch()) {
+        $arSystemProps['PROP_' . $arProp['CODE']] = $arProp;
         if ($arProp['PROPERTY_TYPE'] == 'E') {
-            $arFilter['PROP_' . $arProp['CODE'] . '_VALUE'] = 'PROPERTY.' . $arProp['CODE'] . '.NAME';
-            $arFilter['PROP_' . $arProp['CODE'] . '_TEXT_COLOR'] = 'PROPERTY.' . $arProp['CODE'] . '.XML_ID';
-            $arFilter['PROP_' . $arProp['CODE'] . '_PASSIVE_COLOR'] = 'PROPERTY.' . $arProp['CODE'] . '.PREVIEW_TEXT';
-            $arFilter['PROP_' . $arProp['CODE'] . '_ACTIVE_COLOR'] = 'PROPERTY.' . $arProp['CODE'] . '.DETAIL_TEXT';
+            $arSelect['PROP_' . $arProp['CODE'] . '_VALUE'] = 'PROPERTY.' . $arProp['CODE'] . '.NAME';
+            $arSelect['PROP_' . $arProp['CODE'] . '_TEXT_COLOR'] = 'PROPERTY.' . $arProp['CODE'] . '.XML_ID';
+            $arSelect['PROP_' . $arProp['CODE'] . '_PASSIVE_COLOR'] = 'PROPERTY.' . $arProp['CODE'] . '.PREVIEW_TEXT';
+            $arSelect['PROP_' . $arProp['CODE'] . '_ACTIVE_COLOR'] = 'PROPERTY.' . $arProp['CODE'] . '.DETAIL_TEXT';
         } else {
-            $arFilter['PROP_' . $arProp['CODE']] = 'PROPERTY.' . $arProp['CODE'];
+            $arSelect['PROP_' . $arProp['CODE']] = 'PROPERTY.' . $arProp['CODE'];
         }
     }
 
     $rsSytems = Element::getList(array(
             'filter' => array('IBLOCK_ID' => $iblockSystem, 'ACTIVE' => 'Y'),
-            'select' => $arFilter,
+            'select' => $arSelect,
     ));
 
     while ($arSystem = $rsSytems->fetch()) {
-        $arSystems[$arSystem['ID']] = $arSystem;
+        if (!isset($arSystems[$arSystem['ID']])) {
+            foreach ($arSystem as $field => &$value) {
+                if ($arSystemProps[$field]['MULTIPLE'] == 'Y') {
+                    if (is_null($value)) {
+                        $value = array();
+                    } else {
+                        $value = array($value);
+                    }
+                }
+            }
+            unset($value);
+            $arSystems[$arSystem['ID']] = $arSystem;
+        } else {
+            foreach ($arSystem as $field => &$value) {
+                if ($arSystemProps[$field]['MULTIPLE'] == 'Y' && !is_null($value) && !in_array($value, $arSystems[$arSystem['ID']][$field])) {
+                    $arSystems[$arSystem['ID']][$field][] = $value;
+                }
+            }
+            unset($value);
+        }
     }
 
     $rsResults = Element::getList(array(
