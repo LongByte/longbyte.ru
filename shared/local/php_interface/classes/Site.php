@@ -1,5 +1,6 @@
 <?php
 
+use Bitrix\Main\Application;
 use Bitrix\Main\Context;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Page\Asset;
@@ -13,10 +14,8 @@ class Site {
 
     public static function IsDevelop() {
         $APPLICATION_ENV = getenv('APPLICATION_ENV');
-        if ($APPLICATION_ENV === 'develop') {
-            return true;
-        }
-        return false;
+        $obServer = Context::getCurrent()->getServer();
+        return $APPLICATION_ENV === 'develop' || preg_match('/\.local$/', $obServer->getServerName());
     }
 
     public static function IsPrint() {

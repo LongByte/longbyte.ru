@@ -1,10 +1,8 @@
 <template id="portfolio-list">
     <div class="portfolio-list row">
-        <portfolio-item
-            v-for="item in items"
-            v-bind:result="item"
-            v-bind:key="item.ID"
-            ></portfolio-item>
+        <template v-for="item in items">
+            <portfolio-item :result="item"></portfolio-item>
+        </template>
     </div>
 </template>
 <script>
