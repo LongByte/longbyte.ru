@@ -5,12 +5,14 @@ use Bitrix\Main\Context;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Page\Asset;
 use Bitrix\Iblock\IblockTable;
+use Bitrix\Conversion\Internals\MobileDetect;
 
 Bitrix\Main\Localization\Loc::loadMessages(__FILE__);
 
 class Site {
 
     public static $IS_PRINT;
+    public static $isMobile;
 
     public static function IsDevelop() {
         $APPLICATION_ENV = getenv('APPLICATION_ENV');
@@ -30,6 +32,15 @@ class Site {
         }
 
         return static::$IS_PRINT;
+    }
+
+    public static function isMobile() {
+        if (is_null(self::$isMobile)) {
+            $device = new MobileDetect();
+            self::$isMobile = $device->isMobile() || $device->isTablet();
+        }
+
+        return self::$isMobile;
     }
 
     public static function isIE() {

@@ -1,9 +1,8 @@
 <?
-include_once($_SERVER['DOCUMENT_ROOT'] . '/Mobile_Detect.php');
+if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
+    die();
 
-$device = new Mobile_Detect();
-global $isMobile;
-$isMobile = $device->isMobile() || $device->isTablet();
+use Bitrix\Main\Page\Asset;
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,10 +27,10 @@ $isMobile = $device->isMobile() || $device->isTablet();
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
         <meta name="theme-color" content="#ffffff">
         <?
-        $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/jquery-1.11.1.min.js');
-        $APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH . '/js/prettyPhoto/css/prettyPhoto.css');
-        $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/prettyPhoto/js/jquery.prettyPhoto.js');
-        $APPLICATION->AddHeadScript(SITE_TEMPLATE_PATH . '/js/script.js');
+        Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/jquery-1.11.1.min.js');
+        Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . '/js/prettyPhoto/css/prettyPhoto.css');
+        Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/prettyPhoto/js/jquery.prettyPhoto.js');
+        Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/script.js');
         $APPLICATION->ShowHead();
         ?>
     </head>
