@@ -36,8 +36,10 @@ class Site {
 
     public static function isMobile() {
         if (is_null(self::$isMobile)) {
-            $device = new MobileDetect();
-            self::$isMobile = $device->isMobile() || $device->isTablet();
+            if (Loader::includeModule('conversion')) {
+                $device = new MobileDetect();
+                self::$isMobile = $device->isMobile() || $device->isTablet();
+            }
         }
 
         return self::$isMobile;
