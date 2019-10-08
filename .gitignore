@@ -11,8 +11,8 @@
 /vdstech.ru/public_html/local
 /vdstech.ru/public_html/upload
 /luminad-dev.longbyte.ru/
-/shared/bitrix/
-/shared/upload/
+/shared/*
+!/shared/local/
 /disallow
 cgi-bin/
 document_errors/
