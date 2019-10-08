@@ -5,6 +5,7 @@ use Bitrix\Main\Context;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Page\Asset;
 use Bitrix\Iblock\IblockTable;
+use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Conversion\Internals\MobileDetect;
 
 Bitrix\Main\Localization\Loc::loadMessages(__FILE__);
@@ -76,6 +77,20 @@ class Site {
                 }
             }
         }
+		
+		if (Loader::includeModule('iblock') && Loader::includeModule('highloadblock')) {
+
+            $result = HighloadBlockTable::getList(array(
+                    'select' => array('ID', 'NAME'),
+            ));
+            while ($row = $result->fetch()) {
+                $row['NAME'] = str_replace('-', '_', $row['NAME']);
+                $CONSTANT = ToUpper(implode('_', array('HLBLOCK', $row['NAME'])));
+                if (!defined($CONSTANT)) {
+                    define($CONSTANT, $row['ID']);
+                }
+            }
+        }
     }
 
     public static function DeclOfNum($number, $titles) {
@@ -103,6 +118,38 @@ class Site {
         } else {
             Asset::getInstance()->addString('<script src="https://cdn.jsdelivr.net/npm/vue"></script>');
         }
+    }
+	
+	/**
+     * Упрощенная обертка ресайза
+     * @param int|array $picture
+     * @param array[int, int] $arSize
+     * @param int $method
+     * @param bool $updateVar
+     * @return array
+     */
+    public static function resizeImageGet(&$picture, $arSize, $method = BX_RESIZE_IMAGE_PROPORTIONAL, $updateVar = true) {
+
+        $arReturn = array();
+
+        $arResize = \CFile::ResizeImageGet(is_array($picture) ? $picture['ID'] : $picture, array('width' => $arSize[0], 'height' => $arSize[1]), $method, true);
+        if ($arResize) {
+            $arReturn = array(
+                'WIDTH' => $arResize['width'],
+                'HEIGHT' => $arResize['height'],
+                'SRC' => $arResize['src'],
+            );
+
+            if ($updateVar) {
+                if (is_array($picture)) {
+                    $picture = array_merge($picture, $arReturn);
+                } else {
+                    $picture = $arReturn;
+                }
+            }
+        }
+
+        return $arReturn;
     }
 
 }

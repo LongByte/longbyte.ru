@@ -32,7 +32,7 @@ foreach ($arResult['ITEMS'] as $key => &$arItem) {
 
     $arItem['IS_IMG'] = strpos($arFile['CONTENT_TYPE'], 'image/') !== false;
 
-    if (Site::isMobile && $arItem['IS_IMG'] && $arFile['CONTENT_TYPE'] != 'image/gif') {
+    if (Site::isMobile() && $arItem['IS_IMG'] && $arFile['CONTENT_TYPE'] != 'image/gif') {
         if ($img = CFile::ResizeImageGet($arFile['ID'], array('width' => 700, 'height' => 700), BX_RESIZE_IMAGE_PROPORTIONAL)) {
             $arFile['SRC'] = $img['src'];
             $arFile['WIDTH'] = $img['width'];

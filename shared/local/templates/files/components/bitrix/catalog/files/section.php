@@ -126,7 +126,8 @@ $this->setFrameMode(true);
         'COMPARE_PATH' => $arResult['FOLDER'] . $arResult['URL_TEMPLATES']['compare'],
         'BACKGROUND_IMAGE' => (isset($arParams['SECTION_BACKGROUND_IMAGE']) ? $arParams['SECTION_BACKGROUND_IMAGE'] : ''),
         'DISABLE_INIT_JS_IN_COMPONENT' => (isset($arParams['DISABLE_INIT_JS_IN_COMPONENT']) ? $arParams['DISABLE_INIT_JS_IN_COMPONENT'] : ''),
-        'IS_MOBILE' => Site::isMobile()
+        'IS_MOBILE' => Site::isMobile(),
+        'SHOW_ALL_WO_SECTION' => 'Y',
         ), $component
     );
     ?>
