@@ -1,9 +1,10 @@
 <?
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
     die();
-
 ?>
-
+<h2 style="text-align: center;">Добро пожаловать на сборник результатов бенчмарков</h2>
+<h3 style="text-align: center;">Выберите интересующий вид тестов</h3>
+<br>
 <script>
 
     var groups = [

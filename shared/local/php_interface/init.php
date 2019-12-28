@@ -6,6 +6,7 @@ use Bitrix\Main\EventManager;
 Loader::registerAutoLoadClasses(null, array(
     '\LongByte\Wakeup' => '/local/php_interface/classes/Wakeup.php',
     '\LongByte\Babel' => '/local/php_interface/classes/Babel.php',
+    '\LongByte\Vue' => '/local/php_interface/classes/Vue.php',
     'Site' => '/local/php_interface/classes/Site.php',
     //PageType
     'PageType' => '/local/php_interface/classes/PageType.php',

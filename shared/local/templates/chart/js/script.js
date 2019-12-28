@@ -1,5 +1,8 @@
 'use strict';
 
+if (!window.vueData)
+    window.vueData = {};
+
 $(function () {
     $("[data-filter]").click(() => {
         UrlGenerate();

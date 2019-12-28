@@ -112,14 +112,6 @@ class Site {
         self::Definders();
     }
 
-    public static function includeVueJS() {
-        if (self::IsDevelop()) {
-            Asset::getInstance()->addString('<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>');
-        } else {
-            Asset::getInstance()->addString('<script src="https://cdn.jsdelivr.net/npm/vue"></script>');
-        }
-    }
-	
 	/**
      * Упрощенная обертка ресайза
      * @param int|array $picture
