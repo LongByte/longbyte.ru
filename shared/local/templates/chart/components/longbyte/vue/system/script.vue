@@ -1,72 +1,71 @@
 <template id="system">
-    <form class="" method="post" action="">
-        <button type="submit" class="btn btn-save">Сохранить</button>
+    <form name="system" class="" method="post" action="" @submit="save">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <br>
+        <br>
+        <h5>Система</h5>
         <div class="system">
-            <table>
-                <template v-for="field in system">
-                    <template v-if="field.type === 'hidden'">
-                        <input type="hidden" :name="field.code" :value="field.value" />
-                    </template>
-                    <template v-else>
-                        <tr>
-                            <td v-html="field.name"></td>
-                            <td>
-                                <template v-if="field.type === 'select'">
-                                    <select :name="field.code" v-model="field.value" :multiple="field.multiple" class="system__form-field">
-                                        <template v-for="option in field.values">
-                                            <option v-html="option.value" :value="option.id"></option>
-                                        </template>
-                                    </select>
-                                </template>
-                                <template v-else-if="field.type === 'checkbox'">
-                                    <input type="hidden" :name="field.code" value="0" />
-                                    <input type="checkbox" :name="field.code" value="1" :checked="field.value" />
-                                </template>
-                                <template v-else-if="field.type === 'text'">
-                                    <input type="text" :name="field.code" :value="field.value" class="system__form-field" />
-                                </template>
-                                <span v-html="field.hint"></span>
-                            </td>
-                        </tr>
-                    </template>
+            <template v-for="field in system">
+                <template v-if="field.type === 'hidden'">
+                    <input type="hidden" :name="field.code" :value="field.value" />
                 </template>
-            </table>
+                <template v-else>
+                    <div class="form-row">
+                        <div class="col-2" v-html="field.name"></div>
+                        <div class="col-4">
+                            <template v-if="field.type === 'select'">
+                                <select class="form-control" :name="field.code" v-model="field.value" :multiple="field.multiple">
+                                    <template v-for="option in field.values">
+                                        <option v-html="option.value" :value="option.id"></option>
+                                    </template>
+                                </select>
+                            </template>
+                            <template v-else-if="field.type === 'checkbox'">
+                                <div class="form-check">
+                                    <input type="hidden" :name="field.code" value="0" />
+                                    <input class="form-check-input position-static" type="checkbox" :name="field.code" value="1" :checked="field.value" />
+                                </div>
+                            </template>
+                            <template v-else-if="field.type === 'text'">
+                                <input class="form-control" type="text" :name="field.code" :value="field.value" />
+                            </template>
+                        </div>
+                        <span class="col-4" v-html="field.hint"></span>
+                    </div>
+                </template>
+            </template>
         </div>
 
         <div class="result">
-            <table>
-                <template v-for="test_type in test_types">
-                    <tr>
-                        <td class="result__test-type-name" v-html="test_type.name"></td>
-                        <td>Результат 1</td>
-                        <td>Результат 2</td>
-                        <td>Результат 3</td>
-                        <td>Информация</td>
-                    </tr>
+            <template v-for="test_type in test_types">
+                <div class="result__group">
+                    <div class="form-row">
+                        <h5 class="result__test-type-name col-2" v-html="test_type.name"></h5>
+                    </div>
                     <template v-for="test in test_type.tests">
-                        <tr>
-                            <td class="result__test-name" v-html="test.name"></td>
-                            <td>
-                                <input :value="getValue(test,'result')" :name="getName(test,'result')" />
-                                <span v-html="test.units"></span>
-                            </td>
-                            <td>
-                                <input :value="getValue(test,'result2')" :name="getName(test,'result2')" />
-                                <span v-html="test.units"></span>
-                            </td>
-                            <td>
-                                <input :value="getValue(test,'result3')" :name="getName(test,'result3')" />
-                                <span v-html="test.units"></span>
-                            </td>
-                            <td>
-                                <textarea rows="5" cols="70" v-html="getValue(test,'info')" :name="getName(test,'info')"></textarea>
-                            </td>
-                        </tr>
+                        <div class="form-row">
+                            <div class="result__test-name col-2" v-html="test.name"></div>
+                            <div class="col-2">
+                                <input class="form-control" :value="getValue(test,'result')" :name="getName(test,'result')" v-if="isVisiable(test,'result')" :placeholder="getPlaceholder(test,'result')" />
+                                <span v-html="test.units" v-if="isVisiable(test,'result')"></span>
+                            </div>
+                            <div class="col-2">
+                                <input class="form-control" :value="getValue(test,'result2')" :name="getName(test,'result2')" v-if="isVisiable(test,'result2')" :placeholder="getPlaceholder(test,'result2')" />
+                                <span v-html="test.units" v-if="isVisiable(test,'result2')"></span>
+                            </div>
+                            <div class="col-2">
+                                <input class="form-control" :value="getValue(test,'result3')" :name="getName(test,'result3')" v-if="isVisiable(test,'result3')" :placeholder="getPlaceholder(test,'result3')" />
+                                <span v-html="test.units" v-if="isVisiable(test,'result3')"></span>
+                            </div>
+                            <div class="col-4">
+                                <textarea class="form-control" rows="5" v-html="getValue(test,'info')" :name="getName(test,'info')" v-if="isVisiable(test,'info')" :placeholder="getPlaceholder(test,'info')"></textarea>
+                            </div>
+                        </div>
                     </template>
-                </template>
-            </table>
+                </div>
+            </template>
         </div>
-        <button type="submit" class="btn btn-save">Сохранить</button>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>
 
 </template>
@@ -87,6 +86,22 @@
                 if (!!test.result && !!test.result[resultKey])
                     html = test.result[resultKey];
                 return html;
+            },
+            getPlaceholder(test, resultKey) {
+                let html = '';
+                if (!!test && !!test['placeholder_' + resultKey])
+                    html = test['placeholder_' + resultKey];
+                return html;
+            },
+            isVisiable(test, resultKey) {
+                return (!!test && !!test['placeholder_' + resultKey]);
+            },
+            save(event) {
+                event.preventDefault();
+                let form = new FormData(document.forms.system);
+                axios
+                    .post('', form)
+                    .then(response => (this.data = response));
             }
         }
     })

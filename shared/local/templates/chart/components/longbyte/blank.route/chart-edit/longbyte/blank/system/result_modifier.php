@@ -325,6 +325,10 @@ if (!$arSystem) {
                 'TEST_TYPE' => 'IBLOCK_SECTION_ID',
                 'UNITS' =>
                 'PROPERTY.UNITS',
+                'PLACEHOLDER_RESULT' => 'PROPERTY.PLACEHOLDER_RESULT',
+                'PLACEHOLDER_RESULT2' => 'PROPERTY.PLACEHOLDER_RESULT2',
+                'PLACEHOLDER_RESULT3' => 'PROPERTY.PLACEHOLDER_RESULT3',
+                'PLACEHOLDER_INFO' => 'DETAIL_TEXT',
             ),
     ));
 
@@ -359,4 +363,6 @@ if (!$arSystem) {
     }
 
     $arResult['VUE'] = $arResult;
+    
+    $arResult['FORMAT'] = $obRequest->isPost() ? 'json' : 'html';
 }

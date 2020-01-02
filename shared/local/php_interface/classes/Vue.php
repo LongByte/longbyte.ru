@@ -3,6 +3,7 @@
 namespace LongByte;
 
 use \Bitrix\Main\Page\Asset;
+use \Bitrix\Main\Web\Json;
 
 class Vue {
 
@@ -14,6 +15,11 @@ class Vue {
         }
     }
 
+    public static function toJson($arData) {
+        self::arrayKeyToLower($arData);
+        return Json::encode($arData);
+    }
+    
     public static function toVueJson($arData) {
         self::arrayKeyToLower($arData);
         return \CUtil::PhpToJSObject($arData, false, true, true);

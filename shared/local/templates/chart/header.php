@@ -30,15 +30,22 @@ LongByte\Vue::includeVueJS();
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
         <meta name="theme-color" content="#ffffff">
         <?
-        Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . '/js/dialogs-2.0/dialogs.css');
-        Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . '/js/spoiler/spoiler.css');
         Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/jquery-1.11.1.min.js');
+        Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/jquery-ui/jquery-ui.js');
+        Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . '/js/jquery-ui/jquery-ui.min.css');
+
+        Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . '/css/bootstrap/bootstrap.css');
+        Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . '/css/bootstrap/bootstrap-grid.css');
+
+        Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . '/js/dialogs-2.0/dialogs.css');
         Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/dialogs-2.0/dialogs.js');
         Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/dialogs-2.0/jquery.mousewheel.min.js');
+
+        Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . '/js/spoiler/spoiler.css');
         Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/spoiler/spoiler.js');
+
         Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/chart.js');
-        Asset::getInstance()->addCss(SITE_TEMPLATE_PATH . '/js/jquery-ui/jquery-ui.min.css');
-        Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/jquery-ui/jquery-ui.js');
+
         Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/script.js');
         $APPLICATION->ShowHead();
         ?>
