@@ -19,7 +19,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
     var data = <?= CUtil::PhpToJSObject($arResult['JS_DATA'], false, false, true) ?>
 </script>
 
-<? foreach ($arResult['TEST_TYPES'] as &$arTestType) { ?>
+<? foreach ($arResult['TEST_TYPES'] as $arTestType) { ?>
     <div class="ilex-dialog" id="filter-<?= $arTestType['TYPE'] ?>">
         <div class="dialog-content">
             <input type="checkbox" name="hide" value="hideOc" id="filterHideOc" autocomplete="off">
@@ -28,15 +28,13 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
             <label for="filterHideComment">Скрыть тайминги, напряжения и прочую фигню</label><br>
             <?
             $arFilter = array();
-            foreach ($arTestType['TESTS'] as $i => &$arTest) {
-                foreach ($arTest["ITEMS"] as $j => &$arItem) {
-                    if (floatval($arItem['RESULT']) == 0.0)
+            foreach ($arTestType['TESTS'] as $i => $arTest) {
+                foreach ($arTest['RESULTS'] as $j => $arTestResult) {
+                    if (floatval($arTestResult['RESULT']) == 0.0)
                         continue;
-                    $arFilter[preg_replace('/ title="[^"]+"/', '', $arItem["NAME"])] = $arItem['SYSTEM']['ID'];
+                    $arFilter[preg_replace('/ title="[^"]+"/', '', $arTestResult['NAME'])] = $arTestResult['SYSTEM']['ID'];
                 }
-                unset($arItem);
             }
-            unset($arTest);
             ?>
             <input type="checkbox" autocomplete="off" checked name="line-all" value="<?= $arTestType['TYPE'] . '_all' ?>" id="filter<?= $arTestType['TYPE'] . '_all' ?>">
             <label for="filter<?= $arTestType['TYPE'] . '_all' ?>">Все</label><br>
@@ -53,9 +51,8 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
     </div>
     <?
 }
-unset($arTestType);
 $i = 0;
-foreach ($arResult['TEST_TYPES'] as &$arTestType):
+foreach ($arResult['TEST_TYPES'] as $arTestType):
     ?>
     <div class="lb-spoiler spoiler-type">
         <div class="spoiler-title" data-filter="<?= $arTestType['TYPE'] ?>"><?= $arTestType['NAME'] ?></div>
@@ -64,11 +61,11 @@ foreach ($arResult['TEST_TYPES'] as &$arTestType):
                 <a class="filter-call" href="#" onclick="return OpenFilter('<?= $arTestType['TYPE'] ?>')">Фильтр</a>
             </div>
             <?
-            foreach ($arTestType['TESTS'] as &$arTest):
+            foreach ($arTestType['TESTS'] as $arTest):
                 ?>
-                <div class="graphic <?= $arTestType["TYPE"] ?> <?= strpos($arTest["NAME"], "Итог") !== false ? "SUMMARY" : "" ?>">
+                <div class="graphic <?= $arTestType['TYPE'] ?> <?= strpos($arTest['NAME'], 'Итог') !== false ? 'SUMMARY' : '' ?>">
                     <center>
-                        <h3><?= $arTest["NAME"] . ($arTest['UNITS'] ? ', ' . $arTest['UNITS'] : '') . ($arTest['LESS_BETTER'] ? ' (меньше - лучше)' : '') ?></h3>
+                        <h3><?= $arTest['NAME'] . ($arTest['UNITS'] ? ', ' . $arTest['UNITS'] : '') . ($arTest['LESS_BETTER'] ? ' (меньше - лучше)' : '') ?></h3>
                         <? if (!empty($arTest['DESCRIPTION'])): ?>
                             <div class="lb-spoiler spoiler-desc">
                                 <div class="spoiler-title">Описание теста</div>
@@ -93,13 +90,11 @@ foreach ($arResult['TEST_TYPES'] as &$arTestType):
                 <?
                 $i++;
             endforeach;
-            unset($arTest);
             ?>
         </div>
     </div>
     <?
 endforeach;
-unset($arTestType);
 ?>
 <div class="help">
     <h3>Расшифровка</h3>
