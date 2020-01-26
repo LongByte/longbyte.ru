@@ -256,8 +256,6 @@ function chartdraw(i, width, o) {
         o.axisMarks = false;
         o.axisValues = false
     }
-//Сносим замечание о включении javascript
-//if (document.getElementById('c'+i)!=null) document.getElementById('c'+i).innerHTML='';
 //Сортируем график, если нужно:
     if (o.srt) {
         data[i].sort(eval('comp' + o.srtInd));
@@ -271,7 +269,6 @@ function chartdraw(i, width, o) {
     else
         fontSize = ' style="width:auto"';
     var str = '<table' + fontSize + ' cellpadding="' + o.padding1 + '" border="0" cellspacing="0" onmouseout="unmark(' + i + ')">';
-//document.writeln('<table'+fontSize+' cellpadding="'+o.padding1+'" border="0" cellspacing="0" onmouseout="unmark('+i+')">');
     for (var j = 0; j < data[i].length; j++) {
         //Дефолтный цвет
         for (var l = 1; l <= 3; l++)
@@ -348,7 +345,6 @@ function chartdraw(i, width, o) {
         if (o.horzLine && o.vertLine2 && j == data[i].length - 1)
             style = style + cellStyle('bottom', lineCol);
         str = str + '<tr id="c' + i + 'r' + j + '" onmouseover="mark(' + i + ',' + j + ',' + o.markAll + ',' + o.type + ',' + o.dec + ')"><td id="c' + i + 'd' + j + '"' + stl + ' align="right"><nobr><font color="#000000">' + data[i][j][0] + '</font></nobr><td' + style + 'padding-left:0"><table style="width:' + width + 'px" border="0" cellpadding="' + o.padding2 + '" cellspacing="0"><tr>';
-        //document.writeln('<tr id="c'+i+'r'+j+'" onmouseover="mark('+i+','+j+','+o.markAll+','+o.type+','+o.dec+')"><td id="c'+i+'d'+j+'"'+stl+' align="right"><nobr>'+data[i][j][0]+'</nobr><td style="'+style+'padding-left:0"><table'+fontSize+' width="'+width+'" border="0" cellpadding="'+o.padding2+'" cellspacing="0" width="100%"><tr>');
         //Главный цикл
         var toRight = 0;
         for (var k = 0; k <= count; k++) {
@@ -419,10 +415,8 @@ function chartdraw(i, width, o) {
             str = str + makeCell(style, colw[k], 'left', '', '000000', i, j, ind[lastNum] - serviceCount, data[i][j][ind[lastNum]])
         else if (usedw < 100)
             str = str + '<td style="' + style + '">&nbsp;';
-        //document.writeln('<td style="'+style+'">&nbsp;');
         str = str + '</table>';
     }
-    //document.writeln('</table>');}
 //Ось
     var interval = axisInt(o.axisMin, o.axisMax);
     var temp = firstVal(o.axisMin, interval);
@@ -442,7 +436,6 @@ function chartdraw(i, width, o) {
         } else
             style = '';
         str = str + '<tr style="font-size:1px"><td style="' + style + 'padding-top:0;padding-bottom:0">&nbsp;<td style="padding-left:0;padding-top:0;padding-bottom:0"><table style="font-size:4px;width:100%" border="0" cellpadding="0" cellspacing="0"><tr>';
-        //document.writeln('<tr style="font-size:1"><td style="'+style+'padding-top:0;padding-bottom:0">&nbsp;<td style="padding-left:0;padding-top:0;padding-bottom:0"><table style="font-size:4" border="0" cellpadding="0" cellspacing="0" width="100%"><tr>');
         usedw = 0;
         var axisLineCol = lineCol;
         while (temp <= o.axisMax) {
@@ -455,7 +448,6 @@ function chartdraw(i, width, o) {
             else
                 style = '';
             str = str + '<td style="' + stl + style + '" width="' + (Math.round((temp - o.axisMin) / (o.axisMax - o.axisMin) * 100) - usedw) + '%">&nbsp;';
-            //document.writeln('<td style="'+stl+style+'" width="'+(Math.round((temp-o.axisMin)/(o.axisMax-o.axisMin)*100)-usedw)+'%">&nbsp;');
             if (o.axisGradient && !o.vertLine2)
                 axisLineCol = colPlus(axisLineCol, colInt);
             usedw = Math.round((temp - o.axisMin) / (o.axisMax - o.axisMin) * 100);
@@ -468,13 +460,10 @@ function chartdraw(i, width, o) {
                 style = '';
             str = str + '<td style="' + style + '">&nbsp;';
         }
-        //document.writeln('<td style="'+style+'">&nbsp;')}
         str = str + '</table>';
-        //document.writeln('</table>');
     }
     if (o.axisValues) {
         str = str + '<tr><td style="padding-top:0;padding-bottom:0">&nbsp;<td style="padding-left:0;padding-top:0;padding-bottom:0"><table border="0" cellpadding="0" cellspacing="0" style="width:100%"><tr>';
-        //document.writeln('<tr><td style="padding-top:0;padding-bottom:0">&nbsp;<td style="padding-left:0;padding-top:0;padding-bottom:0"><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr>');
         usedw = 0;
         var onew = 4.5;
         temp = firstVal(o.axisMin, interval);
@@ -485,27 +474,23 @@ function chartdraw(i, width, o) {
         colInt = trunc((255 - colR(axisValCol)) / intCount);
         if (Math.round((temp - o.axisMin) / (o.axisMax - o.axisMin) * 100) > onew / 2) {
             str = str + '<td width="' + Math.round((temp - o.axisMin) / (o.axisMax - o.axisMin) * 100 - onew / 2) + '%">&nbsp;';
-            //document.writeln('<td width="'+Math.round((temp-o.axisMin)/(o.axisMax-o.axisMin)*100-onew/2)+'%">&nbsp;');
             usedw = Math.round((temp - o.axisMin) / (o.axisMax - o.axisMin) * 100 - onew / 2)
         }
         while (temp <= o.axisMax) {
             str = str + '<td style="color:#' + axisValCol + '" align="center" width="' + onew + '%">' + temp;
-            //document.writeln('<td style="color:#'+axisValCol+'" align="center" width="'+onew+'%">'+temp);
             if (o.axisGradient && !o.vertLine2)
                 axisValCol = colPlus(axisValCol, colInt);
             temp = temp + interval;
             if (usedw < 100 - onew)
-                str = str + '<td width="' + (Math.round((temp - o.axisMin) / (o.axisMax - o.axisMin) * 100) - usedw - onew) + '%">&nbsp;'; //document.writeln('<td width="'+(Math.round((temp-o.axisMin)/(o.axisMax-o.axisMin)*100)-usedw-onew)+'%">&nbsp;');
+                str = str + '<td width="' + (Math.round((temp - o.axisMin) / (o.axisMax - o.axisMin) * 100) - usedw - onew) + '%">&nbsp;';
             usedw = Math.round((temp - o.axisMin) / (o.axisMax - o.axisMin) * 100);
         }
         if (usedw < 100)
-            str = str + '<td style="' + cellStyle('top', lineCol) + '" width="' + (100 - usedw) + '%">&nbsp;'; //{document.writeln('<td style="'+cellStyle('top', lineCol)+'" width="'+(100-usedw)+'%">&nbsp;')}
+            str = str + '<td style="' + cellStyle('top', lineCol) + '" width="' + (100 - usedw) + '%">&nbsp;';
         str = str + '</table>';
-        //document.writeln('</table>');
     }
     str = str + '</table>';
     document.getElementById('c' + i).innerHTML = str;
-//document.writeln('</table>');
 //Авторазмеры заголовков по группам
     if (o.alignTitles && gnum >= 0) {
         var maxWidth = 0;
@@ -520,7 +505,6 @@ function chartdraw(i, width, o) {
 
 function makeCell(style, width, align, bgColor, fontColor, i, j, k, dat) {
     return '<td style="padding-left:0;padding-right:0;' + style + '" width="' + width + '%" align="' + align + '"' + bgColor + '"><font color="#' + fontColor + '" id="c' + i + 'd' + j + 'd' + k + '">' + dat + '</font>';
-//document.writeln('<td style="padding-left:0;padding-right:0;'+style+'" width="'+width+'%" align="'+align+'"'+bgColor+'"><font color="#'+fontColor+'" id="c'+i+'d'+j+'d'+k+'">'+dat+'</font>');
 }
 
 function cellStyle(align, col) {

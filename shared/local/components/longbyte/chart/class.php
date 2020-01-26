@@ -49,6 +49,10 @@ class LongbyteChartComponent extends CBitrixComponent {
         }
     }
 
+    /**
+     * 
+     * @global \CCacheManager $CACHE_MANAGER
+     */
     private function _getData() {
         global $CACHE_MANAGER;
         $CACHE_MANAGER->RegisterTag('iblock_id_' . IBLOCK_CHART_TESTS);
@@ -60,6 +64,9 @@ class LongbyteChartComponent extends CBitrixComponent {
         $this->_getResults();
     }
 
+    /**
+     * 
+     */
     private function _getTestTypes() {
         $this->arResult = array('TEST_TYPES' => array());
         $rsTestTypes = SectionTable::getList(array(
@@ -74,6 +81,9 @@ class LongbyteChartComponent extends CBitrixComponent {
         }
     }
 
+    /**
+     * 
+     */
     private function _getTests() {
         $rsTest = Element::getList(array(
                 'order' => array('SORT' => 'ASC'),
@@ -105,6 +115,9 @@ class LongbyteChartComponent extends CBitrixComponent {
         }
     }
 
+    /**
+     * 
+     */
     private function _getSystems() {
 
         $arSelect = array(
@@ -155,6 +168,9 @@ class LongbyteChartComponent extends CBitrixComponent {
         }
     }
 
+    /**
+     * 
+     */
     private function _getResults() {
         $rsResults = Element::getList(array(
                 'filter' => array('IBLOCK_ID' => IBLOCK_CHART_RESULT, '=ACTIVE' => 'Y'),
@@ -197,6 +213,9 @@ class LongbyteChartComponent extends CBitrixComponent {
         }
     }
 
+    /**
+     * 
+     */
     private function _processTotalTest() {
         foreach ($this->arTestTypes as &$arTestType) {
 
@@ -270,6 +289,11 @@ class LongbyteChartComponent extends CBitrixComponent {
         unset($arTestType);
     }
 
+    /**
+     * 
+     * @param array $arResult
+     * @param string $numResult
+     */
     private function _calculateSum($arResult, $numResult) {
         if ($numResult == 1)
             $numResult = '';
@@ -297,13 +321,16 @@ class LongbyteChartComponent extends CBitrixComponent {
         }
     }
 
+    /**
+     * 
+     */
     private function _prepareJsData() {
 
-        foreach ($this->arTestTypes as $arTestType) {
+        foreach ($this->arTestTypes as &$arTestType) {
 
-            foreach ($arTestType['TESTS'] as $i => $arTest) {
+            foreach ($arTestType['TESTS'] as $i => &$arTest) {
                 $arDataTests = array();
-                foreach ($arTest['RESULTS'] as $j => $arResult) {
+                foreach ($arTest['RESULTS'] as $j => &$arResult) {
 
                     if (floatval($arResult['RESULT']) == 0.0)
                         continue;
@@ -346,11 +373,18 @@ class LongbyteChartComponent extends CBitrixComponent {
                     }
                     $arDataTests[] = $arDataItem;
                 }
+                unset($arResult);
                 $this->arResult['JS_DATA'][] = $arDataTests;
             }
+            unset($arTest);
         }
+        unset($arTestType);
     }
 
+    /**
+     * 
+     * @param array $arResult
+     */
     private function _prepareGPUs(&$arResult) {
         $arSystem = &$arResult['SYSTEM'];
         $arTestType = &$arResult['TEST_TYPE'];
@@ -441,6 +475,10 @@ class LongbyteChartComponent extends CBitrixComponent {
         }
     }
 
+    /**
+     * 
+     * @param array $arResult
+     */
     private function _prepareCPU_RAMs(&$arResult) {
         $arSystem = &$arResult['SYSTEM'];
         $arTestType = &$arResult['TEST_TYPE'];
@@ -490,6 +528,10 @@ class LongbyteChartComponent extends CBitrixComponent {
         }
     }
 
+    /**
+     * 
+     * @param array $arResult
+     */
     private function _prepareHDDs(&$arResult) {
         $arSystem = &$arResult['SYSTEM'];
         $arTestType = &$arResult['TEST_TYPE'];
@@ -507,6 +549,13 @@ class LongbyteChartComponent extends CBitrixComponent {
         }
     }
 
+    /**
+     * 
+     * @param int|float $va1ue_1
+     * @param int|float $va1ue_2
+     * @param int $presicion
+     * @return int
+     */
     private function _percent($va1ue_1, $va1ue_2, $presicion = 0) {
         return round(($va1ue_1 / $va1ue_2 - 1) * 100, $presicion);
     }
