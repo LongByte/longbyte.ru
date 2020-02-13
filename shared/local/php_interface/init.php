@@ -7,6 +7,7 @@ Loader::registerAutoLoadClasses(null, array(
     '\LongByte\Wakeup' => '/local/php_interface/classes/Wakeup.php',
     '\LongByte\Babel' => '/local/php_interface/classes/Babel.php',
     '\LongByte\Vue' => '/local/php_interface/classes/Vue.php',
+    '\LongByte\Webp' => '/local/php_interface/classes/Webp.php',
     'Site' => '/local/php_interface/classes/Site.php',
     //PageType
     'PageType' => '/local/php_interface/classes/PageType.php',
@@ -28,3 +29,4 @@ EventManager::getInstance()->addEventHandler('main', 'OnPageStart', array('Site'
 EventManager::getInstance()->addEventHandler('iblock', 'OnIBlockPropertyBuildList', array('PageType', 'GetUserTypeDescription'));
 EventManager::getInstance()->addEventHandler('main', 'onEpilog', array('Site', 'onEpilog'));
 EventManager::getInstance()->addEventHandler('main', 'OnEndBufferContent', array('Site', 'OnEndBufferContent'));
+EventManager::getInstance()->addEventHandler('main', 'OnEndBufferContent', array('\LongByte\Webp', 'convertAllToWebp'));
