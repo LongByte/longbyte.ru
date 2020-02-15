@@ -14,63 +14,69 @@ class Webp {
 
     /**
      * 
-     * @global \CMain $APPLICATION
      * @param string $content
-     * @return mixed
      */
     public static function convertAllToWebp(&$content) {
 
-        global $APPLICATION;
+        if (self::_checkSupport()) {
+            $strPattern = '/<img[^>]*src="([^"]+\.(jpg|jpeg|png))"[^>]*>/';
+            preg_match_all($strPattern, $content, $arMatches);
 
-        $obServer = Context::getCurrent()->getServer();
-
-        $arGDInfo = gd_info();
-
-        if (
-            !$arGDInfo['WebP Support'] ||
-            strpos($obServer->get('HTTP_ACCEPT'), 'image/webp') === false ||
-            !function_exists('imagewebp') ||
-            strpos($APPLICATION->GetCurDir(), '/bitrix/') !== false
-        )
-            return;
-
-        $strPattern = '/<img[^>]+src="([^"]+\.(jpg|jpeg|png))"[^>]+>/';
-        preg_match_all($strPattern, $content, $arMatches);
-
-        foreach ($arMatches[1] as $strPath) {
-            $strWebpPath = self::convertToWebp($strPath);
-            $content = str_replace($strPath, $strWebpPath, $content);
+            foreach ($arMatches[1] as $strPath) {
+                $strWebpPath = self::convertToWebp($strPath);
+                $content = str_replace($strPath, $strWebpPath, $content);
+            }
         }
     }
 
     /**
      * 
-     * @param string $src
+     * @param string $strSrc
      * @return string
      */
-    public static function convertToWebp($src) {
-        $newImgPath = $src;
+    public static function convertToWebp($strSrc) {
+        $strNewSrc = $strSrc;
 
-        if (function_exists('imagewebp')) {
-            $src = ToLower($src);
-            if (IO\File::isFileExists(Application::getDocumentRoot() . $src)) {
-                if (strpos($src, '.png')) {
-                    $newImg = imagecreatefrompng(Application::getDocumentRoot() . $src);
-                    $newImgPath = str_replace('.png', '.webp', $src);
-                } elseif (strpos($src, '.jpg') !== false || strpos($src, '.jpeg') !== false) {
-                    $newImg = imagecreatefromjpeg(Application::getDocumentRoot() . $src);
-                    $newImgPath = str_replace(array('.jpg', '.jpeg'), '.webp', $src);
+        if (self::_checkSupport()) {
+            $strSrc = ToLower($strSrc);
+            if (IO\File::isFileExists(Application::getDocumentRoot() . $strSrc)) {
+                if (strpos($strSrc, '.png')) {
+                    $obImage = imagecreatefrompng(Application::getDocumentRoot() . $strSrc);
+                    $strNewSrc = str_replace('.png', '.webp', $strSrc);
+                } elseif (strpos($strSrc, '.jpg') !== false || strpos($strSrc, '.jpeg') !== false) {
+                    $obImage = imagecreatefromjpeg(Application::getDocumentRoot() . $strSrc);
+                    $strNewSrc = str_replace(array('.jpg', '.jpeg'), '.webp', $strSrc);
                 }
-                if ($newImg) {
-                    if (!IO\File::isFileExists(Application::getDocumentRoot() . $newImgPath)) {
-                        imagewebp($newImg, Application::getDocumentRoot() . $newImgPath, 90);
+                if ($obImage) {
+                    if (!IO\File::isFileExists(Application::getDocumentRoot() . $strNewSrc)) {
+                        imagewebp($obImage, Application::getDocumentRoot() . $strNewSrc, false);
                     }
-                    imagedestroy($newImg);
+                    imagedestroy($obImage);
                 }
             }
         }
 
-        return $newImgPath;
+        return $strNewSrc;
+    }
+
+    /**
+     * 
+     * @global \CMain $APPLICATION
+     * @return bool
+     */
+    private static function _checkSupport() {
+
+        global $APPLICATION;
+        $obServer = Context::getCurrent()->getServer();
+        $arGDInfo = gd_info();
+
+        return (
+            $arGDInfo['WebP Support'] &&
+            function_exists('imagewebp') &&
+            strpos($obServer->get('HTTP_ACCEPT'), 'image/webp') !== false &&
+            strpos($APPLICATION->GetCurDir(), '/bitrix/') === false &&
+            intval(phpversion()) >= 7
+            );
     }
 
 }
