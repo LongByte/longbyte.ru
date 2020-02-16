@@ -75,6 +75,7 @@ class Webp {
             function_exists('imagewebp') &&
             strpos($obServer->get('HTTP_ACCEPT'), 'image/webp') !== false &&
             strpos($APPLICATION->GetCurDir(), '/bitrix/') === false &&
+            $APPLICATION->GetProperty('disable_webp') != 'Y' &&
             intval(phpversion()) >= 7
             );
     }
