@@ -19,12 +19,18 @@ class Webp {
     public static function convertAllToWebp(&$content) {
 
         if (self::_checkSupport()) {
-            $strPattern = '/<img[^>]*src="([^"]+\.(jpg|jpeg|png))"[^>]*>/';
-            preg_match_all($strPattern, $content, $arMatches);
+            $arPatterns = array(
+                '/<img[^>]*src="([^"]+\.(jpg|jpeg|png|bmp))"[^>]*>/',
+                '/<[^>]*style="[^"]*url\(([^)]+\.(jpg|jpeg|png|bmp))\)[^"]*"[^>]*>/',
+            );
 
-            foreach ($arMatches[1] as $strPath) {
-                $strWebpPath = self::convertToWebp($strPath);
-                $content = str_replace($strPath, $strWebpPath, $content);
+            foreach ($arPatterns as $strPattern) {
+                preg_match_all($strPattern, $content, $arMatches);
+
+                foreach ($arMatches[1] as $strPath) {
+                    $strWebpPath = self::convertToWebp($strPath);
+                    $content = str_replace($strPath, $strWebpPath, $content);
+                }
             }
         }
     }
@@ -43,6 +49,9 @@ class Webp {
                 if (strpos($strSrc, '.png')) {
                     $obImage = imagecreatefrompng(Application::getDocumentRoot() . $strSrc);
                     $strNewSrc = str_replace('.png', '.webp', $strSrc);
+                } elseif (strpos($strSrc, '.bmp')) {
+                    $obImage = imagecreatefrombmp(Application::getDocumentRoot() . $strSrc);
+                    $strNewSrc = str_replace('.bmp', '.webp', $strSrc);
                 } elseif (strpos($strSrc, '.jpg') !== false || strpos($strSrc, '.jpeg') !== false) {
                     $obImage = imagecreatefromjpeg(Application::getDocumentRoot() . $strSrc);
                     $strNewSrc = str_replace(array('.jpg', '.jpeg'), '.webp', $strSrc);
