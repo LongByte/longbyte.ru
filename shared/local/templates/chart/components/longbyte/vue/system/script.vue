@@ -14,9 +14,9 @@
                         <div class="col-2" v-html="field.name"></div>
                         <div class="col-4">
                             <template v-if="field.type === 'select'">
-                                <select class="form-control" :name="field.code" v-model="field.value" :multiple="field.multiple">
+                                <select class="form-control" :name="field.code" :multiple="field.multiple">
                                     <template v-for="option in field.values">
-                                        <option v-html="option.value" :value="option.id"></option>
+                                        <option v-html="option.value" :value="option.id" :selected="field.value == option.id"></option>
                                     </template>
                                 </select>
                             </template>
@@ -46,19 +46,27 @@
                         <div class="form-row">
                             <div class="result__test-name col-2" v-html="test.name"></div>
                             <div class="col-2">
-                                <input class="form-control" :value="getValue(test,'result')" :name="getName(test,'result')" v-if="isVisiable(test,'result')" :placeholder="getPlaceholder(test,'result')" />
-                                <span v-html="test.units" v-if="isVisiable(test,'result')"></span>
+                                <template v-if="isVisiable(test,'result')">
+                                    <input class="form-control" :value="getValue(test,'result')" :name="getName(test,'result')" :placeholder="test.placeholder_result" />
+                                    <span v-html="test.units"></span>
+                                </template>
                             </div>
                             <div class="col-2">
-                                <input class="form-control" :value="getValue(test,'result2')" :name="getName(test,'result2')" v-if="isVisiable(test,'result2')" :placeholder="getPlaceholder(test,'result2')" />
-                                <span v-html="test.units" v-if="isVisiable(test,'result2')"></span>
+                                <template v-if="isVisiable(test,'result2')">
+                                    <input class="form-control" :value="getValue(test,'result2')" :name="getName(test,'result2')" :placeholder="getPlaceholder(test,'result2')" />
+                                    <span v-html="test.units"></span>
+                                </template>
                             </div>
                             <div class="col-2">
-                                <input class="form-control" :value="getValue(test,'result3')" :name="getName(test,'result3')" v-if="isVisiable(test,'result3')" :placeholder="getPlaceholder(test,'result3')" />
-                                <span v-html="test.units" v-if="isVisiable(test,'result3')"></span>
+                                <template v-if="isVisiable(test,'result3')">
+                                    <input class="form-control" :value="getValue(test,'result3')" :name="getName(test,'result3')" :placeholder="getPlaceholder(test,'result3')" />
+                                    <span v-html="test.units"></span>
+                                </template>
                             </div>
                             <div class="col-4">
-                                <textarea class="form-control" rows="5" v-html="getValue(test,'info')" :name="getName(test,'info')" v-if="isVisiable(test,'info')" :placeholder="getPlaceholder(test,'info')"></textarea>
+                                <template v-if="isVisiable(test,'info')">
+                                    <textarea class="form-control" rows="5" v-html="getValue(test,'info')" :name="getName(test,'info')" :placeholder="getPlaceholder(test,'info')"></textarea>
+                                </template>
                             </div>
                         </div>
                     </template>

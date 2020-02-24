@@ -239,6 +239,10 @@ if (!$arSystem) {
         if ($arProp['PROPERTY_TYPE'] == PropertyTable::TYPE_LIST) {
             $arValues = $arEnums[$arProp['ID']];
         }
+        
+        if ($arProp['MULTIPLE'] == 'Y' && !$arProp['VALUE']) {
+            $arProp['VALUE'] = array();
+        }
 
         $arResult['SYSTEM'][] = array(
             'CODE' => 'system[PROPERTY_VALUES][' . $arProp['CODE'] . ']' . ($arProp['MULTIPLE'] == 'Y' ? '[]' : ''),
