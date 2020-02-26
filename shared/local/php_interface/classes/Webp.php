@@ -151,14 +151,26 @@ class Webp {
         return $this->getSourceSrc();
     }
 
+    /**
+     * 
+     * @return bool
+     */
     private function isPng() {
         return $this->getSourceFile()->getExtension() == 'png' && $this->getSourceFile()->getContentType() == 'image/png';
     }
 
+    /**
+     * 
+     * @return bool
+     */
     private function isBmp() {
         return $this->getSourceFile()->getExtension() == 'bmp' && $this->getSourceFile()->getContentType() == 'image/bmp';
     }
 
+    /**
+     * 
+     * @return bool
+     */
     private function isJpg() {
         return in_array($this->getSourceFile()->getExtension(), array('jpg', 'jpeg')) && $this->getSourceFile()->getContentType() == 'image/jpeg';
     }
