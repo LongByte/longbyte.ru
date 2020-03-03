@@ -20,6 +20,10 @@ Loader::registerAutoLoadClasses(null, array(
     //telegram
     '\LongByte\Telegram\SessionTable' => '/local/php_interface/classes/Telegram/LongByte/SessionTable.php',
     '\LongByte\Telegram\Bot' => '/local/php_interface/classes/Telegram/LongByte/Bot.php',
+    //api
+    '\Api\Sensors\Post' => '/local/php_interface/classes/Api/Sensors/Post.php',
+    '\Api\Sensors\SensorsSystemTable' => '/local/php_interface/lib/Api/Sensors/SensorsSystem.php',
+    '\Api\Sensors\SensorsDataTable' => '/local/php_interface/lib/Api/Sensors/SensorsData.php',
 ));
 
 EventManager::getInstance()->addEventHandler('main', 'OnPageStart', array('Site', 'onPageStart'));
