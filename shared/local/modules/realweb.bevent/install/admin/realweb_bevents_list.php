@@ -1,0 +1,1 @@
+<? require($_SERVER["DOCUMENT_ROOT"] . "/local/modules/realweb.bevent/admin/realweb_bevents_list.php"); ?>

@@ -1,0 +1,1 @@
+<? require($_SERVER["DOCUMENT_ROOT"] . "/local/modules/realweb.pagetype/admin/external_link_pop_up.php"); ?>

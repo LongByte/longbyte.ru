@@ -15,13 +15,21 @@ class Site {
     public static $IS_PRINT;
     public static $isMobile;
 
-    public static function IsDevelop() {
+    /**
+     * 
+     * @return bool
+     */
+    public static function isDevelop() {
         $APPLICATION_ENV = getenv('APPLICATION_ENV');
         $obServer = Context::getCurrent()->getServer();
         return $APPLICATION_ENV === 'develop' || preg_match('/\.local$/', $obServer->getServerName());
     }
 
-    public static function IsPrint() {
+    /**
+     * 
+     * @return bool
+     */
+    public static function isPrint() {
         if (is_null(static::$IS_PRINT)) {
             $IS_PRINT = false;
             $request = Context::getCurrent()->getRequest();
@@ -35,6 +43,10 @@ class Site {
         return static::$IS_PRINT;
     }
 
+    /**
+     * 
+     * @return bool
+     */
     public static function isMobile() {
         if (is_null(self::$isMobile)) {
             if (Loader::includeModule('conversion')) {
@@ -46,10 +58,17 @@ class Site {
         return self::$isMobile;
     }
 
+    /**
+     * 
+     * @return bool
+     */
     public static function isIE() {
         return strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false || strpos($_SERVER['HTTP_USER_AGENT'], 'rv:11.0') !== false;
     }
 
+    /**
+     * 
+     */
     public static function Definders() {
 
         if (Loader::includeModule('iblock')) {
@@ -93,21 +112,29 @@ class Site {
         }
     }
 
-    public static function DeclOfNum($number, $titles) {
-        $cases = array(2, 0, 1, 1, 1, 2);
-        return $titles[($number % 100 > 4 && $number % 100 < 20) ? 2 : $cases[min($number % 10, 5)]];
+    /**
+     * 
+     * @param float $fPrice
+     * @return string
+     */
+    public static function FormatPrice($fPrice) {
+        return number_format($fPrice, 0, '&nbsp;', '&nbsp;');
     }
 
-    public static function FormatPrice($PRICE) {
-        return number_format($PRICE, 0, '&nbsp;', '&nbsp;');
-    }
-
-    public static function Translit($STRING) {
+    /**
+     * 
+     * @param string $string
+     * @return string
+     */
+    public static function Translit($string) {
         $params = array("replace_space" => "-", "replace_other" => "-");
-        $result = CUtilEx::translit($STRING, "ru", $params);
+        $result = CUtilEx::translit($string, "ru", $params);
         return $result;
     }
 
+    /**
+     * 
+     */
     public static function onPageStart() {
         self::Definders();
     }
