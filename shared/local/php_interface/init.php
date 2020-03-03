@@ -4,10 +4,10 @@ use Bitrix\Main\Loader;
 use Bitrix\Main\EventManager;
 
 Loader::registerAutoLoadClasses(null, array(
-    '\LongByte\Wakeup' => '/local/php_interface/classes/LongByte/Wakeup.php',
-    '\LongByte\Babel' => '/local/php_interface/classes/LongByte/Babel.php',
-    '\LongByte\Vue' => '/local/php_interface/classes/LongByte/Vue.php',
-    '\LongByte\Webp' => '/local/php_interface/classes/LongByte/Webp.php',
+    '\LongByte\Wakeup' => '/local/php_interface/classes/Longbyte/Wakeup.php',
+    '\LongByte\Babel' => '/local/php_interface/classes/Longbyte/Babel.php',
+    '\LongByte\Vue' => '/local/php_interface/classes/Longbyte/Vue.php',
+    '\LongByte\Webp' => '/local/php_interface/classes/Longbyte/Webp.php',
     'Site' => '/local/php_interface/classes/Site.php',
     //Migration
     '\Migration\Builder\IblockBuilder' => '/local/php_interface/classes/Migration/Builder/IblockBuilder.php',
@@ -18,8 +18,8 @@ Loader::registerAutoLoadClasses(null, array(
     //orm
     '\Bitrix\Iblock\ElementPropertyTable' => '/local/php_interface/lib/elementproperty.php',
     //telegram
-    '\LongByte\Telegram\SessionTable' => '/local/php_interface/classes/Telegram/LongByte/SessionTable.php',
-    '\LongByte\Telegram\Bot' => '/local/php_interface/classes/Telegram/LongByte/Bot.php',
+    '\LongByte\Telegram\SessionTable' => '/local/php_interface/classes/Telegram/Longbyte/SessionTable.php',
+    '\LongByte\Telegram\Bot' => '/local/php_interface/classes/Telegram/Longbyte/Bot.php',
     //api
     '\Api\Sensors\Post' => '/local/php_interface/classes/Api/Sensors/Post.php',
     '\Api\Sensors\SensorsSystemTable' => '/local/php_interface/lib/Api/Sensors/SensorsSystem.php',
