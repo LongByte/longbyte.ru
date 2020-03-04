@@ -30,8 +30,18 @@ class Post {
 
     public function post() {
         $arData = json_decode($this->rawPost);
-        $this->getSystem();
+        if (!$this->getSystem()) {
+            return $this->exitAction();
+        }
+
+        if (!is_array($arData)) {
+            $this->arResponse['success'] = false;
+            $this->arResponse['errors'][] = 'Некорректные данные';
+            return $this->exitAction();
+        }
+
         $this->insertSensorsData($arData);
+        return $this->exitAction();
     }
 
     public function get() {
