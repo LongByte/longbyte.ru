@@ -12,6 +12,9 @@ Loc::loadMessages(__FILE__);
  */
 class SensorsSystemTable extends Main\Entity\DataManager {
 
+    const MODE_AVG = 0;
+    const MODE_EACH = 1;
+
     /**
      * Returns DB table name for entity.
      *
@@ -43,6 +46,9 @@ class SensorsSystemTable extends Main\Entity\DataManager {
                 'autocomplete' => true,
                 'title' => 'ID',
                 )),
+            'UF_ACTIVE' => new Main\Entity\BooleanField('UF_ACTIVE', array(
+                'title' => 'Активность',
+                )),
             'UF_NAME' => new Main\Entity\StringField('UF_NAME', array(
                 'required' => true,
                 'title' => 'Название',
@@ -50,6 +56,15 @@ class SensorsSystemTable extends Main\Entity\DataManager {
             'UF_TOKEN' => new Main\Entity\StringField('UF_TOKEN', array(
                 'required' => true,
                 'title' => 'Токен',
+                )),
+            'UF_MODE' => new Main\Entity\IntegerField('UF_MODE', array(
+                'required' => true,
+                'title' => 'Режим',
+                'values' => array(self::MODE_AVG, self::MODE_EACH)
+                )),
+            'UF_EMAIL' => new Main\Entity\StringField('UF_EMAIL', array(
+                'required' => true,
+                'title' => 'E-mail для уведомлений',
                 )),
         );
     }

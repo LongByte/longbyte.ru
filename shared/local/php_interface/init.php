@@ -23,6 +23,7 @@ Loader::registerAutoLoadClasses(null, array(
     //api
     '\Api\Sensors\Post' => '/local/php_interface/classes/Api/Sensors/Post.php',
     '\Api\Sensors\SensorsSystemTable' => '/local/php_interface/lib/Api/Sensors/SensorsSystem.php',
+    '\Api\Sensors\SensorsSensorsTable' => '/local/php_interface/lib/Api/Sensors/SensorsSensors.php',
     '\Api\Sensors\SensorsDataTable' => '/local/php_interface/lib/Api/Sensors/SensorsData.php',
 ));
 

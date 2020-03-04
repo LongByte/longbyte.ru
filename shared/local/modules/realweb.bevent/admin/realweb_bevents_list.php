@@ -64,25 +64,42 @@ $arOrder = (strtoupper($by) === 'ID' ? array($by => $order) : array($by => $orde
 $lAdmin = new CAdminList($sTableID, $oSort);
 $arFilterFields = array();
 foreach ($arTableMap as $fieldCode => $arField) {
+    if ($arField instanceof Bitrix\Main\ORM\Fields\ScalarField) {
+        $fieldCode = $arField->getColumnName();
+    }
     $arFilterFields[] = 'find_' . $fieldCode;
 }
 $lAdmin->InitFilter($arFilterFields);
 
 foreach ($arTableMap as $fieldCode => $arField) {
+    if ($arField instanceof Bitrix\Main\ORM\Fields\ScalarField) {
+        $fieldCode = $arField->getColumnName();
+    }
     if (strlen($arRequest['find_' . $fieldCode]) > 0)
         $arFilter[$fieldCode] = $arRequest['find_' . $fieldCode];
 }
 
 foreach ($arTableMap as $fieldCode => $arField) {
+    $isPrimary = false;
+    if ($arField instanceof Bitrix\Main\ORM\Fields\ScalarField) {
+        $isPrimary = $arField->isPrimary();
+        $fieldCode = $arField->getColumnName();
+    } else {
+        $isPrimary = $arField['primary'];
+    }
+
     $arHeader[] = array(
         'id' => $fieldCode,
         'content' => Loc::getMessage('REALWEB.BEVENT.DATA_' . $fieldCode),
         'sort' => $fieldCode,
-        'default' => $arField['primary'],
+        'default' => $isPrimary,
     );
 }
 $lAdmin->AddHeaders($arHeader);
 foreach ($arTableMap as $fieldCode => $arField) {
+    if ($arField instanceof Bitrix\Main\ORM\Fields\ScalarField) {
+        $fieldCode = $arField->getColumnName();
+    }
     $lAdmin->AddVisibleHeaderColumn($fieldCode);
 }
 
@@ -140,6 +157,9 @@ $lAdmin->CheckListMode();
 require_once ($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_admin_after.php');
 //фильтр
 foreach ($arTableMap as $fieldCode => $arField) {
+    if ($arField instanceof Bitrix\Main\ORM\Fields\ScalarField) {
+        $fieldCode = $arField->getColumnName();
+    }
     $arAdminFilter[] = Loc::getMessage('REALWEB.BEVENT.DATA_' . $fieldCode);
 }
 $oFilter = new CAdminFilter($sTableID . '_filter', $arAdminFilter);
@@ -149,6 +169,9 @@ $oFilter = new CAdminFilter($sTableID . '_filter', $arAdminFilter);
     <?
     $oFilter->Begin();
     foreach ($arTableMap as $fieldCode => $arField) {
+        if ($arField instanceof Bitrix\Main\ORM\Fields\ScalarField) {
+            $fieldCode = $arField->getColumnName();
+        }
         ?>
         <tr>
             <td><?= Loc::getMessage('REALWEB.BEVENT.DATA_' . $fieldCode) . ":" ?></td>
