@@ -103,7 +103,8 @@ class Post {
             if ($this->arSystem['UF_MODE'] == SensorsSystemTable::MODE_AVG) {
                 $rsValues = SensorsDataTable::getList(array(
                         'filter' => array(
-                            'SENSOR.UF_SYSTEM_ID' => $this->arSystem['ID']
+                            'SENSOR.UF_SYSTEM_ID' => $this->arSystem['ID'],
+                            'UF_DATE' => new \Bitrix\Main\Type\Date(),
                         ),
                 ));
 
