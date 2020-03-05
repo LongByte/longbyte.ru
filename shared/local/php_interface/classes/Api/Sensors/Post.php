@@ -256,6 +256,9 @@ class Post {
         }
     }
 
+    /**
+     * 
+     */
     private function sendAlerts() {
         if (count($this->arResponse['alerts']) > 0 && strlen($this->arSystem['UF_EMAIL']) > 0) {
 

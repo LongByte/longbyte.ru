@@ -15,6 +15,13 @@ $arUrlRewrite = array(
         'PATH' => '/wiki/index.php',
         'SORT' => 100,
     ),
+    1 => array(
+        'CONDITION' => '#^/sensors/#',
+        'RULE' => '',
+        'ID' => 'longbyte:blank.route',
+        'PATH' => '/sensors/index.php',
+        'SORT' => 100,
+    ),
     5 => array(
         'CONDITION' => '#^/#',
         'RULE' => '',
