@@ -1,7 +1,7 @@
 <template id="sensors-template">
     <div class="sensors">
         <div class="sensors__date">
-            <vuejs-datepicker :value="getCurrenDate()" @selected="changeDate" />
+            <vuejs-datepicker @selected="changeDate" />
         </div>
         <div class="sensors__list">
             <div class="sensors__item" v-for="sensorData in store.sensors">
@@ -50,10 +50,6 @@
                         this.store = response.data.data;
                     }.bind(this))
                     ;
-            },
-            getCurrenDate() {
-              
-                return new Date();
             },
         }
     })
