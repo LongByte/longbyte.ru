@@ -67,8 +67,10 @@
                     }
                     if (tmpMax >= 5) {
                         maxValue = Math.pow(10, valueLen + 1);
-                    } else {
+                    } else if(tmpMax >= 2) {
                         maxValue = Math.pow(10, valueLen + 1) / 2;
+                    } else {
+                        maxValue = Math.pow(10, valueLen + 1) / 5;
                     }
                 }
 

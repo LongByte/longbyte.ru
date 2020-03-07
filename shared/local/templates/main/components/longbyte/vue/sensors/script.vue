@@ -7,6 +7,9 @@
             <div class="sensors__date-component">
                 <vuejs-datepicker @selected="changeDate" />
             </div>
+            <div class="sensors__date-refresh">
+                <button @click="refresh">Обновить</button>
+            </div>
         </div>
         <div class="sensors__list">
             <div class="sensors__item" v-for="sensorData in store.sensors">
@@ -37,14 +40,28 @@
         },
         mounted() {
             this.loadData();
+            this.startCountdown();
         },
         methods: {
             changeDate(date) {
                 this.loadData(date);
             },
+            refresh() {
+                this.loadData();
+            },
+            startCountdown() {
+                this.stopCountdown();
+                this.interval = setInterval(() => this.refresh() ,1000*60*5);
+            },
+            stopCountdown() {
+                if (!!this.interval) {
+                    clearInterval(this.interval);
+                }
+            },
             loadData(date) {
                 let url = '/api/sensors/get/?token=' + window.vueData.system_token;
                 if (!!date) {
+                    this.stopCountdown();
                     let day = date.getDate();
                     if (day < 10)
                         day = '0' + day;
@@ -53,6 +70,8 @@
                         month = '0' + month;
                     let strDate = day + '.' + month + '.' + date.getFullYear();
                     url += '&date=' + strDate;
+                } else {
+                    this.startCountdown();
                 }
                 axios
                     .get(url)
