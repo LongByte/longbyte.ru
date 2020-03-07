@@ -85,7 +85,7 @@ class Get {
                 $arValue['DATE'] = $arValue['DATE']->format('d.m.Y');
             }
             if ($this->arSystem['UF_MODE'] == SensorsSystemTable::MODE_EACH) {
-                $arValue['DATE'] = $arValue['DATE']->format('H:i:s');
+                $arValue['DATE'] = $arValue['DATE']->format('H:i');
             }
 
             $valueMin = 0;
@@ -156,7 +156,7 @@ class Get {
                 self::arrayValueToNumber($value);
             }
             if (is_numeric($value)) {
-                $value = (float) $value;
+                $value = round($value, 3);
             }
         }
     }

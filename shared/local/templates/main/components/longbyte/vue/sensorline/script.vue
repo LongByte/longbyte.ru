@@ -89,7 +89,7 @@
                     },
                     title: {
 						display: true,
-						text: this.sensor.sensor_app + ' ' + this.sensor.sensor_device + ' ' + this.sensor.sensor_name + ' (' + this.sensor.sensor_unit + ')'
+						text: this.sensor.sensor_device + ' ' + this.sensor.sensor_name + ' (' + this.sensor.sensor_unit + ')'
 					},
                     legend: {
                         display: false,
