@@ -1,7 +1,12 @@
 <template id="sensors-template">
     <div class="sensors">
         <div class="sensors__date">
-            <vuejs-datepicker @selected="changeDate" />
+            <div class="sensors__date-label">
+                Дата: 
+            </div>
+            <div class="sensors__date-component">
+                <vuejs-datepicker @selected="changeDate" />
+            </div>
         </div>
         <div class="sensors__list">
             <div class="sensors__item" v-for="sensorData in store.sensors">
