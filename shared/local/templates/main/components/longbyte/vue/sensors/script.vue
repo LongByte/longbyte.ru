@@ -10,10 +10,10 @@
         </div>
         <div class="sensors__list">
             <div class="sensors__item" v-for="sensorData in store.sensors">
-                <template v-if="store.system.mode==0" >
+                <template v-if="store.system.mode==0 || sensorData.values.length == 1" >
                     <sensorbar :sensor="sensorData" />
                 </template>
-                <template v-if="store.system.mode==1">
+                <template v-if="store.system.mode==1 && sensorData.values.length > 1">
                     <sensorline :sensor="sensorData" />
                 </template>
             </div>
