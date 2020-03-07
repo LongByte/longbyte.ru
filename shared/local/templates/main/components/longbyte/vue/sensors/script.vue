@@ -5,7 +5,12 @@
         </div>
         <div class="sensors__list">
             <div class="sensors__item" v-for="sensorData in store.sensors">
-                <sensor :sensor="sensorData" />
+                <template v-if="store.system.mode==0" >
+                    <sensorbar :sensor="sensorData" />
+                </template>
+                <template v-if="store.system.mode==1">
+                    <sensorline :sensor="sensorData" />
+                </template>
             </div>
         </div>
     </div>

@@ -56,29 +56,62 @@ class Get {
         while ($arSensor = $rsSensors->fetch()) {
             $this->clearUF($arSensor);
             $arSensor['VALUES'] = array();
+            $arSensor['ALERT'] = false;
+            $arSensor['ALERT_DIRECTION'] = 0;
             $arSensors[$arSensor['ID']] = $arSensor;
         }
 
         $arValues = array();
+        $arValuesFilter = array(
+            'SENSOR.UF_ACTIVE' => true,
+            'SENSOR.UF_SYSTEM_ID' => $this->arSystem['ID'],
+        );
+        if ($this->arSystem['UF_MODE'] == SensorsSystemTable::MODE_AVG) {
+            $arValuesFilter['UF_DATE'] = $obDate;
+        }
+        if ($this->arSystem['UF_MODE'] == SensorsSystemTable::MODE_EACH) {
+            $arValuesFilter['>=UF_DATE'] = $obDate;
+            $arValuesFilter['<UF_DATE'] = $obDateTo;
+        }
         $rsValues = SensorsDataTable::getList(array(
-                'filter' => array(
-                    'SENSOR.UF_ACTIVE' => true,
-                    'SENSOR.UF_SYSTEM_ID' => $this->arSystem['ID'],
-                    '>=UF_DATE' => $obDate,
-                    '<UF_DATE' => $obDateTo,
-                ),
+                'filter' => $arValuesFilter,
         ));
 
         while ($arValue = $rsValues->fetch()) {
             $this->clearUF($arValue);
+            $arSensor = &$arSensors[$arValue['SENSOR_ID']];
+
             if ($this->arSystem['UF_MODE'] == SensorsSystemTable::MODE_AVG) {
                 $arValue['DATE'] = $arValue['DATE']->format('d.m.Y');
             }
             if ($this->arSystem['UF_MODE'] == SensorsSystemTable::MODE_EACH) {
-                $arValue['DATE'] = $arValue['DATE']->format('d.m.Y H:i:s');
+                $arValue['DATE'] = $arValue['DATE']->format('H:i:s');
             }
-            $arSensors[$arValue['SENSOR_ID']]['VALUES'][] = $arValue;
+
+            $valueMin = 0;
+            $valueMax = 0;
+            if ($this->arSystem['UF_MODE'] == SensorsSystemTable::MODE_AVG) {
+                $valueMin = $arValue['SENSOR_VALUE_MIN'];
+                $valueMax = $arValue['SENSOR_VALUE_MAX'];
+            }
+            if ($this->arSystem['UF_MODE'] == SensorsSystemTable::MODE_EACH) {
+                $valueMin = $arValue['SENSOR_VALUE'];
+                $valueMax = $arValue['SENSOR_VALUE'];
+            }
+
+            if (!$arSensor['ALERT'] && $arSensor['ALERT_VALUE_MAX'] != 0 && $valueMax > $arSensor['ALERT_VALUE_MAX']) {
+                $arSensor['ALERT'] = true;
+                $arSensor['ALERT_DIRECTION'] = 1;
+            }
+
+            if (!$arSensor['ALERT'] && $arSensor['ALERT_VALUE_MIN'] != 0 && $valueMin < $arSensor['ALERT_VALUE_MIN']) {
+                $arSensor['ALERT'] = true;
+                $arSensor['ALERT_DIRECTION'] = 1;
+            }
+
+            $arSensor['VALUES'][] = $arValue;
         }
+        unset($arSensor);
 
         $arVue = array(
             'SYSTEM' => $arSystem,
@@ -108,8 +141,24 @@ class Get {
      * @return string
      */
     private function exitAction() {
+        $this->arrayValueToNumber($this->arResponse);
         header('Content-Type: application/json');
         return json_encode($this->arResponse);
+    }
+
+    /**
+     * 
+     * @param array $array
+     */
+    private function arrayValueToNumber(array &$array) {
+        foreach ($array as $key => &$value) {
+            if (is_array($value)) {
+                self::arrayValueToNumber($value);
+            }
+            if (is_numeric($value)) {
+                $value = (float) $value;
+            }
+        }
     }
 
     /**
