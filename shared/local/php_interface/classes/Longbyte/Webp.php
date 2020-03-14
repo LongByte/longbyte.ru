@@ -5,6 +5,7 @@ namespace LongByte;
 use Bitrix\Main\Application;
 use Bitrix\Main\Context;
 use Bitrix\Main\IO;
+use Bitrix\Main\Config\Option;
 
 /**
  * Class \LongByte\Webp
@@ -75,8 +76,12 @@ class Webp {
      * @param string $strSrc
      */
     public function __construct(string $strSrc) {
+        $strUploadDir = Option::get('main', 'upload_dir', 'upload');
+        if (strpos($strSrc, '/' . $strUploadDir) !== 0) {
+            $strToUploadDir = '/' . $strUploadDir . '/webp';
+        }
         $this->obSourceFile = new IO\File(Application::getDocumentRoot() . $strSrc);
-        $this->obTargetFile = new IO\File(Application::getDocumentRoot() . preg_replace('/\.[^\.]+$/i', '.webp', $strSrc));
+        $this->obTargetFile = new IO\File(Application::getDocumentRoot() . $strToUploadDir . preg_replace('/\.[^\.]+$/i', '.webp', $strSrc));
     }
 
     /**
@@ -89,7 +94,7 @@ class Webp {
             return $this->getSourceSrc();
         }
 
-        if ($this->getTargetFile()->isExists()) {
+        if ($this->getTargetFile()->isExists() && !$this->isNeedUpdate()) {
             return $this->checkCorrectImage();
         }
 
@@ -101,6 +106,7 @@ class Webp {
             $obImage = imagecreatefromjpeg($this->getSourceFile()->getPath());
         }
         if (!is_null($obImage)) {
+            $this->getTargetFile()->putContents(' ');   //создаем путь до файла и файл 
             imagewebp($obImage, $this->getTargetFile()->getPath(), 90);
             imagedestroy($obImage);
         }
@@ -149,6 +155,14 @@ class Webp {
             return $this->getTargetSrc();
         }
         return $this->getSourceSrc();
+    }
+
+    /**
+     * Проверка даты обновления файла
+     * @return bool
+     */
+    private function isNeedUpdate() {
+        return $this->getTargetFile()->getModificationTime() < $this->getSourceFile()->getModificationTime();
     }
 
     /**
