@@ -249,7 +249,7 @@ class Post {
             $isAlert = true;
         }
 
-        $message .= $arSensor['UF_ALERT_VALUE_MIN'] . $arSensor['UF_SENSOR_UNIT'];
+        $message .= $arSensor['UF_SENSOR_UNIT'];
 
         if ($isAlert) {
             $this->arResponse['alerts'][] = $message;
