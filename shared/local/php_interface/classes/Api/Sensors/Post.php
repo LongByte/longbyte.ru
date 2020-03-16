@@ -262,7 +262,9 @@ class Post {
     private function sendAlerts() {
         if (count($this->arResponse['alerts']) > 0 && strlen($this->arSystem['UF_EMAIL']) > 0) {
 
-            $message = 'Контроль сенсоров на системе ' . $this->arSystem['UF_NAME'] . '. Некоторые значения вне допустимого диапазона.<br><br>';
+            $strUrl = 'https://longbyte.ru/sensors/' . $this->arSystem['UF_NAME'] . '-' . $this->arSystem['UF_TOKEN'] . '/';
+
+            $message = 'Контроль сенсоров на системе <a href="' . $strUrl . '">' . $this->arSystem['UF_NAME'] . '</a>. Некоторые значения вне допустимого диапазона.<br><br>';
             $message .= implode('<br>', $this->arResponse['alerts']);
 
             \Bitrix\Main\Mail\Event::send(array(

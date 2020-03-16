@@ -7,6 +7,7 @@ $APPLICATION->IncludeComponent(
     "longbyte:blank",
     "system",
     Array(
+        'SYSTEM_NAME' => $arResult['VARIABLES']['SYSTEM_NAME'],
         'SYSTEM_TOKEN' => $arResult['VARIABLES']['SYSTEM_TOKEN']
     ),
     $component

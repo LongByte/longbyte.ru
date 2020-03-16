@@ -12,7 +12,7 @@ $APPLICATION->IncludeComponent(
         "SEF_FOLDER" => "/sensors/",
         'SEF_URL_TEMPLATES' => array(
             "default" => "",
-            "system" => "#SYSTEM_TOKEN#/",
+            "system" => "#SYSTEM_NAME#-#SYSTEM_TOKEN#/",
         )
     )
 );

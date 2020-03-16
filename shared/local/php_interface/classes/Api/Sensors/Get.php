@@ -12,6 +12,7 @@ class Get {
 
     private $obRequest = null;
     private $token = null;
+    private $name = null;
     private $arResponse = array(
         'data' => array(),
         'errors' => array(),
@@ -22,6 +23,7 @@ class Get {
 
     public function __construct() {
         $this->obRequest = Context::getCurrent()->getRequest();
+        $this->name = $this->obRequest->get('name');
         $this->token = $this->obRequest->get('token');
     }
 
@@ -168,6 +170,7 @@ class Get {
     private function getSystem() {
         $arSystem = SensorsSystemTable::getRow(array(
                 'filter' => array(
+                    '=UF_NAME' => $this->name,
                     '=UF_TOKEN' => $this->token,
                     'UF_ACTIVE' => true
                 ),

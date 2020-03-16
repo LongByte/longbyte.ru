@@ -51,7 +51,7 @@
             },
             startCountdown() {
                 this.stopCountdown();
-                this.interval = setInterval(() => this.refresh() ,1000*60*5);
+                this.interval = setInterval(() => this.refresh(), 1000 * 60 * 5);
             },
             stopCountdown() {
                 if (!!this.interval) {
@@ -59,7 +59,7 @@
                 }
             },
             loadData(date) {
-                let url = '/api/sensors/get/?token=' + window.vueData.system_token;
+                let url = '/api/sensors/get/?name=' + window.vueData.system_name + '&token=' + window.vueData.system_token;
                 if (!!date) {
                     this.stopCountdown();
                     let day = date.getDate();
