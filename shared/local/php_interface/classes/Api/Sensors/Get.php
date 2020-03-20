@@ -19,7 +19,12 @@ class Get {
         'alerts' => array(),
         'success' => true,
     );
-    private $arSystem = null;
+
+    /**
+     *
+     * @var \Api\Sensors\System\Entity
+     */
+    private $obSystem = null;
 
     public function __construct() {
         $this->obRequest = Context::getCurrent()->getRequest();
@@ -29,6 +34,10 @@ class Get {
 
     public function get() {
 
+        /** @var \Api\Sensors\Sensor\Collection $obSensors */
+        /** @var \Api\Sensors\Sensor\Entity $obSensor */
+        /** @var \Api\Sensors\Data\Collection $obValues */
+        /** @var \Api\Sensors\Data\Entity $obValue */
         if (!$this->getSystem()) {
             return $this->exitAction();
         }
@@ -43,81 +52,57 @@ class Get {
         $obDateTo = clone $obDate;
         $obDateTo->add('+1day');
 
-        $arSystem = $this->arSystem;
-        $this->clearUF($arSystem);
-
-        $arSensors = array();
-        $rsSensors = SensorsSensorsTable::getList(array(
-                'filter' => array(
-                    'UF_SYSTEM_ID' => $this->arSystem['ID'],
-                    'UF_ACTIVE' => true,
-                ),
+        $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
+                'SYSTEM_ID' => $this->obSystem->getId(),
+                'ACTIVE' => true,
         ));
 
-
-        while ($arSensor = $rsSensors->fetch()) {
-            $this->clearUF($arSensor);
-            $arSensor['VALUES'] = array();
-            $arSensor['ALERT'] = false;
-            $arSensor['ALERT_DIRECTION'] = 0;
-            $arSensors[$arSensor['ID']] = $arSensor;
-        }
-
-        $arValues = array();
         $arValuesFilter = array(
-            'SENSOR.UF_ACTIVE' => true,
-            'SENSOR.UF_SYSTEM_ID' => $this->arSystem['ID'],
+            'SENSOR.ACTIVE' => true,
+            'SENSOR.SYSTEM_ID' => $this->obSystem->getId(),
         );
-        if ($this->arSystem['UF_MODE'] == SensorsSystemTable::MODE_AVG) {
-            $arValuesFilter['UF_DATE'] = $obDate;
+        if ($this->obSystem->isModeAvg()) {
+            $arValuesFilter['DATE'] = $obDate;
         }
-        if ($this->arSystem['UF_MODE'] == SensorsSystemTable::MODE_EACH) {
-            $arValuesFilter['>=UF_DATE'] = $obDate;
-            $arValuesFilter['<UF_DATE'] = $obDateTo;
+        if ($this->obSystem->isModeEach()) {
+            $arValuesFilter['>=DATE'] = $obDate;
+            $arValuesFilter['<DATE'] = $obDateTo;
         }
-        $rsValues = SensorsDataTable::getList(array(
-                'filter' => $arValuesFilter,
-        ));
 
-        while ($arValue = $rsValues->fetch()) {
-            $this->clearUF($arValue);
-            $arSensor = &$arSensors[$arValue['SENSOR_ID']];
+        $obValues = \Api\Sensors\Data\Model::getAll($arValuesFilter);
 
-            if ($this->arSystem['UF_MODE'] == SensorsSystemTable::MODE_AVG) {
-                $arValue['DATE'] = $arValue['DATE']->format('d.m.Y');
-            }
-            if ($this->arSystem['UF_MODE'] == SensorsSystemTable::MODE_EACH) {
-                $arValue['DATE'] = $arValue['DATE']->format('H:i');
-            }
+
+        foreach ($obValues as $obValue) {
+            $obSensor = $obSensors->getByKey($obValue->getSensorId());
+            $obValue->setSystemMode($this->obSystem->getMode());
 
             $valueMin = 0;
             $valueMax = 0;
-            if ($this->arSystem['UF_MODE'] == SensorsSystemTable::MODE_AVG) {
-                $valueMin = $arValue['SENSOR_VALUE_MIN'];
-                $valueMax = $arValue['SENSOR_VALUE_MAX'];
+            if ($this->obSystem->isModeAvg()) {
+                $valueMin = $obValue->getSensorValueMin();
+                $valueMax = $obValue->getSensorValueMax();
             }
-            if ($this->arSystem['UF_MODE'] == SensorsSystemTable::MODE_EACH) {
-                $valueMin = $arValue['SENSOR_VALUE'];
-                $valueMax = $arValue['SENSOR_VALUE'];
-            }
-
-            if (!$arSensor['ALERT'] && $arSensor['ALERT_VALUE_MAX'] != 0 && $valueMax > $arSensor['ALERT_VALUE_MAX']) {
-                $arSensor['ALERT'] = true;
-                $arSensor['ALERT_DIRECTION'] = 1;
+            if ($this->obSystem->isModeEach()) {
+                $valueMin = $obValue->getSensorValue();
+                $valueMax = $obValue->getSensorValue();
             }
 
-            if (!$arSensor['ALERT'] && $arSensor['ALERT_VALUE_MIN'] != 0 && $valueMin < $arSensor['ALERT_VALUE_MIN']) {
-                $arSensor['ALERT'] = true;
-                $arSensor['ALERT_DIRECTION'] = 1;
+            if (!$obSensor->isAlert() && $obSensor->getAlertValueMax() != 0 && $valueMax > $obSensor->getAlertValueMax()) {
+                $obSensor->setAlert();
+                $obSensor->setAlertDirection(1);
             }
 
-            $arSensor['VALUES'][] = $arValue;
+            if (!$obSensor->isAlert() && $obSensor->getAlertValueMin() != 0 && $valueMin < $obSensor->getAlertValueMin()) {
+                $obSensor->setAlert();
+                $obSensor->setAlertDirection(1);
+            }
+
+            $obSensor->addValue($obValue);
         }
-        unset($arSensor);
 
         $arVue = array(
-            'SYSTEM' => $arSystem,
-            'SENSORS' => $arSensors,
+            'SYSTEM' => $this->obSystem,
+            'SENSORS' => $obSensors,
             'DATE' => $obDate->format('d.m.Y'),
         );
 
@@ -126,16 +111,6 @@ class Get {
         $this->arResponse['data'] = $arVue;
 
         return $this->exitAction();
-    }
-
-    private function clearUF(array &$array) {
-        foreach ($array as $key => $value) {
-            if (strpos($key, 'UF_') === 0) {
-                unset($array[$key]);
-                $key = str_replace('UF_', '', $key);
-                $array[$key] = $value;
-            }
-        }
     }
 
     /**
@@ -168,44 +143,14 @@ class Get {
      * @return boolean
      */
     private function getSystem() {
-        $arSystem = SensorsSystemTable::getRow(array(
-                'filter' => array(
-                    '=UF_NAME' => $this->name,
-                    '=UF_TOKEN' => $this->token,
-                    'UF_ACTIVE' => true
-                ),
+
+        $this->obSystem = \Api\Sensors\System\Model::getOne(array(
+                '=NAME' => $this->name,
+                '=TOKEN' => $this->token,
+                'ACTIVE' => true
         ));
 
-        if ($arSystem) {
-            $this->arSystem = $arSystem;
-
-            $rsSensors = SensorsSensorsTable::getList(array(
-                    'filter' => array(
-                        'UF_SYSTEM_ID' => $this->arSystem ['ID']
-                    ),
-            ));
-
-            while ($arSensor = $rsSensors->fetch()) {
-                $this->arSensors
-                    [$arSensor['UF_SENSOR_APP']]
-                    [$arSensor['UF_SENSOR_DEVICE']]
-                    [$arSensor['UF_SENSOR_NAME']] = $arSensor;
-            }
-
-            if ($this->arSystem['UF_MODE'] == SensorsSystemTable::MODE_AVG) {
-                $rsValues = SensorsDataTable::getList(array(
-                        'filter' => array(
-                            'SENSOR.UF_SYSTEM_ID' => $this->arSystem['ID'],
-                            'UF_DATE' => new \Bitrix\Main\Type\Date(),
-                        ),
-                ));
-
-                while ($arValue = $rsValues->fetch()) {
-                    $this->arTodayValues
-                        [$arValue['UF_SENSOR_ID']] = $arValue;
-                }
-            }
-
+        if ($this->obSystem) {
             return true;
         } else {
             $this->arResponse['success'] = false;

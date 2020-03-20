@@ -1,6 +1,6 @@
 <?php
 
-namespace Api\Sensors;
+namespace Api\Sensors\Data;
 
 use Bitrix\Main;
 use Bitrix\Main\Localization\Loc;
@@ -8,9 +8,9 @@ use Bitrix\Main\Localization\Loc;
 Loc::loadMessages(__FILE__);
 
 /**
- * Class \Api\Sensors\SensorsSystemTable
+ * Class \Api\Sensors\Data\Table
  */
-class SensorsDataTable extends Main\Entity\DataManager {
+class Table extends Main\Entity\DataManager {
 
     /**
      * Returns DB table name for entity.
@@ -43,31 +43,31 @@ class SensorsDataTable extends Main\Entity\DataManager {
                 'autocomplete' => true,
                 'title' => 'ID',
                 )),
-            'UF_SENSOR_ID' => new Main\Entity\IntegerField('UF_SENSOR_ID', array(
+            'SENSOR_ID' => new Main\Entity\IntegerField('UF_SENSOR_ID', array(
                 'required' => true,
                 'title' => 'Сенсор',
                 )),
             'SENSOR' => new Main\Entity\ReferenceField(
                 'SENSOR',
-                '\Api\Sensors\SensorsSensorsTable',
-                array('this.UF_SENSOR_ID' => 'ref.ID'),
+                '\Api\Sensors\Sensor\Table',
+                array('this.SENSOR_ID' => 'ref.ID'),
                 array('join_type' => 'INNER')
             ),
-            'UF_DATE' => new Main\Entity\DatetimeField('UF_DATE', array(
+            'DATE' => new Main\Entity\DatetimeField('UF_DATE', array(
                 'required' => true,
                 'title' => 'Дата',
                 )),
-            'UF_SENSOR_VALUE_MIN' => new Main\Entity\FloatField('UF_SENSOR_VALUE_MIN', array(
+            'SENSOR_VALUE_MIN' => new Main\Entity\FloatField('UF_SENSOR_VALUE_MIN', array(
                 'title' => 'Минимальное значение',
                 )),
-            'UF_SENSOR_VALUE' => new Main\Entity\FloatField('UF_SENSOR_VALUE', array(
+            'SENSOR_VALUE' => new Main\Entity\FloatField('UF_SENSOR_VALUE', array(
                 'required' => true,
                 'title' => 'Значение',
                 )),
-            'UF_SENSOR_VALUE_MAX' => new Main\Entity\FloatField('UF_SENSOR_VALUE_MAX', array(
+            'SENSOR_VALUE_MAX' => new Main\Entity\FloatField('UF_SENSOR_VALUE_MAX', array(
                 'title' => 'Максимальное значение',
                 )),
-            'UF_SENSOR_VALUES' => new Main\Entity\IntegerField('UF_SENSOR_VALUES', array(
+            'SENSOR_VALUES' => new Main\Entity\IntegerField('UF_SENSOR_VALUES', array(
                 'title' => 'Количество значений',
                 )),
         );

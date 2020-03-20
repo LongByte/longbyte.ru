@@ -1,6 +1,6 @@
 <?php
 
-namespace Api\Sensors;
+namespace Api\Sensors\System;
 
 use Bitrix\Main;
 use Bitrix\Main\Localization\Loc;
@@ -8,9 +8,9 @@ use Bitrix\Main\Localization\Loc;
 Loc::loadMessages(__FILE__);
 
 /**
- * Class \Api\Sensors\SensorsSystemTable
+ * Class \Api\Sensors\System\Table
  */
-class SensorsSystemTable extends Main\Entity\DataManager {
+class Table extends Main\Entity\DataManager {
 
     const MODE_AVG = 0;
     const MODE_EACH = 1;
@@ -46,23 +46,23 @@ class SensorsSystemTable extends Main\Entity\DataManager {
                 'autocomplete' => true,
                 'title' => 'ID',
                 )),
-            'UF_ACTIVE' => new Main\Entity\BooleanField('UF_ACTIVE', array(
+            'ACTIVE' => new Main\Entity\BooleanField('UF_ACTIVE', array(
                 'title' => 'Активность',
                 )),
-            'UF_NAME' => new Main\Entity\StringField('UF_NAME', array(
+            'NAME' => new Main\Entity\StringField('UF_NAME', array(
                 'required' => true,
                 'title' => 'Название',
                 )),
-            'UF_TOKEN' => new Main\Entity\StringField('UF_TOKEN', array(
+            'TOKEN' => new Main\Entity\StringField('UF_TOKEN', array(
                 'required' => true,
                 'title' => 'Токен',
                 )),
-            'UF_MODE' => new Main\Entity\IntegerField('UF_MODE', array(
+            'MODE' => new Main\Entity\IntegerField('UF_MODE', array(
                 'required' => true,
                 'title' => 'Режим',
                 'values' => array(self::MODE_AVG, self::MODE_EACH)
                 )),
-            'UF_EMAIL' => new Main\Entity\StringField('UF_EMAIL', array(
+            'EMAIL' => new Main\Entity\StringField('UF_EMAIL', array(
                 'required' => true,
                 'title' => 'E-mail для уведомлений',
                 )),

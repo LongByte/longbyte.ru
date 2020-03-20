@@ -1,5 +1,6 @@
 <?
 
+use Bitrix\Main\Application;
 use Bitrix\Main\Loader;
 use Bitrix\Main\EventManager;
 
@@ -23,12 +24,11 @@ Loader::registerAutoLoadClasses(null, array(
     //api
     '\Api\Sensors\Get' => '/local/php_interface/classes/Api/Sensors/Get.php',
     '\Api\Sensors\Post' => '/local/php_interface/classes/Api/Sensors/Post.php',
-    '\Api\Sensors\SensorsSystemTable' => '/local/php_interface/lib/Api/Sensors/SensorsSystem.php',
-    '\Api\Sensors\SensorsSensorsTable' => '/local/php_interface/lib/Api/Sensors/SensorsSensors.php',
-    '\Api\Sensors\SensorsDataTable' => '/local/php_interface/lib/Api/Sensors/SensorsData.php',
 ));
 
 EventManager::getInstance()->addEventHandler('main', 'OnPageStart', array('Site', 'onPageStart'));
 EventManager::getInstance()->addEventHandler('main', 'onEpilog', array('Site', 'onEpilog'));
 EventManager::getInstance()->addEventHandler('main', 'OnEndBufferContent', array('Site', 'OnEndBufferContent'));
 EventManager::getInstance()->addEventHandler('main', 'OnEndBufferContent', array('\LongByte\Webp', 'convertAllToWebp'));
+
+include_once(Application::getDocumentRoot() . '/local/php_interface/lib/Api/Autoloader.php');

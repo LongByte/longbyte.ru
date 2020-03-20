@@ -77,40 +77,40 @@ class Post {
      * @return boolean
      */
     private function getSystem() {
-        $arSystem = SensorsSystemTable::getRow(array(
+        $arSystem = \Api\Sensors\System\Table::getRow(array(
                 'filter' => array(
-                    '=UF_TOKEN' => $this->token,
-                    'UF_ACTIVE' => true
+                    '=TOKEN' => $this->token,
+                    'ACTIVE' => true
                 ),
         ));
 
         if ($arSystem) {
             $this->arSystem = $arSystem;
 
-            $rsSensors = SensorsSensorsTable::getList(array(
+            $rsSensors = \Api\Sensors\Sensor\Table::getList(array(
                     'filter' => array(
-                        'UF_SYSTEM_ID' => $this->arSystem ['ID']
+                        'SYSTEM_ID' => $this->arSystem ['ID']
                     ),
             ));
 
             while ($arSensor = $rsSensors->fetch()) {
                 $this->arSensors
-                    [$arSensor['UF_SENSOR_APP']]
-                    [$arSensor['UF_SENSOR_DEVICE']]
-                    [$arSensor['UF_SENSOR_NAME']] = $arSensor;
+                    [$arSensor['SENSOR_APP']]
+                    [$arSensor['SENSOR_DEVICE']]
+                    [$arSensor['SENSOR_NAME']] = $arSensor;
             }
 
-            if ($this->arSystem['UF_MODE'] == SensorsSystemTable::MODE_AVG) {
-                $rsValues = SensorsDataTable::getList(array(
+            if ($this->arSystem['MODE'] == \Api\Sensors\System\Table::MODE_AVG) {
+                $rsValues = \Api\Sensors\Data\Table::getList(array(
                         'filter' => array(
-                            'SENSOR.UF_SYSTEM_ID' => $this->arSystem['ID'],
-                            'UF_DATE' => new \Bitrix\Main\Type\Date(),
+                            'SENSOR.SYSTEM_ID' => $this->arSystem['ID'],
+                            'DATE' => new \Bitrix\Main\Type\Date(),
                         ),
                 ));
 
                 while ($arValue = $rsValues->fetch()) {
                     $this->arTodayValues
-                        [$arValue['UF_SENSOR_ID']] = $arValue;
+                        [$arValue['SENSOR_ID']] = $arValue;
                 }
             }
 
@@ -136,14 +136,14 @@ class Post {
             if (is_null($arSensor)) {
 
                 $arSensor = array(
-                    'UF_ACTIVE' => true,
-                    'UF_SYSTEM_ID' => $this->arSystem['ID'],
-                    'UF_SENSOR_APP' => $obValue->SensorApp,
-                    'UF_SENSOR_DEVICE' => $obValue->SensorClass,
-                    'UF_SENSOR_NAME' => $obValue->SensorName,
-                    'UF_SENSOR_UNIT' => $obValue->SensorUnit,
+                    'ACTIVE' => true,
+                    'SYSTEM_ID' => $this->arSystem['ID'],
+                    'SENSOR_APP' => $obValue->SensorApp,
+                    'SENSOR_DEVICE' => $obValue->SensorClass,
+                    'SENSOR_NAME' => $obValue->SensorName,
+                    'SENSOR_UNIT' => $obValue->SensorUnit,
                 );
-                $rsResult = SensorsSensorsTable::add($arSensor);
+                $rsResult = \Api\Sensors\Sensor\Table::add($arSensor);
                 if ($rsResult->isSuccess()) {
                     $arSensor['ID'] = $rsResult->getId();
                 } else {
@@ -152,49 +152,49 @@ class Post {
                     continue;
                 }
             } else {
-                if (!$arSensor['UF_ACTIVE'])
+                if (!$arSensor['ACTIVE'])
                     continue;
             }
 
-            if ($this->arSystem['UF_MODE'] == SensorsSystemTable::MODE_AVG) {
+            if ($this->arSystem['MODE'] == \Api\Sensors\System\Table::MODE_AVG) {
                 $arValue = $this->arTodayValues[$arSensor['ID']];
 
                 if (!$arValue) {
                     $arValue = array(
-                        'UF_SENSOR_ID' => $arSensor['ID'],
-                        'UF_DATE' => new \Bitrix\Main\Type\Date(),
-                        'UF_SENSOR_VALUE_MIN' => $value,
-                        'UF_SENSOR_VALUE' => $value,
-                        'UF_SENSOR_VALUE_MAX' => $value,
-                        'UF_SENSOR_VALUES' => 1,
+                        'SENSOR_ID' => $arSensor['ID'],
+                        'DATE' => new \Bitrix\Main\Type\Date(),
+                        'SENSOR_VALUE_MIN' => $value,
+                        'SENSOR_VALUE' => $value,
+                        'SENSOR_VALUE_MAX' => $value,
+                        'SENSOR_VALUES' => 1,
                     );
-                    $rsResult = SensorsDataTable::add($arValue);
+                    $rsResult = \Api\Sensors\Data\Table::add($arValue);
                     if (!$rsResult->isSuccess()) {
                         $this->arResponse['errors'][] = 'Невозможно добавить данные: ' . implode(';', $rsResult->getErrorMessages());
                         $this->arResponse['errors'][] = 'Данные: ' . print_r($arValue, true);
                     }
                 } else {
-                    if ($value < $arValue['UF_SENSOR_VALUE_MIN']) {
-                        $arValue['UF_SENSOR_VALUE_MIN'] = $value;
+                    if ($value < $arValue['SENSOR_VALUE_MIN']) {
+                        $arValue['SENSOR_VALUE_MIN'] = $value;
                     }
-                    if ($value > $arValue['UF_SENSOR_VALUE_MAX']) {
-                        $arValue['UF_SENSOR_VALUE_MAX'] = $value;
+                    if ($value > $arValue['SENSOR_VALUE_MAX']) {
+                        $arValue['SENSOR_VALUE_MAX'] = $value;
                     }
-                    $arValue['UF_SENSOR_VALUE'] = ($arValue['UF_SENSOR_VALUE'] * $arValue['UF_SENSOR_VALUES'] + $value) / ($arValue['UF_SENSOR_VALUES'] + 1);
-                    $arValue['UF_SENSOR_VALUES'] ++;
+                    $arValue['SENSOR_VALUE'] = ($arValue['SENSOR_VALUE'] * $arValue['SENSOR_VALUES'] + $value) / ($arValue['SENSOR_VALUES'] + 1);
+                    $arValue['SENSOR_VALUES'] ++;
                     $valueId = $arValue['ID'];
                     unset($arValue['ID']);
-                    SensorsDataTable::update($valueId, $arValue);
+                    \Api\Sensors\Data\Table::update($valueId, $arValue);
                 }
             }
 
-            if ($this->arSystem['UF_MODE'] == SensorsSystemTable::MODE_EACH) {
+            if ($this->arSystem['MODE'] == \Api\Sensors\System\Table::MODE_EACH) {
                 $arValue = array(
-                    'UF_SENSOR_ID' => $arSensor['ID'],
-                    'UF_DATE' => new \Bitrix\Main\Type\DateTime(),
-                    'UF_SENSOR_VALUE' => $value,
+                    'SENSOR_ID' => $arSensor['ID'],
+                    'DATE' => new \Bitrix\Main\Type\DateTime(),
+                    'SENSOR_VALUE' => $value,
                 );
-                $rsResult = SensorsDataTable::add($arValue);
+                $rsResult = \Api\Sensors\Data\Table::add($arValue);
                 if (!$rsResult->isSuccess()) {
                     $this->arResponse['errors'][] = 'Невозможно добавить данные: ' . implode(';', $rsResult->getErrorMessages());
                     $this->arResponse['errors'][] = 'Данные: ' . print_r($arValue, true);
@@ -237,19 +237,19 @@ class Post {
 
         $isAlert = false;
 
-        $message = 'Значение на датчике ' . $arSensor['UF_SENSOR_APP'] . ' > ' . $arSensor['UF_SENSOR_DEVICE'] . ' > ' . $arSensor['UF_SENSOR_NAME'] . ' = ' . $value . $arSensor['UF_SENSOR_UNIT'] . ' и ';
+        $message = 'Значение на датчике ' . $arSensor['SENSOR_APP'] . ' > ' . $arSensor['SENSOR_DEVICE'] . ' > ' . $arSensor['SENSOR_NAME'] . ' = ' . $value . $arSensor['SENSOR_UNIT'] . ' и ';
 
-        if ($arSensor['UF_ALERT_VALUE_MIN'] != 0 && $value < $arSensor['UF_ALERT_VALUE_MIN']) {
-            $message .= 'меньше допустимого ' . $arSensor['UF_ALERT_VALUE_MIN'];
+        if ($arSensor['ALERT_VALUE_MIN'] != 0 && $value < $arSensor['ALERT_VALUE_MIN']) {
+            $message .= 'меньше допустимого ' . $arSensor['ALERT_VALUE_MIN'];
             $isAlert = true;
         }
 
-        if ($arSensor['UF_ALERT_VALUE_MAX'] != 0 && $value > $arSensor['UF_ALERT_VALUE_MAX']) {
-            $message .= 'больше допустимого ' . $arSensor['UF_ALERT_VALUE_MAX'];
+        if ($arSensor['ALERT_VALUE_MAX'] != 0 && $value > $arSensor['ALERT_VALUE_MAX']) {
+            $message .= 'больше допустимого ' . $arSensor['ALERT_VALUE_MAX'];
             $isAlert = true;
         }
 
-        $message .= $arSensor['UF_SENSOR_UNIT'];
+        $message .= $arSensor['SENSOR_UNIT'];
 
         if ($isAlert) {
             $this->arResponse['alerts'][] = $message;
@@ -260,19 +260,19 @@ class Post {
      * 
      */
     private function sendAlerts() {
-        if (count($this->arResponse['alerts']) > 0 && strlen($this->arSystem['UF_EMAIL']) > 0) {
+        if (count($this->arResponse['alerts']) > 0 && strlen($this->arSystem['EMAIL']) > 0) {
 
-            $strUrl = 'https://longbyte.ru/sensors/' . $this->arSystem['UF_NAME'] . '-' . $this->arSystem['UF_TOKEN'] . '/';
+            $strUrl = 'https://longbyte.ru/sensors/' . $this->arSystem['NAME'] . '-' . $this->arSystem['TOKEN'] . '/';
 
-            $message = 'Контроль сенсоров на системе <a href="' . $strUrl . '">' . $this->arSystem['UF_NAME'] . '</a>. Некоторые значения вне допустимого диапазона.<br><br>';
+            $message = 'Контроль сенсоров на системе <a href="' . $strUrl . '">' . $this->arSystem['NAME'] . '</a>. Некоторые значения вне допустимого диапазона.<br><br>';
             $message .= implode('<br>', $this->arResponse['alerts']);
 
             \Bitrix\Main\Mail\Event::send(array(
                 'EVENT_NAME' => 'SENSORS_ALERT',
                 'LID' => 's1',
                 'C_FIELDS' => array(
-                    'EMAIL_TO' => $this->arSystem['UF_EMAIL'],
-                    'SUBJECT' => 'Оповещение системы контроля сенсоров на системе ' . $this->arSystem['UF_NAME'],
+                    'EMAIL_TO' => $this->arSystem['EMAIL'],
+                    'SUBJECT' => 'Оповещение системы контроля сенсоров на системе ' . $this->arSystem['NAME'],
                     'MESSAGE' => $message
                 )
             ));
