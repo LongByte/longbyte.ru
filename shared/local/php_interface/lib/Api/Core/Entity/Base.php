@@ -64,6 +64,8 @@ abstract class Base {
         } elseif ($primary !== null) {
             $this->_primary = $primary;
             $this->getData();
+        } else {
+            $this->getData();
         }
     }
 
@@ -72,22 +74,24 @@ abstract class Base {
      */
     public function getData() {
         if (is_null($this->_data)) {
-            $this->_data = array_fill_keys(static::getFields(), '');
+            $this->_data = array_fill_keys($this->getFields(), '');
 
-            $primaryField = static::getTable()::getEntity()->getPrimary();
-            if (is_array($primaryField)) {
-                $arPrimaryFilter = $this->_primary;
-            } else {
-                $arPrimaryFilter = array($primaryField => $this->_primary);
-            }
+            if (!is_null($this->_primary)) {
+                $primaryField = static::getModel()::getTable()::getEntity()->getPrimary();
+                if (is_array($primaryField)) {
+                    $arPrimaryFilter = $this->_primary;
+                } else {
+                    $arPrimaryFilter = array($primaryField => $this->_primary);
+                }
 
-            if ($arPrimaryFilter !== null) {
-                $_arData = static::getTable()::getRow(array(
-                        'filter' => $arPrimaryFilter,
-                ));
-                if ($_arData) {
-                    $this->_data = $_arData;
-                    $this->_exist = true;
+                if ($arPrimaryFilter !== null) {
+                    $_arData = static::getTable()::getRow(array(
+                            'filter' => $arPrimaryFilter,
+                    ));
+                    if ($_arData) {
+                        $this->_data = $_arData;
+                        $this->_exist = true;
+                    }
                 }
             }
         }
