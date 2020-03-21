@@ -7,11 +7,11 @@ namespace Api\Core\Model;
  */
 abstract class Base {
 
-    abstract protected static function getTable();
+    abstract public static function getTable();
 
-    abstract protected static function getEntity();
+    abstract public static function getEntity();
 
-    abstract protected static function getCollection();
+    abstract public static function getCollection();
 
     /**
      * 

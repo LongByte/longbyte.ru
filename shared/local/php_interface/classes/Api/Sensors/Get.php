@@ -71,10 +71,14 @@ class Get {
 
         $obValues = \Api\Sensors\Data\Model::getAll($arValuesFilter);
 
-
         foreach ($obValues as $obValue) {
             $obSensor = $obSensors->getByKey($obValue->getSensorId());
-            $obValue->setSystemMode($this->obSystem->getMode());
+
+            $this->obSystem->getSensorsCollection()->addItem($obSensor);
+            $obSensor->setSystem($this->obSystem);
+
+            $obSensor->getValuesCollection()->addItem($obValue);
+            $obValue->setSensor($obSensor);
 
             $valueMin = 0;
             $valueMax = 0;
@@ -94,19 +98,15 @@ class Get {
 
             if (!$obSensor->isAlert() && $obSensor->getAlertValueMin() != 0 && $valueMin < $obSensor->getAlertValueMin()) {
                 $obSensor->setAlert();
-                $obSensor->setAlertDirection(1);
+                $obSensor->setAlertDirection(-1);
             }
-
-            $obSensor->addValue($obValue);
         }
 
         $arVue = array(
-            'SYSTEM' => $this->obSystem,
-            'SENSORS' => $obSensors,
-            'DATE' => $obDate->format('d.m.Y'),
+            'system' => $this->obSystem->toArray(),
+            'sensors' => $obSensors->toArray(),
+            'date' => $obDate->format('d.m.Y'),
         );
-
-        \LongByte\Vue::arrayKeyToLower($arVue);
 
         $this->arResponse['data'] = $arVue;
 

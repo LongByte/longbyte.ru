@@ -29,7 +29,11 @@ namespace Api\Sensors\Data;
  */
 class Entity extends \Api\Core\Entity\Base {
 
-    protected $_systemMode = 0;
+    /**
+     *
+     * @var \Api\Sensors\Sensor\Entity 
+     */
+    protected $_obSensor = null;
 
     /**
      * 
@@ -43,17 +47,29 @@ class Entity extends \Api\Core\Entity\Base {
      * 
      * @return \Api\Sensors\Data\Model
      */
-    protected static function getModel() {
+    public static function getModel() {
         return \Api\Sensors\Data\Model::class;
     }
 
     /**
      * 
-     * @param int $iSystemMode
+     * @return \Api\Sensors\Sensor\Entity 
+     */
+    public function getSensor() {
+        if (is_null($this->_obSensor)) {
+            $this->_obSensor = new \Api\Sensors\Sensor\Entity($this->getSensorId());
+        }
+        return $this->_obSensor;
+    }
+
+    /**
+     * 
+     * @param \Api\Sensors\Sensor\Entity $obSensor
      * @return $this
      */
-    public function setSystemMode(int $iSystemMode) {
-        $this->_systemMode = $iSystemMode;
+    public function setSensor(\Api\Sensors\Sensor\Entity $obSensor) {
+        $this->_obSensor = $obSensor;
+        $this->setSensorId($obSensor->getId());
         return $this;
     }
 

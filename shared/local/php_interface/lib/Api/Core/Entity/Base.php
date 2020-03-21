@@ -37,7 +37,7 @@ abstract class Base {
     /**
      * @return \Api\Core\Model\Base
      */
-    abstract protected static function getModel();
+    abstract public static function getModel();
 
     /**
      * DataEntity constructor.
@@ -138,7 +138,7 @@ abstract class Base {
                 $arField[] = $arRes[0];
             }
             $strField = self::toUpper(implode('_', $arField));
-            $arData = $$this->_data;
+            $arData = $this->_data;
             if (array_key_exists($strField, $arData)) {
                 if ($this->checkChanges($this->_data[$strField], $arguments[0])) {
                     $this->_changed = true;
@@ -168,16 +168,27 @@ abstract class Base {
     }
 
     /**
-     * @param null $data
      *
+     * @param type $oldValue
+     * @param type $newValue
+     * @return bool
+     */
+    protected function checkChanges($oldValue, $newValue) {
+        if ($oldValue instanceof \Bitrix\Main\Type\DateTime && $newValue instanceof \Bitrix\Main\Type\DateTime) {
+            $oldValue = $oldValue->getTimestamp();
+            $newValue = $newValue->getTimestamp();
+        }
+
+        return $oldValue != $newValue;
+    }
+
+    /**
+     * 
      * @return array
      */
-    public function toArray($data = null) {
+    public function toArray() {
         $arArray = array();
-        if (is_null($data)) {
-            $data = $this->_data;
-        }
-        foreach ($data as $strKey => $value) {
+        foreach ($this->_data as $strKey => $value) {
             if (strpos($strKey, '~') === 0) {
                 continue;
             }
@@ -220,18 +231,15 @@ abstract class Base {
     public function save() {
         $arFields = array();
         $arData = $this->getData();
-        foreach (static::getTable()::getTableFields() as $strAliasField => $strTableField) {
-            if (is_numeric($strAliasField)) {
-                $strAliasField = $strTableField;
-            }
-            if (array_key_exists($strAliasField, $arData)) {
-                $arFields[$strTableField] = $arData[$strAliasField];
+        foreach ($this->getFields() as $strTableField) {
+            if (array_key_exists($strTableField, $arData)) {
+                $arFields[$strTableField] = $arData[$strTableField];
             }
         }
         if ($this->isExist()) {
-            $rsResult = static::getTable()::update($this->_primary, $arFields);
+            $rsResult = static::getModel()::getTable()::update($this->_primary, $arFields);
         } else {
-            $rsResult = static::getTable()::add($arFields);
+            $rsResult = static::getModel()::getTable()::add($arFields);
             if (intval($rsResult->getId()) > 0) {
                 $this->_primary = $rsResult->getId();
                 $this->_exist = true;
@@ -244,7 +252,7 @@ abstract class Base {
 
     public function delete() {
         if ($this->isExist()) {
-            $rsResult = static::getTable()::delete($this->_primary);
+            $rsResult = static::getModel()::getTable()::delete($this->_primary);
             $this->_exist = false;
             $this->_primary = null;
             $this->_changed = true;

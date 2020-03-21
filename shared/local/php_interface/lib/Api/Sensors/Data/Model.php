@@ -7,15 +7,15 @@ namespace Api\Sensors\Data;
  */
 class Model extends \Api\Core\Model\Base {
 
-    protected static function getTable() {
+    public static function getTable() {
         return \Api\Sensors\Data\Table::class;
     }
 
-    protected static function getEntity() {
+    public static function getEntity() {
         return \Api\Sensors\Data\Entity::class;
     }
 
-    protected static function getCollection() {
+    public static function getCollection() {
         return \Api\Sensors\Data\Collection::class;
     }
 

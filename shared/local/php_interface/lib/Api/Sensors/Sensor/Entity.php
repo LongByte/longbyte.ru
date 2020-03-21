@@ -40,9 +40,15 @@ class Entity extends \Api\Core\Entity\Base {
 
     /**
      *
+     * @var \Api\Sensors\System\Entity 
+     */
+    protected $_obSystem = null;
+
+    /**
+     *
      * @var \Api\Sensors\Data\Collection
      */
-    protected $_valuesCollection = null;
+    protected $_obValuesCollection = null;
 
     /**
      * 
@@ -56,8 +62,14 @@ class Entity extends \Api\Core\Entity\Base {
      * 
      * @return \Api\Sensors\Sensor\Model
      */
-    protected static function getModel() {
+    public static function getModel() {
         return \Api\Sensors\Sensor\Model::class;
+    }
+
+    public function toArray() {
+        $arData = parent::toArray();
+        $arData['values'] = $this->getValuesCollection()->toArray();
+        return $arData;
     }
 
     /**
@@ -90,14 +102,34 @@ class Entity extends \Api\Core\Entity\Base {
 
     /**
      * 
-     * @param \Api\Sensors\Data\Entity $obValue
+     * @return \Api\Sensors\Data\Collection
+     */
+    public function getValuesCollection() {
+        if (is_null($this->_obValuesCollection)) {
+            $this->_obValuesCollection = new \Api\Sensors\Data\Collection();
+        }
+        return $this->_obValuesCollection;
+    }
+
+    /**
+     * 
+     * @return \Api\Sensors\System\Entity 
+     */
+    public function getSystem() {
+        if (is_null($this->_obSystem)) {
+            $this->_obSystem = new \Api\Sensors\System\Entity($this->getSensorId());
+        }
+        return $this->_obSystem;
+    }
+
+    /**
+     * 
+     * @param \Api\Sensors\System\Entity $obSystem
      * @return $this
      */
-    public function addValue(\Api\Sensors\Data\Entity $obValue) {
-        if (is_null($this->_valuesCollection)) {
-            $this->_valuesCollection = new \Api\Sensors\Data\Collection();
-        }
-        $this->_valuesCollection->addItem($obValue);
+    public function setSystem(\Api\Sensors\System\Entity $obSystem) {
+        $this->_obSystem = $obSystem;
+        $this->setSystemId($obSystem->getId());
         return $this;
     }
 

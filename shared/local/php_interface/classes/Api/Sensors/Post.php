@@ -18,9 +18,18 @@ class Post {
         'alerts' => array(),
         'success' => true,
     );
-    private $arSystem = null;
-    private $arSensors = null;
-    private $arTodayValues = null;
+
+    /**
+     *
+     * @var \Api\Sensors\System\Entity
+     */
+    private $obSystem = null;
+
+    /**
+     *
+     * @var \Api\Sensors\Data\Collection 
+     */
+    private $obTodayValues = null;
 
     public function __construct() {
         $this->obRequest = Context::getCurrent()->getRequest();
@@ -77,41 +86,29 @@ class Post {
      * @return boolean
      */
     private function getSystem() {
-        $arSystem = \Api\Sensors\System\Table::getRow(array(
-                'filter' => array(
-                    '=TOKEN' => $this->token,
-                    'ACTIVE' => true
-                ),
+        /** @var \Api\Sensors\Sensor\Collection $obSensors */
+        /** @var \Api\Sensors\Sensor\Entity $obSensor */
+        /** @var \Api\Sensors\Data\Collection $obValues */
+        /** @var \Api\Sensors\Data\Entity $obValue */
+        $this->obSystem = \Api\Sensors\System\Model::getOne(array(
+                '=TOKEN' => $this->token,
+                'ACTIVE' => true
         ));
 
-        if ($arSystem) {
-            $this->arSystem = $arSystem;
+        if ($this->obSystem) {
 
-            $rsSensors = \Api\Sensors\Sensor\Table::getList(array(
-                    'filter' => array(
-                        'SYSTEM_ID' => $this->arSystem ['ID']
-                    ),
+            $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
+                    'SYSTEM_ID' => $this->obSystem->getId(),
             ));
 
-            while ($arSensor = $rsSensors->fetch()) {
-                $this->arSensors
-                    [$arSensor['SENSOR_APP']]
-                    [$arSensor['SENSOR_DEVICE']]
-                    [$arSensor['SENSOR_NAME']] = $arSensor;
-            }
+            $this->obSystem->setSensorsCollection($obSensors);
 
-            if ($this->arSystem['MODE'] == \Api\Sensors\System\Table::MODE_AVG) {
-                $rsValues = \Api\Sensors\Data\Table::getList(array(
-                        'filter' => array(
-                            'SENSOR.SYSTEM_ID' => $this->arSystem['ID'],
-                            'DATE' => new \Bitrix\Main\Type\Date(),
-                        ),
+            if ($this->obSystem->isModeAvg()) {
+
+                $this->obTodayValues = \Api\Sensors\Data\Model::getAll(array(
+                        'SENSOR.SYSTEM_ID' => $this->obSystem->getId(),
+                        'DATE' => new \Bitrix\Main\Type\Date(),
                 ));
-
-                while ($arValue = $rsValues->fetch()) {
-                    $this->arTodayValues
-                        [$arValue['SENSOR_ID']] = $arValue;
-                }
             }
 
             return true;
@@ -129,129 +126,110 @@ class Post {
      */
     private function insertSensorsData(array $arData) {
 
-        foreach ($arData as $obValue) {
-            $value = floatval(str_replace(',', '.', $obValue->SensorValue));
-            $arSensor = $this->getSensor($obValue->SensorApp, $obValue->SensorClass, $obValue->SensorName);
+        /** @var \Api\Sensors\Sensor\Collection $obSensors */
+        /** @var \Api\Sensors\Sensor\Entity $obSensor */
+        /** @var \Api\Sensors\Data\Collection $obValues */
+        /** @var \Api\Sensors\Data\Entity $obValue */
+        foreach ($arData as $obInputValue) {
+            $value = floatval(str_replace(',', '.', $obInputValue->SensorValue));
+            $obSensor = $this->obSystem->getSensorsCollection()->getByParams($obInputValue->SensorApp, $obInputValue->SensorClass, $obInputValue->SensorName);
 
-            if (is_null($arSensor)) {
+            if (is_null($obSensor)) {
 
-                $arSensor = array(
-                    'ACTIVE' => true,
-                    'SYSTEM_ID' => $this->arSystem['ID'],
-                    'SENSOR_APP' => $obValue->SensorApp,
-                    'SENSOR_DEVICE' => $obValue->SensorClass,
-                    'SENSOR_NAME' => $obValue->SensorName,
-                    'SENSOR_UNIT' => $obValue->SensorUnit,
-                );
-                $rsResult = \Api\Sensors\Sensor\Table::add($arSensor);
-                if ($rsResult->isSuccess()) {
-                    $arSensor['ID'] = $rsResult->getId();
-                } else {
-                    $this->arResponse['errors'][] = 'Невозможно создать сенсор: ' . implode(';', $rsResult->getErrorMessages());
-                    $this->arResponse['errors'][] = 'Данные: ' . print_r($arSensor, true);
+                $obSensor = new \Api\Sensors\Sensor\Entity();
+                $obSensor
+                    ->setActive(true)
+                    ->setSystem($this->obSystem)
+                    ->setSensorApp($obInputValue->SensorApp)
+                    ->setSensorClass($obInputValue->SensorClass)
+                    ->setSensorrName($obInputValue->SensorName)
+                    ->setSensorUnit($obInputValue->SensorUnit)
+                    ->save()
+                ;
+
+                if (!$obSensor->isExist()) {
+                    $this->arResponse['errors'][] = 'Невозможно создать сенсор. Данные: ' . print_r($obSensor->toArray(), true);
                     continue;
                 }
             } else {
-                if (!$arSensor['ACTIVE'])
+                if (!$obSensor->getActive())
                     continue;
             }
 
-            if ($this->arSystem['MODE'] == \Api\Sensors\System\Table::MODE_AVG) {
-                $arValue = $this->arTodayValues[$arSensor['ID']];
+            if ($this->obSystem->isModeAvg()) {
+                $obValue = $this->obTodayValues->getBySensorId($obSensor->getId());
 
-                if (!$arValue) {
-                    $arValue = array(
-                        'SENSOR_ID' => $arSensor['ID'],
-                        'DATE' => new \Bitrix\Main\Type\Date(),
-                        'SENSOR_VALUE_MIN' => $value,
-                        'SENSOR_VALUE' => $value,
-                        'SENSOR_VALUE_MAX' => $value,
-                        'SENSOR_VALUES' => 1,
-                    );
-                    $rsResult = \Api\Sensors\Data\Table::add($arValue);
-                    if (!$rsResult->isSuccess()) {
-                        $this->arResponse['errors'][] = 'Невозможно добавить данные: ' . implode(';', $rsResult->getErrorMessages());
-                        $this->arResponse['errors'][] = 'Данные: ' . print_r($arValue, true);
+                if (is_null($obValue)) {
+                    $obValue = new \Api\Sensors\Data\Entity();
+                    $obValue
+                        ->setSensor($obSensor)
+                        ->setDate(new \Bitrix\Main\Type\Date())
+                        ->setSensorValueMin($value)
+                        ->setSensorValue($value)
+                        ->setSensorValueMax($value)
+                        ->setSensorValues(1)
+                        ->save()
+                    ;
+
+                    if (!$obValue->isExist()) {
+                        $this->arResponse['errors'][] = 'Невозможно добавить данные. Данные: ' . print_r($obValue->toArray(), true);
                     }
                 } else {
-                    if ($value < $arValue['SENSOR_VALUE_MIN']) {
-                        $arValue['SENSOR_VALUE_MIN'] = $value;
+                    if ($value < $obValue->getSensorValueMin()) {
+                        $obValue->setSensorValueMin($value);
                     }
-                    if ($value > $arValue['SENSOR_VALUE_MAX']) {
-                        $arValue['SENSOR_VALUE_MAX'] = $value;
+                    if ($value > $obValue->getSensorValueMax()) {
+                        $obValue->setSensorValueMax($value);
                     }
-                    $arValue['SENSOR_VALUE'] = ($arValue['SENSOR_VALUE'] * $arValue['SENSOR_VALUES'] + $value) / ($arValue['SENSOR_VALUES'] + 1);
-                    $arValue['SENSOR_VALUES'] ++;
-                    $valueId = $arValue['ID'];
-                    unset($arValue['ID']);
-                    \Api\Sensors\Data\Table::update($valueId, $arValue);
+                    $fAvgValue = ($obValue->getSensorValue() * $obValue->getSensorValues() + $value) / ($obValue->getSensorValues() + 1);
+                    $obValue->setSensorValue($fAvgValue);
+                    $obValue->setSensorValues($obValue->getSensorValues() + 1);
+                    $obValue->setSensor($obSensor);
+                    $obValue->save();
                 }
             }
 
-            if ($this->arSystem['MODE'] == \Api\Sensors\System\Table::MODE_EACH) {
-                $arValue = array(
-                    'SENSOR_ID' => $arSensor['ID'],
-                    'DATE' => new \Bitrix\Main\Type\DateTime(),
-                    'SENSOR_VALUE' => $value,
-                );
-                $rsResult = \Api\Sensors\Data\Table::add($arValue);
-                if (!$rsResult->isSuccess()) {
-                    $this->arResponse['errors'][] = 'Невозможно добавить данные: ' . implode(';', $rsResult->getErrorMessages());
-                    $this->arResponse['errors'][] = 'Данные: ' . print_r($arValue, true);
+            if ($this->obSystem->isModeEach()) {
+                $obValue = new \Api\Sensors\Data\Entity();
+                $obValue
+                    ->setSensor($obSensor)
+                    ->setDate(new \Bitrix\Main\Type\Date())
+                    ->setSensorValue($value)
+                    ->save()
+                ;
+
+                if (!$obValue->isExist()) {
+                    $this->arResponse['errors'][] = 'Невозможно добавить данные. Данные: ' . print_r($obValue->toArray(), true);
                 }
             }
 
-            $this->checkAlert($arSensor, $value);
+            $this->checkAlert($obValue);
         }
     }
 
     /**
      * 
-     * @param string $appName
-     * @param string $deviceName
-     * @param string $sensorName
-     * @return array|null
+     * @param \Api\Sensors\Data\Entity $obValue
      */
-    private function getSensor(string $appName, string $deviceName, string $sensorName) {
+    private function checkAlert(\Api\Sensors\Data\Entity $obValue) {
 
-        if (isset($this->arSensors
-                [$appName]
-                [$deviceName]
-                [$sensorName])) {
+        $obSensor = $obValue->getSensor();
 
-            return $this->arSensors
-                [$appName]
-                [$deviceName]
-                [$sensorName];
+        $message = 'Значение на датчике ' . $obSensor->getSensorApp() . ' > ' . $obSensor->getSensorDevice() . ' > ' . $obSensor->getSensorName() . ' = ' . $obValue->getSensorValue() . $obSensor->getSensorUnit() . ' и ';
+
+        if ($obSensor->getAlertValueMin() != 0 && $obValue->getSensorValue() < $obSensor->getAlertValueMin()) {
+            $message .= 'меньше допустимого ' . $obSensor->getAlertValueMin();
+            $obSensor->setAlert();
         }
 
-        return null;
-    }
-
-    /**
-     * 
-     * @param array $arSensor
-     * @param float $value
-     */
-    private function checkAlert(array $arSensor, float $value) {
-
-        $isAlert = false;
-
-        $message = 'Значение на датчике ' . $arSensor['SENSOR_APP'] . ' > ' . $arSensor['SENSOR_DEVICE'] . ' > ' . $arSensor['SENSOR_NAME'] . ' = ' . $value . $arSensor['SENSOR_UNIT'] . ' и ';
-
-        if ($arSensor['ALERT_VALUE_MIN'] != 0 && $value < $arSensor['ALERT_VALUE_MIN']) {
-            $message .= 'меньше допустимого ' . $arSensor['ALERT_VALUE_MIN'];
-            $isAlert = true;
+        if ($obSensor->getAlertValueMax() != 0 && $obValue->getSensorValue() > $obSensor->getAlertValueMax()) {
+            $message .= 'больше допустимого ' . $obSensor->getAlertValueMax();
+            $obSensor->setAlert();
         }
 
-        if ($arSensor['ALERT_VALUE_MAX'] != 0 && $value > $arSensor['ALERT_VALUE_MAX']) {
-            $message .= 'больше допустимого ' . $arSensor['ALERT_VALUE_MAX'];
-            $isAlert = true;
-        }
+        $message .= $obSensor->getSensorUnit();
 
-        $message .= $arSensor['SENSOR_UNIT'];
-
-        if ($isAlert) {
+        if ($obSensor->isAlert()) {
             $this->arResponse['alerts'][] = $message;
         }
     }
@@ -262,17 +240,17 @@ class Post {
     private function sendAlerts() {
         if (count($this->arResponse['alerts']) > 0 && strlen($this->arSystem['EMAIL']) > 0) {
 
-            $strUrl = 'https://longbyte.ru/sensors/' . $this->arSystem['NAME'] . '-' . $this->arSystem['TOKEN'] . '/';
+            $strUrl = 'https://longbyte.ru/sensors/' . $this->obSystem->getName() . '-' . $this->obSystem->getToken() . '/';
 
-            $message = 'Контроль сенсоров на системе <a href="' . $strUrl . '">' . $this->arSystem['NAME'] . '</a>. Некоторые значения вне допустимого диапазона.<br><br>';
+            $message = 'Контроль сенсоров на системе <a href="' . $strUrl . '">' . $this->obSystem->getName() . '</a>. Некоторые значения вне допустимого диапазона.<br><br>';
             $message .= implode('<br>', $this->arResponse['alerts']);
 
             \Bitrix\Main\Mail\Event::send(array(
                 'EVENT_NAME' => 'SENSORS_ALERT',
                 'LID' => 's1',
                 'C_FIELDS' => array(
-                    'EMAIL_TO' => $this->arSystem['EMAIL'],
-                    'SUBJECT' => 'Оповещение системы контроля сенсоров на системе ' . $this->arSystem['NAME'],
+                    'EMAIL_TO' => $this->obSystem->getEmail(),
+                    'SUBJECT' => 'Оповещение системы контроля сенсоров на системе ' . $this->obSystem->getName(),
                     'MESSAGE' => $message
                 )
             ));

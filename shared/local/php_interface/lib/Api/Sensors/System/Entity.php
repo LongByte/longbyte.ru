@@ -27,6 +27,12 @@ namespace Api\Sensors\System;
 class Entity extends \Api\Core\Entity\Base {
 
     /**
+     *
+     * @var \Api\Sensors\Sensor\Collection
+     */
+    protected $_obSensorsCollection = null;
+
+    /**
      * 
      * @return array
      */
@@ -34,8 +40,29 @@ class Entity extends \Api\Core\Entity\Base {
         return array_keys(static::getModel()::getTable()::getScalarFields());
     }
 
-    protected static function getModel() {
+    public static function getModel() {
         return \Api\Sensors\System\Model::class;
+    }
+
+    /**
+     * 
+     * @return \Api\Sensors\Sensor\Collection
+     */
+    public function getSensorsCollection() {
+        if (is_null($this->_obSensorsCollection)) {
+            $this->_obSensorsCollection = new \Api\Sensors\Sensor\Collection();
+        }
+        return $this->_obSensorsCollection;
+    }
+
+    /**
+     * 
+     * @param \Api\Sensors\Sensor\Collection $obSensorsCollection
+     * @return $this
+     */
+    public function setSensorsCollection(\Api\Sensors\Sensor\Collection $obSensorsCollection) {
+        $this->_obSensorsCollection = $obSensorsCollection;
+        return $this;
     }
 
     /**
