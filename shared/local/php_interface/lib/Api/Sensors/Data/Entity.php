@@ -51,6 +51,19 @@ class Entity extends \Api\Core\Entity\Base {
         return \Api\Sensors\Data\Model::class;
     }
 
+    public function toArray() {
+        $arData = parent::toArray();
+        $obSystem = $this->getSensor()->getSystem();
+        if ($obSystem->isModeAvg()) {
+            $strDate = $this->getDate()->format('d.m.Y');
+        }
+        if ($obSystem->isModeEach()) {
+            $strDate = $this->getDate()->format('H:i:s');
+        }
+        $arData['date'] = $strDate;
+        return $arData;
+    }
+
     /**
      * 
      * @return \Api\Sensors\Sensor\Entity 
