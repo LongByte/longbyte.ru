@@ -5,7 +5,7 @@ namespace Api\Sensors\Sensor;
 /**
  * Class \Api\Sensors\Sensor\Collection
  */
-class Collection extends \Api\Core\Collection\Base {
+class Collection extends \Api\Core\Base\Collection {
 
     /**
      * 

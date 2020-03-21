@@ -5,7 +5,7 @@ namespace Api\Portfolio\Element;
 /**
  * Class \Api\Portfolio\Element\Model
  */
-class Model extends \Api\Core\Model\Element {
+class Model extends \Api\Core\Iblock\Element\Model {
 
     /**
      * @var int
@@ -14,10 +14,6 @@ class Model extends \Api\Core\Model\Element {
 
     public static function getEntity() {
         return Entity::class;
-    }
-
-    public static function getCollection() {
-        return Collection::class;
     }
 
 }

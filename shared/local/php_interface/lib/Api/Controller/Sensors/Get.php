@@ -7,7 +7,7 @@ use Bitrix\Main\Type\DateTime;
 /**
  * class \Api\Controller\Sensors\Post
  */
-class Get extends \Api\Core\Controller\Base {
+class Get extends \Api\Core\Base\Controller {
 
     private $token = null;
     private $name = null;

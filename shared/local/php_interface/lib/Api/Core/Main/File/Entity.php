@@ -1,9 +1,9 @@
 <?php
 
-namespace Api\Core\Entity;
+namespace Api\Core\Main\File;
 
 /**
- * Class \Api\Core\Entity\File
+ * Class \Api\Core\Main\File\Entity
  * 
  * @method int getId()
  * @method $this setId(int $iId)
@@ -45,31 +45,51 @@ namespace Api\Core\Entity;
  * @method $this setExternalId(string $strExternalId)
  * @method bool hasExternalId()
  */
-class File extends Base {
+class Entity extends \Api\Core\Base\Entity {
 
     protected $_src = null;
 
     public static function getModel() {
-        return \Api\Core\Model\File::class;
+        return Model::class;
     }
 
+    /**
+     * 
+     * @return array
+     */
     public function getFields() {
         return array_keys(static::getModel()::getTable()::getMap());
     }
 
+    /**
+     * 
+     * @return string
+     */
     public function getSrc() {
-        if (is_null($this->_src)) {
+        if ($this->isExist() && is_null($this->_src)) {
             $uploadDirName = \Bitrix\Main\Config\Option::get('main', 'upload_dir', 'upload');
             $this->_src = '/' . $uploadDirName . '/' . $this->getSubdir() . '/' . $this->getFileName();
         }
         return $this->_src;
     }
 
+    /**
+     * 
+     * @param string $strSrc
+     * @return $this
+     */
     protected function _setSrc(string $strSrc) {
         $this->_src = $strSrc;
         return $this;
     }
 
+    /**
+     * 
+     * @param int $iWidth
+     * @param int $iHeight
+     * @param int $iMode
+     * @return $this
+     */
     public function setResize(int $iWidth, int $iHeight, int $iMode = BX_RESIZE_IMAGE_PROPORTIONAL) {
         $arImage = \CFile::ResizeImageGet($this->getId(), array('width' => $iWidth, 'height' => $iHeight), $iMode, true);
         if ($arImage) {

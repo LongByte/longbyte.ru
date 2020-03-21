@@ -1,14 +1,14 @@
 <?php
 
-namespace Api\Core\Model;
+namespace Api\Core\Main\File;
 
 /**
- * Class \Api\Core\Model\File
+ * Class \Api\Core\Main\File\Model
  */
-class File extends Base {
+class Model extends \Api\Core\Base\Model {
 
     public static function getEntity() {
-        return \Api\Core\Entity\File::class;
+        return Entity::class;
     }
 
     public static function getTable() {

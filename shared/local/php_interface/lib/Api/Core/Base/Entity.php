@@ -1,12 +1,12 @@
 <?php
 
-namespace Api\Core\Entity;
+namespace Api\Core\Base;
 
 /**
- * Class \Api\Core\Entity\Base
+ * Class \Api\Core\Base\Entity
  *
  */
-abstract class Base {
+abstract class Entity {
 
     /**
      * @var array|int
@@ -38,6 +38,14 @@ abstract class Base {
      * @return \Api\Core\Model\Base
      */
     abstract public static function getModel();
+
+    /**
+     * 
+     * @return string
+     */
+    public static function getCollection() {
+        return Collection::class;
+    }
 
     /**
      * DataEntity constructor.
@@ -220,7 +228,7 @@ abstract class Base {
      * @param $strString
      * @return string
      */
-    public static function toLower($strString) {
+    protected static function toLower($strString) {
         return ToLower($strString);
     }
 
@@ -229,7 +237,7 @@ abstract class Base {
      *
      * @return string
      */
-    public static function toUpper($strString) {
+    protected static function toUpper($strString) {
         return ToUpper($strString);
     }
 

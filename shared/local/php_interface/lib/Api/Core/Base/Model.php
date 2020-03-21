@@ -1,19 +1,15 @@
 <?php
 
-namespace Api\Core\Model;
+namespace Api\Core\Base;
 
 /**
- * Class \Api\Core\Model\Base
+ * Class \Api\Core\Base\Model
  */
-abstract class Base {
+abstract class Model {
 
     abstract public static function getTable();
 
     abstract public static function getEntity();
-
-    public static function getCollection() {
-        return \Api\Core\Collection\Base::class;
-    }
 
     /**
      * 
@@ -71,7 +67,7 @@ abstract class Base {
                 'filter' => $arFilter,
             ))->fetchAll();
 
-        $strCollectionClass = static::getCollection();
+        $strCollectionClass = static::getEntity()::getCollection();
         $obCollection = new $strCollectionClass();
 
         foreach ($arRows as $arRow) {

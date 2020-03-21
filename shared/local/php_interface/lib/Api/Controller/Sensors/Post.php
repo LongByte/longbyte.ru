@@ -5,7 +5,7 @@ namespace Api\Controller\Sensors;
 /**
  * class \Api\Controller\Sensors\Post
  */
-class Post extends \Api\Core\Controller\Base {
+class Post extends \Api\Core\Base\Controller {
 
     private $token = null;
     private $arResponse = array(

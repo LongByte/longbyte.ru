@@ -1,13 +1,13 @@
 <?php
 
-namespace Api\Core\Controller;
+namespace Api\Core\Base;
 
 use Bitrix\Main\Context;
 
 /**
- * Class \Api\Core\Controller\Base
+ * Class \Api\Core\Base\Controller
  */
-class Base {
+class Controller {
 
     /**
      *

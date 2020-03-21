@@ -1,13 +1,13 @@
 <?php
 
-namespace Api\Core\Model;
+namespace Api\Core\Iblock\Element;
 
 use Bitrix\Main\Loader;
 
 /**
- * Class \Api\Core\Model\Element
+ * Class \Api\Core\Iblock\Element\Model
  */
-abstract class Element extends Base {
+abstract class Model extends \Api\Core\Base\Model {
 
     /**
      * @var int
@@ -77,7 +77,7 @@ abstract class Element extends Base {
             }
         }
 
-        $strCollectionClass = static::getCollection();
+        $strCollectionClass = static::getEntity()::getCollection();
         $obCollection = new $strCollectionClass();
 
         $rsElement = \CIBlockElement::GetList(
@@ -102,9 +102,23 @@ abstract class Element extends Base {
         $arProperties = $obElement->GetProperties();
 
         $arElement = static::_getFromTilda($arElement);
-        
+
+
         $strEntityClass = static::getEntity();
+        /** @var \Api\Core\Iblock\Element\Entity $obEntity */
         $obEntity = new $strEntityClass($arElement['ID'], $arElement);
+        $obPropertyCollection = $obEntity->getPropertyCollection();
+
+        $arAllowProps = $obEntity->getProps();
+
+        foreach ($arProperties as $arProperty) {
+            if (!in_array($arProperty['CODE'], $arAllowProps)) {
+                continue;
+            }
+            $obProperty = new \Api\Core\Iblock\Property\Entity($arProperty['ID'], $arProperty);
+            $obPropertyCollection->addItem($obProperty);
+        }
+
         return $obEntity;
     }
 
