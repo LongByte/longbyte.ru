@@ -49,7 +49,6 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
         'PREVIEW_TEXT',
         'PREVIEW_PICTURE',
         'DETAIL_PICTURE',
-        'TAGS',
     );
 
     /**
@@ -99,8 +98,9 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
         $arData['preview_src'] = $this->getPreviewPictureFile()->getSrc();
         $arData['detail_src'] = $this->getDetailPictureFile()->getSrc();
         $arData['print_year'] = $this->getPrintYear();
-        $arData['tags'] = $this->getTags()->toArray();
         $arData['url'] = $this->getUrl();
+        unset($arData['preview_picture']);
+        unset($arData['detail_picture']);
 
         return $arData;
     }
