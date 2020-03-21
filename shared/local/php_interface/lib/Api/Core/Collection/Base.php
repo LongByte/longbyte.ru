@@ -6,7 +6,7 @@ namespace Api\Core\Collection;
  * Class \Api\Core\Collection\Base
  *
  */
-abstract class Base implements \ArrayAccess, \Countable, \IteratorAggregate {
+class Base implements \ArrayAccess, \Countable, \IteratorAggregate {
 
     protected static $_keyFunction = 'getId';
     protected $_collection = array();

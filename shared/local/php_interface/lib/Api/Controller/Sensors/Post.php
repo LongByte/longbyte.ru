@@ -1,16 +1,12 @@
 <?
 
-namespace Api\Sensors;
-
-use Bitrix\Main\Context;
+namespace Api\Controller\Sensors;
 
 /**
- * class \Api\Sensors\Post
+ * class \Api\Controller\Sensors\Post
  */
-class Post {
+class Post extends \Api\Core\Controller\Base {
 
-    private $obRequest = null;
-    private $rawPost = null;
     private $token = null;
     private $arResponse = array(
         'data' => array(),
@@ -32,8 +28,7 @@ class Post {
     private $obTodayValues = null;
 
     public function __construct() {
-        $this->obRequest = Context::getCurrent()->getRequest();
-        $this->rawPost = file_get_contents('php://input');
+        parent::__construct();
         $this->token = $this->obRequest->get('token');
     }
 

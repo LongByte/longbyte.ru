@@ -46,9 +46,14 @@ abstract class Base {
      */
     public function __construct($primary = null, $data = array()) {
         if ($data) {
-            $this->_data = $data;
+            $this->_data = array_fill_keys($this->getFields(), '');
+            foreach ($data as $strField => $value) {
+                if (array_key_exists($strField, $this->_data)) {
+                    $this->_data[$strField] = $value;
+                }
+            }
             if ($primary === null) {
-                $primaryField = static::getTable()::getEntity()->getPrimary();
+                $primaryField = static::getModel()::getTable()::getEntity()->getPrimary();
                 if (is_array($primaryField)) {
                     foreach ($primaryField as $strField) {
                         $primary[$strField] = array_key_exists($strField, $data) ? $data[$strField] : null;
@@ -85,11 +90,15 @@ abstract class Base {
                 }
 
                 if ($arPrimaryFilter !== null) {
-                    $_arData = static::getTable()::getRow(array(
+                    $_arData = static::getModel()::getTable()::getRow(array(
                             'filter' => $arPrimaryFilter,
                     ));
                     if ($_arData) {
-                        $this->_data = $_arData;
+                        foreach ($_arData as $strField => $value) {
+                            if (array_key_exists($strField, $this->_data)) {
+                                $this->_data[$strField] = $value;
+                            }
+                        }
                         $this->_exist = true;
                     }
                 }

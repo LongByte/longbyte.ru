@@ -9,16 +9,76 @@ namespace Api\Core\Entity;
 abstract class Element extends Base {
 
     /**
-     * @var int
+     *
+     * @var \Api\Core\Entity\File 
      */
-    protected $_iblockId = 0;
+    protected $_obPreviewPicture = null;
+
+    /**
+     *
+     * @var \Api\Core\Entity\File 
+     */
+    protected $_obDetailPicture = null;
+
+    /**
+     * @var array
+     */
+    protected static $arProps = array();
 
     /**
      * 
-     * @return int
+     * @return \Api\Core\Entity\File
      */
-    public static function getIblockId() {
-        return $this->_iblockId;
+    public function getPreviewPictureFile() {
+        $iFile = 0;
+        if (is_null($this->_obPreviewPicture)) {
+            if ($this->hasPreviewPicture()) {
+                $iFile = $this->getPreviewPicture();
+            }
+            $this->_obPreviewPicture = new \Api\Core\Entity\File($iFile);
+        }
+        return $this->_obPreviewPicture;
+    }
+
+    /**
+     * 
+     * @return \Api\Core\Entity\File
+     */
+    public function getDetailPictureFile() {
+        $iFile = 0;
+        if (is_null($this->_obDetailPicture)) {
+            if ($this->hasDetailPicture()) {
+                $iFile = $this->getDetailPicture();
+            }
+            $this->_obDetailPicture = new \Api\Core\Entity\File($iFile);
+        }
+        return $this->_obDetailPicture;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    public function getProps() {
+        return static::$arProps;
+    }
+
+    /**
+     * 
+     * @return null|array
+     */
+    public function getData() {
+        if (is_null($this->_data)) {
+            $this->_data = array_fill_keys($this->getFields(), '');
+            if (!is_null($this->_primary)) {
+                $_arData = static::getModel()::getOneAsArray(array('ID' => $this->_primary));
+                if ($_arData) {
+                    $this->_data = $_arData;
+                    $this->_exist = true;
+                }
+            }
+        }
+        return $this->_data;
     }
 
     /**
@@ -39,7 +99,7 @@ abstract class Element extends Base {
         }
 
         unset($arData['ID']);
-        $arData['IBLOCK_ID'] = static::getIblockId();
+        $arData['IBLOCK_ID'] = static::getModel()::getIblockId();
         $iId = $this->getId();
 
         $el = new \CIBlockElement;
