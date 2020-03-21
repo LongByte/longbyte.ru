@@ -1,12 +1,12 @@
 <?php
 
-namespace Api\Core\Collection;
+namespace Api\Core\Base;
 
 /**
- * Class \Api\Core\Collection\Base
+ * Class \Api\Core\Base\Collection
  *
  */
-abstract class Base implements \ArrayAccess, \Countable, \IteratorAggregate {
+class Collection implements \ArrayAccess, \Countable, \IteratorAggregate {
 
     protected static $_keyFunction = 'getId';
     protected $_collection = array();
@@ -14,7 +14,7 @@ abstract class Base implements \ArrayAccess, \Countable, \IteratorAggregate {
 
     /**
      * 
-     * @param \Api\Core\Entity\Base $obEntity
+     * @param \Api\Core\Base\Entity $obEntity
      * @return $this
      */
     public function addItem($obEntity) {
@@ -35,7 +35,7 @@ abstract class Base implements \ArrayAccess, \Countable, \IteratorAggregate {
     /**
      *
      * @param string $strKey
-     * @return \Realweb\Api\Model\Data
+     * @return \Api\Core\Base\Entity
      */
     public function getByKey($strKey) {
         $iCollectionKey = array_search($strKey, $this->_keys);

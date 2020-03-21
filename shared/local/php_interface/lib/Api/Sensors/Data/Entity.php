@@ -27,7 +27,7 @@ namespace Api\Sensors\Data;
  * @method $this setSensorValues(int $iSensorValues)
  * @method bool hasSensorValues()
  */
-class Entity extends \Api\Core\Entity\Base {
+class Entity extends \Api\Core\Base\Entity {
 
     /**
      *
@@ -45,10 +45,18 @@ class Entity extends \Api\Core\Entity\Base {
 
     /**
      * 
-     * @return \Api\Sensors\Data\Model
+     * @return string
+     */
+    public static function getCollection() {
+        return Collection::class;
+    }
+
+    /**
+     * 
+     * @return string
      */
     public static function getModel() {
-        return \Api\Sensors\Data\Model::class;
+        return Model::class;
     }
 
     public function toArray() {

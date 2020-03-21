@@ -33,7 +33,7 @@ namespace Api\Sensors\Sensor;
  * @method $this setAlertValueMax(float $fAlertValueMax)
  * @method bool hasAlertValueMax()
  */
-class Entity extends \Api\Core\Entity\Base {
+class Entity extends \Api\Core\Base\Entity {
 
     protected $_alert = false;
     protected $_alertDirection = 0;
@@ -60,7 +60,15 @@ class Entity extends \Api\Core\Entity\Base {
 
     /**
      * 
-     * @return \Api\Sensors\Sensor\Model
+     * @return string
+     */
+    public static function getCollection() {
+        return Collection::class;
+    }
+
+    /**
+     * 
+     * @return string
      */
     public static function getModel() {
         return \Api\Sensors\Sensor\Model::class;

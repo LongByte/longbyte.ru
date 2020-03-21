@@ -8,7 +8,7 @@ $obRequest = Context::getCurrent()->getRequest();
 
 $strModule = $obRequest->get('module');
 $strController = $obRequest->get('controller');
-$strClassName = '\\Api\\' . $strModule . '\\' . $strController;
+$strClassName = '\\Api\\Controller\\' . $strModule . '\\' . $strController;
 if (class_exists($strClassName)) {
     $obController = new $strClassName;
     $strMethod = strtolower($obRequest->getRequestMethod());

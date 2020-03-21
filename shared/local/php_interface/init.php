@@ -21,9 +21,6 @@ Loader::registerAutoLoadClasses(null, array(
     //telegram
     '\LongByte\Telegram\SessionTable' => '/local/php_interface/classes/Telegram/Longbyte/SessionTable.php',
     '\LongByte\Telegram\Bot' => '/local/php_interface/classes/Telegram/Longbyte/Bot.php',
-    //api
-    '\Api\Sensors\Get' => '/local/php_interface/classes/Api/Sensors/Get.php',
-    '\Api\Sensors\Post' => '/local/php_interface/classes/Api/Sensors/Post.php',
 ));
 
 EventManager::getInstance()->addEventHandler('main', 'OnPageStart', array('Site', 'onPageStart'));

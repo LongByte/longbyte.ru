@@ -1,16 +1,14 @@
 <?
 
-namespace Api\Sensors;
+namespace Api\Controller\Sensors;
 
-use Bitrix\Main\Context;
 use Bitrix\Main\Type\DateTime;
 
 /**
- * class \Api\Sensors\Post
+ * class \Api\Controller\Sensors\Post
  */
-class Get {
+class Get extends \Api\Core\Base\Controller {
 
-    private $obRequest = null;
     private $token = null;
     private $name = null;
     private $arResponse = array(
@@ -27,7 +25,7 @@ class Get {
     private $obSystem = null;
 
     public function __construct() {
-        $this->obRequest = Context::getCurrent()->getRequest();
+        parent::__construct();
         $this->name = $this->obRequest->get('name');
         $this->token = $this->obRequest->get('token');
     }

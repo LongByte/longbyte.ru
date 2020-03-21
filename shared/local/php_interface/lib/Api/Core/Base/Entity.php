@@ -1,12 +1,12 @@
 <?php
 
-namespace Api\Core\Entity;
+namespace Api\Core\Base;
 
 /**
- * Class \Api\Core\Entity\Base
+ * Class \Api\Core\Base\Entity
  *
  */
-abstract class Base {
+abstract class Entity {
 
     /**
      * @var array|int
@@ -40,15 +40,28 @@ abstract class Base {
     abstract public static function getModel();
 
     /**
+     * 
+     * @return string
+     */
+    public static function getCollection() {
+        return Collection::class;
+    }
+
+    /**
      * DataEntity constructor.
      * @param null $primary
      * @param array $data
      */
     public function __construct($primary = null, $data = array()) {
         if ($data) {
-            $this->_data = $data;
+            $this->_data = array_fill_keys($this->getFields(), '');
+            foreach ($data as $strField => $value) {
+                if (array_key_exists($strField, $this->_data)) {
+                    $this->_data[$strField] = $value;
+                }
+            }
             if ($primary === null) {
-                $primaryField = static::getTable()::getEntity()->getPrimary();
+                $primaryField = static::getModel()::getTable()::getEntity()->getPrimary();
                 if (is_array($primaryField)) {
                     foreach ($primaryField as $strField) {
                         $primary[$strField] = array_key_exists($strField, $data) ? $data[$strField] : null;
@@ -85,11 +98,15 @@ abstract class Base {
                 }
 
                 if ($arPrimaryFilter !== null) {
-                    $_arData = static::getTable()::getRow(array(
+                    $_arData = static::getModel()::getTable()::getRow(array(
                             'filter' => $arPrimaryFilter,
                     ));
                     if ($_arData) {
-                        $this->_data = $_arData;
+                        foreach ($_arData as $strField => $value) {
+                            if (array_key_exists($strField, $this->_data)) {
+                                $this->_data[$strField] = $value;
+                            }
+                        }
                         $this->_exist = true;
                     }
                 }
@@ -211,7 +228,7 @@ abstract class Base {
      * @param $strString
      * @return string
      */
-    public static function toLower($strString) {
+    protected static function toLower($strString) {
         return ToLower($strString);
     }
 
@@ -220,7 +237,7 @@ abstract class Base {
      *
      * @return string
      */
-    public static function toUpper($strString) {
+    protected static function toUpper($strString) {
         return ToUpper($strString);
     }
 

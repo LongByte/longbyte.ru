@@ -1,25 +1,12 @@
 <?php
 
-namespace Api\Core\Entity;
+namespace Api\Core\Iblock\Section;
 
 /**
- * Class \Api\Core\Entity\Section
+ * Class \Api\Core\Iblock\Section\Entity
 
  */
-abstract class Section extends Base {
-
-    /**
-     * @var int
-     */
-    protected $_iblockId = 0;
-
-    /**
-     * 
-     * @return int
-     */
-    public static function getIblockId() {
-        return $this->_iblockId;
-    }
+abstract class Entity extends Base {
 
     /**
      * @return $this

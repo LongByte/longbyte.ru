@@ -24,7 +24,7 @@ namespace Api\Sensors\System;
  * @method $this setEmail(string $strEmail)
  * @method bool hasEmail()
  */
-class Entity extends \Api\Core\Entity\Base {
+class Entity extends \Api\Core\Base\Entity {
 
     /**
      *
@@ -40,8 +40,20 @@ class Entity extends \Api\Core\Entity\Base {
         return array_keys(static::getModel()::getTable()::getScalarFields());
     }
 
+    /**
+     * 
+     * @return string
+     */
+    public static function getCollection() {
+        return Collection::class;
+    }
+
+    /**
+     * 
+     * @return string
+     */
     public static function getModel() {
-        return \Api\Sensors\System\Model::class;
+        return Model::class;
     }
 
     /**

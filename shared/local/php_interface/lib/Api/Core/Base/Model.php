@@ -1,17 +1,15 @@
 <?php
 
-namespace Api\Core\Model;
+namespace Api\Core\Base;
 
 /**
- * Class \Api\Core\Model\Base
+ * Class \Api\Core\Base\Model
  */
-abstract class Base {
+abstract class Model {
 
     abstract public static function getTable();
 
     abstract public static function getEntity();
-
-    abstract public static function getCollection();
 
     /**
      * 
@@ -19,11 +17,9 @@ abstract class Base {
      * @return \Api\Core\Entity\Base
      */
     public static function getOne(array $arFilter = array()) {
-        $arRow = static::getTable()::getRow(array(
-                'filter' => $arFilter,
-        ));
+        $arRow = static::getOneAsArray($arFilter);
 
-        if ($arRow) {
+        if (!is_null($arRow)) {
 
             $primaryField = static::getTable()::getEntity()->getPrimary();
             if (is_array($primaryField)) {
@@ -37,6 +33,18 @@ abstract class Base {
             $strEntityClass = static::getEntity();
             $obEntity = new $strEntityClass($primary, $arRow);
             return $obEntity;
+        }
+
+        return null;
+    }
+
+    public static function getOneAsArray(array $arFilter = array()) {
+        $arRow = static::getTable()::getRow(array(
+                'filter' => $arFilter,
+        ));
+
+        if ($arRow) {
+            return $arRow;
         }
 
         return null;
@@ -59,7 +67,7 @@ abstract class Base {
                 'filter' => $arFilter,
             ))->fetchAll();
 
-        $strCollectionClass = static::getCollection();
+        $strCollectionClass = static::getEntity()::getCollection();
         $obCollection = new $strCollectionClass();
 
         foreach ($arRows as $arRow) {
@@ -77,6 +85,28 @@ abstract class Base {
         }
 
         return $obCollection;
+    }
+
+    /**
+     * 
+     * @param array $array
+     * @return array
+     */
+    protected static function _getFromTilda(array $array) {
+        $clearArray = array();
+        foreach ($array as $strKey => $value) {
+            if (strpos($strKey, '~') === 0) {
+                continue;
+            }
+
+            $hasTilda = array_key_exists('~' . $strKey, $array);
+            if ($hasTilda) {
+                $clearArray[$strKey] = $array['~' . $strKey];
+            } else {
+                $clearArray[$strKey] = $value;
+            }
+        }
+        return $clearArray;
     }
 
 }
