@@ -77,6 +77,7 @@ class Webp {
      */
     public function __construct(string $strSrc) {
         $strUploadDir = Option::get('main', 'upload_dir', 'upload');
+        $strToUploadDir = '';
         if (strpos($strSrc, '/' . $strUploadDir) !== 0) {
             $strToUploadDir = '/' . $strUploadDir . '/webp';
         }

@@ -95,8 +95,8 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
     public function toArray() {
         $arData = parent::toArray();
 
-        $arData['preview_src'] = $this->getPreviewPictureFile()->getSrc();
-        $arData['detail_src'] = $this->getDetailPictureFile()->getSrc();
+        $arData['preview_src'] = $this->getPreviewPictureFile()->convertToWebp()->getSrc();
+        $arData['detail_src'] = $this->getDetailPictureFile()->convertToWebp()->getSrc();
         $arData['print_year'] = $this->getPrintYear();
         $arData['url'] = $this->getUrl();
         unset($arData['preview_picture']);

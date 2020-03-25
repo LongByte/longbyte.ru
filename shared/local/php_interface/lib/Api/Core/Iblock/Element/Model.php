@@ -58,6 +58,14 @@ abstract class Model extends \Api\Core\Base\Model {
         return null;
     }
 
+    /**
+     * 
+     * @param array $arFilter
+     * @param int $iLimit
+     * @param int $iPageSize
+     * @param int $iNumPage
+     * @return \Api\Core\Iblock\Element\strCollectionClass
+     */
     public static function getAll(array $arFilter = array(), int $iLimit = 0, int $iPageSize = 0, int $iNumPage = 0) {
 
         Loader::includeModule('iblock');
@@ -97,6 +105,11 @@ abstract class Model extends \Api\Core\Base\Model {
         return $obCollection;
     }
 
+    /**
+     * 
+     * @param type $obElement
+     * @return \Api\Core\Iblock\Element\Entity
+     */
     private static function _getEntityFromElement($obElement) {
         $arElement = $obElement->GetFields();
         $arProperties = $obElement->GetProperties();
