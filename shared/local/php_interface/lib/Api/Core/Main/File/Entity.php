@@ -2,6 +2,8 @@
 
 namespace Api\Core\Main\File;
 
+use \Bitrix\Main\Application;
+
 /**
  * Class \Api\Core\Main\File\Entity
  * 
@@ -47,8 +49,23 @@ namespace Api\Core\Main\File;
  */
 class Entity extends \Api\Core\Base\Entity {
 
+    protected static $_sizeUnits = array('Б', 'КБ', 'МБ', 'ГБ', 'ТБ');
+
+    /**
+     * @var string
+     */
     protected $_src = null;
 
+    /**
+     *
+     * @var \Bitrix\Main\IO\File
+     */
+    protected $_obIOFile = null;
+
+    /**
+     * 
+     * @return string
+     */
     public static function getModel() {
         return Model::class;
     }
@@ -75,6 +92,32 @@ class Entity extends \Api\Core\Base\Entity {
 
     /**
      * 
+     * @return string
+     */
+    public function getFileSizePrint() {
+        $iSize = $this->getFileSize();
+        $fs_type = 0;
+        while ($iSize > 1024) {
+            $iSize /= 1024;
+            $fs_type++;
+        }
+        return round($iSize) . ' ' . self::$_sizeUnits[$fs_type];
+    }
+
+    /**
+     * 
+     * @return \Bitrix\Main\IO\File
+     */
+    public function getIOFile() {
+        if (is_null($this->_obIOFile)) {
+            $obIOFile = new \Bitrix\Main\IO\File(Application::getDocumentRoot() . $this->getSrc());
+            $this->_obIOFile = $obIOFile;
+        }
+        return $this->_obIOFile;
+    }
+
+    /**
+     * 
      * @param string $strSrc
      * @return $this
      */
@@ -95,6 +138,7 @@ class Entity extends \Api\Core\Base\Entity {
         if ($arImage) {
             $this->setWidth($arImage['width']);
             $this->setHeight($arImage['height']);
+            $this->setFileSize($arImage['size']);
             $this->_setSrc($arImage['src']);
         }
         return $this;

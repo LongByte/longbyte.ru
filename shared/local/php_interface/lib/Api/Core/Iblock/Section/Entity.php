@@ -6,7 +6,7 @@ namespace Api\Core\Iblock\Section;
  * Class \Api\Core\Iblock\Section\Entity
 
  */
-abstract class Entity extends Base {
+abstract class Entity extends \Api\Core\Base\Entity {
 
     /**
      *
@@ -48,6 +48,57 @@ abstract class Entity extends Base {
             $this->_obDetailPicture = new \Api\Core\Main\File\Entity($iFile);
         }
         return $this->_obDetailPicture;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSectionPageUrl() {
+        $arReplaceFrom = array('#SITE_DIR#');
+        $arReplaceTo = array('');
+        if ($this->hasCode()) {
+            $arReplaceFrom[] = '#CODE#';
+            $arReplaceTo[] = $this->getCode();
+            $arReplaceFrom[] = '#SECTION_CODE#';
+            $arReplaceTo[] = $this->getCode();
+        }
+        if ($this->hasId()) {
+            $arReplaceFrom[] = '#ID#';
+            $arReplaceTo[] = $this->getId();
+            $arReplaceFrom[] = '#SECTION_ID#';
+            $arReplaceTo[] = $this->getId();
+        }
+        if ($this->hasSectionCodePath()) {
+            $arReplaceFrom[] = '#SECTION_CODE_PATH#';
+            $arReplaceTo[] = $this->getSectionCodePath();
+        }
+        $url = str_replace($arReplaceFrom, $arReplaceTo, $this->getUrlTemplate());
+
+        return preg_replace("'(?<!:)/+'s", "/", $url);
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrlTemplate() {
+        if (is_null($this->_url_template)) {
+            if ($obIblock = $this->getIblock()) {
+                $this->_url_template = $obIblock->getSectionPageUrl();
+            }
+        }
+
+        return $this->_url_template;
+    }
+
+    /**
+     * @return null|\Api\Core\Iblock\Iblock\Entity
+     */
+    public function getIblock() {
+        if (is_null($this->_iblock)) {
+            $this->_iblock = \Api\Core\Iblock\Iblock\Model::getOne(array('ID' => static::getModel()::getIblockId()));
+        }
+
+        return $this->_iblock;
     }
 
     /**

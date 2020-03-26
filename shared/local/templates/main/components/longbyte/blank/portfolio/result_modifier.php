@@ -12,7 +12,7 @@ $arCacahe = \Api\Core\Main\Cache::getInstance()
     $obElementsCollection = \Api\Portfolio\Element\Model::getAll(array(
             'ACTIVE' => 'Y'
     ));
-    
+
     if ($obElementsCollection->count() <= 0) {
         \Api\Core\Main\Cache::getInstance()->abortCache();
         \Api\Core\Main\NotFound::setStatus404();
@@ -42,8 +42,7 @@ $arCacahe = \Api\Core\Main\Cache::getInstance()
     }
 
     return $obElementsCollection->toArray();
-})
-;
+});
 
 $arResult['VUE'] = array(
     'items' => $arCacahe

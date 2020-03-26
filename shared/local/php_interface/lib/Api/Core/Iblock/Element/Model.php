@@ -110,7 +110,7 @@ abstract class Model extends \Api\Core\Base\Model {
      * @param type $obElement
      * @return \Api\Core\Iblock\Element\Entity
      */
-    private static function _getEntityFromElement($obElement) {
+    protected static function _getEntityFromElement($obElement) {
         $arElement = $obElement->GetFields();
         $arProperties = $obElement->GetProperties();
 
