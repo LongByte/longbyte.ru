@@ -12,11 +12,14 @@ $arCacahe = \Api\Core\Main\Cache::getInstance()
     $obElementsCollection = \Api\Portfolio\Element\Model::getAll(array(
             'ACTIVE' => 'Y'
     ));
+    
+    if ($obElementsCollection->count() <= 0) {
+        \Api\Core\Main\Cache::getInstance()->abortCache();
+        \Api\Core\Main\NotFound::setStatus404();
+        return;
+    }
 
     foreach ($obElementsCollection as $obElement) {
-        $strPreviewPicture = $obElement->getPreviewPictureFile()->setResize(100, 10000)->getSrc();
-
-
         $startYear = $obElement->getYearStart();
         $endYear = $obElement->getYearFinish();
         $strPrintYear = $startYear . ' г.';
@@ -37,7 +40,6 @@ $arCacahe = \Api\Core\Main\Cache::getInstance()
             }
         }
     }
-    unset($arItem);
 
     return $obElementsCollection->toArray();
 })

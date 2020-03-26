@@ -9,6 +9,48 @@ namespace Api\Core\Iblock\Section;
 abstract class Entity extends Base {
 
     /**
+     *
+     * @var \Api\Core\Main\File\Entity
+     */
+    protected $_obPicture = null;
+
+    /**
+     *
+     * @var \Api\Core\Main\File\Entity 
+     */
+    protected $_obDetailPicture = null;
+
+    /**
+     * 
+     * @return \Api\Core\Main\File\Entity
+     */
+    public function getPictureFile() {
+        $iFile = 0;
+        if (is_null($this->_obPicture)) {
+            if ($this->hasPicture()) {
+                $iFile = $this->getPicture();
+            }
+            $this->_obPicture = new \Api\Core\Main\File\Entity($iFile);
+        }
+        return $this->_obPicture;
+    }
+
+    /**
+     * 
+     * @return \Api\Core\Main\File\Entity
+     */
+    public function getDetailPictureFile() {
+        $iFile = 0;
+        if (is_null($this->_obDetailPicture)) {
+            if ($this->hasDetailPicture()) {
+                $iFile = $this->getDetailPicture();
+            }
+            $this->_obDetailPicture = new \Api\Core\Main\File\Entity($iFile);
+        }
+        return $this->_obDetailPicture;
+    }
+
+    /**
      * @return $this
      */
     public function save() {

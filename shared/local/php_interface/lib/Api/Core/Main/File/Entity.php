@@ -100,4 +100,22 @@ class Entity extends \Api\Core\Base\Entity {
         return $this;
     }
 
+    /**
+     * 
+     * @return $this
+     */
+    public function convertToWebp() {
+        if (class_exists('\LongByte\Webp')) {
+            $strSrc = $this->getSrc();
+            if (strlen($strSrc) > 0) {
+                $obWebp = new \LongByte\Webp($this->getSrc());
+                $strWebpSrc = $obWebp->getWebpPath();
+                if (strlen($strWebpSrc) > 0) {
+                    $this->_setSrc($strWebpSrc);
+                }
+            }
+        }
+        return $this;
+    }
+
 }
