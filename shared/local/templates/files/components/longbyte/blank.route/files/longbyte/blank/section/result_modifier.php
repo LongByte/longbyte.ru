@@ -6,6 +6,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 $arResult = \Api\Core\Main\Cache::getInstance()
     ->setIblockTag(\Api\Portfolio\Element\Model::getIblockId())
     ->setId('FilesSection_' . $arParams['SECTION_CODE'])
+    ->setTime(30 * 24 * 60 * 60)
     ->get(function() use ($arParams) {
 
     $arResult = array();

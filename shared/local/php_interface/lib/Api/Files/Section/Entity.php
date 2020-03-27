@@ -27,6 +27,10 @@ class Entity extends \Api\Core\Iblock\Section\Entity {
         return Model::class;
     }
 
+    /**
+     * 
+     * @return array
+     */
     public function toArray() {
         $arData = parent::toArray();
 

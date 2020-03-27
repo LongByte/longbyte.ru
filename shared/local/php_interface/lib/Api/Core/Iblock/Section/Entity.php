@@ -55,7 +55,7 @@ abstract class Entity extends \Api\Core\Base\Entity {
      */
     public function getSectionPageUrl() {
         $arReplaceFrom = array('#SITE_DIR#');
-        $arReplaceTo = array('');
+        $arReplaceTo = array('/');
         if ($this->hasCode()) {
             $arReplaceFrom[] = '#CODE#';
             $arReplaceTo[] = $this->getCode();
@@ -126,6 +126,10 @@ abstract class Entity extends \Api\Core\Base\Entity {
         return $this;
     }
 
+    /**
+     * 
+     * @return $this
+     */
     public function delete() {
         if ($this->isExist()) {
             $iId = $this->getId();

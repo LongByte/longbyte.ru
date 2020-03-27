@@ -12,6 +12,10 @@ class Model extends \Api\Core\Iblock\Element\Model {
      */
     protected static $_iblockId = IBLOCK_MAIN_PORTFOLIO;
 
+    /**
+     * 
+     * @return string
+     */
     public static function getEntity() {
         return Entity::class;
     }
