@@ -13,18 +13,18 @@ $arCache = \Api\Core\Main\Cache::getInstance()
 
     $obIblock = new \Api\Core\Iblock\Iblock\Entity(\Api\Files\Element\Model::getIblockId());
     $obIblock->getMeta();
-    
+
     $obSections = \Api\Files\Section\Model::getAll(array(
             'ACTIVE' => 'Y'
     ));
 
-    $arCache['iblock'] = $obIblock;
-    $arCache['sections'] = $obSections;
+    $arCache['obIblock'] = $obIblock;
+    $arCache['obSections'] = $obSections;
 
     return $arCache;
 });
 
-$arCache['iblock']->setMeta();
+$arCache['obIblock']->setMeta();
 
-$arResult['sections'] = $arCache['sections']->toArray();
+$arResult['sections'] = $arCache['obSections']->toArray();
 

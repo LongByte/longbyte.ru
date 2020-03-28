@@ -18,25 +18,29 @@ $arCache = \Api\Core\Main\Cache::getInstance()
             'ACTIVE' => 'Y',
             '=CODE' => $arParams['SECTION_CODE']
     ));
-    
-    $obSection->getMeta();
+
+    if (!is_null($obSection)) {
+        $obSection->getMeta();
+    }
 
     $obElements = \Api\Files\Element\Model::getAll(array(
             'ACTIVE' => 'Y',
             'IBLOCK_SECTION_ID' => !is_null($obSection) ? $obSection->getId() : false
     ));
 
-    $arCache['iblock'] = $obIblock;
-    $arCache['section'] = $obSection;
-    $arCache['elements'] = $obElements;
+    $arCache['obIblock'] = $obIblock;
+    $arCache['obSection'] = $obSection;
+    $arCache['obElements'] = $obElements;
     $arCache['root'] = is_null($obSection);
 
     return $arCache;
 });
 
-$arCache['iblock']->setMeta();
-$arCache['section']->setMeta();
-$arCache['section']->addToBreadcrumbs();
+$arCache['obIblock']->setMeta();
+if (!is_null($arCache['obSection'])) {
+    $arCache['obSection']->setMeta();
+    $arCache['obSection']->addToBreadcrumbs();
+}
 
-$arResult['elements'] = $arCache['elements']->toArray();
+$arResult['elements'] = $arCache['obElements']->toArray();
 $arResult['root'] = $arCache['root'];
