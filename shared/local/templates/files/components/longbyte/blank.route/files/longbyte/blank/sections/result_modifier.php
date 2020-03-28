@@ -3,19 +3,28 @@
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
     die();
 
-$arResult = \Api\Core\Main\Cache::getInstance()
-    ->setIblockTag(\Api\Portfolio\Element\Model::getIblockId())
+$arCache = \Api\Core\Main\Cache::getInstance()
+    ->setIblockTag(\Api\Files\Element\Model::getIblockId())
     ->setId('FilesSections')
     ->setTime(30 * 24 * 60 * 60)
     ->get(function() use ($arParams) {
 
-    $arResult = array();
+    $arCache = array();
 
+    $obIblock = new \Api\Core\Iblock\Iblock\Entity(\Api\Files\Element\Model::getIblockId());
+    $obIblock->getMeta();
+    
     $obSections = \Api\Files\Section\Model::getAll(array(
             'ACTIVE' => 'Y'
     ));
 
-    $arResult['sections'] = $obSections->toArray();
+    $arCache['iblock'] = $obIblock;
+    $arCache['sections'] = $obSections;
 
-    return $arResult;
+    return $arCache;
 });
+
+$arCache['iblock']->setMeta();
+
+$arResult['sections'] = $arCache['sections']->toArray();
+

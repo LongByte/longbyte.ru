@@ -3,26 +3,40 @@
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
     die();
 
-$arResult = \Api\Core\Main\Cache::getInstance()
-    ->setIblockTag(\Api\Portfolio\Element\Model::getIblockId())
+$arCache = \Api\Core\Main\Cache::getInstance()
+    ->setIblockTag(\Api\Files\Element\Model::getIblockId())
     ->setId('FilesSection_' . $arParams['SECTION_CODE'])
     ->setTime(30 * 24 * 60 * 60)
     ->get(function() use ($arParams) {
 
-    $arResult = array();
+    $arCache = array();
+
+    $obIblock = new \Api\Core\Iblock\Iblock\Entity(\Api\Files\Element\Model::getIblockId());
+    $obIblock->getMeta();
 
     $obSection = \Api\Files\Section\Model::getOne(array(
             'ACTIVE' => 'Y',
             '=CODE' => $arParams['SECTION_CODE']
     ));
+    
+    $obSection->getMeta();
 
     $obElements = \Api\Files\Element\Model::getAll(array(
             'ACTIVE' => 'Y',
             'IBLOCK_SECTION_ID' => !is_null($obSection) ? $obSection->getId() : false
     ));
 
-    $arResult['root'] = is_null($obSection);
-    $arResult['elements'] = $obElements->toArray();
+    $arCache['iblock'] = $obIblock;
+    $arCache['section'] = $obSection;
+    $arCache['elements'] = $obElements;
+    $arCache['root'] = is_null($obSection);
 
-    return $arResult;
+    return $arCache;
 });
+
+$arCache['iblock']->setMeta();
+$arCache['section']->setMeta();
+$arCache['section']->addToBreadcrumbs();
+
+$arResult['elements'] = $arCache['elements']->toArray();
+$arResult['root'] = $arCache['root'];

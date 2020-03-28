@@ -23,11 +23,58 @@ class Entity extends \Api\Core\Base\Entity {
     );
 
     /**
+     *
+     * @var array
+     */
+    protected $_arIProperty = null;
+
+    /**
      * 
      * @return string
      */
     public static function getModel() {
         return Model::class;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    public function getMeta() {
+        if (is_null($this->_arIProperty)) {
+            $obIProperty = new \Bitrix\Iblock\InheritedProperty\IblockValues($this->getId());
+            $this->_arIProperty = $obIProperty->getValues();
+        }
+        return $this->_arIProperty;
+    }
+
+    /**
+     * 
+     * @return $this
+     */
+    public function setMeta() {
+        $this->getMeta();
+
+        \Api\Core\Main\Seo::getInstance()->setMeta(array(
+            'page_title' => $this->_arIProperty['IBLOCK_PAGE_TITLE'],
+            'meta_title' => $this->_arIProperty['IBLOCK_META_TITLE'],
+            'meta_keywords' => $this->_arIProperty['IBLOCK_META_KEYWORDS'],
+            'meta_description' => $this->_arIProperty['IBLOCK_META_DESCRIPTION'],
+        ));
+        return $this;
+    }
+
+    /**
+     * 
+     * @return $this
+     */
+    public function addToBreadcrumbs() {
+        $this->getMeta();
+
+        $strName = $this->_arIProperty['IBLOCK_PAGE_TITLE'] ?: $this->getName();
+        $strUrl = $this->hasListPageUrl() ? $this->getListPageUrl() : '';
+        \Api\Core\Main\Seo::getInstance()->addBreadcrumb($strName, $strUrl);
+        return $this;
     }
 
 }

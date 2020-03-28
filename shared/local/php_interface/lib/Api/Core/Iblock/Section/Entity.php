@@ -21,6 +21,12 @@ abstract class Entity extends \Api\Core\Base\Entity {
     protected $_obDetailPicture = null;
 
     /**
+     *
+     * @var array
+     */
+    protected $_arIProperty = null;
+
+    /**
      * 
      * @return \Api\Core\Main\File\Entity
      */
@@ -99,6 +105,47 @@ abstract class Entity extends \Api\Core\Base\Entity {
         }
 
         return $this->_iblock;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    public function getMeta() {
+        if (is_null($this->_arIProperty)) {
+            $obIProperty = new \Bitrix\Iblock\InheritedProperty\ElementValues(static::getModel()::getIblockId(), $this->getId());
+            $this->_arIProperty = $obIProperty->getValues();
+        }
+        return $this->_arIProperty;
+    }
+
+    /**
+     * 
+     * @return $this
+     */
+    public function setMeta() {
+        $this->getMeta();
+
+        \Api\Core\Main\Seo::getInstance()->setMeta(array(
+            'page_title' => $this->_arIProperty['SECTION_PAGE_TITLE'],
+            'meta_title' => $this->_arIProperty['SECTION_META_TITLE'],
+            'meta_keywords' => $this->_arIProperty['SECTION_META_KEYWORDS'],
+            'meta_description' => $this->_arIProperty['SECTION_META_DESCRIPTION'],
+        ));
+        return $this;
+    }
+
+    /**
+     * 
+     * @return $this
+     */
+    public function addToBreadcrumbs() {
+        $this->getMeta();
+
+        $strName = $this->_arIProperty['SECTION_PAGE_TITLE'] ?: $this->getName();
+        $strUrl = $this->getSectionPageUrl();
+        \Api\Core\Main\Seo::getInstance()->addBreadcrumb($strName, $strUrl);
+        return $this;
     }
 
     /**

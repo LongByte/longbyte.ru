@@ -96,8 +96,8 @@ class Site {
                 }
             }
         }
-		
-		if (Loader::includeModule('iblock') && Loader::includeModule('highloadblock')) {
+
+        if (Loader::includeModule('iblock') && Loader::includeModule('highloadblock')) {
 
             $result = HighloadBlockTable::getList(array(
                     'select' => array('ID', 'NAME'),
@@ -139,7 +139,16 @@ class Site {
         self::Definders();
     }
 
-	/**
+    /**
+     * 
+     */
+    public static function onEpilog() {
+        if (class_exists('\Api\Core\Main\Seo')) {
+            \Api\Core\Main\Seo::getInstance()->setMetaPage();
+        }
+    }
+
+    /**
      * Упрощенная обертка ресайза
      * @param int|array $picture
      * @param array[int, int] $arSize

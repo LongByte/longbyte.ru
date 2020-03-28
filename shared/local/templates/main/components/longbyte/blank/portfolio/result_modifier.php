@@ -5,10 +5,16 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
 
 /** @var \Api\Portfolio\Element\Collection $obElementsCollection */
 /** @var \Api\Portfolio\Element\Entity $obElement */
-$arCacahe = \Api\Core\Main\Cache::getInstance()
+$arCache = \Api\Core\Main\Cache::getInstance()
     ->setIblockTag(\Api\Portfolio\Element\Model::getIblockId())
     ->setId('PortfolioList')
     ->get(function() {
+
+    $arCache = array();
+
+    $obIblock = new \Api\Core\Iblock\Iblock\Entity(\Api\Portfolio\Element\Model::getIblockId());
+    $obIblock->getMeta();
+
     $obElementsCollection = \Api\Portfolio\Element\Model::getAll(array(
             'ACTIVE' => 'Y'
     ));
@@ -41,10 +47,15 @@ $arCacahe = \Api\Core\Main\Cache::getInstance()
         }
     }
 
-    return $obElementsCollection->toArray();
+    $arCache['obIblock'] = $obIblock;
+    $arCache['obElementsCollection'] = $obElementsCollection;
+
+    return $arCache;
 });
 
+$arCache['obIblock']->setMeta();
+
 $arResult['VUE'] = array(
-    'items' => $arCacahe
+    'items' => $arCache['obElementsCollection']->toArray()
 );
 
