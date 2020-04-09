@@ -136,8 +136,8 @@ class Post extends \Api\Core\Base\Controller {
                     ->setActive(true)
                     ->setSystem($this->obSystem)
                     ->setSensorApp($obInputValue->SensorApp)
-                    ->setSensorClass($obInputValue->SensorClass)
-                    ->setSensorrName($obInputValue->SensorName)
+                    ->setSensorDevice($obInputValue->SensorClass)
+                    ->setSensorName($obInputValue->SensorName)
                     ->setSensorUnit($obInputValue->SensorUnit)
                     ->save()
                 ;
@@ -152,7 +152,7 @@ class Post extends \Api\Core\Base\Controller {
             }
 
             if ($this->obSystem->isModeAvg()) {
-                $obValue = $this->obTodayValues->getBySensorId($obSensor->getId());
+                $obValue = $this->obTodayValues->getBySensorId((int) $obSensor->getId());
 
                 if (is_null($obValue)) {
                     $obValue = new \Api\Sensors\Data\Entity();
