@@ -61,13 +61,15 @@ abstract class Entity {
                 }
             }
             if ($primary === null) {
-                $primaryField = static::getModel()::getTable()::getEntity()->getPrimary();
-                if (is_array($primaryField)) {
-                    foreach ($primaryField as $strField) {
-                        $primary[$strField] = array_key_exists($strField, $data) ? $data[$strField] : null;
+                if (!is_null(static::getModel()::getTable())) {
+                    $primaryField = static::getModel()::getTable()::getEntity()->getPrimary();
+                    if (is_array($primaryField)) {
+                        foreach ($primaryField as $strField) {
+                            $primary[$strField] = array_key_exists($strField, $data) ? $data[$strField] : null;
+                        }
+                    } else {
+                        $primary = $data[$primaryField];
                     }
-                } else {
-                    $primary = $data[$primaryField];
                 }
             }
             if ($primary !== null) {

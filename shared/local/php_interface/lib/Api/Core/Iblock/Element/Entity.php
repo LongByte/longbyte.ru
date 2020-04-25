@@ -186,8 +186,17 @@ abstract class Entity extends \Api\Core\Base\Entity {
             $arData = $this->_data;
             if (array_key_exists($strField, $arData)) {
                 return $arData[$strField];
-            } elseif ($this->getPropertyCollection()->getByKey($strField)) {
-                return $this->getPropertyCollection()->getByKey($strField)->getValue();
+            } elseif ($obProperty = $this->getPropertyCollection()->getByKey($strField)) {
+                    /** @var \Api\Core\Iblock\Property\Entity $obProperty */
+                if ($arguments[0] == true) {
+                    if ($obProperty->getMultiple() == 'Y') {
+                        return $obProperty->getValuesCollection();
+                    } else {
+                        return $obProperty->getValueObject();
+                    }
+                } else {
+                    return $obProperty->getValue();
+                }
             } else {
                 throw new \Exception("Call to undefined method {$name}");
             }

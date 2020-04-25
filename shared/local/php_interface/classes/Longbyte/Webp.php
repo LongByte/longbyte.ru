@@ -53,7 +53,7 @@ class Webp {
             $arPatterns = array(
                 '/<img[^>]* src="([^"]+\.(jpg|jpeg|png|bmp))"[^>]*>/',
                 '/<img[^>]* data-src="([^"]+\.(jpg|jpeg|png|bmp))"[^>]*>/',
-                '/<[^>]*style="[^"]*url\(([^)]+\.(jpg|jpeg|png|bmp))\)[^"]*"[^>]*>/',
+                '/<[^>]*style="[^"]*url\(\'?([^)]+\.(jpg|jpeg|png|bmp))\'?\)[^"]*"[^>]*>/',
             );
 
             foreach ($arPatterns as $strPattern) {
@@ -101,6 +101,18 @@ class Webp {
 
         if ($this->isPng()) {
             $obImage = imagecreatefrompng($this->getSourceFile()->getPath());
+
+            if ($this->_isPhp56BetaEnabled()) {
+                list($iWidth, $iHeight) = getimagesize($this->getSourceFile()->getPath());
+                $obJpgImage = imagecreatetruecolor($iWidth, $iHeight);
+                $obWhite = imagecolorallocate($obJpgImage, 255, 255, 255);
+                imagefilledrectangle($obJpgImage, 0, 0, $iWidth, $iHeight, $obWhite);
+                imagecopy($obJpgImage, $obImage, 0, 0, 0, 0, $iWidth, $iHeight);
+
+                $strTempSrc = str_replace('.webp', '_tmp.jpg', $this->getTargetFile()->getPath());
+                imagejpeg($obJpgImage, $strTempSrc, 100);
+                $obImage = imagecreatefromjpeg($strTempSrc);
+            }
         } elseif ($this->isBmp()) {
             $obImage = imagecreatefrombmp($this->getSourceFile()->getPath());
         } elseif ($this->isJpg()) {
@@ -152,14 +164,14 @@ class Webp {
      * @return string
      */
     private function checkCorrectImage() {
-        if ($this->getTargetFile()->isExists() && $this->getTargetFile()->getSize() > 0) {
+        if ($this->getTargetFile()->isExists() && $this->getTargetFile()->getSize() > 1) {
             return $this->getTargetSrc();
         }
         return $this->getSourceSrc();
     }
 
     /**
-     * Проверка даты обновления файла
+     * 
      * @return bool
      */
     private function isNeedUpdate() {
@@ -167,7 +179,7 @@ class Webp {
     }
 
     /**
-     * 
+     *
      * @return bool
      */
     private function isPng() {
@@ -188,6 +200,16 @@ class Webp {
      */
     private function isJpg() {
         return in_array($this->getSourceFile()->getExtension(), array('jpg', 'jpeg')) && $this->getSourceFile()->getContentType() == 'image/jpeg';
+    }
+
+    /**
+     * Возможность включить конвертацию на php 5.6.
+     * На php 5.6 проблема с прозрачностью png. При включении этой опции конвертация идет через jpg с потерей прозрачности фона. Но всегда есть шанс, что что-то пойдет не так.
+     * @global \CMain $APPLICATION
+     */
+    private function _isPhp56BetaEnabled() {
+        global $APPLICATION;
+        return $APPLICATION->GetProperty('enable_webp_php56_beta') == 'Y';
     }
 
 }
