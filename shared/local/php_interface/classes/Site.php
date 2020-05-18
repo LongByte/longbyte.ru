@@ -12,8 +12,9 @@ Bitrix\Main\Localization\Loc::loadMessages(__FILE__);
 
 class Site {
 
-    public static $IS_PRINT;
-    public static $isMobile;
+    public static $IS_PRINT = null;
+    public static $isMobile = null;
+    public static $isMainPage = null;
 
     /**
      * 
@@ -64,6 +65,27 @@ class Site {
      */
     public static function isIE() {
         return strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false || strpos($_SERVER['HTTP_USER_AGENT'], 'rv:11.0') !== false;
+    }
+
+    /**
+     * 
+     * @return bool
+     */
+    public static function isEdge() {
+        return preg_match('/Edge/i', $_SERVER['HTTP_USER_AGENT']);
+    }
+
+    /**
+     * 
+     * @global \CMain $APPLICATION
+     * @return bool
+     */
+    public static function isMainPage() {
+        if (is_null(self::$isMainPage)) {
+            global $APPLICATION;
+            self::$isMainPage = $APPLICATION->GetCurPage() == '/';
+        }
+        return self::$isMainPage;
     }
 
     /**
@@ -160,19 +182,35 @@ class Site {
 
         $arReturn = array();
 
-        $arResize = \CFile::ResizeImageGet(is_array($picture) ? $picture['ID'] : $picture, array('width' => $arSize[0], 'height' => $arSize[1]), $method, true);
-        if ($arResize) {
-            $arReturn = array(
-                'WIDTH' => $arResize['width'],
-                'HEIGHT' => $arResize['height'],
-                'SRC' => $arResize['src'],
-            );
+        if (!is_array($picture) && !is_numeric($picture)) {
+            $destSrc = '/' . Option::get('main', 'upload_dir', 'upload') . '/tmp' . $picture;
+            $destSrcFull = Application::getDocumentRoot() . $destSrc;
+            $bResize = \CFile::ResizeImageFile(Application::getDocumentRoot() . $picture, $destSrcFull, array('width' => $arSize[0], 'height' => $arSize[1]), $method);
+            if ($bResize) {
+                if ($updateVar) {
+                    $picture = $destSrc;
+                }
 
-            if ($updateVar) {
-                if (is_array($picture)) {
-                    $picture = array_merge($picture, $arReturn);
-                } else {
-                    $picture = $arReturn;
+                $arReturn = $destSrc;
+            } else {
+                $arReturn = false;
+            }
+        } else {
+
+            $arResize = \CFile::ResizeImageGet(is_array($picture) ? $picture['ID'] : $picture, array('width' => $arSize[0], 'height' => $arSize[1]), $method, true);
+            if ($arResize) {
+                $arReturn = array(
+                    'WIDTH' => $arResize['width'],
+                    'HEIGHT' => $arResize['height'],
+                    'SRC' => $arResize['src'],
+                );
+
+                if ($updateVar) {
+                    if (is_array($picture)) {
+                        $picture = array_merge($picture, $arReturn);
+                    } else {
+                        $picture = $arReturn;
+                    }
                 }
             }
         }

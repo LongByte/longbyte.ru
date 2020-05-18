@@ -8,6 +8,12 @@ namespace Api\Sensors\Data;
 class Collection extends \Api\Core\Base\Collection {
 
     /**
+     *
+     * @var \Bitrix\Main\Type\Date
+     */
+    protected $obDate = null;
+
+    /**
      * 
      * @param int $iSensorId
      * @return null|\Api\Sensors\Data\Entity
@@ -20,6 +26,40 @@ class Collection extends \Api\Core\Base\Collection {
             }
         }
         return null;
+    }
+
+    /**
+     * 
+     * @return \Bitrix\Main\Type\Date|null
+     */
+    public function getDate() {
+        return $this->obDate;
+    }
+
+    /**
+     * 
+     * @param \Bitrix\Main\Type\Date $obDate
+     * @return $this
+     */
+    public function setDate(\Bitrix\Main\Type\Date $obDate) {
+        $this->obDate = $obDate;
+        return $this;
+    }
+
+    /**
+     * 
+     * @param array $arErrors
+     * @return $this
+     */
+    public function save(array &$arErrors) {
+        /** @var \Api\Sensors\Data\Entity $obValue */
+        foreach ($this->getCollection() as $obValue) {
+            $obValue->save();
+            if (!$obValue->isExist()) {
+                $arErrors[] = 'Невозможно добавить данные. Данные: ' . print_r($obValue->toArray(), true);
+            }
+        }
+        return $this;
     }
 
 }

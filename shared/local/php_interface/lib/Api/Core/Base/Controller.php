@@ -42,4 +42,14 @@ class Controller {
         return $this->rawPost;
     }
 
+    /**
+     * 
+     * @param mixed $rawPost
+     * @return $this
+     */
+    public function setPostData($rawPost) {
+        $this->rawPost = $rawPost;
+        return $this;
+    }
+
 }
