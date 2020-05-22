@@ -3,6 +3,7 @@
 $_SERVER["DOCUMENT_ROOT"] = dirname(dirname(__DIR__));
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
 
+date_default_timezone_set('Europe/Moscow');
 error_reporting(E_ALL);
 set_time_limit(0);
 ob_implicit_flush();
