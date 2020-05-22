@@ -160,6 +160,7 @@ class Post extends \Api\Core\Base\Controller {
         /** @var \Api\Sensors\Data\Collection $obValues */
         /** @var \Api\Sensors\Data\Entity $obValue */
         foreach ($arData as $obInputValue) {
+            $this->arResponse['data']['read_values'] ++;
             $value = floatval(str_replace(',', '.', $obInputValue->SensorValue));
             $obSensor = $this->obSystem->getSensorsCollection()->getByParams($obInputValue->SensorApp, $obInputValue->SensorClass, $obInputValue->SensorName);
 
@@ -218,6 +219,7 @@ class Post extends \Api\Core\Base\Controller {
                 if (is_null($this->obLastSave) || $this->obLastSave->getTimestamp() + $this->saveEvery < (new \Bitrix\Main\Type\DateTime())->getTimestamp()) {
                     $this->obTodayValues->save($this->arResponse['errors']);
                     $this->obLastSave = new \Bitrix\Main\Type\DateTime();
+                    $this->arResponse['data']['last_save'] = $this->obLastSave->format('H:i:s d.m.Y');
                 }
             }
 
@@ -305,7 +307,10 @@ class Post extends \Api\Core\Base\Controller {
      * 
      */
     private function resetResponse() {
-        $this->arResponse['data'] = array();
+//        $this->arResponse['data'] = array(
+//            'token' => $this->token,
+//            'read_values' => 0,
+//        );
         $this->arResponse['errors'] = array();
         $this->arResponse['success'] = true;
     }
