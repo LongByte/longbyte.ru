@@ -61,6 +61,11 @@ do {
                     socket_shutdown($obClient);
                     unset($arClientSockets[$key]);
                     SocketLog($obLog, "Client disconnected.");
+                    foreach ($arControllers as $obPost) {
+                        if (!is_null($obPost)) {
+                            $obPost->emergencySave();
+                        }
+                    }
                 } else {
                     $rawMessage = trim($rawMessage);
                     $arBuffer[$key] .= $rawMessage;
