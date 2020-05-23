@@ -67,7 +67,6 @@ do {
                         }
                     }
                 } else {
-                    $rawMessage = trim($rawMessage);
                     $arBuffer[$key] .= $rawMessage;
                     $arData = json_decode($arBuffer[$key], true);
                     if ($arData) {
