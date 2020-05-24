@@ -1,0 +1,99 @@
+.sensorbool {
+
+    @halfHeight: 80px;
+    padding: 8px;
+    color: #898989;
+
+    &__title {
+        .size(100%, 19px);
+        font-size: 13px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    &__value {
+        display: flex;
+        flex-wrap: wrap;
+        font-size: 24px;
+
+        &-avg {
+            .size(100%, @halfHeight);
+            line-height: @halfHeight;
+            text-align: center;
+
+            &--red {
+                color: red;
+
+                &-value {
+                    color: inherit;
+                }
+            }
+
+        }
+        &-min {
+            .size(50%, @halfHeight);
+            line-height: @halfHeight;
+            text-align: center;
+
+        }
+        &-max {
+            .size(50%, @halfHeight);
+            line-height: @halfHeight;
+            text-align: center;
+        }
+    }
+
+    &--alert {
+        .sensorbool {
+            &__title {
+                color: red;
+            }
+
+            &__value {
+                &-avg {
+                    color: red;
+                }
+            }
+        }
+    }
+
+    &--alert-red {
+        .sensorbool {
+            &__value {
+                &-avg {
+                    &-value {
+                        color: red;
+                    }
+                }
+
+                &-max {
+                    color: red;
+
+                    &-value {
+                        color: inherit;
+                    }
+                }
+            }
+        }
+    }
+
+    &--alert-blue {
+        .sensorbool {
+            &__value {
+                &-avg {
+                    &-value {
+                        color: blue;
+                    }
+                }
+
+                &-min {
+                    color: blue;
+                    
+                    &-value {
+                        color: inherit;
+                    }
+                }
+            }
+        }
+    }
+}

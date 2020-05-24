@@ -14,7 +14,12 @@
         <div class="sensors__list">
             <div class="sensors__item" v-for="sensorData in store.sensors">
                 <template v-if="store.system.mode==0 || sensorData.values.length == 1" >
-                    <sensorbar :sensor="sensorData" />
+                    <template v-if="sensorData.sensor_unit=='Yes/No'">
+                        <sensorbool :sensor="sensorData" />
+                    </template>
+                    <template v-else>
+                        <sensorbar :sensor="sensorData" />
+                    </template>
                 </template>
                 <template v-if="store.system.mode==1 && sensorData.values.length > 1">
                     <sensorline :sensor="sensorData" />

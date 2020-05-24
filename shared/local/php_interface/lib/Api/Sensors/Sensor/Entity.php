@@ -76,6 +76,8 @@ class Entity extends \Api\Core\Base\Entity {
 
     public function toArray() {
         $arData = parent::toArray();
+        $arData['alert'] = $this->isAlert();
+        $arData['alert_direction'] = $this->getAlertDirection();
         $arData['values'] = $this->getValuesCollection()->toArray();
         return $arData;
     }
@@ -96,6 +98,14 @@ class Entity extends \Api\Core\Base\Entity {
     public function setAlert(bool $bAlert = true) {
         $this->_alert = $bAlert;
         return $this;
+    }
+
+    /**
+     * 
+     * @return int
+     */
+    public function getAlertDirection() {
+        return $this->_alertDirection;
     }
 
     /**

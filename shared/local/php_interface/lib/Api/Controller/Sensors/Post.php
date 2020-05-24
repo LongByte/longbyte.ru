@@ -223,12 +223,6 @@ class Post extends \Api\Core\Base\Controller {
                     $obValue->setSensorValues($obValue->getSensorValues() + 1);
                     $obValue->setSensor($obSensor);
                 }
-
-                if (is_null($this->obLastSave) || $this->obLastSave->getTimestamp() + $this->saveEvery < (new \Bitrix\Main\Type\DateTime())->getTimestamp()) {
-                    $this->obTodayValues->save($this->arResponse['errors']);
-                    $this->obLastSave = new \Bitrix\Main\Type\DateTime();
-                    $this->arResponse['data']['last_save'] = $this->obLastSave->format('H:i:s d.m.Y');
-                }
             }
 
             if ($this->obSystem->isModeEach()) {
@@ -246,6 +240,14 @@ class Post extends \Api\Core\Base\Controller {
             }
 
             $this->checkAlert($obValue);
+        }
+
+        if ($this->obSystem->isModeAvg()) {
+            if (is_null($this->obLastSave) || $this->obLastSave->getTimestamp() + $this->saveEvery < (new \Bitrix\Main\Type\DateTime())->getTimestamp()) {
+                $this->obTodayValues->save($this->arResponse['errors']);
+                $this->obLastSave = new \Bitrix\Main\Type\DateTime();
+                $this->arResponse['data']['last_save'] = $this->obLastSave->format('H:i:s d.m.Y');
+            }
         }
     }
 

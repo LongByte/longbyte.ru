@@ -10,7 +10,7 @@ Bitrix\Main\Page\Asset::getInstance()->addString('<script src="//unpkg.com/vuejs
 Bitrix\Main\Page\Asset::getInstance()->addString('<meta name="robots" content="noindex, nofollow"/>', true);
 
 $APPLICATION->IncludeComponent("longbyte:vue", "sensors", Array(
-    'INCLUDE_COMPONENTS' => array('sensorbar', 'sensorline'),
+    'INCLUDE_COMPONENTS' => array('sensorbar', 'sensorline', 'sensorbool'),
     'STYLE_TO_COMPILER' => 'Y',
     ), false
 );
