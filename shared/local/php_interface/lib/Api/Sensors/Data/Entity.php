@@ -36,6 +36,12 @@ class Entity extends \Api\Core\Base\Entity {
     protected $_obSensor = null;
 
     /**
+     *
+     * @var float
+     */
+    protected $_lastValue = 0;
+
+    /**
      * 
      * @return array
      */
@@ -91,6 +97,24 @@ class Entity extends \Api\Core\Base\Entity {
     public function setSensor(\Api\Sensors\Sensor\Entity $obSensor) {
         $this->_obSensor = $obSensor;
         $this->setSensorId($obSensor->getId());
+        return $this;
+    }
+
+    /**
+     * 
+     * @return float
+     */
+    public function getLastValue() {
+        return $this->_lastValue;
+    }
+
+    /**
+     * 
+     * @param float $fLastValue
+     * @return $this
+     */
+    public function setLastValue(float $fLastValue) {
+        $this->_lastValue = $fLastValue;
         return $this;
     }
 

@@ -10,6 +10,7 @@ class Post extends \Api\Core\Base\Controller {
     private $saveEvery = 60;
     private $alertEvery = 5 * 60;
     private $token = null;
+    private $arAlerts = array();
     private $arResponse = array(
         'data' => array(),
         'errors' => array(),
@@ -208,6 +209,7 @@ class Post extends \Api\Core\Base\Controller {
                         ->setSensorValue($value)
                         ->setSensorValueMax($value)
                         ->setSensorValues(1)
+                        ->setLastValue((float) $value)
                     ;
 
                     $this->obTodayValues->addItem($obValue);
@@ -222,6 +224,7 @@ class Post extends \Api\Core\Base\Controller {
                     $obValue->setSensorValue($fAvgValue);
                     $obValue->setSensorValues($obValue->getSensorValues() + 1);
                     $obValue->setSensor($obSensor);
+                    $obValue->setLastValue((float) $value);
                 }
             }
 
@@ -231,6 +234,7 @@ class Post extends \Api\Core\Base\Controller {
                     ->setSensor($obSensor)
                     ->setDate(new \Bitrix\Main\Type\Date())
                     ->setSensorValue($value)
+                    ->setLastValue((float) $value)
                     ->save()
                 ;
 
@@ -259,14 +263,14 @@ class Post extends \Api\Core\Base\Controller {
 
         $obSensor = $obValue->getSensor();
 
-        $message = 'Значение на датчике ' . $obSensor->getSensorApp() . ' > ' . $obSensor->getSensorDevice() . ' > ' . $obSensor->getSensorName() . ' = ' . $obValue->getSensorValue() . $obSensor->getSensorUnit() . ' и ';
+        $message = 'Значение на датчике ' . $obSensor->getSensorApp() . ' > ' . $obSensor->getSensorDevice() . ' > ' . $obSensor->getSensorName() . ' = ' . $obValue->getLastValue() . $obSensor->getSensorUnit() . ' и ';
 
-        if ($obSensor->getAlertValueMin() != 0 && $obValue->getSensorValue() < $obSensor->getAlertValueMin()) {
+        if ($obSensor->getAlertValueMin() != 0 && $obValue->getLastValue() < $obSensor->getAlertValueMin()) {
             $message .= 'меньше допустимого ' . $obSensor->getAlertValueMin();
             $obSensor->setAlert();
         }
 
-        if ($obSensor->getAlertValueMax() != 0 && $obValue->getSensorValue() > $obSensor->getAlertValueMax()) {
+        if ($obSensor->getAlertValueMax() != 0 && $obValue->getLastValue() > $obSensor->getAlertValueMax()) {
             $message .= 'больше допустимого ' . $obSensor->getAlertValueMax();
             $obSensor->setAlert();
         }
@@ -275,6 +279,7 @@ class Post extends \Api\Core\Base\Controller {
 
         if ($obSensor->isAlert()) {
             $this->arResponse['alerts'][] = $message;
+            $this->arAlerts[] = $message;
         }
     }
 
@@ -283,20 +288,20 @@ class Post extends \Api\Core\Base\Controller {
      */
     private function sendAlerts() {
         if (
-            count($this->arResponse['alerts']) > 0 &&
-            strlen($this->arSystem['EMAIL']) > 0 &&
+            count($this->arAlerts) > 0 &&
+            strlen($this->obSystem->getEmail()) > 0 &&
             (
             is_null($this->obLastAlert) ||
             !is_null($this->obLastAlert) && $this->obLastAlert->getTimestamp() + $this->alertEvery < (new \Bitrix\Main\Type\DateTime())->getTimestamp()
             )
         ) {
 
-            $this->arResponse['alerts'] = array_unique($this->arResponse['alerts']);
+            $this->arAlerts = array_unique($this->arAlerts);
 
             $strUrl = 'https://longbyte.ru/sensors/' . $this->obSystem->getName() . '-' . $this->obSystem->getToken() . '/';
 
             $message = 'Контроль сенсоров на системе <a href="' . $strUrl . '">' . $this->obSystem->getName() . '</a>. Некоторые значения вне допустимого диапазона.<br><br>';
-            $message .= implode('<br>', $this->arResponse['alerts']);
+            $message .= implode('<br>', $this->arAlerts);
 
             \Bitrix\Main\Mail\Event::send(array(
                 'EVENT_NAME' => 'SENSORS_ALERT',
@@ -308,7 +313,7 @@ class Post extends \Api\Core\Base\Controller {
                 )
             ));
 
-            $this->arResponse['alerts'] = array();
+            $this->arAlerts = array();
             $this->obLastAlert = new \Bitrix\Main\Type\DateTime();
         }
     }
@@ -317,6 +322,7 @@ class Post extends \Api\Core\Base\Controller {
      * 
      */
     private function resetResponse() {
+        $this->arResponse['alerts'] = array();
         $this->arResponse['errors'] = array();
         $this->arResponse['success'] = true;
     }
