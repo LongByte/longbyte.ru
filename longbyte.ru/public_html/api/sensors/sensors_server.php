@@ -3,6 +3,18 @@
 $_SERVER["DOCUMENT_ROOT"] = dirname(dirname(__DIR__));
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
 
+global $logEnable;
+global $shutdown;
+$logEnable = false;
+$shutdown = false;
+if (in_array('log', $argv)) {
+    $logEnable = true;
+}
+
+pcntl_async_signals(true);
+pcntl_signal(SIGTERM, "sig_handler");
+pcntl_signal(SIGUSR1, "sig_handler");
+
 date_default_timezone_set('Europe/Moscow');
 error_reporting(E_ALL);
 set_time_limit(0);
@@ -98,8 +110,34 @@ do {
 
     $arSockets = $arClientSockets;
     $arSockets[] = $obSocket;
-} while (true);
+} while (!$shutdown);
+
+foreach ($arControllers as $obPost) {
+    if (!is_null($obPost)) {
+        $obPost->emergencySave();
+    }
+}
 
 function SocketLog($obLog, $str) {
-//    $obLog->putContents($str . "\n", \Bitrix\Main\IO\File::APPEND);
+    global $logEnable;
+    if ($logEnable) {
+        $obLog->putContents($str . "\n", \Bitrix\Main\IO\File::APPEND);
+    }
+}
+
+function SIGTERM_handler($signo) {
+    global $shutdown;
+
+    switch ($signo) {
+        case SIGTERM:
+            $shutdown = true;
+            SocketLog($obLog, "SIGTERM recived.");
+            break;
+        case SIGUSR1:
+            $shutdown = true;
+            SocketLog($obLog, "SIGUSR1 recived.");
+            break;
+        default:
+            break;
+    }
 }
