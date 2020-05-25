@@ -23,6 +23,9 @@ namespace Api\Sensors\System;
  * @method string getEmail()
  * @method $this setEmail(string $strEmail)
  * @method bool hasEmail()
+ * @method \Bitrix\Main\Type\DateTime getLastUpdate()
+ * @method $this setLastUpdate(\Bitrix\Main\Type\DateTime $obLastUpdate)
+ * @method bool hasLastUpdate()
  */
 class Entity extends \Api\Core\Base\Entity {
 
@@ -91,6 +94,16 @@ class Entity extends \Api\Core\Base\Entity {
      */
     public function isModeEach() {
         return $this->getMode() == Table::MODE_EACH;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    public function toArray() {
+        $arData = parent::toArray();
+        $arData['last_update'] = $this->getLastUpdate()->format('d.m.Y H:i:s');
+        return $arData;
     }
 
 }

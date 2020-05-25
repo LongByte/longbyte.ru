@@ -251,6 +251,10 @@ class Post extends \Api\Core\Base\Controller {
                 $this->obTodayValues->save($this->arResponse['errors']);
                 $this->obLastSave = new \Bitrix\Main\Type\DateTime();
                 $this->arResponse['data']['last_save'] = $this->obLastSave->format('H:i:s d.m.Y');
+                $this->obSystem
+                    ->setLastUpdate($this->obLastSave)
+                    ->save()
+                ;
             }
         }
     }

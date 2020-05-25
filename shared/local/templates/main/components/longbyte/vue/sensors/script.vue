@@ -11,6 +11,7 @@
                 <button @click="refresh">Обновить</button>
             </div>
         </div>
+        <div class="sensors__last-update">Последнее обновление: {{store.system.last_update}}</div>
         <div class="sensors__list">
             <div class="sensors__item" v-for="sensorData in store.sensors">
                 <template v-if="store.system.mode==0 || sensorData.values.length == 1" >

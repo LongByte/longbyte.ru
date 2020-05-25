@@ -66,6 +66,10 @@ class Table extends Main\Entity\DataManager {
                 'required' => true,
                 'title' => 'E-mail для уведомлений',
                 )),
+            'LAST_UPDATE' => new Main\Entity\DateTimeField('UF_LAST_UPDATE', array(
+                'required' => true,
+                'title' => 'Последнее обновление данных',
+                )),
         );
     }
 
