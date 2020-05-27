@@ -161,7 +161,7 @@ abstract class Entity extends \Api\Core\Base\Entity {
                 $_arData = static::getModel()::getOneAsArray(array('ID' => $this->_primary));
                 if ($_arData) {
                     $this->_data = $_arData;
-                    $this->_exist = true;
+                    $this->_exists = true;
                 }
             }
         }
@@ -276,7 +276,7 @@ abstract class Entity extends \Api\Core\Base\Entity {
 
         if ($this->getId() > 0) {
             \CIBlockElement::SetPropertyValuesEx($this->getId(), static::getModel()::getIblockId(), $arProperties);
-            $this->_exist = true;
+            $this->_exists = true;
             $this->_changed = false;
         }
 
@@ -288,12 +288,12 @@ abstract class Entity extends \Api\Core\Base\Entity {
      * @return $this
      */
     public function delete() {
-        if ($this->isExist()) {
+        if ($this->isExists()) {
             $iId = $this->getId();
             \CIBlockElement::Delete($iId);
             $this->setId(0);
             $this->_primary = null;
-            $this->_exist = false;
+            $this->_exists = false;
             $this->_changed = true;
         }
         return $this;

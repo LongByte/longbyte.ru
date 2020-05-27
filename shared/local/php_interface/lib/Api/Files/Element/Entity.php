@@ -60,7 +60,9 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      */
     private function _isImage() {
         if (!is_null($this->_getFile())) {
-            return strpos($this->_getFile()->getIOFile()->getContentType(), 'image/') !== false;
+            if ($this->_getFile()->getIOFile()->isExists()) {
+                return strpos($this->_getFile()->getIOFile()->getContentType(), 'image/') !== false;
+            }
         }
         return false;
     }

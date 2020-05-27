@@ -159,7 +159,7 @@ abstract class Entity extends \Api\Core\Base\Entity {
         unset($arData['ID']);
         $arData['IBLOCK_ID'] = static::getIblockId();
         $obSection = new \CIBlockSection();
-        if ($this->isExist()) {
+        if ($this->isExists()) {
             $obSection->Update($this->getId(), $arData);
             $this->_data = null;
             $this->getData();
@@ -178,12 +178,12 @@ abstract class Entity extends \Api\Core\Base\Entity {
      * @return $this
      */
     public function delete() {
-        if ($this->isExist()) {
+        if ($this->isExists()) {
             $iId = $this->getId();
             \CIBlockSection::Delete($iId);
             $this->setId(0);
             $this->_primary = null;
-            $this->_exist = false;
+            $this->_exists = false;
             $this->_changed = true;
         }
         return $this;

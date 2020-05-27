@@ -56,11 +56,20 @@ abstract class Model extends \Api\Core\Base\Model {
 
             $obEntity = static::_getEntityFromSection($arSection);
             return $obEntity;
+        } else {
+            return static::_getEntityFromSection(array());
         }
 
         return null;
     }
 
+    /**
+     * 
+     * @param array $arFilter
+     * @param int $iLimit
+     * @param int $iOffset
+     * @return \Api\Core\Base\Collection
+     */
     public static function getAll(array $arFilter = array(), int $iLimit = 0, int $iOffset = 0) {
 
         Loader::includeModule('iblock');
@@ -95,6 +104,24 @@ abstract class Model extends \Api\Core\Base\Model {
 
         while ($arSection = $rsSections->fetch()) {
 
+            $obEntity = static::_getEntityFromSection($arSection);
+            $obCollection->addItem($obEntity);
+        }
+
+        return $obCollection;
+    }
+
+    /**
+     * 
+     * @param array $arSections
+     * @return \Api\Core\Base\Collection
+     */
+    public static function getFromArray(array $arSections) {
+
+        $strCollectionClass = static::getEntity()::getCollection();
+        $obCollection = new $strCollectionClass();
+
+        foreach ($arSections as $arSection) {
             $obEntity = static::_getEntityFromSection($arSection);
             $obCollection->addItem($obEntity);
         }

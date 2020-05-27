@@ -16,7 +16,7 @@ abstract class Entity {
     /**
      * @var bool
      */
-    protected $_exist = false;
+    protected $_exists = false;
 
     /**
      * @var bool
@@ -74,7 +74,7 @@ abstract class Entity {
             }
             if ($primary !== null) {
                 $this->_primary = $primary;
-                $this->_exist = true;
+                $this->_exists = true;
             }
         } elseif ($primary !== null) {
             $this->_primary = $primary;
@@ -109,7 +109,7 @@ abstract class Entity {
                                 $this->_data[$strField] = $value;
                             }
                         }
-                        $this->_exist = true;
+                        $this->_exists = true;
                     }
                 }
             }
@@ -179,8 +179,8 @@ abstract class Entity {
     /**
      * @return bool
      */
-    public function isExist() {
-        return $this->_exist;
+    public function isExists() {
+        return $this->_exists;
     }
 
     /**
@@ -259,13 +259,13 @@ abstract class Entity {
                 $arFields[$strTableField] = $arData[$strTableField];
             }
         }
-        if ($this->isExist()) {
+        if ($this->isExists()) {
             $rsResult = static::getModel()::getTable()::update($this->_primary, $arFields);
         } else {
             $rsResult = static::getModel()::getTable()::add($arFields);
             if (intval($rsResult->getId()) > 0) {
                 $this->_primary = $rsResult->getId();
-                $this->_exist = true;
+                $this->_exists = true;
             }
         }
         $this->_changed = false;
@@ -274,9 +274,9 @@ abstract class Entity {
     }
 
     public function delete() {
-        if ($this->isExist()) {
+        if ($this->isExists()) {
             $rsResult = static::getModel()::getTable()::delete($this->_primary);
-            $this->_exist = false;
+            $this->_exists = false;
             $this->_primary = null;
             $this->_changed = true;
         }

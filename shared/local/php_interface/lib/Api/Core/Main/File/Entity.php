@@ -83,7 +83,7 @@ class Entity extends \Api\Core\Base\Entity {
      * @return string
      */
     public function getSrc() {
-        if ($this->isExist() && is_null($this->_src)) {
+        if ($this->isExists() && is_null($this->_src)) {
             $uploadDirName = \Bitrix\Main\Config\Option::get('main', 'upload_dir', 'upload');
             $this->_src = '/' . $uploadDirName . '/' . $this->getSubdir() . '/' . $this->getFileName();
         }

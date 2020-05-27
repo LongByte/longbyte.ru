@@ -186,7 +186,7 @@ class Post extends \Api\Core\Base\Controller {
                     ->save()
                 ;
 
-                if (!$obSensor->isExist()) {
+                if (!$obSensor->isExists()) {
                     $this->arResponse['errors'][] = 'Невозможно создать сенсор. Данные: ' . print_r($obSensor->toArray(), true);
                     continue;
                 }
@@ -238,7 +238,7 @@ class Post extends \Api\Core\Base\Controller {
                     ->save()
                 ;
 
-                if (!$obValue->isExist()) {
+                if (!$obValue->isExists()) {
                     $this->arResponse['errors'][] = 'Невозможно добавить данные. Данные: ' . print_r($obValue->toArray(), true);
                 }
             }

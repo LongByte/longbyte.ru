@@ -51,7 +51,7 @@ abstract class Model extends \Api\Core\Base\Model {
 
         if ($obElement) {
 
-            $obEntity = static::_getEntityFromElement($obElement);
+            $obEntity = static::_getEntityFromElementObject($obElement);
             return $obEntity;
         }
 
@@ -64,7 +64,7 @@ abstract class Model extends \Api\Core\Base\Model {
      * @param int $iLimit
      * @param int $iPageSize
      * @param int $iNumPage
-     * @return \Api\Core\Iblock\Element\strCollectionClass
+     * @return \Api\Core\Base\Collection
      */
     public static function getAll(array $arFilter = array(), int $iLimit = 0, int $iPageSize = 0, int $iNumPage = 0) {
 
@@ -98,7 +98,7 @@ abstract class Model extends \Api\Core\Base\Model {
 
         while ($obElement = $rsElement->GetNextElement(false, true)) {
 
-            $obEntity = static::_getEntityFromElement($obElement);
+            $obEntity = static::_getEntityFromElementObject($obElement);
             $obCollection->addItem($obEntity);
         }
 
@@ -107,15 +107,47 @@ abstract class Model extends \Api\Core\Base\Model {
 
     /**
      * 
-     * @param type $obElement
+     * @param array $arElements
+     * @return \Api\Core\Base\Collection
+     */
+    public static function getFromArray(array $arElements) {
+        $strCollectionClass = static::getEntity()::getCollection();
+        $obCollection = new $strCollectionClass();
+
+        foreach ($arElements as $arElement) {
+            $obEntity = static::_getEntityFromElementArray($arElement);
+            $obCollection->addItem($obEntity);
+        }
+
+        return $obCollection;
+    }
+
+    /**
+     * 
+     * @param \_CIBElement $obElement
      * @return \Api\Core\Iblock\Element\Entity
      */
-    protected static function _getEntityFromElement($obElement) {
+    protected static function _getEntityFromElementObject($obElement) {
         $arElement = $obElement->GetFields();
         $arProperties = $obElement->GetProperties();
 
         $arElement = static::_getFromTilda($arElement);
+        $obEntity = static::_getEntityFromElementArray($arElement, $arProperties);
 
+        return $obEntity;
+    }
+
+    /**
+     * 
+     * @param array $arElement
+     * @param array|null $arProperties
+     * @return \Api\Core\Iblock\Element\Entity
+     */
+    protected static function _getEntityFromElementArray(array $arElement, array $arProperties = null) {
+
+        if (is_null($arProperties)) {
+            $arProperties = $arElement['PROPERTIES'];
+        }
 
         $strEntityClass = static::getEntity();
         /** @var \Api\Core\Iblock\Element\Entity $obEntity */
