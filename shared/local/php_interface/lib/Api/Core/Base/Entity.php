@@ -243,6 +243,10 @@ abstract class Entity {
         return ToUpper($strString);
     }
 
+    /**
+     * 
+     * @return array
+     */
     public function getFields() {
         return static::$arFields;
     }
@@ -273,15 +277,21 @@ abstract class Entity {
         return $rsResult->isSuccess();
     }
 
+    /**
+     * 
+     * @return bool
+     */
     public function delete() {
         if ($this->isExists()) {
             $rsResult = static::getModel()::getTable()::delete($this->_primary);
             $this->_exists = false;
             $this->_primary = null;
             $this->_changed = true;
+
+            return $rsResult->isSuccess();
         }
 
-        return $rsResult->isSuccess();
+        return false;
     }
 
 }
