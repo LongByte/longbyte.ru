@@ -18,7 +18,11 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate {
      * @return $this
      */
     public function addItem($obEntity) {
-        $strGetFunction = static::$_keyFunction;
+        if ($obEntity instanceof \Api\Core\Base\Virtual\Entity) {
+            $strGetFunction = 'get' . \Api\Core\Utils\StringHelper::convertCodeToUpperCamelCase($obEntity->getPrimaryField());
+        } else {
+            $strGetFunction = static::$_keyFunction;
+        }
         $this->_collection[] = $obEntity;
         $this->_keys[] = $obEntity->$strGetFunction();
         return $this;

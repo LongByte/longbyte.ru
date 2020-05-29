@@ -114,6 +114,10 @@ class Entity extends \Api\Core\Base\Entity {
         return Collection::class;
     }
 
+    /**
+     * 
+     * @return array
+     */
     public function getFields() {
         $arFields = array_keys(static::getModel()::getTable()::getScalarFields());
         $arFields[] = 'VALUE';
@@ -129,7 +133,7 @@ class Entity extends \Api\Core\Base\Entity {
      */
     public function getValueObject() {
         if ($this->getMultiple() == 'N') {
-            return new \Api\Core\Iblock\Property\Value\Entity(null, array(
+            return new \Api\Core\Iblock\Property\Value\Entity(array(
                 'VALUE' => $this->getValue(),
                 'VALUE_XML_ID' => $this->getValueXmlId(),
                 'VALUE_ID' => $this->getValueId(),
@@ -148,7 +152,7 @@ class Entity extends \Api\Core\Base\Entity {
 
             $obCollection = new \Api\Core\Iblock\Property\Value\Collection();
             foreach ($this->getValue() as $keyValue => $mixedValue) {
-                $obValue = new \Api\Core\Iblock\Property\Value\Entity(null, array(
+                $obValue = new \Api\Core\Iblock\Property\Value\Entity(array(
                     'VALUE' => $mixedValue,
                     'VALUE_XML_ID' => $this->getValueXmlId()[$keyValue],
                     'VALUE_ID' => $this->getValueId()[$keyValue],
@@ -163,20 +167,16 @@ class Entity extends \Api\Core\Base\Entity {
         return null;
     }
 
-    /**
-     * 
-     * @return null|array
-     */
     public function getData() {
         return null;
     }
 
     public function save() {
-        return false;
+        return null;
     }
 
     public function delete() {
-        return false;
+        return null;
     }
 
 }
