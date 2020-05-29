@@ -30,7 +30,7 @@
     </div>
 </template>
 <script>
-    var portfolioApp = new Vue({
+    var sensorsApp = new Vue({
         el: '#sensorsApp',
         data() {
             return {

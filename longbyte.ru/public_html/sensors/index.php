@@ -13,6 +13,7 @@ $APPLICATION->IncludeComponent(
         'SEF_URL_TEMPLATES' => array(
             "default" => "",
             "system" => "#SYSTEM_NAME#-#SYSTEM_TOKEN#/",
+            "edit" => "#SYSTEM_NAME#-#SYSTEM_TOKEN#/edit/",
         )
     )
 );

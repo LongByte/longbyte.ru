@@ -75,6 +75,15 @@ class Table extends Main\Entity\DataManager {
             'ALERT_VALUE_MAX' => new Main\Entity\FloatField('UF_ALERT_VALUE_MAX', array(
                 'title' => 'Максимальное допустимое значение',
                 )),
+            'VISUAL_MIN' => new Main\Entity\FloatField('UF_VISUAL_MIN', array(
+                'title' => 'Минимум на графике',
+                )),
+            'VISUAL_MAX' => new Main\Entity\FloatField('UF_VISUAL_MAX', array(
+                'title' => 'Максимум на графике',
+                )),
+            'OFF_ALERT' => new Main\Entity\DateTimeField('UF_OFF_ALERT', array(
+                'title' => 'Отключить оповещение до',
+                )),
         );
     }
 
