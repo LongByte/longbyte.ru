@@ -30,6 +30,26 @@ class Collection extends \Api\Core\Base\Collection {
 
     /**
      * 
+     * @param \Bitrix\Main\Type\DateTime $obDateTime
+     * @param int $iSensorId
+     * @return null|\Api\Sensors\Data\Entity
+     */
+    public function getByDateAndSensorId(\Bitrix\Main\Type\DateTime $obDateTime, int $iSensorId) {
+        $obDateTime = clone $obDateTime;
+        $obDateTime->setTime(0, 0, 0);
+        /** @var \Api\Sensors\Data\Entity $obValue */
+        foreach ($this->getCollection() as $obValue) {
+            $obValueDateTime = clone $obValue->getDate();
+            $obValueDateTime->setTime(0, 0, 0);
+            if ($obDateTime->getTimestamp() == $obValueDateTime->getTimestamp() && $obValue->getSensorId() == $iSensorId) {
+                return $obValue;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 
      * @return \Bitrix\Main\Type\Date|null
      */
     public function getDate() {
