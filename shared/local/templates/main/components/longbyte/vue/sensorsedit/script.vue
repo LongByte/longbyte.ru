@@ -20,12 +20,12 @@
                 <div class="sensors-edit__col col-2">
                     Диапазон значений на графике
                 </div>
-                <div class="sensors-edit__col col-2">
+<!--                <div class="sensors-edit__col col-2">
                     Использовать шаблон
-                </div>
-                <div class="sensors-edit__col col-1">
+                </div>-->
+<!--                <div class="sensors-edit__col col-1">
                     Не уведомлять до
-                </div>
+                </div>-->
             </div>
             <form :id="getFormName(sensor)" class="sensors-edit__item row" v-for="sensor in sensors" v-if="isRowVisible(sensor)">
                 <div class="sensors-edit__col col-0">
@@ -71,7 +71,7 @@
                            @change="saveForm(sensor)"
                            />
                 </div>
-                <div class="sensors-edit__col col-2">
+<!--                <div class="sensors-edit__col col-2">
                     <select class="sensors-edit__template-select">
                         <option value="manual">Пользовательский</option>
                         <option value="percent">Проценты</option>
@@ -82,15 +82,15 @@
                         <option value="volt5">Напряжение 5V</option>
                         <option value="volt12">Напряжение 12V</option>
                     </select>
-                </div>
-                <div class="sensors-edit__col col-1">
+                </div>-->
+<!--                <div class="sensors-edit__col col-1">
                     <input class="form-control sensors-edit__input-date" 
                            type="text"
                            name="off_alert"
                            :value="sensor.off_alert" 
                            @change="saveForm(sensor)"
                            />
-                </div>
+                </div>-->
             </form>
 
         </div>

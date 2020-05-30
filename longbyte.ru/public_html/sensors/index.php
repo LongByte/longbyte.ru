@@ -14,6 +14,7 @@ $APPLICATION->IncludeComponent(
             "default" => "",
             "system" => "#SYSTEM_NAME#-#SYSTEM_TOKEN#/",
             "edit" => "#SYSTEM_NAME#-#SYSTEM_TOKEN#/edit/",
+            "stat" => "#SYSTEM_NAME#-#SYSTEM_TOKEN#/stat/",
         )
     )
 );

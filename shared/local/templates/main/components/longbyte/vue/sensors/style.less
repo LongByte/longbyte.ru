@@ -4,36 +4,43 @@ body .container {
 }
 
 .sensors {
-    
+
     margin: 24px 0;
-    
+
     &__date {
         display: flex;
         justify-content: center;
-        
+
         &-label {
             margin-right: 8px;
         }
-        
+
         &-component {
             position: relative;
             width: 170px;
         }
     }
-    
+
     &__last-update {
-        padding: 8px 0 16px;
+        padding: 8px 0 4px;
         font-size: 13px;
         font-weight: bold;
         text-align: center;
     }
-    
+
+    &__links {
+        padding: 4px 0 16px;
+        font-size: 13px;
+        font-weight: bold;
+        text-align: center;
+    }
+
     &__list {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
     }
-    
+
     &__item > div {
         position: relative;
         width: 470px;
