@@ -32,6 +32,15 @@ namespace Api\Sensors\Sensor;
  * @method float getAlertValueMax()
  * @method $this setAlertValueMax(float $fAlertValueMax)
  * @method bool hasAlertValueMax()
+ * @method float getVisualMin()
+ * @method $this setVisualMin(float $fVisualMin)
+ * @method bool hasVisualMin()
+ * @method float getVisualMax()
+ * @method $this setVisualMax(float $fVisualMax)
+ * @method bool hasVisualMax()
+ * @method \Bitrix\Main\Type\DateTime getOffAlert()
+ * @method $this setOffAlert(\Bitrix\Main\Type\DateTime $obOffAlert)
+ * @method bool hasOffAlert()
  */
 class Entity extends \Api\Core\Base\Entity {
 

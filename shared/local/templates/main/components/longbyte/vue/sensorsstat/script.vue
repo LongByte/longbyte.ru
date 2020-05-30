@@ -1,0 +1,40 @@
+<template id="sensors-template">
+    <div class="sensors">
+        <div class="sensors__list">
+            <div class="sensors__item" v-for="sensorData in store.sensors">
+                <sensorstatline :sensor="sensorData" />
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    var sensorsApp = new Vue({
+        el: '#sensorsApp',
+        data() {
+            return {
+                store: {
+                    system: {},
+                    sensors: []
+                },
+            };
+        },
+        template: `#sensors-template`,
+        components: {
+
+        },
+        mounted() {
+            this.loadData();
+        },
+        methods: {
+            loadData() {
+                let url = '/api/sensors/stat/?token=' + window.vueData.system_token;
+                axios
+                    .get(url)
+                    .then(function (response) {
+                        this.store = response.data.data;
+                    }.bind(this))
+                    ;
+            },
+        }
+    })
+</script>

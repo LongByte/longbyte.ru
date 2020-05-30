@@ -18,7 +18,9 @@ namespace Api\Core\Iblock\Property\Value;
  * @method $this setDescription(mixed $mixedDescription)
  * @method bool hasDescription()
  */
-class Entity extends \Api\Core\Base\Entity {
+class Entity extends \Api\Core\Base\Virtual\Entity {
+
+    protected static $_primaryField = 'VALUE';
 
     public static function getModel() {
         return Model::class;
@@ -40,22 +42,6 @@ class Entity extends \Api\Core\Base\Entity {
             'DESCRIPTION',
         );
         return $arFields;
-    }
-
-    /**
-     * 
-     * @return null|array
-     */
-    public function getData() {
-        return null;
-    }
-
-    public function save() {
-        return false;
-    }
-
-    public function delete() {
-        return false;
     }
 
 }

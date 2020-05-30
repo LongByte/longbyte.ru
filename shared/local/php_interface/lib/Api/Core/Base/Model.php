@@ -14,10 +14,12 @@ abstract class Model {
     /**
      * 
      * @param array $arFilter
+     * @param array $arParams
      * @return \Api\Core\Entity\Base
      */
-    public static function getOne(array $arFilter = array()) {
-        $arRow = static::getOneAsArray($arFilter);
+    public static function getOne(array $arFilter = array(), array $arParams = array()) {
+
+        $arRow = static::getOneAsArray($arFilter, $arParams);
 
         if (!is_null($arRow)) {
 
@@ -38,10 +40,14 @@ abstract class Model {
         return null;
     }
 
-    public static function getOneAsArray(array $arFilter = array()) {
-        $arRow = static::getTable()::getRow(array(
-                'filter' => $arFilter,
-        ));
+    /**
+     * 
+     * @param array $arFilter
+     * @return array|null
+     */
+    public static function getOneAsArray(array $arFilter = array(), array $arParams = array()) {
+        $arParams['filter'] = $arFilter;
+        $arRow = static::getTable()::getRow($arParams);
 
         if ($arRow) {
             return $arRow;
@@ -50,11 +56,17 @@ abstract class Model {
         return null;
     }
 
-    public static function getAll(array $arFilter = array(), int $iLimit = 0, int $iOffset = 0) {
+    /**
+     * 
+     * @param array $arFilter
+     * @param int $iLimit
+     * @param int $iOffset
+     * @param array $arParams
+     * @return \Api\Core\Base\Collection
+     */
+    public static function getAll(array $arFilter = array(), int $iLimit = 0, int $iOffset = 0, array $arParams = array()) {
 
-        $arParams = array(
-            'filter' => $arFilter,
-        );
+        $arParams['filter'] = $arFilter;
         if ($iLimit > 0) {
             $arParams['limit'] = $iLimit;
         }
@@ -63,9 +75,7 @@ abstract class Model {
         }
 
         $primaryField = static::getTable()::getEntity()->getPrimary();
-        $arRows = static::getTable()::getList(array(
-                'filter' => $arFilter,
-            ))->fetchAll();
+        $arRows = static::getTable()::getList($arParams)->fetchAll();
 
         $strCollectionClass = static::getEntity()::getCollection();
         $obCollection = new $strCollectionClass();

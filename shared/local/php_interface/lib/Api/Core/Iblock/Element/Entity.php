@@ -187,7 +187,7 @@ abstract class Entity extends \Api\Core\Base\Entity {
             if (array_key_exists($strField, $arData)) {
                 return $arData[$strField];
             } elseif ($obProperty = $this->getPropertyCollection()->getByKey($strField)) {
-                    /** @var \Api\Core\Iblock\Property\Entity $obProperty */
+                /** @var \Api\Core\Iblock\Property\Entity $obProperty */
                 if ($arguments[0] == true) {
                     if ($obProperty->getMultiple() == 'Y') {
                         return $obProperty->getValuesCollection();

@@ -117,20 +117,12 @@ class Post extends \Api\Core\Base\Controller {
         /** @var \Api\Sensors\Data\Collection $obValues */
         /** @var \Api\Sensors\Data\Entity $obValue */
         if (is_null($this->obSystem)) {
-            $this->obSystem = \Api\Sensors\System\Model::getOne(array(
-                    '=TOKEN' => $this->token,
-                    'ACTIVE' => true
-            ));
+            $this->loadSystem();
         }
 
         if ($this->obSystem) {
             if ($this->obSystem->getSensorsCollection()->count() <= 0) {
-
-                $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
-                        'SYSTEM_ID' => $this->obSystem->getId(),
-                ));
-
-                $this->obSystem->setSensorsCollection($obSensors);
+                $this->loadSensors();
             }
 
             if ($this->obSystem->isModeAvg()) {
@@ -156,6 +148,29 @@ class Post extends \Api\Core\Base\Controller {
         }
 
         return false;
+    }
+
+    /**
+     * 
+     */
+    private function loadSystem() {
+        $this->obSystem = \Api\Sensors\System\Model::getOne(array(
+                '=TOKEN' => $this->token,
+                'ACTIVE' => true
+        ));
+    }
+
+    /**
+     * 
+     */
+    private function loadSensors() {
+        $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
+                'SYSTEM_ID' => $this->obSystem->getId(),
+        ));
+
+        if (!is_null($this->obSystem)) {
+            $this->obSystem->setSensorsCollection($obSensors);
+        }
     }
 
     /**
@@ -255,6 +270,8 @@ class Post extends \Api\Core\Base\Controller {
                     ->setLastUpdate($this->obLastSave)
                     ->save()
                 ;
+                $this->loadSystem();
+                $this->loadSensors();
             }
         }
 
@@ -265,6 +282,8 @@ class Post extends \Api\Core\Base\Controller {
                 ->setLastUpdate($this->obLastSave)
                 ->save()
             ;
+            $this->loadSystem();
+            $this->loadSensors();
         }
     }
 

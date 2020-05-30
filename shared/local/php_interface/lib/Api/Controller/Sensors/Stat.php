@@ -5,12 +5,11 @@ namespace Api\Controller\Sensors;
 use Bitrix\Main\Type\DateTime;
 
 /**
- * class \Api\Controller\Sensors\Get
+ * class \Api\Controller\Sensors\Stat
  */
-class Get extends \Api\Core\Base\Controller {
+class Stat extends \Api\Core\Base\Controller {
 
     private $token = null;
-    private $name = null;
     private $arResponse = array(
         'data' => array(),
         'errors' => array(),
@@ -26,7 +25,6 @@ class Get extends \Api\Core\Base\Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->name = $this->obRequest->get('name');
         $this->token = $this->obRequest->get('token');
     }
 
@@ -40,16 +38,6 @@ class Get extends \Api\Core\Base\Controller {
             return $this->exitAction();
         }
 
-        $date = $this->obRequest->get('date');
-        if (strlen($date) > 0) {
-            $obDate = DateTime::tryParse($date, 'd.m.Y');
-        } else {
-            $obDate = new DateTime();
-        }
-        $obDate->setTime(0, 0, 0);
-        $obDateTo = clone $obDate;
-        $obDateTo->add('+1day');
-
         $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
                 'SYSTEM_ID' => $this->obSystem->getId(),
                 'ACTIVE' => true,
@@ -59,20 +47,21 @@ class Get extends \Api\Core\Base\Controller {
             'SENSOR.ACTIVE' => true,
             'SENSOR.SYSTEM_ID' => $this->obSystem->getId(),
         );
-        if ($this->obSystem->isModeAvg()) {
-            $arValuesFilter['DATE'] = $obDate;
-        }
-        if ($this->obSystem->isModeEach()) {
-            $arValuesFilter['>=DATE'] = $obDate;
-            $arValuesFilter['<DATE'] = $obDateTo;
-        }
+        $arValuesParams = array(
+            'group' => array('DATE'),
+        );
 
-        $obValues = \Api\Sensors\Data\Model::getAll($arValuesFilter);
+        $obValues = \Api\Sensors\Data\Model::getAll($arValuesFilter, 0, 0, $arValuesParams);
 
         foreach ($obValues as $obValue) {
             $obSensor = $obSensors->getByKey($obValue->getSensorId());
+            if ($obSensor->getValuesCollection()->getByDateAndSensorId($obValue->getDate(), $obValue->getSensorId())) {
+                continue;
+            }
 
-            $this->obSystem->getSensorsCollection()->addItem($obSensor);
+            if (!$this->obSystem->getSensorsCollection()->getByKey($obSensor->getId())) {
+                $this->obSystem->getSensorsCollection()->addItem($obSensor);
+            }
             $obSensor->setSystem($this->obSystem);
 
             $obSensor->getValuesCollection()->addItem($obValue);
@@ -103,7 +92,6 @@ class Get extends \Api\Core\Base\Controller {
         $arVue = array(
             'system' => $this->obSystem->toArray(),
             'sensors' => $obSensors->toArray(),
-            'date' => $obDate->format('d.m.Y'),
         );
 
         $this->arResponse['data'] = $arVue;
@@ -143,7 +131,6 @@ class Get extends \Api\Core\Base\Controller {
     private function getSystem() {
 
         $this->obSystem = \Api\Sensors\System\Model::getOne(array(
-                '=NAME' => $this->name,
                 '=TOKEN' => $this->token,
                 'ACTIVE' => true
         ));
