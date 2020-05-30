@@ -47,13 +47,21 @@ class Stat extends \Api\Core\Base\Controller {
             'SENSOR.ACTIVE' => true,
             'SENSOR.SYSTEM_ID' => $this->obSystem->getId(),
         );
+        $arValuesParams = array(
+            'group' => array('DATE'),
+        );
 
-        $obValues = \Api\Sensors\Data\Model::getAll($arValuesFilter);
+        $obValues = \Api\Sensors\Data\Model::getAll($arValuesFilter, 0, 0, $arValuesParams);
 
         foreach ($obValues as $obValue) {
             $obSensor = $obSensors->getByKey($obValue->getSensorId());
+            if ($obSensor->getValuesCollection()->getByDateAndSensorId($obValue->getDate(), $obValue->getSensorId())) {
+                continue;
+            }
 
-            $this->obSystem->getSensorsCollection()->addItem($obSensor);
+            if (!$this->obSystem->getSensorsCollection()->getByKey($obSensor->getId())) {
+                $this->obSystem->getSensorsCollection()->addItem($obSensor);
+            }
             $obSensor->setSystem($this->obSystem);
 
             $obSensor->getValuesCollection()->addItem($obValue);
@@ -66,8 +74,8 @@ class Stat extends \Api\Core\Base\Controller {
                 $valueMax = $obValue->getSensorValueMax();
             }
             if ($this->obSystem->isModeEach()) {
-//                $valueMin = $obValue->getSensorValue();
-//                $valueMax = $obValue->getSensorValue();
+                $valueMin = $obValue->getSensorValue();
+                $valueMax = $obValue->getSensorValue();
             }
 
             if (!$obSensor->isAlert() && $obSensor->getAlertValueMax() != 0 && $valueMax > $obSensor->getAlertValueMax()) {
