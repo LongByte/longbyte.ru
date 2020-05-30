@@ -5,12 +5,11 @@ namespace Api\Controller\Sensors;
 use Bitrix\Main\Type\DateTime;
 
 /**
- * class \Api\Controller\Sensors\Get
+ * class \Api\Controller\Sensors\Stat
  */
-class Get extends \Api\Core\Base\Controller {
+class Stat extends \Api\Core\Base\Controller {
 
     private $token = null;
-    private $name = null;
     private $arResponse = array(
         'data' => array(),
         'errors' => array(),
@@ -26,7 +25,6 @@ class Get extends \Api\Core\Base\Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->name = $this->obRequest->get('name');
         $this->token = $this->obRequest->get('token');
     }
 
@@ -40,16 +38,6 @@ class Get extends \Api\Core\Base\Controller {
             return $this->exitAction();
         }
 
-        $date = $this->obRequest->get('date');
-        if (strlen($date) > 0) {
-            $obDate = DateTime::tryParse($date, 'd.m.Y');
-        } else {
-            $obDate = new DateTime();
-        }
-        $obDate->setTime(0, 0, 0);
-        $obDateTo = clone $obDate;
-        $obDateTo->add('+1day');
-
         $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
                 'SYSTEM_ID' => $this->obSystem->getId(),
                 'ACTIVE' => true,
@@ -59,13 +47,6 @@ class Get extends \Api\Core\Base\Controller {
             'SENSOR.ACTIVE' => true,
             'SENSOR.SYSTEM_ID' => $this->obSystem->getId(),
         );
-        if ($this->obSystem->isModeAvg()) {
-            $arValuesFilter['DATE'] = $obDate;
-        }
-        if ($this->obSystem->isModeEach()) {
-            $arValuesFilter['>=DATE'] = $obDate;
-            $arValuesFilter['<DATE'] = $obDateTo;
-        }
 
         $obValues = \Api\Sensors\Data\Model::getAll($arValuesFilter);
 
@@ -85,8 +66,8 @@ class Get extends \Api\Core\Base\Controller {
                 $valueMax = $obValue->getSensorValueMax();
             }
             if ($this->obSystem->isModeEach()) {
-                $valueMin = $obValue->getSensorValue();
-                $valueMax = $obValue->getSensorValue();
+//                $valueMin = $obValue->getSensorValue();
+//                $valueMax = $obValue->getSensorValue();
             }
 
             if (!$obSensor->isAlert() && $obSensor->getAlertValueMax() != 0 && $valueMax > $obSensor->getAlertValueMax()) {
@@ -103,7 +84,6 @@ class Get extends \Api\Core\Base\Controller {
         $arVue = array(
             'system' => $this->obSystem->toArray(),
             'sensors' => $obSensors->toArray(),
-            'date' => $obDate->format('d.m.Y'),
         );
 
         $this->arResponse['data'] = $arVue;
@@ -143,7 +123,6 @@ class Get extends \Api\Core\Base\Controller {
     private function getSystem() {
 
         $this->obSystem = \Api\Sensors\System\Model::getOne(array(
-                '=NAME' => $this->name,
                 '=TOKEN' => $this->token,
                 'ACTIVE' => true
         ));
