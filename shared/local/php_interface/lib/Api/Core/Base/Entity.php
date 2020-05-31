@@ -56,9 +56,7 @@ abstract class Entity {
         if ($data) {
             $this->_data = array_fill_keys($this->getFields(), '');
             foreach ($data as $strField => $value) {
-                if (array_key_exists($strField, $this->_data)) {
-                    $this->_data[$strField] = $value;
-                }
+                $this->_data[$strField] = $value;
             }
             if ($primary === null) {
                 if (!is_null(static::getModel()::getTable())) {

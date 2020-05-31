@@ -68,24 +68,34 @@ abstract class Model extends \Api\Core\Base\Model {
      * @param array $arFilter
      * @param int $iLimit
      * @param int $iOffset
+     * @param array $arParams
      * @return \Api\Core\Base\Collection
      */
-    public static function getAll(array $arFilter = array(), int $iLimit = 0, int $iOffset = 0) {
+    public static function getAll(array $arFilter = array(), int $iLimit = 0, int $iOffset = 0, array $arParams = array()) {
 
         Loader::includeModule('iblock');
 
         $arFilter['IBLOCK_ID'] = static::getIblockId();
-        $arSelect = static::getEntity()::getFields();
-        $arSelect[] = 'IBLOCK_ID';
 
         $strCollectionClass = static::getEntity()::getCollection();
         $obCollection = new $strCollectionClass();
 
-        $arParams = array(
-            'select' => $arSelect,
-            'filter' => $arFilter,
-            'order' => array('SORT' => 'ASC', 'NAME' => 'ASC', 'ID' => 'ASC'),
-        );
+        $arParams['filter'] = $arFilter;
+
+        if (!(is_array($arParams['select']) && count($arParams['select']) > 0)) {
+            $arParams['select'] = static::getEntity()::getFields();
+        }
+        if (!in_array('IBLOCK_ID', $arParams['select'])) {
+            $arParams['select'][] = 'IBLOCK_ID';
+        }
+        if (is_array($arParams['select_add']) && count($arParams['select_add']) > 0) {
+            $arParams['select'] = array_merge($arParams['select'], $arParams['select_add']);
+            unset($arParams['select_add']);
+        }
+
+        if (empty($arParams['order'])) {
+            $arParams['order'] = array('SORT' => 'ASC', 'NAME' => 'ASC', 'ID' => 'ASC');
+        }
 
         if ($iLimit > 0) {
             $arParams['limit'] = $iLimit;
@@ -95,7 +105,15 @@ abstract class Model extends \Api\Core\Base\Model {
             $arParams['offset'] = $iOffset;
         }
 
-        if (in_array('SECTION_CODE_PATH', $arSelect)) {
+        if (is_array($arParams['runtime_add']) && count($arParams['runtime_add']) > 0) {
+            if (!is_array($arParams['runtime'])) {
+                $arParams['runtime'] = array();
+            }
+            $arParams['runtime'] = array_merge($arParams['runtime'], $arParams['runtime_add']);
+            unset($arParams['runtime_add']);
+        }
+
+        if (in_array('SECTION_CODE_PATH', $arParams['select'])) {
             self::_appendSectionCodePath($arParams);
         }
 
