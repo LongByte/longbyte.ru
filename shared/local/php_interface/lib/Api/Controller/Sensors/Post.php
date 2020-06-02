@@ -266,24 +266,26 @@ class Post extends \Api\Core\Base\Controller {
                 $this->obTodayValues->save($this->arResponse['errors']);
                 $this->obLastSave = new \Bitrix\Main\Type\DateTime();
                 $this->arResponse['data']['last_save'] = $this->obLastSave->format('H:i:s d.m.Y');
+
+                $this->loadSystem();
+                $this->loadSensors();
                 $this->obSystem
                     ->setLastUpdate($this->obLastSave)
                     ->save()
                 ;
-                $this->loadSystem();
-                $this->loadSensors();
             }
         }
 
         if ($this->obSystem->isModeEach()) {
             $this->obLastSave = new \Bitrix\Main\Type\DateTime();
             $this->arResponse['data']['last_save'] = $this->obLastSave->format('H:i:s d.m.Y');
+
+            $this->loadSystem();
+            $this->loadSensors();
             $this->obSystem
                 ->setLastUpdate($this->obLastSave)
                 ->save()
             ;
-            $this->loadSystem();
-            $this->loadSensors();
         }
     }
 
@@ -294,6 +296,7 @@ class Post extends \Api\Core\Base\Controller {
     private function checkAlert(\Api\Sensors\Data\Entity $obValue) {
 
         $obSensor = $obValue->getSensor();
+        $obSensor->setAlert(false);
 
         $message = 'Значение на датчике ' . $obSensor->getSensorApp() . ' > ' . $obSensor->getSensorDevice() . ' > ' . $obSensor->getSensorName() . ' = ' . $obValue->getLastValue() . $obSensor->getSensorUnit() . ' и ';
 
