@@ -36,3 +36,7 @@ dat.html
 /package-lock.json
 *.log
 *.pid
+/shared/**/.git
+/shared/local/php_interface/lib/Api/Core
+/shared/local/php_interface/lib/Api/Core/
+/shared/local/php_interface/lib/Api/Core/*
