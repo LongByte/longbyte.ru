@@ -12,13 +12,14 @@
             </div>
         </div>
         <div class="sensors__last-update">Последнее обновление: {{store.system.last_update}}</div>
+        <div class="sensors__last-update" v-if="store.system.last_update != store.system.last_receive">Последнее получение данных {{store.system.last_receive}}</div>
         <div class="sensors__links">
             <a href="edit/">Настроить датчики</a>
             <a href="stat/">Статистика за все время</a>
         </div>
         <div class="sensors__list">
             <div class="sensors__item" v-for="sensorData in store.sensors">
-                <template v-if="store.system.mode==0 || sensorData.values.length == 1" >
+                <template v-if="sensorData.log_mode==0 || sensorData.log_mode.length == 1" >
                     <template v-if="sensorData.sensor_unit=='Yes/No'">
                         <sensorbool :sensor="sensorData" />
                     </template>
@@ -26,7 +27,7 @@
                         <sensorbar :sensor="sensorData" />
                     </template>
                 </template>
-                <template v-if="store.system.mode==1 && sensorData.values.length > 1">
+                <template v-if="sensorData.log_mode==1 && sensorData.values.length > 1">
                     <sensorline :sensor="sensorData" />
                 </template>
             </div>
@@ -61,7 +62,7 @@
             },
             startCountdown() {
                 this.stopCountdown();
-                this.interval = setInterval(() => this.refresh(), 1000 * 60 * 5);
+                this.interval = setInterval(() => this.refresh(), 1000 * 60);
             },
             stopCountdown() {
                 if (!!this.interval) {

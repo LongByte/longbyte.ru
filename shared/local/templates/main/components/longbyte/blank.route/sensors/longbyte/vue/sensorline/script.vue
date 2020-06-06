@@ -25,18 +25,18 @@
                 
                 for (let key in this.sensor.values) {
                     let value = this.sensor.values[key];
-                    arData.push(value.sensor_value);
+                    arData.push(value.value);
                     arLabels.push(value.date);
-                    if (value.sensor_value > maxValue) {
-                        maxValue = value.sensor_value;
+                    if (value.value > maxValue) {
+                        maxValue = value.value;
                     }
                 }
                 
                 let color = 'rgba(127, 255, 127, 0.5)';
-                if (this.sensor.alert) {
-                    if (this.sensor.alert_direction == 1) {
+                if (this.sensor.alert.alert) {
+                    if (this.sensor.alert.direction == 1) {
                         color = 'rgba(255, 127, 127, 0.5)';
-                    } else if (this.sensor.alert_direction == -1) {
+                    } else if (this.sensor.alert.direction == -1) {
                         color = 'rgba(127, 127, 255, 0.5)';
                     }
                 }

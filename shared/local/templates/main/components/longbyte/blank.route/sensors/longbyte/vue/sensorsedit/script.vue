@@ -18,9 +18,12 @@
                     Пределы допустимых значений
                 </div>
                 <div class="sensors-edit__col col-2">
-                    Диапазон значений на графике
+                    Игнорировать данные вне диапазона
                 </div>
                 <div class="sensors-edit__col col-2">
+                    Диапазон значений на графике
+                </div>
+                <div class="sensors-edit__col col-1">
                     Использовать шаблон
                 </div>
                 <!--                <div class="sensors-edit__col col-1">
@@ -57,6 +60,21 @@
                            />
                 </div>
                 <div class="sensors-edit__col col-2">
+                    <input class="form-control sensors-edit__input-text" 
+                           type="text"
+                           name="ignore_less"
+                           :value="sensor.ignore_less"
+                           @change="saveForm(sensor)"
+                           />
+                    - 
+                    <input class="form-control sensors-edit__input-text" 
+                           type="text" 
+                           name="ignore_more"
+                           :value="sensor.ignore_more" 
+                           @change="saveForm(sensor)"
+                           />
+                </div>
+                <div class="sensors-edit__col col-2">
                     <input class="form-control sensors-edit__input-text"
                            type="text"
                            name="visual_min"
@@ -71,8 +89,9 @@
                            @change="saveForm(sensor)"
                            />
                 </div>
-                <div class="sensors-edit__col col-2">
+                <div class="sensors-edit__col col-1">
                     <select class="sensors-edit__template-select form-control" @change="changeTemplate(sensor)">
+                        <option value="">Выбрать</option>
                         <option value="manual">Пользовательский</option>
                         <option value="percent">Проценты</option>
                         <option value="temp_cpu">Температура CPU</option>
@@ -200,6 +219,18 @@
                     } else {
                         form.alert_value_max.value = '';
                     }
+                    
+                     if (!isNaN(obSelectedTemplate.ignore_less)) {
+                        form.ignore_less.value = obSelectedTemplate.ignore_less;
+                    } else {
+                        form.ignore_less.value = '';
+                    }
+                    if (!isNaN(obSelectedTemplate.ignore_more)) {
+                        form.ignore_more.value = obSelectedTemplate.ignore_more;
+                    } else {
+                        form.ignore_more.value = '';
+                    }                    
+                    
                     if (!isNaN(obSelectedTemplate.visual_min)) {
                         form.visual_min.value = obSelectedTemplate.visual_min;
                     } else {

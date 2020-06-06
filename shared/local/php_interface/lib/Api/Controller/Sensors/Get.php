@@ -30,23 +30,33 @@ class Get extends \Api\Core\Base\Controller {
         $this->token = $this->obRequest->get('token');
     }
 
+    /**
+     * 
+     * @return json
+     */
     public function get() {
 
         /** @var \Api\Sensors\Sensor\Collection $obSensors */
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
         /** @var \Api\Sensors\Data\Collection $obValues */
         /** @var \Api\Sensors\Data\Entity $obValue */
-        if (!$this->getSystem()) {
+        if (!$this->loadSystem()) {
             return $this->exitAction();
         }
 
+        $obToday = new DateTime();
+        $obToday->setTime(0, 0, 0);
+
         $date = $this->obRequest->get('date');
         if (strlen($date) > 0) {
-            $obDate = DateTime::tryParse($date, 'd.m.Y');
+            $obDate = new DateTime($date, 'd.m.Y');
         } else {
             $obDate = new DateTime();
         }
         $obDate->setTime(0, 0, 0);
+
+        $bToday = $obToday->getTimestamp() == $obDate->getTimestamp();
+
         $obDateTo = clone $obDate;
         $obDateTo->add('+1day');
 
@@ -58,14 +68,9 @@ class Get extends \Api\Core\Base\Controller {
         $arValuesFilter = array(
             'SENSOR.ACTIVE' => true,
             'SENSOR.SYSTEM_ID' => $this->obSystem->getId(),
+            '>=DATE' => $obDate,
+            '<DATE' => $obDateTo,
         );
-        if ($this->obSystem->isModeAvg()) {
-            $arValuesFilter['DATE'] = $obDate;
-        }
-        if ($this->obSystem->isModeEach()) {
-            $arValuesFilter['>=DATE'] = $obDate;
-            $arValuesFilter['<DATE'] = $obDateTo;
-        }
 
         $obValues = \Api\Sensors\Data\Model::getAll($arValuesFilter);
 
@@ -80,23 +85,23 @@ class Get extends \Api\Core\Base\Controller {
 
             $valueMin = 0;
             $valueMax = 0;
-            if ($this->obSystem->isModeAvg()) {
-                $valueMin = $obValue->getSensorValueMin();
-                $valueMax = $obValue->getSensorValueMax();
+            if ($obSensor->isModeAvg() || !$bToday && $obSensor->isModeEachLastDay()) {
+                $valueMin = $obValue->getValueMin();
+                $valueMax = $obValue->getValueMax();
             }
-            if ($this->obSystem->isModeEach()) {
-                $valueMin = $obValue->getSensorValue();
-                $valueMax = $obValue->getSensorValue();
-            }
-
-            if (!$obSensor->isAlert() && $obSensor->getAlertValueMax() != 0 && $valueMax > $obSensor->getAlertValueMax()) {
-                $obSensor->setAlert();
-                $obSensor->setAlertDirection(1);
+            if ($obSensor->isModeEach() || $bToday && $obSensor->isModeEachLastDay()) {
+                $valueMin = $obValue->getValue();
+                $valueMax = $obValue->getValue();
             }
 
-            if (!$obSensor->isAlert() && $obSensor->getAlertValueMin() != 0 && $valueMin < $obSensor->getAlertValueMin()) {
-                $obSensor->setAlert();
-                $obSensor->setAlertDirection(-1);
+            if ($obSensor->getAlertValueMax() != 0 && $valueMax > $obSensor->getAlertValueMax()) {
+                $obSensor->getAlert()->setAlert(true);
+                $obSensor->getAlert()->setAlertDirection(1);
+            }
+
+            if ($obSensor->getAlertValueMin() != 0 && $valueMin < $obSensor->getAlertValueMin()) {
+                $obSensor->getAlert()->setAlert(true);
+                $obSensor->getAlert()->setAlertDirection(1);
             }
         }
 
@@ -140,7 +145,7 @@ class Get extends \Api\Core\Base\Controller {
      * 
      * @return boolean
      */
-    private function getSystem() {
+    private function loadSystem() {
 
         $this->obSystem = \Api\Sensors\System\Model::getOne(array(
                 '=NAME' => $this->name,

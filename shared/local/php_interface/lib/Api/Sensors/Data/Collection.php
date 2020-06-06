@@ -74,9 +74,11 @@ class Collection extends \Api\Core\Base\Collection {
     public function save(array &$arErrors) {
         /** @var \Api\Sensors\Data\Entity $obValue */
         foreach ($this->getCollection() as $obValue) {
-            $obValue->save();
-            if (!$obValue->isExists()) {
-                $arErrors[] = 'Невозможно добавить данные. Данные: ' . print_r($obValue->toArray(), true);
+            if ($obValue->isChanged()) {
+                $obValue->save();
+                if (!$obValue->isExists()) {
+                    $arErrors[] = 'Невозможно добавить данные. Данные: ' . print_r($obValue->toArray(), true);
+                }
             }
         }
         return $this;

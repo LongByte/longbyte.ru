@@ -31,6 +31,10 @@ class Edit extends \Api\Core\Base\Controller {
         }
     }
 
+    /**
+     * 
+     * @return string
+     */
     public function get() {
         if (!$this->getSystem()) {
             return $this->exitAction();
@@ -51,20 +55,21 @@ class Edit extends \Api\Core\Base\Controller {
         $obSensor = $this->obSystem->getSensorsCollection()->getByKey($iSensorId);
 
         if (!is_null($obSensor)) {
-            $offAlert = $this->getRequest()->get('off_alert');
-            if (strlen($offAlert) <= 0) {
-                $offAlert = null;
-            } else {
-                $offAlert = new \Bitrix\Main\Type\DateTime();
-            }
+//            $offAlert = $this->getRequest()->get('off_alert');
+//            if (strlen($offAlert) <= 0) {
+//                $offAlert = null;
+//            } else {
+//                $offAlert = new \Bitrix\Main\Type\DateTime();
+//            }
 
             $obSensor
                 ->setActive($this->getRequest()->get('active') == 1)
                 ->setAlertValueMin($this->getRequest()->get('alert_value_min'))
                 ->setAlertValueMax($this->getRequest()->get('alert_value_max'))
+                ->setIgnoreLess($this->getRequest()->get('ignore_less'))
+                ->setIgnoreMore($this->getRequest()->get('ignore_more'))
                 ->setVisualMin($this->getRequest()->get('visual_min'))
                 ->setVisualMax($this->getRequest()->get('visual_max'))
-//            ->setOffAlert($offAlert)
                 ->save()
             ;
         }

@@ -26,11 +26,11 @@
                 let avgColor = 'rgba(0, 255, 0, 0.5)';
                 let maxColor = 'rgba(255, 0, 0, 0.5)';
                 let borderColor = '#000000';
-                if (this.sensor.alert) {
+                if (this.sensor.alert.alert) {
                     borderColor = 'red';
-                    if (this.sensor.alert_direction == 1) {
+                    if (this.sensor.alert.direction == 1) {
                         maxColor = 'red';
-                    } else if (this.sensor.alert_direction == -1) {
+                    } else if (this.sensor.alert.direction == -1) {
                         minColor = 'blue';
                     }
                 }
@@ -43,7 +43,7 @@
                         borderWidth: 1,
                         borderColor: borderColor,
                         data: [
-                            value.sensor_value_min,
+                            value.value_min,
                         ]
                     });
                     datasets.push({
@@ -52,7 +52,7 @@
                         borderWidth: 1,
                         borderColor: borderColor,
                         data: [
-                            value.sensor_value,
+                            value.value_avg,
                         ]
                     });
                     datasets.push({
@@ -61,14 +61,14 @@
                         borderWidth: 1,
                         borderColor: borderColor,
                         data: [
-                            value.sensor_value_max,
+                            value.value_max,
                         ]
                     });
-                    if (value.sensor_value_max > maxValue) {
-                        maxValue = value.sensor_value_max;
+                    if (value.value_max > maxValue) {
+                        maxValue = value.value_max;
                     }
-                    if (value.sensor_value_min < 0) {
-                        minValue = value.sensor_value_min;
+                    if (value.value_min < 0) {
+                        minValue = value.value_min;
                     }
                 }
 

@@ -12,6 +12,10 @@ Loc::loadMessages(__FILE__);
  */
 class Table extends Main\Entity\DataManager {
 
+    const MODE_AVG = 0;
+    const MODE_EACH = 1;
+    const MODE_EACH_LAST_DAY = 2;
+
     /**
      * Returns DB table name for entity.
      *
@@ -81,8 +85,25 @@ class Table extends Main\Entity\DataManager {
             'VISUAL_MAX' => new Main\Entity\FloatField('UF_VISUAL_MAX', array(
                 'title' => 'Максимум на графике',
                 )),
-            'OFF_ALERT' => new Main\Entity\DateTimeField('UF_OFF_ALERT', array(
-                'title' => 'Отключить оповещение до',
+            'ALERT_ENABLE' => new Main\Entity\BooleanField('UF_ALERT_ENABLE', array(
+                'title' => 'Включить оповещение',
+                )),
+            'ALERT_MUTE_TILL' => new Main\Entity\DateTimeField('UF_ALERT_MUTE_TILL', array(
+                'title' => 'Отключить уведомления до',
+                )),
+            'IGNORE_LESS' => new Main\Entity\FloatField('UF_IGNORE_LESS', array(
+                'title' => 'Игнорировать значения меньше',
+                )),
+            'IGNORE_MORE' => new Main\Entity\FloatField('UF_IGNORE_MORE', array(
+                'title' => 'Игнорировать значения больше',
+                )),
+            'LOG_MODE' => new Main\Entity\IntegerField('UF_LOG_MODE', array(
+                'title' => 'Режим логирования',
+                'required' => true,
+                'values' => array(self::MODE_AVG, self::MODE_EACH, self::MODE_EACH_LAST_DAY)
+                )),
+            'MODIFIER' => new Main\Entity\StringField('UF_MODIFIER', array(
+                'title' => 'Формула для модификации значения',
                 )),
         );
     }

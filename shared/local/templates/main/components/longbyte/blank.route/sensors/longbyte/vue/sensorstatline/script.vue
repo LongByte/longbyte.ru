@@ -30,16 +30,26 @@
 
                 for (let key in this.sensor.values) {
                     let value = this.sensor.values[key];
-                    arData.min.push(value.sensor_value_min);
-                    arData.avg.push(value.sensor_value);
-                    arData.max.push(value.sensor_value_max);
+                    if (!!value.value) {
+                        arData.avg.push(value.value);
+                        if (maxValue == null || value.value > maxValue) {
+                            maxValue = value.value
+                        }
+                        if (minValue == null || value.value < minValue) {
+                            minValue = value.value;
+                        }
+                    } else {
+                        arData.min.push(value.value_min);
+                        arData.avg.push(value.value_avg);
+                        arData.max.push(value.value_max);
+                        if (maxValue == null || value.value_max > maxValue) {
+                            maxValue = value.value_max;
+                        }
+                        if (minValue == null || value.value_min < minValue) {
+                            minValue = value.value_min;
+                        }
+                    }
                     arLabels.push(value.date);
-                    if (maxValue == null || value.sensor_value_max > maxValue) {
-                        maxValue = value.sensor_value_max;
-                    }
-                    if (minValue == null || value.sensor_value_min < minValue) {
-                        minValue = value.sensor_value_min;
-                    }
                 }
 
                 datasets.push({
