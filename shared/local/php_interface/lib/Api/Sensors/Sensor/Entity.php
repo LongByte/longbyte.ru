@@ -155,6 +155,24 @@ class Entity extends \Api\Core\Base\Entity {
 
     /**
      * 
+     * @param \Api\Sensors\Alert\Entity $obAlert
+     * @return $this
+     */
+    public function setAlert(\Api\Sensors\Alert\Entity $obAlert) {
+        $this->_obAlert = $obAlert;
+        return $this;
+    }
+
+    /**
+     * 
+     * @return bool
+     */
+    public function hasAlert() {
+        return !is_null($this->_obAlert);
+    }
+
+    /**
+     * 
      * @return \Api\Sensors\Data\Collection
      */
     public function getValuesCollection() {

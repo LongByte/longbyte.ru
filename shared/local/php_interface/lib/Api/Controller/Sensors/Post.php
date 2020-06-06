@@ -36,6 +36,12 @@ class Post extends \Api\Core\Base\Controller {
 
     /**
      *
+     * @var \Api\Core\Base\Collection
+     */
+    private $obAlerts = null;
+
+    /**
+     *
      * @var \Bitrix\Main\Type\DateTime 
      */
     private $obLastSave = null;
@@ -50,6 +56,8 @@ class Post extends \Api\Core\Base\Controller {
         if (!is_null($strToken)) {
             $this->token = $strToken;
         }
+        $this->obAlerts = new \Api\Core\Base\Collection();
+        $this->obAlerts->setUniqueMode(true);
     }
 
     public function post() {
@@ -304,6 +312,16 @@ class Post extends \Api\Core\Base\Controller {
 
         $obSensor = $obValue->getSensor();
 
+        $obAlert = $this->getAlertCollection()->getByKey($obSensor->getId());
+        if (is_null($obAlert)) {
+            $obAlert = $obSensor->getAlert();
+            $this->getAlertCollection()->addItem($obAlert);
+        } else {
+            if (!$obSensor->hasAlert()) {
+                $obSensor->setAlert($obAlert);
+            }
+        }
+
         if ($obSensor->getAlertValueMin() != 0 && $obValue->getValue() < $obSensor->getAlertValueMin()) {
             $obSensor->getAlert()->setAlert(true);
             $obSensor->getAlert()->setDirection(-1);
@@ -326,6 +344,7 @@ class Post extends \Api\Core\Base\Controller {
      */
     private function sendAlerts() {
         if (
+            $this->getAlertCollection()->count() > 0 &&
             strlen($this->obSystem->getEmail()) > 0 &&
             (
             is_null($this->obLastAlert) ||
@@ -384,6 +403,14 @@ class Post extends \Api\Core\Base\Controller {
     private function resetResponse() {
         $this->arResponse['errors'] = array();
         $this->arResponse['success'] = true;
+    }
+
+    /**
+     * 
+     * @return \Api\Core\Base\Collection
+     */
+    private function getAlertCollection() {
+        return $this->obAlerts;
     }
 
 }
