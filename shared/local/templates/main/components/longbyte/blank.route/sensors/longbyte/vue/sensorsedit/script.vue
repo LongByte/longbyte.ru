@@ -20,14 +20,14 @@
                 <div class="sensors-edit__col col-2">
                     Диапазон значений на графике
                 </div>
-<!--                <div class="sensors-edit__col col-2">
+                <div class="sensors-edit__col col-2">
                     Использовать шаблон
-                </div>-->
-<!--                <div class="sensors-edit__col col-1">
-                    Не уведомлять до
-                </div>-->
+                </div>
+                <!--                <div class="sensors-edit__col col-1">
+                                    Не уведомлять до
+                                </div>-->
             </div>
-            <form :id="getFormName(sensor)" class="sensors-edit__item row" v-for="sensor in sensors" v-if="isRowVisible(sensor)">
+            <form :id="getFormName(sensor)" :name="getFormName(sensor)" class="sensors-edit__item row" v-for="sensor in sensors" v-if="isRowVisible(sensor)">
                 <div class="sensors-edit__col col-0">
                     <input type="hidden" :value="sensor.id" name="id" />
                     <input type="checkbox"
@@ -71,26 +71,28 @@
                            @change="saveForm(sensor)"
                            />
                 </div>
-<!--                <div class="sensors-edit__col col-2">
-                    <select class="sensors-edit__template-select">
+                <div class="sensors-edit__col col-2">
+                    <select class="sensors-edit__template-select form-control" @change="changeTemplate(sensor)">
                         <option value="manual">Пользовательский</option>
                         <option value="percent">Проценты</option>
-                        <option value="temp">Температура</option>
-                        <option value="bool-yes">Да/Нет. Корректное "да"</option>
-                        <option value="bool-no">Да/Нет. Корректное "нет"</option>
+                        <option value="temp_cpu">Температура CPU</option>
+                        <option value="temp_gpu">Температура GPU</option>
+                        <option value="temp_hdd">Температура HDD</option>
+                        <option value="bool_yes">Да/Нет. Корректное "да"</option>
+                        <option value="bool_no">Да/Нет. Корректное "нет"</option>
                         <option value="volt33">Напряжение 3.3V</option>
                         <option value="volt5">Напряжение 5V</option>
                         <option value="volt12">Напряжение 12V</option>
                     </select>
-                </div>-->
-<!--                <div class="sensors-edit__col col-1">
-                    <input class="form-control sensors-edit__input-date" 
-                           type="text"
-                           name="off_alert"
-                           :value="sensor.off_alert" 
-                           @change="saveForm(sensor)"
-                           />
-                </div>-->
+                </div>
+                <!--                <div class="sensors-edit__col col-1">
+                                    <input class="form-control sensors-edit__input-date" 
+                                           type="text"
+                                           name="off_alert"
+                                           :value="sensor.off_alert" 
+                                           @change="saveForm(sensor)"
+                                           />
+                                </div>-->
             </form>
 
         </div>
@@ -104,7 +106,8 @@
             return {
                 system: {},
                 sensors: [],
-                showActive: true
+                showActive: true,
+                allowSave: true,
             };
         },
         template: `#sensors-edit-template`,
@@ -125,10 +128,91 @@
                     .then(response => (this.sensors = response.data.data));
             },
             saveForm(sensor) {
-                let form = new FormData(document.forms[this.getFormName(sensor)]);
-                axios
-                    .post('/api/sensors/edit/?token=' + window.vueData.system_token, form)
-                    .then(response => (this.sensors = response.data.data));
+                if (this.allowSave) {
+                    let formData = new FormData(document.forms[this.getFormName(sensor)]);
+                    axios
+                        .post('/api/sensors/edit/?token=' + window.vueData.system_token, formData)
+                        .then(response => (this.sensors = response.data.data));
+                }
+            },
+            changeTemplate(sensor) {
+                this.allowSave = false;
+
+                let obTemplateData = {
+                    manual: {},
+                    percent: {
+                        visual_min: 0,
+                        visual_max: 100,
+                    },
+                    temp_cpu: {
+                        alert_value_max: 75,
+                        visual_min: 20,
+                        visual_max: 100,
+                    },
+                    temp_gpu: {
+                        alert_value_max: 85,
+                        visual_min: 20,
+                        visual_max: 100,
+                    },
+                    temp_hdd: {
+                        alert_value_max: 60,
+                        visual_min: 20,
+                        visual_max: 100,
+                    },
+                    bool_yes: {
+                        alert_value_min: 0.99,
+                    },
+                    bool_no: {
+                        alert_value_max: 0.01,
+                    },
+                    volt33: {
+                        alert_value_min: 3.19,
+                        alert_value_max: 3.47,
+                        visual_min: 3,
+                        visual_max: 3.6,
+                    },
+                    volt5: {
+                        alert_value_min: 4.83,
+                        alert_value_max: 5.25,
+                        visual_min: 4.5,
+                        visual_max: 5.5,
+                    },
+                    volt12: {
+                        alert_value_min: 11.6,
+                        alert_value_max: 12.6,
+                        visual_min: 11,
+                        visual_max: 13,
+                    },
+                };
+
+                let form = document.forms[this.getFormName(sensor)];
+                let obSelect = form.querySelector('select');
+                console.log(obSelect);
+                if (!!obTemplateData[obSelect.value]) {
+                    let obSelectedTemplate = obTemplateData[obSelect.value];
+                    if (!isNaN(obSelectedTemplate.alert_value_min)) {
+                        form.alert_value_min.value = obSelectedTemplate.alert_value_min;
+                    } else {
+                        form.alert_value_min.value = '';
+                    }
+                    if (!isNaN(obSelectedTemplate.alert_value_max)) {
+                        form.alert_value_max.value = obSelectedTemplate.alert_value_max;
+                    } else {
+                        form.alert_value_max.value = '';
+                    }
+                    if (!isNaN(obSelectedTemplate.visual_min)) {
+                        form.visual_min.value = obSelectedTemplate.visual_min;
+                    } else {
+                        form.visual_min.value = '';
+                    }
+                    if (!isNaN(obSelectedTemplate.visual_max)) {
+                        form.visual_max.value = obSelectedTemplate.visual_max;
+                    } else {
+                        form.visual_max.value = '';
+                    }
+                }
+                this.allowSave = true;
+                this.saveForm(sensor);
             },
             getFormName(sensor) {
                 return 'form_' + sensor.id;
