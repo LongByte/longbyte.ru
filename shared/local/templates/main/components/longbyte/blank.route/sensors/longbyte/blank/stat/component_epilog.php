@@ -11,5 +11,5 @@ Bitrix\Main\Page\Asset::getInstance()->addString('<meta name="robots" content="n
 $APPLICATION->IncludeComponent("longbyte:vue", "sensorsstat", Array(
     'INCLUDE_COMPONENTS' => array('sensorstatline'),
     'STYLE_TO_COMPILER' => 'Y',
-    ), false
+    ), $component->__parent
 );
