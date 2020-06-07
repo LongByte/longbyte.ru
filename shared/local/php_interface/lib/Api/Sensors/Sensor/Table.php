@@ -105,6 +105,9 @@ class Table extends Main\Entity\DataManager {
             'MODIFIER' => new Main\Entity\StringField('UF_MODIFIER', array(
                 'title' => 'Формула для модификации значения',
                 )),
+            'PRECISION' => new Main\Entity\IntegerField('UF_PRECISION', array(
+                'title' => 'Количество знаков после запятой',
+                )),
         );
     }
 

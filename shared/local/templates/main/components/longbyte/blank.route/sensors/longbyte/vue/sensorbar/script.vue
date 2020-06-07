@@ -43,7 +43,7 @@
                         borderWidth: 1,
                         borderColor: borderColor,
                         data: [
-                            value.value_min,
+                            value.value_min || value.value,
                         ]
                     });
                     datasets.push({
@@ -52,7 +52,7 @@
                         borderWidth: 1,
                         borderColor: borderColor,
                         data: [
-                            value.value_avg,
+                            value.value_avg || value.value,
                         ]
                     });
                     datasets.push({
@@ -61,7 +61,7 @@
                         borderWidth: 1,
                         borderColor: borderColor,
                         data: [
-                            value.value_max,
+                            value.value_max || value.value,
                         ]
                     });
                     if (value.value_max > maxValue) {

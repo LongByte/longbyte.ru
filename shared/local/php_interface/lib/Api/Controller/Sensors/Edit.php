@@ -79,6 +79,8 @@ class Edit extends \Api\Core\Base\Controller {
                 ->setAlertEnable($this->getRequest()->get('alert_enable') == 1)
                 ->setAlertMuteTill($obAlertMuteTill)
                 ->setModifier($this->getRequest()->get('modifier'))
+                ->setLogMode($this->getRequest()->get('log_mode'))
+                ->setPrecision($this->getRequest()->get('precision'))
                 ->save()
             ;
         }

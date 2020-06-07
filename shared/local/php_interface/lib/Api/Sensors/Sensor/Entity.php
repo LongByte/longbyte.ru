@@ -56,6 +56,9 @@ namespace Api\Sensors\Sensor;
  * @method string getModifier()
  * @method $this setModifier(string $strModifier)
  * @method bool hasModifier()
+ * @method string getPrecision()
+ * @method $this setPrecision(string $strPrecision)
+ * @method bool hasPrecision()
  */
 class Entity extends \Api\Core\Base\Entity {
 
@@ -76,6 +79,12 @@ class Entity extends \Api\Core\Base\Entity {
      * @var \Api\Sensors\Alert\Entity
      */
     protected $_obAlert = null;
+
+    /**
+     *
+     * @var bool
+     */
+    protected $_bToday = false;
 
     /**
      * 
@@ -127,6 +136,14 @@ class Entity extends \Api\Core\Base\Entity {
 
     /**
      * 
+     * @return bool
+     */
+    public function isBooleanSensor() {
+        return $this->getSensorUnit() == 'Yes/No';
+    }
+
+    /**
+     * 
      * @return boolean
      */
     public function isAllowAlert() {
@@ -151,6 +168,16 @@ class Entity extends \Api\Core\Base\Entity {
         $arData['values'] = $this->getValuesCollection()->toArray();
         if (!is_null($this->getAlertMuteTill())) {
             $arData['alert_mute_till'] = $this->getAlertMuteTill()->format('d.m.Y H:i:s');
+        }
+
+        if ($this->isModeEach() || $this->isModeEachLastDay() && $this->isToday()) {
+            $arData['view'] = 'line';
+        } else {
+            if ($this->isBooleanSensor()) {
+                $arData['view'] = 'bool';
+            } else {
+                $arData['view'] = 'bar';
+            }
         }
         return $arData;
     }
@@ -220,6 +247,24 @@ class Entity extends \Api\Core\Base\Entity {
     public function setSystem(\Api\Sensors\System\Entity $obSystem) {
         $this->_obSystem = $obSystem;
         $this->setSystemId($obSystem->getId());
+        return $this;
+    }
+
+    /**
+     * 
+     * @return bool
+     */
+    public function isToday() {
+        return $this->_bToday;
+    }
+
+    /**
+     * 
+     * @param bool $bToday
+     * @return $this
+     */
+    public function setToday(bool $bToday = true) {
+        $this->_bToday = $bToday;
         return $this;
     }
 

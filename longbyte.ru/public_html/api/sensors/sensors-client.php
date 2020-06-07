@@ -8,6 +8,7 @@ $sendEverySecond = 1;
 $reconnectTimeOut = 5;
 $localSensorsServer = 'http://localhost:55555';
 $remoteSensorsSocket = 'longbyte.ru';
+//$remoteSensorsSocket = '127.0.0.1';
 $remotePort = 56999;
 
 

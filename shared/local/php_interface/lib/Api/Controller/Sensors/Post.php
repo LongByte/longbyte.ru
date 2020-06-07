@@ -250,6 +250,8 @@ class Post extends \Api\Core\Base\Controller {
                 
             }
 
+            $value = round($value, (int) $obSensor->getPrecision());
+
             if ($obSensor->getIgnoreLess() != 0 && $value < $obSensor->getIgnoreLess()) {
                 continue;
             }
@@ -290,16 +292,29 @@ class Post extends \Api\Core\Base\Controller {
             }
 
             if ($obSensor->isModeEach() || $obSensor->isModeEachLastDay()) {
-                $obValue = new \Api\Sensors\Data\Entity();
-                $obValue
-                    ->setSensor($obSensor)
-                    ->setDate(new \Bitrix\Main\Type\DateTime())
-                    ->setValue($value)
-                    ->save()
-                ;
+                $obValue = $this->obTodayValues->getBySensorId((int) $obSensor->getId());
+                if (!is_null($obValue) && $value == $obValue->getValue()) {
+                    $obValue->setValuesCount($obValue->getValuesCount() + 1);
+                } else {
+                    if (!is_null($obValue)) {
+                        $obEndingValue = new \Api\Sensors\Data\Entity();
+                        $obEndingValue
+                            ->setSensor($obSensor)
+                            ->setDate((new \Bitrix\Main\Type\DateTime())->add('-1second'))
+                            ->setValue($obValue->getValue())
+                            ->setValuesCount(0)
+                        ;
+                        $this->obTodayValues->addItem($obEndingValue);
+                    }
 
-                if (!$obValue->isExists()) {
-                    $this->arResponse['errors'][] = 'Невозможно добавить данные. Данные: ' . print_r($obValue->toArray(), true);
+                    $obValue = new \Api\Sensors\Data\Entity();
+                    $obValue
+                        ->setSensor($obSensor)
+                        ->setDate(new \Bitrix\Main\Type\DateTime())
+                        ->setValue($value)
+                        ->setValuesCount(1)
+                    ;
+                    $this->obTodayValues->addItem($obValue);
                 }
             }
 

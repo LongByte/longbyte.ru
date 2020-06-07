@@ -67,18 +67,38 @@ class Entity extends \Api\Core\Base\Entity {
      * @return array
      */
     public function toArray() {
-        $arData = parent::toArray();
         $obSensor = $this->getSensor();
-        if ($obSensor->isModeAvg()) {
+
+        $obNow = new \Bitrix\Main\Type\DateTime();
+        $obNow->setTime(0, 0, 0);
+        $obValueDate = clone $this->getDate();
+        $obValueDate->setTime(0, 0, 0);
+        $bToday = $obNow->getTimestamp() == $obValueDate->getTimestamp();
+
+        if ($obSensor->isModeAvg() || $obSensor->isModeEachLastDay() && !$bToday) {
             $strDate = $this->getDate()->format('d.m.Y');
         }
-        if ($obSensor->isModeEach()) {
-            $strDate = $this->getDate()->format('H:i:s');
+        if ($obSensor->isModeEach() || $obSensor->isModeEachLastDay() && $bToday) {
+            $strDate = $this->getDate()->format(\DateTime::ATOM);
         }
-        if ($obSensor->isModeEachLastDay()) {
-            $strDate = $this->getDate()->format('d.m.Y H:i:s');
-        }
+
+        $arData = array();
         $arData['date'] = $strDate;
+        if ($this->getValue()) {
+            $arData['value'] = $this->getValue();
+        }
+
+        $bBoolView = $obSensor->isBooleanSensor() && !$obSensor->isToday();
+
+        if ($this->getValueMin() || $bBoolView) {
+            $arData['value_min'] = $this->getValueMin();
+        }
+        if ($this->getValueAvg() || $bBoolView) {
+            $arData['value_avg'] = $this->getValueAvg();
+        }
+        if ($this->getValueMax() || $bBoolView) {
+            $arData['value_max'] = $this->getValueMax();
+        }
         return $arData;
     }
 

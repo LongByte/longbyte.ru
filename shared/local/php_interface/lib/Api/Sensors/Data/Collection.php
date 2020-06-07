@@ -20,7 +20,7 @@ class Collection extends \Api\Core\Base\Collection {
      */
     public function getBySensorId(int $iSensorId) {
         /** @var \Api\Sensors\Data\Entity $obValue */
-        foreach ($this->getCollection() as $obValue) {
+        foreach (array_reverse($this->getCollection()) as $obValue) {
             if ($obValue->getSensorId() == $iSensorId) {
                 return $obValue;
             }

@@ -76,6 +76,7 @@ class Get extends \Api\Core\Base\Controller {
 
         foreach ($obValues as $obValue) {
             $obSensor = $obSensors->getByKey($obValue->getSensorId());
+            $obSensor->setToday($bToday);
 
             $this->obSystem->getSensorsCollection()->addItem($obSensor);
             $obSensor->setSystem($this->obSystem);
@@ -96,12 +97,12 @@ class Get extends \Api\Core\Base\Controller {
 
             if ($obSensor->getAlertValueMax() != 0 && $valueMax > $obSensor->getAlertValueMax()) {
                 $obSensor->getAlert()->setAlert(true);
-                $obSensor->getAlert()->setAlertDirection(1);
+                $obSensor->getAlert()->setDirection(1);
             }
 
             if ($obSensor->getAlertValueMin() != 0 && $valueMin < $obSensor->getAlertValueMin()) {
                 $obSensor->getAlert()->setAlert(true);
-                $obSensor->getAlert()->setAlertDirection(1);
+                $obSensor->getAlert()->setDirection(-1);
             }
         }
 

@@ -54,6 +54,11 @@ class ws_m_1591451819_sensors_smena_struktury_bd extends \WS\ReduceMigrations\Sc
                 self::hlData($arExistHlIblock['ID']);
             }
         }
+
+        $obNextDay = new \Bitrix\Main\Type\DateTime();
+        $obNextDay->setTime(5, 0, 0);
+        $obNextDay->add('+1day');
+        \CAgent::AddAgent("\Api\Core\Utils\Agent::executeController('Sensors', 'CollapseDay');", $obNextDay->format('d.m.Y H:i:s'), 'N', 24 * 60 * 60, $obNextDay->format('d.m.Y H:i:s'), 'Y');
     }
 
     /**
@@ -115,6 +120,11 @@ class ws_m_1591451819_sensors_smena_struktury_bd extends \WS\ReduceMigrations\Sc
         $obProp = new \Migration\Builder\UserField('UF_MODIFIER', 'HLBLOCK_' . $iHlBlockId);
         $obProp->type(\Migration\Builder\UserField::TYPE_STRING);
         $obProp->label(array('ru' => 'Формула для модификации значения', 'en' => 'Формула для модификации значения'));
+        $obProp->save();
+
+        $obProp = new \Migration\Builder\UserField('UF_PRECISION', 'HLBLOCK_' . $iHlBlockId);
+        $obProp->type(\Migration\Builder\UserField::TYPE_INTEGER);
+        $obProp->label(array('ru' => 'Количество знаков после запятой', 'en' => 'Количество знаков после запятой'));
         $obProp->save();
     }
 

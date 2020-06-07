@@ -33,7 +33,7 @@
                     if (!!value.value) {
                         arData.avg.push(value.value);
                         if (maxValue == null || value.value > maxValue) {
-                            maxValue = value.value
+                            maxValue = value.value;
                         }
                         if (minValue == null || value.value < minValue) {
                             minValue = value.value;

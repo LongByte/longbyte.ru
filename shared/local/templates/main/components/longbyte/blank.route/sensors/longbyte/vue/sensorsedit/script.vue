@@ -27,14 +27,34 @@
                     <div class="" v-html="sensor.sensor_app"></div>
                     <div class="" v-html="sensor.sensor_device"></div>
                     <div class="" v-html="sensor.sensor_name"></div>
+                    <div class="">
+                        Режим логирования:<br>
+                        <select class="sensors-edit__template-select form-control" @change="saveForm(sensor)" name="log_mode">
+                            <option value="0" :selected="sensor.log_mode == 0">Среднее за сутки</option>
+                            <option value="1" :selected="sensor.log_mode == 1">Каждое значение</option>
+                            <option value="2" :selected="sensor.log_mode == 2">Каждое значение сегодня и среднее за прошлые дни</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="sensors-edit__col col-1">
-                    <input class="form-control sensors-edit__input-text" 
-                           type="text"
-                           name="sensor_unit"
-                           :value="sensor.sensor_unit"
-                           @change="saveForm(sensor)"
-                           />
+                    <div class="">
+                        Единицы измерения:<br>
+                        <input class="form-control sensors-edit__input-text" 
+                               type="text"
+                               name="sensor_unit"
+                               :value="sensor.sensor_unit"
+                               @change="saveForm(sensor)"
+                               />
+                    </div>
+                    <div class="">
+                        Количество знаков после запятой:<br>
+                        <input class="form-control sensors-edit__input-text" 
+                               type="text"
+                               name="precision"
+                               :value="sensor.precision"
+                               @change="saveForm(sensor)"
+                               />
+                    </div>
                 </div>
                 <div class="sensors-edit__col col-4">
                     <div class="row">
@@ -99,7 +119,7 @@
                     </div> 
                     <div class="row">
                         <div class="col-6 offset-6">
-                            <select class="sensors-edit__template-select form-control" @change="changeTemplate(sensor)">
+                            <select class="sensors-edit__template-select form-control" @change="changeTemplate(sensor)" name="template">
                                 <option value="">Выбрать шаблон</option>
                                 <option value="manual">Пользовательский</option>
                                 <option value="percent">Проценты</option>
@@ -204,51 +224,59 @@
                     percent: {
                         visual_min: 0,
                         visual_max: 100,
+                        precision: 0,
                     },
                     temp_cpu: {
                         alert_value_max: 75,
                         visual_min: 20,
                         visual_max: 100,
+                        precision: 0,
                     },
                     temp_gpu: {
                         alert_value_max: 85,
                         visual_min: 20,
                         visual_max: 100,
+                        precision: 0,
                     },
                     temp_hdd: {
                         alert_value_max: 60,
                         visual_min: 20,
                         visual_max: 100,
+                        precision: 0,
                     },
                     bool_yes: {
                         alert_value_min: 0.99,
+                        precision: 0,
                     },
                     bool_no: {
                         alert_value_max: 0.01,
+                        precision: 0,
                     },
                     volt33: {
                         alert_value_min: 3.19,
                         alert_value_max: 3.47,
                         visual_min: 3,
                         visual_max: 3.6,
+                        precision: 2,
                     },
                     volt5: {
                         alert_value_min: 4.83,
                         alert_value_max: 5.25,
                         visual_min: 4.5,
                         visual_max: 5.5,
+                        precision: 2,
                     },
                     volt12: {
                         alert_value_min: 11.6,
                         alert_value_max: 12.6,
                         visual_min: 11,
                         visual_max: 13,
+                        precision: 2,
                     },
                 };
 
                 let form = document.forms[this.getFormName(sensor)];
-                let obSelect = form.querySelector('select');
-                console.log(obSelect);
+                let obSelect = form.querySelector('select[name=template]');
                 if (!!obTemplateData[obSelect.value]) {
                     let obSelectedTemplate = obTemplateData[obSelect.value];
                     if (!isNaN(obSelectedTemplate.alert_value_min)) {
@@ -282,6 +310,11 @@
                         form.visual_max.value = obSelectedTemplate.visual_max;
                     } else {
                         form.visual_max.value = '';
+                    }
+                    if (!isNaN(obSelectedTemplate.precision)) {
+                        form.precision.value = obSelectedTemplate.precision;
+                    } else {
+                        form.precision.value = 0;
                     }
                 }
                 this.allowSave = true;
