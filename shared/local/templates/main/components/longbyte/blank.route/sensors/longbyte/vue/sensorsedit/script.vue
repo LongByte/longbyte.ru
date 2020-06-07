@@ -3,120 +3,162 @@
 
 
         <div class="sensors-edit__list container">
-            <div class="row">
-                <div class="sensors-edit__col col-0">
+            <div class="sensors-edit__item row">
+                <div class="sensors-edit__col col-3">
+                    Покаывать только включенные датчики:
                     <input type="checkbox"
                            checked
                            @change="toggleShowActive()"
                            />
                 </div>
-                <div class="sensors-edit__col col-1">Приложение</div>
-                <div class="sensors-edit__col col-1">Устройство</div>
-                <div class="sensors-edit__col col-1">Датчик</div>
-                <div class="sensors-edit__col col-1">Ед. изм.</div>
-                <div class="sensors-edit__col col-2">
-                    Пределы допустимых значений
-                </div>
-                <div class="sensors-edit__col col-2">
-                    Игнорировать данные вне диапазона
-                </div>
-                <div class="sensors-edit__col col-2">
-                    Диапазон значений на графике
-                </div>
-                <div class="sensors-edit__col col-1">
-                    Использовать шаблон
-                </div>
-                <!--                <div class="sensors-edit__col col-1">
-                                    Не уведомлять до
-                                </div>-->
             </div>
             <form :id="getFormName(sensor)" :name="getFormName(sensor)" class="sensors-edit__item row" v-for="sensor in sensors" v-if="isRowVisible(sensor)">
-                <div class="sensors-edit__col col-0">
-                    <input type="hidden" :value="sensor.id" name="id" />
-                    <input type="checkbox"
-                           value="1" 
-                           name="active" 
-                           :checked="isChecked(sensor.active)" 
-                           @change="saveForm(sensor)"
-                           />
-                </div>
-                <div class="sensors-edit__col col-1" v-html="sensor.sensor_app"></div>
-                <div class="sensors-edit__col col-1" v-html="sensor.sensor_device"></div>
-                <div class="sensors-edit__col col-1" v-html="sensor.sensor_name"></div>
-                <div class="sensors-edit__col col-1" v-html="sensor.sensor_unit"></div>
+                <input type="hidden" :value="sensor.id" name="id" />
                 <div class="sensors-edit__col col-2">
-                    <input class="form-control sensors-edit__input-text" 
-                           type="text"
-                           name="alert_value_min"
-                           :value="sensor.alert_value_min"
-                           @change="saveForm(sensor)"
-                           />
-                    - 
-                    <input class="form-control sensors-edit__input-text" 
-                           type="text" 
-                           name="alert_value_max"
-                           :value="sensor.alert_value_max" 
-                           @change="saveForm(sensor)"
-                           />
-                </div>
-                <div class="sensors-edit__col col-2">
-                    <input class="form-control sensors-edit__input-text" 
-                           type="text"
-                           name="ignore_less"
-                           :value="sensor.ignore_less"
-                           @change="saveForm(sensor)"
-                           />
-                    - 
-                    <input class="form-control sensors-edit__input-text" 
-                           type="text" 
-                           name="ignore_more"
-                           :value="sensor.ignore_more" 
-                           @change="saveForm(sensor)"
-                           />
-                </div>
-                <div class="sensors-edit__col col-2">
-                    <input class="form-control sensors-edit__input-text"
-                           type="text"
-                           name="visual_min"
-                           :value="sensor.visual_min" 
-                           @change="saveForm(sensor)"
-                           /> 
-                    - 
-                    <input class="form-control sensors-edit__input-text" 
-                           type="text" 
-                           name="visual_max"
-                           :value="sensor.visual_max" 
-                           @change="saveForm(sensor)"
-                           />
+                    <div>
+                        Включен:
+                        <input type="checkbox"
+                               value="1" 
+                               name="active" 
+                               :checked="isChecked(sensor.active)" 
+                               @change="saveForm(sensor)"
+                               />
+                    </div>
+                    <div class="" v-html="sensor.sensor_app"></div>
+                    <div class="" v-html="sensor.sensor_device"></div>
+                    <div class="" v-html="sensor.sensor_name"></div>
                 </div>
                 <div class="sensors-edit__col col-1">
-                    <select class="sensors-edit__template-select form-control" @change="changeTemplate(sensor)">
-                        <option value="">Выбрать</option>
-                        <option value="manual">Пользовательский</option>
-                        <option value="percent">Проценты</option>
-                        <option value="temp_cpu">Температура CPU</option>
-                        <option value="temp_gpu">Температура GPU</option>
-                        <option value="temp_hdd">Температура HDD</option>
-                        <option value="bool_yes">Да/Нет. Корректное "да"</option>
-                        <option value="bool_no">Да/Нет. Корректное "нет"</option>
-                        <option value="volt33">Напряжение 3.3V</option>
-                        <option value="volt5">Напряжение 5V</option>
-                        <option value="volt12">Напряжение 12V</option>
-                    </select>
+                    <input class="form-control sensors-edit__input-text" 
+                           type="text"
+                           name="sensor_unit"
+                           :value="sensor.sensor_unit"
+                           @change="saveForm(sensor)"
+                           />
                 </div>
-                <!--                <div class="sensors-edit__col col-1">
-                                    <input class="form-control sensors-edit__input-date" 
-                                           type="text"
-                                           name="off_alert"
-                                           :value="sensor.off_alert" 
-                                           @change="saveForm(sensor)"
-                                           />
-                                </div>-->
+                <div class="sensors-edit__col col-4">
+                    <div class="row">
+                        <div class="col-6">
+                            Оповещать при выходе за пределы:
+                        </div> 
+                        <div class="col-6">
+                            <input class="form-control sensors-edit__input-text" 
+                                   type="text"
+                                   name="alert_value_min"
+                                   :value="sensor.alert_value_min"
+                                   @change="saveForm(sensor)"
+                                   />
+                            - 
+                            <input class="form-control sensors-edit__input-text" 
+                                   type="text" 
+                                   name="alert_value_max"
+                                   :value="sensor.alert_value_max" 
+                                   @change="saveForm(sensor)"
+                                   />
+                        </div> 
+                    </div> 
+                    <div class="row">
+                        <div class="col-6">
+                            Игнорировать получаемые значения вне диапазона:
+                        </div> 
+                        <div class="col-6">
+                            <input class="form-control sensors-edit__input-text" 
+                                   type="text"
+                                   name="ignore_less"
+                                   :value="sensor.ignore_less"
+                                   @change="saveForm(sensor)"
+                                   />
+                            - 
+                            <input class="form-control sensors-edit__input-text" 
+                                   type="text" 
+                                   name="ignore_more"
+                                   :value="sensor.ignore_more" 
+                                   @change="saveForm(sensor)"
+                                   />
+                        </div> 
+                    </div> 
+                    <div class="row">
+                        <div class="col-6">
+                            Минимальное и максимальное значение на графиках:
+                        </div> 
+                        <div class="col-6">
+                            <input class="form-control sensors-edit__input-text"
+                                   type="text"
+                                   name="visual_min"
+                                   :value="sensor.visual_min" 
+                                   @change="saveForm(sensor)"
+                                   /> 
+                            - 
+                            <input class="form-control sensors-edit__input-text" 
+                                   type="text" 
+                                   name="visual_max"
+                                   :value="sensor.visual_max" 
+                                   @change="saveForm(sensor)"
+                                   />
+                        </div> 
+                    </div> 
+                    <div class="row">
+                        <div class="col-6 offset-6">
+                            <select class="sensors-edit__template-select form-control" @change="changeTemplate(sensor)">
+                                <option value="">Выбрать шаблон</option>
+                                <option value="manual">Пользовательский</option>
+                                <option value="percent">Проценты</option>
+                                <option value="temp_cpu">Температура CPU</option>
+                                <option value="temp_gpu">Температура GPU</option>
+                                <option value="temp_hdd">Температура HDD</option>
+                                <option value="bool_yes">Да/Нет. Корректное "да"</option>
+                                <option value="bool_no">Да/Нет. Корректное "нет"</option>
+                                <option value="volt33">Напряжение 3.3V</option>
+                                <option value="volt5">Напряжение 5V</option>
+                                <option value="volt12">Напряжение 12V</option>
+                            </select>
+                        </div> 
+                    </div>
+                </div>
+                <div class="sensors-edit__col col-2">
+                    <div>
+                        Включить оповещения:
+                        <input type="checkbox"
+                               value="1" 
+                               name="alert_enable" 
+                               :checked="isChecked(sensor.alert_enable)" 
+                               @change="saveForm(sensor)"
+                               />
+                    </div>
+                    <div class="">
+                        Приостановить оповещения до:
+                        <input class="form-control sensors-edit__input-date" 
+                               type="text"
+                               name="alert_mute_till"
+                               :value="sensor.alert_mute_till" 
+                               @change="saveForm(sensor)"
+                               />
+                    </div>
+                </div>
+                <div class="sensors-edit__col col-2">
+                    <div>
+                        Модицифировать значение:
+                    </div>
+                    <div>
+                        <input class="form-control" 
+                               type="text"
+                               name="modifier"
+                               :value="sensor.modifier" 
+                               @change="saveForm(sensor)"
+                               />
+                    </div>
+                    <div>
+                        <small>
+                        Допускается указать до двух арифметических действий. Например:<br>
+                        *1024, *0.98+6, +2*1.4 (первое действие всегда будет приоритетно)<br>
+                        Допустимы знаки +-*/. цифры и пробелы.<br>
+                        Учтите, что правила будут ориентироваться на уже измененное значение.
+                        </small>
+                    </div>
+                </div>
             </form>
-
         </div>
     </div>
-</div>
 </template>
 <script>
     var sensorseditApp = new Vue({
@@ -219,8 +261,8 @@
                     } else {
                         form.alert_value_max.value = '';
                     }
-                    
-                     if (!isNaN(obSelectedTemplate.ignore_less)) {
+
+                    if (!isNaN(obSelectedTemplate.ignore_less)) {
                         form.ignore_less.value = obSelectedTemplate.ignore_less;
                     } else {
                         form.ignore_less.value = '';
@@ -229,8 +271,8 @@
                         form.ignore_more.value = obSelectedTemplate.ignore_more;
                     } else {
                         form.ignore_more.value = '';
-                    }                    
-                    
+                    }
+
                     if (!isNaN(obSelectedTemplate.visual_min)) {
                         form.visual_min.value = obSelectedTemplate.visual_min;
                     } else {

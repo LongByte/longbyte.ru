@@ -36,7 +36,7 @@ class Edit extends \Api\Core\Base\Controller {
      * @return string
      */
     public function get() {
-        if (!$this->getSystem()) {
+        if (!$this->loadSystem()) {
             return $this->exitAction();
         }
 
@@ -46,7 +46,7 @@ class Edit extends \Api\Core\Base\Controller {
     }
 
     public function post() {
-        if (!$this->getSystem()) {
+        if (!$this->loadSystem()) {
             return $this->exitAction();
         }
 
@@ -55,21 +55,30 @@ class Edit extends \Api\Core\Base\Controller {
         $obSensor = $this->obSystem->getSensorsCollection()->getByKey($iSensorId);
 
         if (!is_null($obSensor)) {
-//            $offAlert = $this->getRequest()->get('off_alert');
-//            if (strlen($offAlert) <= 0) {
-//                $offAlert = null;
-//            } else {
-//                $offAlert = new \Bitrix\Main\Type\DateTime();
-//            }
+            $strAlertMuteTill = $this->getRequest()->get('alert_mute_till');
+            if (strlen($strAlertMuteTill) <= 0) {
+                $obAlertMuteTill = null;
+            } else {
+                $obAlertMuteTill = \Bitrix\Main\Type\DateTime::tryParse($strAlertMuteTill, 'd.m.Y H:i:s');
+                if (!is_null($obAlertMuteTill)) {
+                    if ($obAlertMuteTill->getTimestamp() < (new \Bitrix\Main\Type\DateTime())->getTimestamp()) {
+                        $obAlertMuteTill = null;
+                    }
+                }
+            }
 
             $obSensor
                 ->setActive($this->getRequest()->get('active') == 1)
+                ->setSensorUnit($this->getRequest()->get('sensor_unit'))
                 ->setAlertValueMin($this->getRequest()->get('alert_value_min'))
                 ->setAlertValueMax($this->getRequest()->get('alert_value_max'))
                 ->setIgnoreLess($this->getRequest()->get('ignore_less'))
                 ->setIgnoreMore($this->getRequest()->get('ignore_more'))
                 ->setVisualMin($this->getRequest()->get('visual_min'))
                 ->setVisualMax($this->getRequest()->get('visual_max'))
+                ->setAlertEnable($this->getRequest()->get('alert_enable') == 1)
+                ->setAlertMuteTill($obAlertMuteTill)
+                ->setModifier($this->getRequest()->get('modifier'))
                 ->save()
             ;
         }
@@ -92,7 +101,7 @@ class Edit extends \Api\Core\Base\Controller {
      * 
      * @return boolean
      */
-    private function getSystem() {
+    private function loadSystem() {
         /** @var \Api\Sensors\Sensor\Collection $obSensors */
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
         /** @var \Api\Sensors\Data\Collection $obValues */

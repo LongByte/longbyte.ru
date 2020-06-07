@@ -206,6 +206,7 @@ class Post extends \Api\Core\Base\Controller {
         foreach ($arData as $obInputValue) {
             $this->arResponse['data']['read_values'] ++;
             $value = floatval(str_replace(',', '.', $obInputValue->SensorValue));
+
             $obSensor = $this->obSystem->getSensorsCollection()->getByParams($obInputValue->SensorApp, $obInputValue->SensorClass, $obInputValue->SensorName);
 
             if (is_null($obSensor)) {
@@ -231,6 +232,22 @@ class Post extends \Api\Core\Base\Controller {
             } else {
                 if (!$obSensor->getActive())
                     continue;
+            }
+
+            try {
+                if (strlen($obSensor->getModifier()) > 0) {
+                    $strModifier = $obSensor->getModifier();
+                    $strModifier = preg_replace('/[^\d\+\*\/\-\.]/', '', $strModifier);
+                    if (preg_match('/^[\+\*\/\-]\d+(\.\d+)?([\+\*\/\-]\d+(\.\d+)?)?$/', $strModifier)) {
+                        $strModifier = preg_replace('/^([\+\*\/\-]\d+(\.\d+)?)(([\+\*\/\-]\d+(\.\d+)?)?)$/', '$1)$3', $strModifier);
+                        $fModifiedValue = @eval('return ($value' . $strModifier . ';');
+                        if (is_numeric($fModifiedValue)) {
+                            $value = $fModifiedValue;
+                        }
+                    }
+                }
+            } catch (ParseError $exc) {
+                
             }
 
             if ($obSensor->getIgnoreLess() != 0 && $value < $obSensor->getIgnoreLess()) {
@@ -352,13 +369,11 @@ class Post extends \Api\Core\Base\Controller {
             )
         ) {
 
-            $obNow = new \Bitrix\Main\Type\DateTime();
-
             $arAlerts = array();
 
             /** @var \Api\Sensors\Sensor\Entity $obSensor */
             foreach ($this->obSystem->getSensorsCollection() as $obSensor) {
-                if ($obSensor->getActive() && $obSensor->getAlert()->isAlert() && $obSensor->getAlertMuteTill()->getTimestamp() < $obNow->getTimestamp()) {
+                if ($obSensor->getActive() && $obSensor->getAlert()->isAlert() && $obSensor->isAllowAlert()) {
 
                     $message = '';
                     $message .= 'Значение на датчике ' . $obSensor->getSensorApp() . ' > ' . $obSensor->getSensorDevice() . ' > ' . $obSensor->getSensorName() . ' = ' . $obSensor->getValue() . $obSensor->getSensorUnit() . ' и ';
