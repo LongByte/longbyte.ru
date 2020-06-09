@@ -153,11 +153,24 @@ class Post extends \Api\Core\Base\Controller {
                     $this->obTodayValues->save($this->arResponse['errors']);
                     $this->obLastSave = null;
                 }
-                $this->obTodayValues = \Api\Sensors\Data\Model::getAll(array(
+
+                $arTodayValue = \Api\Sensors\Data\Model::getAllAsArray(array(
                         'SENSOR.SYSTEM_ID' => $this->obSystem->getId(),
                         '>=DATE' => $obDate,
                         '<DATE' => $obDateTo,
+                        ), 0, 0, array(
+                        'order' => array('ID' => 'DESC')
                 ));
+
+                $this->obTodayValues = new \Api\Sensors\Data\Collection();
+                foreach ($arTodayValue as $arValue) {
+                    if (!$this->obTodayValues->getBySensorId($arValue['SENSOR_ID'])) {
+                        $obValue = new \Api\Sensors\Data\Entity($arValue['ID'], $arValue);
+                        $this->obTodayValues->addItem($obValue);
+                    }
+                }
+                unset($arTodayValue);
+
                 $this->obTodayValues->setDate($obToday);
             }
 
@@ -260,62 +273,56 @@ class Post extends \Api\Core\Base\Controller {
                 continue;
             }
 
+            $obValue = $this->obTodayValues->getBySensorId((int) $obSensor->getId());
+
+            $obDate = new \Bitrix\Main\Type\DateTime();
+            $obDate->setTime(0, 0, 0);
             if ($obSensor->isModeAvg()) {
-                $obValue = $this->obTodayValues->getBySensorId((int) $obSensor->getId());
-
-                if (is_null($obValue)) {
-                    $obValue = new \Api\Sensors\Data\Entity();
-                    $obValue
-                        ->setSensor($obSensor)
-                        ->setDate(new \Bitrix\Main\Type\Date())
-                        ->setValueMin($value)
-                        ->setValueAvg($value)
-                        ->setValueMax($value)
-                        ->setValue($value)
-                        ->setValuesCount(1)
-                    ;
-
-                    $this->obTodayValues->addItem($obValue);
-                } else {
-                    if ($value < $obValue->getValueMin()) {
-                        $obValue->setValueMin($value);
-                    }
-                    if ($value > $obValue->getValueMax()) {
-                        $obValue->setValueMax($value);
-                    }
-                    $fAvgValue = ($obValue->getValueAvg() * $obValue->getValuesCount() + $value) / ($obValue->getValuesCount() + 1);
-                    $obValue->setValueAvg($fAvgValue);
-                    $obValue->getValuesCount($obValue->getValuesCount() + 1);
-                    $obValue->setSensor($obSensor);
-                    $obValue->setValue($value);
-                }
+                
             }
 
             if ($obSensor->isModeEach() || $obSensor->isModeEachLastDay()) {
-                $obValue = $this->obTodayValues->getBySensorId((int) $obSensor->getId());
-                if (!is_null($obValue) && $value == $obValue->getValue()) {
-                    $obValue->setValuesCount($obValue->getValuesCount() + 1);
-                } else {
-                    if (!is_null($obValue)) {
-                        $obEndingValue = new \Api\Sensors\Data\Entity();
-                        $obEndingValue
-                            ->setSensor($obSensor)
-                            ->setDate((new \Bitrix\Main\Type\DateTime())->add('-1second'))
-                            ->setValue($obValue->getValue())
-                            ->setValuesCount(0)
-                        ;
-                        $this->obTodayValues->addItem($obEndingValue);
-                    }
+                $iRate =  5 * 60;
+                $obTime = new \Bitrix\Main\Type\DateTime();
+                $iDiff = floor(($obTime->getTimestamp() - $obDate->getTimestamp()) / $iRate) * $iRate;
+                $obDate->add("+{$iDiff}seconds");
+            }
 
-                    $obValue = new \Api\Sensors\Data\Entity();
-                    $obValue
-                        ->setSensor($obSensor)
-                        ->setDate(new \Bitrix\Main\Type\DateTime())
-                        ->setValue($value)
-                        ->setValuesCount(1)
-                    ;
-                    $this->obTodayValues->addItem($obValue);
+            if (
+                is_null($obValue) //
+                ||
+                (!is_null($obValue) && $obValue->getDate()->getTimestamp() != $obDate->getTimestamp())
+            ) {
+                if (!is_null($obValue)) {
+                    $obValue->save();
+                    $this->obTodayValues->removeByKey($obValue->getId());
                 }
+                
+                $obValue = new \Api\Sensors\Data\Entity();
+                $obValue
+                    ->setSensor($obSensor)
+                    ->setDate($obDate)
+                    ->setValueMin($value)
+                    ->setValueAvg($value)
+                    ->setValueMax($value)
+                    ->setValue($value)
+                    ->setValuesCount(1)
+                ;
+
+                $this->obTodayValues->addItem($obValue);
+            } else {
+
+                if ($value < $obValue->getValueMin()) {
+                    $obValue->setValueMin($value);
+                }
+                if ($value > $obValue->getValueMax()) {
+                    $obValue->setValueMax($value);
+                }
+                $fAvgValue = ($obValue->getValueAvg() * $obValue->getValuesCount() + $value) / ($obValue->getValuesCount() + 1);
+                $obValue->setValueAvg($fAvgValue);
+                $obValue->setValuesCount($obValue->getValuesCount() + 1);
+                $obValue->setSensor($obSensor);
+                $obValue->setValue($value);
             }
 
             $this->checkAlert($obValue);

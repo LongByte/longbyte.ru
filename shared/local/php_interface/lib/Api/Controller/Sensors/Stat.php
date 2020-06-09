@@ -45,6 +45,7 @@ class Stat extends \Api\Core\Base\Controller {
         $arValuesFilter = array(
             'SENSOR.ACTIVE' => true,
             'SENSOR.SYSTEM_ID' => $this->obSystem->getId(),
+            '<DATE' => (new \Bitrix\Main\Type\Date())
         );
 
         $obValues = \Api\Sensors\Data\Model::getAll($arValuesFilter);
@@ -63,31 +64,14 @@ class Stat extends \Api\Core\Base\Controller {
             $obSensor->getValuesCollection()->addItem($obValue);
             $obValue->setSensor($obSensor);
 
-            $obToday = new DateTime();
-            $obToday->setTime(0, 0, 0);
-
-            $obValueDate = clone $obValue->getDate();
-            $bToday = $obToday->getTimestamp() == $obValue->getDate()->getTimestamp();
-
-            $valueMin = 0;
-            $valueMax = 0;
-            if ($obSensor->isModeAvg() || !$bToday && $obSensor->isModeEachLastDay()) {
-                $valueMin = $obValue->getValueMin();
-                $valueMax = $obValue->getValueMax();
-            }
-            if ($obSensor->isModeEach() || $bToday && $obSensor->isModeEachLastDay()) {
-                $valueMin = $obValue->getValue();
-                $valueMax = $obValue->getValue();
-            }
-
-            if ($obSensor->getAlertValueMax() != 0 && $valueMax > $obSensor->getAlertValueMax()) {
+            if ($obSensor->getAlertValueMax() != 0 && $obValue->getValueMax() > $obSensor->getAlertValueMax()) {
                 $obSensor->getAlert()->setAlert(true);
                 $obSensor->getAlert()->setDirection(1);
             }
 
-            if ($obSensor->getAlertValueMin() != 0 && $valueMin < $obSensor->getAlertValueMin()) {
+            if ($obSensor->getAlertValueMin() != 0 && $obValue->getValueMin() < $obSensor->getAlertValueMin()) {
                 $obSensor->getAlert()->setAlert(true);
-                $obSensor->getAlert()->setDirection(1);
+                $obSensor->getAlert()->setDirection(-1);
             }
         }
 

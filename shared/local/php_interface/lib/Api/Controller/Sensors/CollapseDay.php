@@ -57,15 +57,15 @@ class CollapseDay extends \Api\Core\Base\Controller {
                 $fSum = 0;
 
                 foreach ($obValues as $obValue) {
-                    if (is_null($fMinValue) || $obValue->getValue() < $fMinValue) {
-                        $fMinValue = $obValue->getValue();
+                    if (is_null($fMinValue) || $obValue->getValueMin() < $fMinValue) {
+                        $fMinValue = $obValue->getValueMin();
                     }
-                    if (is_null($fMaxValue) || $obValue->getValue() > $fMaxValue) {
-                        $fMaxValue = $obValue->getValue();
+                    if (is_null($fMaxValue) || $obValue->getValueMax() > $fMaxValue) {
+                        $fMaxValue = $obValue->getValueMax();
                     }
 
                     $iValuesCount += $obValue->getValuesCount();
-                    $fSum += $obValue->getValue() * $obValue->getValuesCount();
+                    $fSum += $obValue->getValueAvg() * $obValue->getValuesCount();
                     $obValue->delete();
                 }
 
@@ -76,7 +76,6 @@ class CollapseDay extends \Api\Core\Base\Controller {
                 $obCollepseValue
                     ->setDate($obYesterday)
                     ->setSensorId($obSensor->getId())
-                    ->setValue($fAvgValue)
                     ->setValueAvg($fAvgValue)
                     ->setValueMax($fMaxValue)
                     ->setValueMin($fMinValue)

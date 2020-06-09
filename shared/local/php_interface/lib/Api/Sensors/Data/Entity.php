@@ -79,7 +79,7 @@ class Entity extends \Api\Core\Base\Entity {
             $strDate = $this->getDate()->format('d.m.Y');
         }
         if ($obSensor->isModeEach() || $obSensor->isModeEachLastDay() && $bToday) {
-            $strDate = $this->getDate()->format(\DateTime::ATOM);
+            $strDate = $this->getDate()->format('H:i');
         }
 
         $arData = array();
@@ -88,17 +88,9 @@ class Entity extends \Api\Core\Base\Entity {
             $arData['value'] = $this->getValue();
         }
 
-        $bBoolView = $obSensor->isBooleanSensor() && !$obSensor->isToday();
-
-        if ($this->getValueMin() || $bBoolView) {
-            $arData['value_min'] = $this->getValueMin();
-        }
-        if ($this->getValueAvg() || $bBoolView) {
-            $arData['value_avg'] = $this->getValueAvg();
-        }
-        if ($this->getValueMax() || $bBoolView) {
-            $arData['value_max'] = $this->getValueMax();
-        }
+        $arData['value_min'] = $this->getValueMin();
+        $arData['value_avg'] = round($this->getValueAvg(), (int) $obSensor->getPrecision());
+        $arData['value_max'] = $this->getValueMax();
         return $arData;
     }
 
