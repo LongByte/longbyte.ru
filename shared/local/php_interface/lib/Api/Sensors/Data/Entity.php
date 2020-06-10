@@ -14,18 +14,21 @@ namespace Api\Sensors\Data;
  * @method \Bitrix\Main\Type\DateTime getDate()
  * @method $this setDate(\Bitrix\Main\Type\DateTime $obDate)
  * @method bool hasDate()
- * @method float getSensorValueMin()
- * @method $this setSensorValueMin(float $fSensorValueMin)
- * @method bool hasSensorValueMin()
- * @method float getSensorValue()
- * @method $this setSensorValue(float $fSensorValue)
- * @method bool hasSensorValue()
- * @method float getSensorValueMax()
- * @method $this setSensorValueMax(float $fSensorValueMax)
- * @method bool hasSensorValueMax()
- * @method int getSensorValues()
- * @method $this setSensorValues(int $iSensorValues)
- * @method bool hasSensorValues()
+ * @method float getValueMin()
+ * @method $this setValueMin(float $fValueMin)
+ * @method bool hasValueMin()
+ * @method float getValueAvg()
+ * @method $this setValueAvg(float $fValueAvg)
+ * @method bool hasValueAvg()
+ * @method float getValueMax()
+ * @method $this setValueMax(float $fValueMax)
+ * @method bool hasValueMax()
+ * @method int getValuesCount()
+ * @method $this setValuesCount(int $iValuesCount)
+ * @method bool hasValuesCount()
+ * @method float getValue()
+ * @method $this setValue(float $fValue)
+ * @method bool hasValue()
  */
 class Entity extends \Api\Core\Base\Entity {
 
@@ -34,12 +37,6 @@ class Entity extends \Api\Core\Base\Entity {
      * @var \Api\Sensors\Sensor\Entity 
      */
     protected $_obSensor = null;
-
-    /**
-     *
-     * @var float
-     */
-    protected $_lastValue = 0;
 
     /**
      * 
@@ -65,16 +62,35 @@ class Entity extends \Api\Core\Base\Entity {
         return Model::class;
     }
 
+    /**
+     * 
+     * @return array
+     */
     public function toArray() {
-        $arData = parent::toArray();
-        $obSystem = $this->getSensor()->getSystem();
-        if ($obSystem->isModeAvg()) {
+        $obSensor = $this->getSensor();
+
+        $obNow = new \Bitrix\Main\Type\DateTime();
+        $obNow->setTime(0, 0, 0);
+        $obValueDate = clone $this->getDate();
+        $obValueDate->setTime(0, 0, 0);
+        $bToday = $obNow->getTimestamp() == $obValueDate->getTimestamp();
+
+        if ($obSensor->isModeAvg() || $obSensor->isModeEachLastDay() && !$bToday) {
             $strDate = $this->getDate()->format('d.m.Y');
         }
-        if ($obSystem->isModeEach()) {
-            $strDate = $this->getDate()->format('H:i:s');
+        if ($obSensor->isModeEach() || $obSensor->isModeEachLastDay() && $bToday) {
+            $strDate = $this->getDate()->format('H:i');
         }
+
+        $arData = array();
         $arData['date'] = $strDate;
+        if ($this->getValue()) {
+            $arData['value'] = $this->getValue();
+        }
+
+        $arData['value_min'] = $this->getValueMin();
+        $arData['value_avg'] = round($this->getValueAvg(), (int) $obSensor->getPrecision());
+        $arData['value_max'] = $this->getValueMax();
         return $arData;
     }
 
@@ -97,24 +113,6 @@ class Entity extends \Api\Core\Base\Entity {
     public function setSensor(\Api\Sensors\Sensor\Entity $obSensor) {
         $this->_obSensor = $obSensor;
         $this->setSensorId($obSensor->getId());
-        return $this;
-    }
-
-    /**
-     * 
-     * @return float
-     */
-    public function getLastValue() {
-        return $this->_lastValue;
-    }
-
-    /**
-     * 
-     * @param float $fLastValue
-     * @return $this
-     */
-    public function setLastValue(float $fLastValue) {
-        $this->_lastValue = $fLastValue;
         return $this;
     }
 

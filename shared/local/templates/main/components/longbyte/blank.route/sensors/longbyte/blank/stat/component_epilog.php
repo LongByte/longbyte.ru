@@ -9,7 +9,7 @@ Bitrix\Main\Page\Asset::getInstance()->addString('<script src="//unpkg.com/vue-c
 Bitrix\Main\Page\Asset::getInstance()->addString('<meta name="robots" content="noindex, nofollow"/>', true);
 
 $APPLICATION->IncludeComponent("longbyte:vue", "sensorsstat", Array(
-    'INCLUDE_COMPONENTS' => array('sensorstatline'),
+    'INCLUDE_COMPONENTS' => array('sensorline'),
     'STYLE_TO_COMPILER' => 'Y',
-    ), false
+    ), $component->__parent
 );

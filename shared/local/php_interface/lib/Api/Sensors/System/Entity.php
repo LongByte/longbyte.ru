@@ -17,15 +17,18 @@ namespace Api\Sensors\System;
  * @method string getToken()
  * @method $this setToken(string $strToken)
  * @method bool hasToken()
- * @method int getMode()
- * @method $this setMode(int $iMode)
- * @method bool hasMode()
  * @method string getEmail()
  * @method $this setEmail(string $strEmail)
  * @method bool hasEmail()
  * @method \Bitrix\Main\Type\DateTime getLastUpdate()
  * @method $this setLastUpdate(\Bitrix\Main\Type\DateTime $obLastUpdate)
  * @method bool hasLastUpdate()
+ * @method \Bitrix\Main\Type\DateTime getLastReceive()
+ * @method $this setLastReceive(\Bitrix\Main\Type\DateTime $obLastReceive)
+ * @method bool hasLastReceive()
+ * @method int getUserId()
+ * @method $this setUserId(int $iUserId)
+ * @method bool hasUserId()
  */
 class Entity extends \Api\Core\Base\Entity {
 
@@ -82,27 +85,12 @@ class Entity extends \Api\Core\Base\Entity {
 
     /**
      * 
-     * @return bool
-     */
-    public function isModeAvg() {
-        return $this->getMode() == Table::MODE_AVG;
-    }
-
-    /**
-     * 
-     * @return bool
-     */
-    public function isModeEach() {
-        return $this->getMode() == Table::MODE_EACH;
-    }
-
-    /**
-     * 
      * @return array
      */
     public function toArray() {
         $arData = parent::toArray();
         $arData['last_update'] = $this->getLastUpdate()->format('d.m.Y H:i:s');
+        $arData['last_receive'] = $this->getLastReceive()->format('d.m.Y H:i:s');
         return $arData;
     }
 

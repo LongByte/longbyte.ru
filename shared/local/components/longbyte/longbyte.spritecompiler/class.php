@@ -46,8 +46,8 @@ class LongbyteSpriteCompilerComponent extends CBitrixComponent {
         $params['PATH_TO_FILES_SPRITE'] = isset($params['PATH_TO_FILES_SPRITE']) && strlen(trim($params['PATH_TO_FILES_SPRITE'])) ? preg_replace(array('~^/~', '~/$~'), '/', trim($params['PATH_TO_FILES_SPRITE'])) : SITE_TEMPLATE_PATH . '/';
 
         $params['TARGET_FILE_MASK'] = trim($params['TARGET_FILE_MASK']);
-        if (!strlen($params['TARGET_FILE_MASK']) || (strpos($params['TARGET_FILE_MASK'], '%s')) === false) {
-            $params['TARGET_FILE_MASK'] = 'sprite-compiled-%s.svg';
+        if (!strlen($params['TARGET_FILE_MASK'])) {
+            $params['TARGET_FILE_MASK'] = 'sprite-%s-compiled.svg';
         }
 
         $params['SHOW_ERRORS_IN_DISPLAY'] = ($params['SHOW_ERRORS_IN_DISPLAY'] == 'Y');
@@ -131,7 +131,7 @@ class LongbyteSpriteCompilerComponent extends CBitrixComponent {
             $target = $this->arParams['PATH_TO_FILES_SPRITE'] . sprintf($this->arParams['TARGET_FILE_MASK'], $lastModified);
 
             $obTargetFile = new IO\File(Application::getDocumentRoot() . $target);
-            if (!$obTargetFile->isExists()) {
+            if (!$obTargetFile->isExists() || $obTargetFile->getModificationTime() < $lastModified) {
 
                 $sprire = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="0" height="0" style="position:absolute">' . "\n\n";
 

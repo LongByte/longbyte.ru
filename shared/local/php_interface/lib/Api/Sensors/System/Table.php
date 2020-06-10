@@ -12,9 +12,6 @@ Loc::loadMessages(__FILE__);
  */
 class Table extends Main\Entity\DataManager {
 
-    const MODE_AVG = 0;
-    const MODE_EACH = 1;
-
     /**
      * Returns DB table name for entity.
      *
@@ -57,11 +54,6 @@ class Table extends Main\Entity\DataManager {
                 'required' => true,
                 'title' => 'Токен',
                 )),
-            'MODE' => new Main\Entity\IntegerField('UF_MODE', array(
-                'required' => true,
-                'title' => 'Режим',
-                'values' => array(self::MODE_AVG, self::MODE_EACH)
-                )),
             'EMAIL' => new Main\Entity\StringField('UF_EMAIL', array(
                 'required' => true,
                 'title' => 'E-mail для уведомлений',
@@ -70,6 +62,20 @@ class Table extends Main\Entity\DataManager {
                 'required' => true,
                 'title' => 'Последнее обновление данных',
                 )),
+            'LAST_RECEIVE' => new Main\Entity\DateTimeField('UF_LAST_RECEIVE', array(
+                'required' => true,
+                'title' => 'Последнее получение данных',
+                )),
+            'USER_ID' => new Main\Entity\IntegerField('UF_USER_ID', array(
+                'required' => true,
+                'title' => 'Пользователь',
+                )),
+            'USER' => new Main\Entity\ReferenceField(
+                'USER',
+                '\Bitrix\Main\User',
+                array('this.USER_ID' => 'ref.ID'),
+                array('join_type' => 'LEFT')
+            ),
         );
     }
 
