@@ -170,7 +170,7 @@ class Entity extends \Api\Core\Base\Entity {
             $arData['alert_mute_till'] = $this->getAlertMuteTill()->format('d.m.Y H:i:s');
         }
 
-        if ($this->isModeEach() || $this->isModeEachLastDay() && $this->isToday()) {
+        if ($this->isModeEach() || ($this->isModeEachLastDay() && $this->getValuesCollection()->count() > 1)) {
             $arData['view'] = 'line';
         } else {
             if ($this->isBooleanSensor()) {

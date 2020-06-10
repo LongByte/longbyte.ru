@@ -75,16 +75,16 @@
 
                 if (+this.sensor.visual_min != 0) {
                     if (minValue < this.sensor.visual_min && minValue != 0) {
-                    minValue = minValue - visibleDiff * 0.1;                   
-                } else {
+                        minValue = minValue - visibleDiff * 0.1;
+                    } else {
                         minValue = this.sensor.visual_min;
                     }
                 }
 
                 if (+this.sensor.visual_max != 0) {
                     if (maxValue > this.sensor.visual_max) {
-                    maxValue = maxValue + visibleDiff * 0.1;            
-                } else {
+                        maxValue = maxValue + visibleDiff * 0.1;
+                    } else {
                         maxValue = this.sensor.visual_max;
                     }
                 }
@@ -111,9 +111,16 @@
                     legend: {
                         display: false,
                     },
+                    animation: {
+                        duration: 0
+                    },
+                    hover: {
+                        animationDuration: 0
+                    },
+                    responsiveAnimationDuration: 0
                 }
                 );
-                }
             }
+        }
     })
 </script>

@@ -84,16 +84,8 @@ class Get extends \Api\Core\Base\Controller {
             $obSensor->getValuesCollection()->addItem($obValue);
             $obValue->setSensor($obSensor);
 
-            $valueMin = 0;
-            $valueMax = 0;
-            if ($obSensor->isModeAvg() || !$bToday && $obSensor->isModeEachLastDay()) {
-                $valueMin = $obValue->getValueMin();
-                $valueMax = $obValue->getValueMax();
-            }
-            if ($obSensor->isModeEach() || $bToday && $obSensor->isModeEachLastDay()) {
-                $valueMin = $obValue->getValue();
-                $valueMax = $obValue->getValue();
-            }
+            $valueMin = $obValue->getValueMin();
+            $valueMax = $obValue->getValueMax();
 
             if ($obSensor->getAlertValueMax() != 0 && $valueMax > $obSensor->getAlertValueMax()) {
                 $obSensor->getAlert()->setAlert(true);
