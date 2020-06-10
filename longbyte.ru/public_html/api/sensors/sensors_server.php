@@ -113,6 +113,10 @@ do {
 
     $arSockets = $arClientSockets;
     $arSockets[] = $obSocket;
+
+    if (date('H:i:s') == '06:00:00') {
+        $shutdown = true;
+    }
 } while (!$shutdown);
 
 foreach ($arControllers as $obPost) {
