@@ -118,6 +118,19 @@ class Post extends \Api\Core\Base\Controller {
      * 
      * @return string
      */
+    public function getDebug() {
+        return json_encode(array(
+            'post_data' => $this->getPostData(),
+            'sensors' => $this->obSystem->getSensorsCollection()->toArray(),
+            'today_values' => $this->obTodayValues->toArray(),
+            'response' => $this->arResponse,
+        ));
+    }
+
+    /**
+     * 
+     * @return string
+     */
     private function exitAction() {
         $this->sendAlerts();
         header('Content-Type: application/json');
@@ -203,6 +216,18 @@ class Post extends \Api\Core\Base\Controller {
 
         if (!is_null($this->obSystem)) {
             $this->obSystem->setSensorsCollection($obSensors);
+
+            foreach ($this->obSystem->getSensorsCollection() as $obSensor) {
+                $obAlert = $this->getAlertCollection()->getByKey($obSensor->getId());
+                if (is_null($obAlert)) {
+                    $obAlert = $obSensor->getAlert();
+                    $this->getAlertCollection()->addItem($obAlert);
+                } else {
+                    if (!$obSensor->hasAlert()) {
+                        $obSensor->setAlert($obAlert);
+                    }
+                }
+            }
         }
     }
 
@@ -232,12 +257,13 @@ class Post extends \Api\Core\Base\Controller {
                     ->setSensorDevice($obInputValue->SensorClass)
                     ->setSensorName($obInputValue->SensorName)
                     ->setSensorUnit($obInputValue->SensorUnit)
-                    ->setLogMode(Api\Sensors\Sensor\Table::MODE_AVG)
+                    ->setLogMode(\Api\Sensors\Sensor\Table::MODE_AVG)
+                    ->setAlertEnable(false)
                     ->save()
                 ;
 
                 if (!$obSensor->isExists()) {
-                    $this->arResponse['errors'][] = 'Невозможно создать сенсор. Данные: ' . print_r($obSensor->toArray(), true);
+                    $this->arResponse['errors'][] = 'Невозможно создать сенсор. Ошибка: ' . print_r($obSensor->getDBResult()->getErrorMessages(), true) . '. Данные: ' . print_r($obSensor->toArray(), true);
                     continue;
                 }
 
@@ -282,7 +308,7 @@ class Post extends \Api\Core\Base\Controller {
             }
 
             if ($obSensor->isModeEach() || $obSensor->isModeEachLastDay()) {
-                $iRate =  5 * 60;
+                $iRate = 5 * 60;
                 $obTime = new \Bitrix\Main\Type\DateTime();
                 $iDiff = floor(($obTime->getTimestamp() - $obDate->getTimestamp()) / $iRate) * $iRate;
                 $obDate->add("+{$iDiff}seconds");
@@ -297,7 +323,7 @@ class Post extends \Api\Core\Base\Controller {
                     $obValue->save();
                     $this->obTodayValues->removeByKey($obValue->getId());
                 }
-                
+
                 $obValue = new \Api\Sensors\Data\Entity();
                 $obValue
                     ->setSensor($obSensor)
@@ -398,12 +424,12 @@ class Post extends \Api\Core\Base\Controller {
                 if ($obSensor->getActive() && $obSensor->getAlert()->isAlert() && $obSensor->isAllowAlert()) {
 
                     $message = '';
-                    $message .= 'Значение на датчике ' . $obSensor->getSensorApp() . ' > ' . $obSensor->getSensorDevice() . ' > ' . $obSensor->getSensorName() . ' = ' . $obSensor->getValue() . $obSensor->getSensorUnit() . ' и ';
+                    $message .= 'Значение на датчике ' . $obSensor->getSensorApp() . ' > ' . $obSensor->getSensorDevice() . ' > ' . $obSensor->getSensorName() . ' = ';
                     if ($obSensor->getAlert()->getDirection() == -1) {
-                        $message .= 'меньше допустимого ' . $obSensor->getAlert()->getValueMin();
+                        $message .= $obSensor->getAlert()->getValueMin() . $obSensor->getSensorUnit() . ' и меньше допустимого ' . $obSensor->getAlertValueMin();
                     }
                     if ($obSensor->getAlert()->getDirection() == 1) {
-                        $message .= 'больше допустимого ' . $obSensor->getAlert()->getValueMax();
+                        $message .= $obSensor->getAlert()->getValueMax() . $obSensor->getSensorUnit() . ' и больше допустимого ' . $obSensor->getAlertValueMax();
                     }
                     $message .= $obSensor->getSensorUnit();
                     $arAlerts[] = $message;

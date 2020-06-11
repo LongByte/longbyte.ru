@@ -25,7 +25,7 @@ $APPLICATION->SetTitle("генератор паролей");
 Список символов: <input type="text" id="charlist" value="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+=-"><br>
 Длина: <input type="number" id="length" value="10" min="1"><br>
 <button id="gogen">Сгенерировать</button><br>
-Длина: <input type="text" id="result" readonly value=""><br>
+Пароль: <input type="text" id="result" readonly value=""><br>
 
 
 

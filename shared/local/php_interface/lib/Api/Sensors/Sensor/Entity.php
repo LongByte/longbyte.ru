@@ -166,7 +166,7 @@ class Entity extends \Api\Core\Base\Entity {
         $arData = parent::toArray();
         $arData['alert'] = $this->getAlert()->toArray();
         $arData['values'] = $this->getValuesCollection()->toArray();
-        if (!is_null($this->getAlertMuteTill())) {
+        if ($this->getAlertMuteTill() instanceof \Bitrix\Main\Type\DateTime) {
             $arData['alert_mute_till'] = $this->getAlertMuteTill()->format('d.m.Y H:i:s');
         }
 

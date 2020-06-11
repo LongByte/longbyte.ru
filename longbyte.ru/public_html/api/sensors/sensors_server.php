@@ -5,6 +5,7 @@ require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_be
 
 global $logEnable;
 global $shutdown;
+global $obLog;
 $logEnable = false;
 $shutdown = false;
 if (in_array('log', $argv)) {
@@ -90,6 +91,7 @@ do {
                         continue;
                     }
                     $strToken = $arData['token'];
+                    $strCommand = $arData['command'];
                     $arSensors = $arData['data'];
                     $jsonSensors = json_encode($arSensors);
 
@@ -101,8 +103,28 @@ do {
                     }
                     $obPost = $arControllers[$strToken];
 
-                    $obPost->setPostData($jsonSensors);
-                    $jsonResponse = $obPost->post();
+                    switch ($strCommand) {
+                        case 'shutdown785423755':
+                            $jsonResponse = json_encode(array('Shutdown command recived.'));
+                            global $shutdown;
+                            $shutdown = true;
+                            break;
+
+                        case 'getDebug':
+                            $jsonResponse = $obPost->getDebug();
+                            break;
+
+                        case 'reload':
+                            $arControllers[$strToken] = new \Api\Controller\Sensors\Post($strToken);
+                            $obPost = $arControllers[$strToken];
+                            break;
+
+                        default :
+                            $obPost->setPostData($jsonSensors);
+                            $jsonResponse = $obPost->post();
+                            break;
+                    }
+
                     $dataLendth = strlen($jsonResponse);
                     SocketLog($obLog, "Responce: [{$dataLendth}] {$jsonResponse}");
                     socket_write($obClient, $jsonResponse, $dataLendth);
@@ -134,6 +156,7 @@ function SocketLog($obLog, $str) {
 
 function SIGTERM_handler($signo) {
     global $shutdown;
+    global $obLog;
 
     switch ($signo) {
         case SIGTERM:

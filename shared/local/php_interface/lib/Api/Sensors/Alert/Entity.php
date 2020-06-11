@@ -52,7 +52,7 @@ class Entity extends \Api\Core\Base\Virtual\Entity {
      * @return bool
      */
     public function isAlert() {
-        return $this->_alert;
+        return $this->getAlert() == true;
     }
 
 }

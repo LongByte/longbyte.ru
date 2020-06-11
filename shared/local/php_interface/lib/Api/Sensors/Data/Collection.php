@@ -77,7 +77,7 @@ class Collection extends \Api\Core\Base\Collection {
             if ($obValue->isChanged()) {
                 $obValue->save();
                 if (!$obValue->isExists()) {
-                    $arErrors[] = 'Невозможно добавить данные. Данные: ' . print_r($obValue->toArray(), true);
+                    $arErrors[] = 'Невозможно добавить данные. Ошибка: ' . print_r($obValue->getDBResult()->getErrorMessages(), true) . '. Данные: ' . print_r($obValue->toArray(), true);
                 }
             }
         }
