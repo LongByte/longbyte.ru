@@ -38,14 +38,29 @@ namespace Api\Sensors\Sensor;
  * @method float getVisualMax()
  * @method $this setVisualMax(float $fVisualMax)
  * @method bool hasVisualMax()
- * @method \Bitrix\Main\Type\DateTime getOffAlert()
- * @method $this setOffAlert(\Bitrix\Main\Type\DateTime $obOffAlert)
- * @method bool hasOffAlert()
+ * @method boolean getAlertEnable()
+ * @method $this setAlertEnable(boolean $bAlertEnable)
+ * @method bool hasAlertEnable()
+ * @method \Bitrix\Main\Type\DateTime getAlertMuteTill()
+ * @method $this setAlertMuteTill(\Bitrix\Main\Type\DateTime $obAlertMuteTill)
+ * @method bool hasAlertMuteTill()
+ * @method float getIgnoreLess()
+ * @method $this setIgnoreLess(float $fIgnoreLess)
+ * @method bool hasIgnoreLess()
+ * @method float getIgnoreMore()
+ * @method $this setIgnoreMore(float $fIgnoreMore)
+ * @method bool hasIgnoreMore()
+ * @method int getLogMode()
+ * @method $this setLogMode(int $iLogMode)
+ * @method bool hasLogMode()
+ * @method string getModifier()
+ * @method $this setModifier(string $strModifier)
+ * @method bool hasModifier()
+ * @method string getPrecision()
+ * @method $this setPrecision(string $strPrecision)
+ * @method bool hasPrecision()
  */
 class Entity extends \Api\Core\Base\Entity {
-
-    protected $_alert = false;
-    protected $_alertDirection = 0;
 
     /**
      *
@@ -58,6 +73,18 @@ class Entity extends \Api\Core\Base\Entity {
      * @var \Api\Sensors\Data\Collection
      */
     protected $_obValuesCollection = null;
+
+    /**
+     *
+     * @var \Api\Sensors\Alert\Entity
+     */
+    protected $_obAlert = null;
+
+    /**
+     *
+     * @var bool
+     */
+    protected $_bToday = false;
 
     /**
      * 
@@ -80,51 +107,114 @@ class Entity extends \Api\Core\Base\Entity {
      * @return string
      */
     public static function getModel() {
-        return \Api\Sensors\Sensor\Model::class;
-    }
-
-    public function toArray() {
-        $arData = parent::toArray();
-        $arData['alert'] = $this->isAlert();
-        $arData['alert_direction'] = $this->getAlertDirection();
-        $arData['values'] = $this->getValuesCollection()->toArray();
-        return $arData;
+        return Model::class;
     }
 
     /**
      * 
      * @return bool
      */
-    public function isAlert() {
-        return $this->_alert;
+    public function isModeAvg() {
+        return $this->getLogMode() == Table::MODE_AVG;
     }
 
     /**
      * 
-     * @param bool $bAlert
+     * @return bool
+     */
+    public function isModeEach() {
+        return $this->getLogMode() == Table::MODE_EACH;
+    }
+
+    /**
+     * 
+     * @return bool
+     */
+    public function isModeEachLastDay() {
+        return $this->getLogMode() == Table::MODE_EACH_LAST_DAY;
+    }
+
+    /**
+     * 
+     * @return bool
+     */
+    public function isBooleanSensor() {
+        return $this->getSensorUnit() == 'Yes/No';
+    }
+
+    /**
+     * 
+     * @return boolean
+     */
+    public function isAllowAlert() {
+        if ($this->getAlertMuteTill() instanceof \Bitrix\Main\Type\DateTime) {
+            $obNow = new \Bitrix\Main\Type\DateTime();
+            if ($this->getAlertMuteTill()->getTimestamp() < $obNow->getTimestamp()) {
+                $this->setAlertMuteTill(null);
+                return true;
+            }
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    public function toArray() {
+        $arData = parent::toArray();
+        $arData['alert'] = $this->getAlert()->toArray();
+        $arData['values'] = $this->getValuesCollection()->toArray();
+        if (!is_null($this->getAlertMuteTill())) {
+            $arData['alert_mute_till'] = $this->getAlertMuteTill()->format('d.m.Y H:i:s');
+        }
+
+        if ($this->isModeEach() || ($this->isModeEachLastDay() && $this->getValuesCollection()->count() > 1)) {
+            $arData['view'] = 'line';
+        } else {
+            if ($this->isBooleanSensor()) {
+                $arData['view'] = 'bool';
+            } else {
+                $arData['view'] = 'bar';
+            }
+        }
+        return $arData;
+    }
+
+    /**
+     * 
+     * @return \Api\Sensors\Alert\Entity
+     */
+    public function getAlert() {
+        if (is_null($this->_obAlert)) {
+            $this->_obAlert = new \Api\Sensors\Alert\Entity(array(
+                'SENSOR_ID' => $this->getId(),
+                'ALERT' => false,
+                'DIRECTION' => 0,
+                'VALUE_MIN' => 0,
+                'VALUE_MAX' => 0,
+            ));
+        }
+        return $this->_obAlert;
+    }
+
+    /**
+     * 
+     * @param \Api\Sensors\Alert\Entity $obAlert
      * @return $this
      */
-    public function setAlert(bool $bAlert = true) {
-        $this->_alert = $bAlert;
+    public function setAlert(\Api\Sensors\Alert\Entity $obAlert) {
+        $this->_obAlert = $obAlert;
         return $this;
     }
 
     /**
      * 
-     * @return int
+     * @return bool
      */
-    public function getAlertDirection() {
-        return $this->_alertDirection;
-    }
-
-    /**
-     * 
-     * @param int $iDirection
-     * @return $this
-     */
-    public function setAlertDirection(int $iDirection) {
-        $this->_alertDirection = $iDirection;
-        return $this;
+    public function hasAlert() {
+        return !is_null($this->_obAlert);
     }
 
     /**
@@ -157,6 +247,24 @@ class Entity extends \Api\Core\Base\Entity {
     public function setSystem(\Api\Sensors\System\Entity $obSystem) {
         $this->_obSystem = $obSystem;
         $this->setSystemId($obSystem->getId());
+        return $this;
+    }
+
+    /**
+     * 
+     * @return bool
+     */
+    public function isToday() {
+        return $this->_bToday;
+    }
+
+    /**
+     * 
+     * @param bool $bToday
+     * @return $this
+     */
+    public function setToday(bool $bToday = true) {
+        $this->_bToday = $bToday;
         return $this;
     }
 

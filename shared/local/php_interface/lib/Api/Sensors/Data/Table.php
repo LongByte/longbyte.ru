@@ -57,18 +57,20 @@ class Table extends Main\Entity\DataManager {
                 'required' => true,
                 'title' => 'Дата',
                 )),
-            'SENSOR_VALUE_MIN' => new Main\Entity\FloatField('UF_SENSOR_VALUE_MIN', array(
+            'VALUE_MIN' => new Main\Entity\FloatField('UF_VALUE_MIN', array(
                 'title' => 'Минимальное значение',
                 )),
-            'SENSOR_VALUE' => new Main\Entity\FloatField('UF_SENSOR_VALUE', array(
-                'required' => true,
+            'VALUE_AVG' => new Main\Entity\FloatField('UF_VALUE_AVG', array(
                 'title' => 'Значение',
                 )),
-            'SENSOR_VALUE_MAX' => new Main\Entity\FloatField('UF_SENSOR_VALUE_MAX', array(
+            'VALUE_MAX' => new Main\Entity\FloatField('UF_VALUE_MAX', array(
                 'title' => 'Максимальное значение',
                 )),
-            'SENSOR_VALUES' => new Main\Entity\IntegerField('UF_SENSOR_VALUES', array(
+            'VALUES_COUNT' => new Main\Entity\IntegerField('UF_VALUES_COUNT', array(
                 'title' => 'Количество значений',
+                )),
+            'VALUE' => new Main\Entity\FloatField('UF_VALUE', array(
+                'title' => 'Текущее/последнее значение',
                 )),
         );
     }

@@ -62,7 +62,7 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
         }
 
         $params['TARGET_FILE_MASK'] = trim($params['TARGET_FILE_MASK']);
-        if (!strlen($params['TARGET_FILE_MASK']) || (strpos($params['TARGET_FILE_MASK'], '%s')) === false) {
+        if (!strlen($params['TARGET_FILE_MASK'])) {
             $params['TARGET_FILE_MASK'] = 'styles-compiled-%s.css';
         }
 
@@ -202,7 +202,7 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
                 $lastModified = $modified;
 
             $obTargetFile = new IO\File(Application::getDocumentRoot() . $this->arParams['PATH_TO_FILES_CSS'] . sprintf($this->arParams['TARGET_FILE_MASK'], $lastModified));
-            if (!$obTargetFile->isExists()) {
+            if (!$obTargetFile->isExists() || $obTargetFile->getModificationTime() < $lastModified) {
 
                 /** @var \Longbyte\Csscompiler\Compiler $compiler */
                 $compiler = $this->getCompiler();

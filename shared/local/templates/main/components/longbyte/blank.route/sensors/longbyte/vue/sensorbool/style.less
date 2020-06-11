@@ -1,6 +1,6 @@
 .sensorbool {
 
-    @halfHeight: 80px;
+    @height: 160px/3;
     padding: 8px;
     color: #898989;
 
@@ -16,9 +16,23 @@
         flex-wrap: wrap;
         font-size: 24px;
 
+        &-current {
+            .size(100%, @height);
+            line-height: @height;
+            text-align: center;
+
+            &--red {
+                color: red;
+
+                &-value {
+                    color: inherit;
+                }
+            }
+
+        }
         &-avg {
-            .size(100%, @halfHeight);
-            line-height: @halfHeight;
+            .size(100%, @height);
+            line-height: @height;
             text-align: center;
 
             &--red {
@@ -31,14 +45,14 @@
 
         }
         &-min {
-            .size(50%, @halfHeight);
-            line-height: @halfHeight;
+            .size(50%, @height);
+            line-height: @height;
             text-align: center;
 
         }
         &-max {
-            .size(50%, @halfHeight);
-            line-height: @halfHeight;
+            .size(50%, @height);
+            line-height: @height;
             text-align: center;
         }
     }
@@ -88,7 +102,7 @@
 
                 &-min {
                     color: blue;
-                    
+
                     &-value {
                         color: inherit;
                     }

@@ -8,5 +8,5 @@ Bitrix\Main\Page\Asset::getInstance()->addString('<meta name="robots" content="n
 
 $APPLICATION->IncludeComponent("longbyte:vue", "sensorsedit", Array(
     'STYLE_TO_COMPILER' => 'Y',
-    ), false
+    ), $component->__parent
 );

@@ -2,7 +2,7 @@
     <div class="sensors">
         <div class="sensors__list">
             <div class="sensors__item" v-for="sensorData in store.sensors">
-                <sensorstatline :sensor="sensorData" />
+                <sensorline :sensor="sensorData" />
             </div>
         </div>
     </div>

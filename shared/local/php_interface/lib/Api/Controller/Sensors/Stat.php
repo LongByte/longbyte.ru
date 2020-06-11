@@ -13,7 +13,6 @@ class Stat extends \Api\Core\Base\Controller {
     private $arResponse = array(
         'data' => array(),
         'errors' => array(),
-        'alerts' => array(),
         'success' => true,
     );
 
@@ -46,12 +45,10 @@ class Stat extends \Api\Core\Base\Controller {
         $arValuesFilter = array(
             'SENSOR.ACTIVE' => true,
             'SENSOR.SYSTEM_ID' => $this->obSystem->getId(),
-        );
-        $arValuesParams = array(
-            'group' => array('DATE'),
+            '<DATE' => (new \Bitrix\Main\Type\Date())
         );
 
-        $obValues = \Api\Sensors\Data\Model::getAll($arValuesFilter, 0, 0, $arValuesParams);
+        $obValues = \Api\Sensors\Data\Model::getAll($arValuesFilter);
 
         foreach ($obValues as $obValue) {
             $obSensor = $obSensors->getByKey($obValue->getSensorId());
@@ -67,25 +64,14 @@ class Stat extends \Api\Core\Base\Controller {
             $obSensor->getValuesCollection()->addItem($obValue);
             $obValue->setSensor($obSensor);
 
-            $valueMin = 0;
-            $valueMax = 0;
-            if ($this->obSystem->isModeAvg()) {
-                $valueMin = $obValue->getSensorValueMin();
-                $valueMax = $obValue->getSensorValueMax();
-            }
-            if ($this->obSystem->isModeEach()) {
-                $valueMin = $obValue->getSensorValue();
-                $valueMax = $obValue->getSensorValue();
+            if ($obSensor->getAlertValueMax() != 0 && $obValue->getValueMax() > $obSensor->getAlertValueMax()) {
+                $obSensor->getAlert()->setAlert(true);
+                $obSensor->getAlert()->setDirection(1);
             }
 
-            if (!$obSensor->isAlert() && $obSensor->getAlertValueMax() != 0 && $valueMax > $obSensor->getAlertValueMax()) {
-                $obSensor->setAlert();
-                $obSensor->setAlertDirection(1);
-            }
-
-            if (!$obSensor->isAlert() && $obSensor->getAlertValueMin() != 0 && $valueMin < $obSensor->getAlertValueMin()) {
-                $obSensor->setAlert();
-                $obSensor->setAlertDirection(-1);
+            if ($obSensor->getAlertValueMin() != 0 && $obValue->getValueMin() < $obSensor->getAlertValueMin()) {
+                $obSensor->getAlert()->setAlert(true);
+                $obSensor->getAlert()->setDirection(-1);
             }
         }
 

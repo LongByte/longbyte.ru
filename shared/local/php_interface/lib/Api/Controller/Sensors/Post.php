@@ -10,11 +10,9 @@ class Post extends \Api\Core\Base\Controller {
     private $saveEvery = 60;
     private $alertEvery = 5 * 60;
     private $token = null;
-    private $arAlerts = array();
     private $arResponse = array(
         'data' => array(),
         'errors' => array(),
-        'alerts' => array(),
         'success' => true,
     );
 
@@ -38,6 +36,12 @@ class Post extends \Api\Core\Base\Controller {
 
     /**
      *
+     * @var \Api\Core\Base\Collection
+     */
+    private $obAlerts = null;
+
+    /**
+     *
      * @var \Bitrix\Main\Type\DateTime 
      */
     private $obLastSave = null;
@@ -52,6 +56,8 @@ class Post extends \Api\Core\Base\Controller {
         if (!is_null($strToken)) {
             $this->token = $strToken;
         }
+        $this->obAlerts = new \Api\Core\Base\Collection();
+        $this->obAlerts->setUniqueMode(true);
     }
 
     public function post() {
@@ -62,6 +68,10 @@ class Post extends \Api\Core\Base\Controller {
         }
 
         if (!is_array($arData)) {
+            $this->obSystem
+                ->setLastReceive(new \Bitrix\Main\Type\DateTime())
+                ->save()
+            ;
             $this->arResponse['success'] = false;
             $this->arResponse['errors'][] = 'Некорректные данные';
             return $this->exitAction();
@@ -80,6 +90,10 @@ class Post extends \Api\Core\Base\Controller {
         }
 
         if (!is_array($arData)) {
+            $this->obSystem
+                ->setLastReceive(new \Bitrix\Main\Type\DateTime())
+                ->save()
+            ;
             $this->arResponse['success'] = false;
             $this->arResponse['errors'][] = 'Некорректные данные';
             return $this->exitAction();
@@ -89,6 +103,9 @@ class Post extends \Api\Core\Base\Controller {
         return $this->exitAction();
     }
 
+    /**
+     * 
+     */
     public function emergencySave() {
         if (!is_null($this->obLastSave)) {
             $this->obTodayValues->save($this->arResponse['errors']);
@@ -125,20 +142,36 @@ class Post extends \Api\Core\Base\Controller {
                 $this->loadSensors();
             }
 
-            if ($this->obSystem->isModeAvg()) {
+            $obDate = new \Bitrix\Main\Type\DateTime();
+            $obDate->setTime(0, 0, 0);
+            $obDateTo = clone $obDate;
+            $obDateTo->add('+1day');
 
-                $obToday = new \Bitrix\Main\Type\Date();
-                if (is_null($this->obTodayValues) || $obToday->getTimestamp() != $this->obTodayValues->getDate()->getTimestamp()) {
-                    if (!is_null($this->obTodayValues) && $obToday->getTimestamp() != $this->obTodayValues->getDate()->getTimestamp()) {
-                        $this->obTodayValues->save($this->arResponse['errors']);
-                        $this->obLastSave = null;
-                    }
-                    $this->obTodayValues = \Api\Sensors\Data\Model::getAll(array(
-                            'SENSOR.SYSTEM_ID' => $this->obSystem->getId(),
-                            'DATE' => $obToday,
-                    ));
-                    $this->obTodayValues->setDate($obToday);
+            $obToday = new \Bitrix\Main\Type\Date();
+            if (is_null($this->obTodayValues) || $obToday->getTimestamp() != $this->obTodayValues->getDate()->getTimestamp()) {
+                if (!is_null($this->obTodayValues) && $obToday->getTimestamp() != $this->obTodayValues->getDate()->getTimestamp()) {
+                    $this->obTodayValues->save($this->arResponse['errors']);
+                    $this->obLastSave = null;
                 }
+
+                $arTodayValue = \Api\Sensors\Data\Model::getAllAsArray(array(
+                        'SENSOR.SYSTEM_ID' => $this->obSystem->getId(),
+                        '>=DATE' => $obDate,
+                        '<DATE' => $obDateTo,
+                        ), 0, 0, array(
+                        'order' => array('ID' => 'DESC')
+                ));
+
+                $this->obTodayValues = new \Api\Sensors\Data\Collection();
+                foreach ($arTodayValue as $arValue) {
+                    if (!$this->obTodayValues->getBySensorId($arValue['SENSOR_ID'])) {
+                        $obValue = new \Api\Sensors\Data\Entity($arValue['ID'], $arValue);
+                        $this->obTodayValues->addItem($obValue);
+                    }
+                }
+                unset($arTodayValue);
+
+                $this->obTodayValues->setDate($obToday);
             }
 
             return true;
@@ -186,6 +219,7 @@ class Post extends \Api\Core\Base\Controller {
         foreach ($arData as $obInputValue) {
             $this->arResponse['data']['read_values'] ++;
             $value = floatval(str_replace(',', '.', $obInputValue->SensorValue));
+
             $obSensor = $this->obSystem->getSensorsCollection()->getByParams($obInputValue->SensorApp, $obInputValue->SensorClass, $obInputValue->SensorName);
 
             if (is_null($obSensor)) {
@@ -198,6 +232,7 @@ class Post extends \Api\Core\Base\Controller {
                     ->setSensorDevice($obInputValue->SensorClass)
                     ->setSensorName($obInputValue->SensorName)
                     ->setSensorUnit($obInputValue->SensorUnit)
+                    ->setLogMode(Api\Sensors\Sensor\Table::MODE_AVG)
                     ->save()
                 ;
 
@@ -212,71 +247,89 @@ class Post extends \Api\Core\Base\Controller {
                     continue;
             }
 
-            if ($this->obSystem->isModeAvg()) {
-                $obValue = $this->obTodayValues->getBySensorId((int) $obSensor->getId());
-
-                if (is_null($obValue)) {
-                    $obValue = new \Api\Sensors\Data\Entity();
-                    $obValue
-                        ->setSensor($obSensor)
-                        ->setDate(new \Bitrix\Main\Type\Date())
-                        ->setSensorValueMin($value)
-                        ->setSensorValue($value)
-                        ->setSensorValueMax($value)
-                        ->setSensorValues(1)
-                        ->setLastValue((float) $value)
-                    ;
-
-                    $this->obTodayValues->addItem($obValue);
-                } else {
-                    if ($value < $obValue->getSensorValueMin()) {
-                        $obValue->setSensorValueMin($value);
+            try {
+                if (strlen($obSensor->getModifier()) > 0) {
+                    $strModifier = $obSensor->getModifier();
+                    $strModifier = preg_replace('/[^\d\+\*\/\-\.]/', '', $strModifier);
+                    if (preg_match('/^[\+\*\/\-]\d+(\.\d+)?([\+\*\/\-]\d+(\.\d+)?)?$/', $strModifier)) {
+                        $strModifier = preg_replace('/^([\+\*\/\-]\d+(\.\d+)?)(([\+\*\/\-]\d+(\.\d+)?)?)$/', '$1)$3', $strModifier);
+                        $fModifiedValue = @eval('return ($value' . $strModifier . ';');
+                        if (is_numeric($fModifiedValue)) {
+                            $value = $fModifiedValue;
+                        }
                     }
-                    if ($value > $obValue->getSensorValueMax()) {
-                        $obValue->setSensorValueMax($value);
-                    }
-                    $fAvgValue = ($obValue->getSensorValue() * $obValue->getSensorValues() + $value) / ($obValue->getSensorValues() + 1);
-                    $obValue->setSensorValue($fAvgValue);
-                    $obValue->setSensorValues($obValue->getSensorValues() + 1);
-                    $obValue->setSensor($obSensor);
-                    $obValue->setLastValue((float) $value);
                 }
+            } catch (ParseError $exc) {
+                
             }
 
-            if ($this->obSystem->isModeEach()) {
+            $value = round($value, (int) $obSensor->getPrecision());
+
+            if ($obSensor->getIgnoreLess() != 0 && $value < $obSensor->getIgnoreLess()) {
+                continue;
+            }
+
+            if ($obSensor->getIgnoreMore() != 0 && $value > $obSensor->getIgnoreMore()) {
+                continue;
+            }
+
+            $obValue = $this->obTodayValues->getBySensorId((int) $obSensor->getId());
+
+            $obDate = new \Bitrix\Main\Type\DateTime();
+            $obDate->setTime(0, 0, 0);
+            if ($obSensor->isModeAvg()) {
+                
+            }
+
+            if ($obSensor->isModeEach() || $obSensor->isModeEachLastDay()) {
+                $iRate =  5 * 60;
+                $obTime = new \Bitrix\Main\Type\DateTime();
+                $iDiff = floor(($obTime->getTimestamp() - $obDate->getTimestamp()) / $iRate) * $iRate;
+                $obDate->add("+{$iDiff}seconds");
+            }
+
+            if (
+                is_null($obValue) //
+                ||
+                (!is_null($obValue) && $obValue->getDate()->getTimestamp() != $obDate->getTimestamp())
+            ) {
+                if (!is_null($obValue)) {
+                    $obValue->save();
+                    $this->obTodayValues->removeByKey($obValue->getId());
+                }
+                
                 $obValue = new \Api\Sensors\Data\Entity();
                 $obValue
                     ->setSensor($obSensor)
-                    ->setDate(new \Bitrix\Main\Type\Date())
-                    ->setSensorValue($value)
-                    ->setLastValue((float) $value)
-                    ->save()
+                    ->setDate($obDate)
+                    ->setValueMin($value)
+                    ->setValueAvg($value)
+                    ->setValueMax($value)
+                    ->setValue($value)
+                    ->setValuesCount(1)
                 ;
 
-                if (!$obValue->isExists()) {
-                    $this->arResponse['errors'][] = 'Невозможно добавить данные. Данные: ' . print_r($obValue->toArray(), true);
+                $this->obTodayValues->addItem($obValue);
+            } else {
+
+                if ($value < $obValue->getValueMin()) {
+                    $obValue->setValueMin($value);
                 }
+                if ($value > $obValue->getValueMax()) {
+                    $obValue->setValueMax($value);
+                }
+                $fAvgValue = ($obValue->getValueAvg() * $obValue->getValuesCount() + $value) / ($obValue->getValuesCount() + 1);
+                $obValue->setValueAvg($fAvgValue);
+                $obValue->setValuesCount($obValue->getValuesCount() + 1);
+                $obValue->setSensor($obSensor);
+                $obValue->setValue($value);
             }
 
             $this->checkAlert($obValue);
         }
 
-        if ($this->obSystem->isModeAvg()) {
-            if (is_null($this->obLastSave) || $this->obLastSave->getTimestamp() + $this->saveEvery < (new \Bitrix\Main\Type\DateTime())->getTimestamp()) {
-                $this->obTodayValues->save($this->arResponse['errors']);
-                $this->obLastSave = new \Bitrix\Main\Type\DateTime();
-                $this->arResponse['data']['last_save'] = $this->obLastSave->format('H:i:s d.m.Y');
-
-                $this->loadSystem();
-                $this->loadSensors();
-                $this->obSystem
-                    ->setLastUpdate($this->obLastSave)
-                    ->save()
-                ;
-            }
-        }
-
-        if ($this->obSystem->isModeEach()) {
+        if (is_null($this->obLastSave) || $this->obLastSave->getTimestamp() + $this->saveEvery < (new \Bitrix\Main\Type\DateTime())->getTimestamp()) {
+            $this->obTodayValues->save($this->arResponse['errors']);
             $this->obLastSave = new \Bitrix\Main\Type\DateTime();
             $this->arResponse['data']['last_save'] = $this->obLastSave->format('H:i:s d.m.Y');
 
@@ -284,6 +337,7 @@ class Post extends \Api\Core\Base\Controller {
             $this->loadSensors();
             $this->obSystem
                 ->setLastUpdate($this->obLastSave)
+                ->setLastReceive($this->obLastSave)
                 ->save()
             ;
         }
@@ -296,25 +350,31 @@ class Post extends \Api\Core\Base\Controller {
     private function checkAlert(\Api\Sensors\Data\Entity $obValue) {
 
         $obSensor = $obValue->getSensor();
-        $obSensor->setAlert(false);
 
-        $message = 'Значение на датчике ' . $obSensor->getSensorApp() . ' > ' . $obSensor->getSensorDevice() . ' > ' . $obSensor->getSensorName() . ' = ' . $obValue->getLastValue() . $obSensor->getSensorUnit() . ' и ';
-
-        if ($obSensor->getAlertValueMin() != 0 && $obValue->getLastValue() < $obSensor->getAlertValueMin()) {
-            $message .= 'меньше допустимого ' . $obSensor->getAlertValueMin();
-            $obSensor->setAlert();
+        $obAlert = $this->getAlertCollection()->getByKey($obSensor->getId());
+        if (is_null($obAlert)) {
+            $obAlert = $obSensor->getAlert();
+            $this->getAlertCollection()->addItem($obAlert);
+        } else {
+            if (!$obSensor->hasAlert()) {
+                $obSensor->setAlert($obAlert);
+            }
         }
 
-        if ($obSensor->getAlertValueMax() != 0 && $obValue->getLastValue() > $obSensor->getAlertValueMax()) {
-            $message .= 'больше допустимого ' . $obSensor->getAlertValueMax();
-            $obSensor->setAlert();
+        if ($obSensor->getAlertValueMin() != 0 && $obValue->getValue() < $obSensor->getAlertValueMin()) {
+            $obSensor->getAlert()->setAlert(true);
+            $obSensor->getAlert()->setDirection(-1);
+            if ($obSensor->getAlert()->getValueMin() == 0 || $obValue->getValue() < $obSensor->getAlert()->setValueMin()) {
+                $obSensor->getAlert()->setValueMin($obValue->getValue());
+            }
         }
 
-        $message .= $obSensor->getSensorUnit();
-
-        if ($obSensor->isAlert()) {
-            $this->arResponse['alerts'][] = $message;
-            $this->arAlerts[] = $message;
+        if ($obSensor->getAlertValueMax() != 0 && $obValue->getValue() > $obSensor->getAlertValueMax()) {
+            $obSensor->getAlert()->setAlert(true);
+            $obSensor->getAlert()->setDirection(1);
+            if ($obSensor->getAlert()->getValueMax() == 0 || $obValue->getValue() > $obSensor->getAlert()->setValueMax()) {
+                $obSensor->getAlert()->setValueMax($obValue->getValue());
+            }
         }
     }
 
@@ -323,7 +383,7 @@ class Post extends \Api\Core\Base\Controller {
      */
     private function sendAlerts() {
         if (
-            count($this->arAlerts) > 0 &&
+            $this->getAlertCollection()->count() > 0 &&
             strlen($this->obSystem->getEmail()) > 0 &&
             (
             is_null($this->obLastAlert) ||
@@ -331,25 +391,46 @@ class Post extends \Api\Core\Base\Controller {
             )
         ) {
 
-            $this->arAlerts = array_unique($this->arAlerts);
+            $arAlerts = array();
 
-            $strUrl = 'https://longbyte.ru/sensors/' . $this->obSystem->getName() . '-' . $this->obSystem->getToken() . '/';
+            /** @var \Api\Sensors\Sensor\Entity $obSensor */
+            foreach ($this->obSystem->getSensorsCollection() as $obSensor) {
+                if ($obSensor->getActive() && $obSensor->getAlert()->isAlert() && $obSensor->isAllowAlert()) {
 
-            $message = 'Контроль сенсоров на системе <a href="' . $strUrl . '">' . $this->obSystem->getName() . '</a>. Некоторые значения вне допустимого диапазона.<br><br>';
-            $message .= implode('<br>', $this->arAlerts);
+                    $message = '';
+                    $message .= 'Значение на датчике ' . $obSensor->getSensorApp() . ' > ' . $obSensor->getSensorDevice() . ' > ' . $obSensor->getSensorName() . ' = ' . $obSensor->getValue() . $obSensor->getSensorUnit() . ' и ';
+                    if ($obSensor->getAlert()->getDirection() == -1) {
+                        $message .= 'меньше допустимого ' . $obSensor->getAlert()->getValueMin();
+                    }
+                    if ($obSensor->getAlert()->getDirection() == 1) {
+                        $message .= 'больше допустимого ' . $obSensor->getAlert()->getValueMax();
+                    }
+                    $message .= $obSensor->getSensorUnit();
+                    $arAlerts[] = $message;
 
-            \Bitrix\Main\Mail\Event::send(array(
-                'EVENT_NAME' => 'SENSORS_ALERT',
-                'LID' => 's1',
-                'C_FIELDS' => array(
-                    'EMAIL_TO' => $this->obSystem->getEmail(),
-                    'SUBJECT' => 'Оповещение системы контроля сенсоров на системе ' . $this->obSystem->getName(),
-                    'MESSAGE' => $message
-                )
-            ));
+                    $obSensor->getAlert()->setAlert(false);
+                }
+            }
 
-            $this->arAlerts = array();
-            $this->obLastAlert = new \Bitrix\Main\Type\DateTime();
+            if (count($arAlerts) > 0) {
+
+                $strUrl = 'https://longbyte.ru/sensors/' . $this->obSystem->getName() . '-' . $this->obSystem->getToken() . '/';
+
+                $message = 'Контроль сенсоров на системе <a href="' . $strUrl . '">' . $this->obSystem->getName() . '</a>. Некоторые значения вне допустимого диапазона.<br><br>';
+                $message .= implode('<br>', $arAlerts);
+
+                \Bitrix\Main\Mail\Event::send(array(
+                    'EVENT_NAME' => 'SENSORS_ALERT',
+                    'LID' => 's1',
+                    'C_FIELDS' => array(
+                        'EMAIL_TO' => $this->obSystem->getEmail(),
+                        'SUBJECT' => 'Оповещение системы контроля сенсоров на системе ' . $this->obSystem->getName(),
+                        'MESSAGE' => $message
+                    )
+                ));
+
+                $this->obLastAlert = new \Bitrix\Main\Type\DateTime();
+            }
         }
     }
 
@@ -357,9 +438,16 @@ class Post extends \Api\Core\Base\Controller {
      * 
      */
     private function resetResponse() {
-        $this->arResponse['alerts'] = array();
         $this->arResponse['errors'] = array();
         $this->arResponse['success'] = true;
+    }
+
+    /**
+     * 
+     * @return \Api\Core\Base\Collection
+     */
+    private function getAlertCollection() {
+        return $this->obAlerts;
     }
 
 }
