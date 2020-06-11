@@ -147,6 +147,10 @@ foreach ($arControllers as $obPost) {
     }
 }
 
+foreach ($arClientSockets as $obSocket) {
+    socket_close($obSocket);
+}
+
 function SocketLog($obLog, $str) {
     global $logEnable;
     if ($logEnable) {
