@@ -1,6 +1,0 @@
-<?
-$sSectionName = "Калькулятор";
-$arDirProperties = Array(
-
-);
-?>

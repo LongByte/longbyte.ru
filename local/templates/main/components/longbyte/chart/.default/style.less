@@ -1,0 +1,188 @@
+.content {
+    padding: 10px;
+}
+
+.active {background-color: #FFF8C0}
+.below {background-color: #E0FFD0}
+.above {background-color: #FFD8C0}
+
+.oc
+{
+    color: red;
+    font-weight: bold;
+}
+
+.comment
+{
+    color: #aaa;
+
+    &:before
+        {
+        content: ' (';
+    }
+
+    &:after
+        {
+        content: ')';
+    }
+}
+
+body.hideOc .oc
+{
+    display: none;
+}
+
+body.hideComment .comment
+{
+    display: none;
+}
+
+.intel
+{
+    color: #0000cc;
+}
+
+.amd
+{
+    color: #cc0000;
+}
+
+.nvidia
+{
+    color: #00cc00;
+}
+
+.mode
+{
+    font-size: 20px;
+    text-align: center;
+
+    a
+    {
+        text-decoration: underline;
+    }
+}
+
+.help
+{
+    text-align: center;
+
+    table
+    {
+        border-collapse: collapse;
+
+        td
+        {
+            padding: 2px;
+            border: 1px solid #ccc;
+        }
+
+        tr:first-child td:first-child
+            {
+            text-align: center;
+        }
+
+        tr td:first-child
+            {
+            text-align: right;
+        }
+    }
+}
+
+.lb-spoiler.spoiler-type  {
+    > .spoiler-title {
+        width: 100%;
+        max-width: 800px;
+        padding: 20px;
+        border: 1px dashed;
+        border-radius: 10px;
+        font-size: 20px;
+    }
+}
+
+.lb-spoiler.spoiler-desc {
+    max-width: 800px;
+
+    > .spoiler-title
+    {
+        color: #8888FF;
+        border-bottom: 1px dashed #8888FF;
+    }
+}
+
+.lb-spoiler.spoiler-filter {
+    > .spoiler-title
+    {
+        border-bottom: 1px dashed black;
+    }
+}
+
+.btn-wrapper {
+    max-width: 800px;
+    .mcenter;
+    padding-top: 20px;
+
+    .filter-call {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 5px;
+        background: rgb(0, 200, 0);
+    }
+}
+
+font > table
+{
+    > tbody 
+    {
+        > tr
+        {
+            > td
+            {
+                width: auto !important;
+            }
+        }
+    }
+}
+
+nobr
+{
+    white-space: normal;
+}
+
+@media (max-width: 720px) {
+    .intel,
+    .amd,
+    .nvidia {
+        display: block;
+    }
+
+    font > table
+    {
+        display: block;
+
+        > tbody 
+        {
+            display: block;
+
+            > tr
+            {
+                display: block;
+                margin: 4px 0;
+                background: #fcfcfc;
+
+                > td
+                {
+                    display: block;
+                    width: auto !important;
+                    padding: 0 !important;
+                    border: 0 !important;
+
+                    tr td:first-child
+                        {
+                        border-left: 1px solid black;
+                    }
+                }
+            }
+        }
+    }
+}
