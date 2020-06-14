@@ -2,14 +2,21 @@
 
 namespace Api\Controller\Sensors;
 
-use Bitrix\Main\Type\DateTime;
-
 /**
  * class \Api\Controller\Sensors\Stat
  */
 class Stat extends \Api\Core\Base\Controller {
 
+    /**
+     *
+     * @var string
+     */
     private $token = null;
+
+    /**
+     *
+     * @var array
+     */
     private $arResponse = array(
         'data' => array(),
         'errors' => array(),
@@ -36,6 +43,8 @@ class Stat extends \Api\Core\Base\Controller {
         if (!$this->getSystem()) {
             return $this->exitAction();
         }
+
+        $obToday = new \Bitrix\Main\Type\Date();
 
         $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
                 'SYSTEM_ID' => $this->obSystem->getId(),
@@ -64,14 +73,17 @@ class Stat extends \Api\Core\Base\Controller {
             $obSensor->getValuesCollection()->addItem($obValue);
             $obValue->setSensor($obSensor);
 
-            if ($obSensor->getAlertValueMax() != 0 && $obValue->getValueMax() > $obSensor->getAlertValueMax()) {
-                $obSensor->getAlert()->setAlert(true);
-                $obSensor->getAlert()->setDirection(1);
-            }
+            $obDiff = $obToday->getDiff($obValue->getDate());
+            if ($obDiff->days < 10) {
+                if ($obSensor->getAlertValueMax() != 0 && $obValue->getValueMax() > $obSensor->getAlertValueMax()) {
+                    $obSensor->getAlert()->setAlert(true);
+                    $obSensor->getAlert()->setDirection(1);
+                }
 
-            if ($obSensor->getAlertValueMin() != 0 && $obValue->getValueMin() < $obSensor->getAlertValueMin()) {
-                $obSensor->getAlert()->setAlert(true);
-                $obSensor->getAlert()->setDirection(-1);
+                if ($obSensor->getAlertValueMin() != 0 && $obValue->getValueMin() < $obSensor->getAlertValueMin()) {
+                    $obSensor->getAlert()->setAlert(true);
+                    $obSensor->getAlert()->setDirection(-1);
+                }
             }
         }
 
