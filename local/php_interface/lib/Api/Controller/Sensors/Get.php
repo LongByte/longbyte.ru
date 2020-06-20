@@ -72,7 +72,9 @@ class Get extends \Api\Core\Base\Controller {
             '<DATE' => $obDateTo,
         );
 
-        $obValues = \Api\Sensors\Data\Model::getAll($arValuesFilter);
+        $obValues = \Api\Sensors\Data\Model::getAll($arValuesFilter, 0, 0, array(
+                'order' => array('DATE' => 'ASC')
+        ));
 
         foreach ($obValues as $obValue) {
             $obSensor = $obSensors->getByKey($obValue->getSensorId());

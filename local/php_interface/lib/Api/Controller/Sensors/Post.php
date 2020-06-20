@@ -172,7 +172,7 @@ class Post extends \Api\Core\Base\Controller {
                         '>=DATE' => $obDate,
                         '<DATE' => $obDateTo,
                         ), 0, 0, array(
-                        'order' => array('ID' => 'DESC')
+                        'order' => array('DATE' => 'DESC')
                 ));
 
                 $this->obTodayValues = new \Api\Sensors\Data\Collection();
@@ -322,6 +322,7 @@ class Post extends \Api\Core\Base\Controller {
                 if (!is_null($obValue)) {
                     $obValue->save();
                     $this->obTodayValues->removeByKey($obValue->getId());
+                    unset($obValue);
                 }
 
                 $obValue = new \Api\Sensors\Data\Entity();
@@ -388,17 +389,17 @@ class Post extends \Api\Core\Base\Controller {
         }
 
         if ($obSensor->getAlertValueMin() != 0 && $obValue->getValue() < $obSensor->getAlertValueMin()) {
-            $obSensor->getAlert()->setAlert(true);
-            $obSensor->getAlert()->setDirection(-1);
             if ($obSensor->getAlert()->getValueMin() == 0 || $obValue->getValue() < $obSensor->getAlert()->setValueMin()) {
+                $obSensor->getAlert()->setAlert(true);
+                $obSensor->getAlert()->setDirection(-1);
                 $obSensor->getAlert()->setValueMin($obValue->getValue());
             }
         }
 
         if ($obSensor->getAlertValueMax() != 0 && $obValue->getValue() > $obSensor->getAlertValueMax()) {
-            $obSensor->getAlert()->setAlert(true);
-            $obSensor->getAlert()->setDirection(1);
             if ($obSensor->getAlert()->getValueMax() == 0 || $obValue->getValue() > $obSensor->getAlert()->setValueMax()) {
+                $obSensor->getAlert()->setAlert(true);
+                $obSensor->getAlert()->setDirection(1);
                 $obSensor->getAlert()->setValueMax($obValue->getValue());
             }
         }

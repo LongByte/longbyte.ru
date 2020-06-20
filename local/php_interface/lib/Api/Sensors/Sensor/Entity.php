@@ -147,6 +147,9 @@ class Entity extends \Api\Core\Base\Entity {
      * @return boolean
      */
     public function isAllowAlert() {
+        if (!$this->getAlertEnable()) {
+            return false;
+        }
         if ($this->getAlertMuteTill() instanceof \Bitrix\Main\Type\DateTime) {
             $obNow = new \Bitrix\Main\Type\DateTime();
             if ($this->getAlertMuteTill()->getTimestamp() < $obNow->getTimestamp()) {

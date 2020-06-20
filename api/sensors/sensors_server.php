@@ -147,8 +147,9 @@ foreach ($arControllers as $obPost) {
     }
 }
 
-foreach ($arClientSockets as $obSocket) {
-    socket_close($obSocket);
+socket_close($obSocket);
+foreach ($arClientSockets as $obClient) {
+    socket_close($obClient);
 }
 
 function SocketLog($obLog, $str) {
