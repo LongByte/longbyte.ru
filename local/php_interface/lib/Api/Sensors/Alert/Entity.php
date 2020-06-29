@@ -7,6 +7,7 @@ namespace Api\Sensors\Alert;
  * 
  * @method int getSensorId()
  * @method $this setSensorId(int $iSensorId)
+ * @method bool getAlert()
  * @method $this setAlert(bool $bAlert)
  * @method int getDirection()
  * @method $this setDirection(int $iDirection)

@@ -60,6 +60,10 @@ class Post extends \Api\Core\Base\Controller {
         $this->obAlerts->setUniqueMode(true);
     }
 
+    /**
+     * 
+     * @return string
+     */
     public function post() {
         $this->resetResponse();
         $arData = json_decode($this->getPostData());
@@ -81,6 +85,10 @@ class Post extends \Api\Core\Base\Controller {
         return $this->exitAction();
     }
 
+    /**
+     * 
+     * @return string
+     */
     public function get() {
         $obHttp = new \Bitrix\Main\Web\HttpClient();
         $rawGet = $obHttp->get('http://localhost:55555/');
@@ -389,7 +397,7 @@ class Post extends \Api\Core\Base\Controller {
         }
 
         if ($obSensor->getAlertValueMin() != 0 && $obValue->getValue() < $obSensor->getAlertValueMin()) {
-            if ($obSensor->getAlert()->getValueMin() == 0 || $obValue->getValue() < $obSensor->getAlert()->setValueMin()) {
+            if ($obSensor->getAlert()->getValueMin() == 0 || $obValue->getValue() < $obSensor->getAlert()->getValueMin()) {
                 $obSensor->getAlert()->setAlert(true);
                 $obSensor->getAlert()->setDirection(-1);
                 $obSensor->getAlert()->setValueMin($obValue->getValue());
@@ -397,7 +405,7 @@ class Post extends \Api\Core\Base\Controller {
         }
 
         if ($obSensor->getAlertValueMax() != 0 && $obValue->getValue() > $obSensor->getAlertValueMax()) {
-            if ($obSensor->getAlert()->getValueMax() == 0 || $obValue->getValue() > $obSensor->getAlert()->setValueMax()) {
+            if ($obSensor->getAlert()->getValueMax() == 0 || $obValue->getValue() > $obSensor->getAlert()->getValueMax()) {
                 $obSensor->getAlert()->setAlert(true);
                 $obSensor->getAlert()->setDirection(1);
                 $obSensor->getAlert()->setValueMax($obValue->getValue());
