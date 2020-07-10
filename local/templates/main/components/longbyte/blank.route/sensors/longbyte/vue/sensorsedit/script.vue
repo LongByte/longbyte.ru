@@ -188,10 +188,10 @@
                     </div>
                 </div>
                 <div class="sensors-edit__col col-1">
-                    <div class="">
+                    <div class="" v-if="sensor.active == false">
                         <button type="button" class="btn btn-warning" @click.prevent="deleteData(sensor)">Удалить данные</button>
                     </div>
-                    <div class="">
+                    <div class="" v-if="sensor.active == false">
                         <button type="button" class="btn btn-danger" @click.prevent="deleteSensor(sensor)">Удалить датчик</button>
                     </div>
                 </div>
@@ -251,7 +251,7 @@
             },
             deleteData(sensor) {
                 if (this.allowSave) {
-                    if (window.confirm('Вы собираетесь удалить все данные по этому датчику. Вы уверены? Если датчик активен, данные за последние несколько минут могут все равно сохраниться.')) {
+                    if (window.confirm('Вы собираетесь удалить все данные по этому датчику. Вы уверены?')) {
                         axios
                             .delete('/api/sensors/edit/?token=' + window.vueData.system_token + '&id=' + sensor.id + '&mode=data')
                             .then(response => (this.sensors = response.data.data));

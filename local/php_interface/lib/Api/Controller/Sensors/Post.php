@@ -259,7 +259,7 @@ class Post extends \Api\Core\Base\Controller {
 
                 $obSensor = new \Api\Sensors\Sensor\Entity();
                 $obSensor
-                    ->setActive(true)
+                    ->setActive(false)
                     ->setSystem($this->obSystem)
                     ->setSensorApp($obInputValue->SensorApp)
                     ->setSensorDevice($obInputValue->SensorClass)
@@ -267,6 +267,7 @@ class Post extends \Api\Core\Base\Controller {
                     ->setSensorUnit($obInputValue->SensorUnit)
                     ->setLogMode(\Api\Sensors\Sensor\Table::MODE_AVG)
                     ->setAlertEnable(false)
+                    ->setSort($this->obSystem->getSensorsCollection()->end()->getSort() + 10)
                     ->save()
                 ;
 
@@ -275,7 +276,9 @@ class Post extends \Api\Core\Base\Controller {
                     continue;
                 }
 
+                $obSensor->setNew();
                 $this->obSystem->getSensorsCollection()->addItem($obSensor);
+                continue;
             } else {
                 if (!$obSensor->getActive())
                     continue;
@@ -418,7 +421,6 @@ class Post extends \Api\Core\Base\Controller {
      */
     private function sendAlerts() {
         if (
-            $this->getAlertCollection()->count() > 0 &&
             strlen($this->obSystem->getEmail()) > 0 &&
             (
             is_null($this->obLastAlert) ||
@@ -444,6 +446,10 @@ class Post extends \Api\Core\Base\Controller {
                     $arAlerts[] = $message;
 
                     $obSensor->getAlert()->setAlert(false);
+                }
+                if ($obSensor->isNew()) {
+                    $arAlerts[] = 'Обнаружен новый датчик: ' . $obSensor->getSensorApp() . ' > ' . $obSensor->getSensorDevice() . ' > ' . $obSensor->getSensorName() . ' . Перейдите в настройки, чтобы активировать его.';
+                    $obSensor->setNew(false);
                 }
             }
 

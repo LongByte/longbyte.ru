@@ -90,6 +90,12 @@ class Entity extends \Api\Core\Base\Entity {
     protected $_bToday = false;
 
     /**
+     *
+     * @var bool
+     */
+    protected $_bNew = false;
+
+    /**
      * 
      * @return array
      */
@@ -271,6 +277,24 @@ class Entity extends \Api\Core\Base\Entity {
      */
     public function setToday(bool $bToday = true) {
         $this->_bToday = $bToday;
+        return $this;
+    }
+
+    /**
+     * 
+     * @return bool
+     */
+    public function isNew() {
+        return $this->_bNew;
+    }
+
+    /**
+     * 
+     * @param bool $bNew
+     * @return $this
+     */
+    public function setNew(bool $bNew = true) {
+        $this->_bNew = $bNew;
         return $this;
     }
 
