@@ -73,15 +73,17 @@ class CollapseDay extends \Api\Core\Base\Controller {
 
                 $obCollepseValue = new \Api\Sensors\Data\Entity();
 
-                $obCollepseValue
-                    ->setDate($obYesterday)
-                    ->setSensorId($obSensor->getId())
-                    ->setValueAvg($fAvgValue)
-                    ->setValueMax($fMaxValue)
-                    ->setValueMin($fMinValue)
-                    ->setValuesCount($iValuesCount)
-                    ->save()
-                ;
+                if ($iValuesCount > 0) {
+                    $obCollepseValue
+                        ->setDate($obYesterday)
+                        ->setSensorId($obSensor->getId())
+                        ->setValueAvg($fAvgValue)
+                        ->setValueMax($fMaxValue)
+                        ->setValueMin($fMinValue)
+                        ->setValuesCount($iValuesCount)
+                        ->save()
+                    ;
+                }
             }
         }
 

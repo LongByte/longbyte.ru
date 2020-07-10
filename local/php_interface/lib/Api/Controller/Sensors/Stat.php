@@ -54,7 +54,8 @@ class Stat extends \Api\Core\Base\Controller {
         $arValuesFilter = array(
             'SENSOR.ACTIVE' => true,
             'SENSOR.SYSTEM_ID' => $this->obSystem->getId(),
-            '<DATE' => (new \Bitrix\Main\Type\Date())
+            '<DATE' => (new \Bitrix\Main\Type\Date()),
+            '>VALUES_COUNT' => 0
         );
 
         $obValues = \Api\Sensors\Data\Model::getAll($arValuesFilter, 0, 0, array(
