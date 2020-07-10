@@ -18,7 +18,7 @@ class TableBuilderCase extends AbstractCase {
     }
 
     public function close() {
-
+        
     }
 
     public function testAlgorithm() {
@@ -26,7 +26,6 @@ class TableBuilderCase extends AbstractCase {
         $this->update();
         $this->drop();
     }
-
 
     public function add() {
         $tableBuilder = new TableBuilder();
@@ -49,7 +48,6 @@ class TableBuilderCase extends AbstractCase {
         $this->assertEquals($tableInfo['ABOUT']['Type'], 'text');
         $this->assertEquals($tableInfo['BIRTHDAY']['Type'], 'date');
     }
-
 
     public function update() {
         $tableBuilder = new TableBuilder();
@@ -74,7 +72,7 @@ class TableBuilderCase extends AbstractCase {
 
         try {
             $this->getTableInfo('test_reducemigrations_table');
-            $this->assertTrue(false);//table wasn't deleted
+            $this->assertTrue(false); //table wasn't deleted
         } catch (\Bitrix\Main\DB\SqlQueryException $e) {
             //everything ok
         }

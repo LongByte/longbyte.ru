@@ -2,8 +2,8 @@
 
 namespace WS\ReduceMigrations\Builder\Entity;
 
-
 abstract class Base {
+
     /** @var array */
     protected $params;
     protected $isDirty;
@@ -28,6 +28,7 @@ abstract class Base {
     public function getAttribute($name) {
         return $this->params[$name];
     }
+
     /**
      * @return array
      */
@@ -57,4 +58,5 @@ abstract class Base {
     public function markClean() {
         $this->isDirty = false;
     }
+
 }

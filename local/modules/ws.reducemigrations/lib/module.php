@@ -22,19 +22,21 @@ class Module {
 
     private $localizePath = null;
     private $localizations = array();
-
     private static $name = 'ws.reducemigrations';
-
     private $applier;
-
     private $rollback;
+    private $scenariosMessageOutput;
 
     private function __construct() {
-        $this->localizePath = __DIR__ . '/../lang/' . LANGUAGE_ID;
+        $langPath = Path::normalize(__DIR__) . '/../lang';
+
+        $this->localizePath = $langPath . '/' . LANGUAGE_ID;
 
         if (!file_exists($this->localizePath)) {
-            $this->localizePath = __DIR__ . '/../lang/' . self::FALLBACK_LOCALE;
+            $this->localizePath = $langPath . '/' . self::FALLBACK_LOCALE;
         }
+
+        $this->scenariosMessageOutput = new DumbMessageOutput();
     }
 
     static public function getName($stripDots = false) {
@@ -141,7 +143,7 @@ class Module {
      */
     public function getLastSetupLog() {
         return SetupLogModel::findOne(array(
-            'order' => array('date' => 'desc'),
+                'order' => array('date' => 'desc'),
         ));
     }
 
@@ -153,12 +155,12 @@ class Module {
      * @return string
      */
     public function createScenario($name, $priority, $time) {
-        $templateContent = file_get_contents( $this->getModuleDir() . '/data/scenarioTemplate.tpl');
+        $templateContent = file_get_contents($this->getModuleDir() . '/data/scenarioTemplate.tpl');
         $arReplace = array(
-            '#class_name#' => $className = 'ws_m_' . time(). '_' . \CUtil::translit($name, LANGUAGE_ID),
+            '#class_name#' => $className = 'ws_m_' . time() . '_' . \CUtil::translit($name, LANGUAGE_ID),
             '#name#' => addslashes($name),
             '#priority#' => $this->getPriorityConstant($priority),
-            '#time#' => (int)$time,
+            '#time#' => (int) $time,
             '#hash#' => sha1($className),
         );
         $classContent = str_replace(array_keys($arReplace), array_values($arReplace), $templateContent);
@@ -176,9 +178,12 @@ class Module {
     private function getPriorityConstant($priority) {
         $obj = new ReflectionClass(\WS\ReduceMigrations\Scenario\ScriptScenario::className());
 
-        $priorityList = array_filter($obj->getConstants(), function ($key) {
-            return strpos($key, 'PRIORITY') === 0;
-        }, ARRAY_FILTER_USE_KEY);
+        $priorityList = array();
+        foreach ($obj->getConstants() as $cName => $cValue) {
+            if (strpos($cName, 'PRIORITY') === 0) {
+                $priorityList[$cName] = $cValue;
+            }
+        }
 
         $constantName = array_search($priority, $priorityList, true);
 
@@ -262,7 +267,7 @@ class Module {
         if ($this->applier) {
             return $this->applier;
         }
-        $this->applier = new MigrationApplier($this->getScenariosDir());
+        $this->applier = new MigrationApplier($this->getScenariosDir(), $this->scenariosMessageOutput);
         return $this->applier;
     }
 
@@ -273,13 +278,21 @@ class Module {
         if ($this->rollback) {
             return $this->rollback;
         }
-        $this->rollback = new MigrationRollback($this->getScenariosDir());
+        $this->rollback = new MigrationRollback($this->getScenariosDir(), $this->scenariosMessageOutput);
         return $this->rollback;
     }
+
+    /**
+     * @param MessageOutputInterface $scenariosMessageOutput
+     */
+    public function setScenariosMessageOutput(MessageOutputInterface $scenariosMessageOutput) {
+        $this->scenariosMessageOutput = $scenariosMessageOutput;
+    }
+
 }
 
-
 function jsonToArray($json) {
+    /** @var \CMain $APPLICATION */
     global $APPLICATION;
     $value = json_decode($json, true);
     $value = $APPLICATION->ConvertCharsetArray($value, 'UTF-8', LANG_CHARSET);
@@ -288,6 +301,7 @@ function jsonToArray($json) {
 }
 
 function arrayToJson($data) {
+    /** @var \CMain $APPLICATION */
     global $APPLICATION;
     $data = $APPLICATION->ConvertCharsetArray($data, LANG_CHARSET, 'UTF-8');
 

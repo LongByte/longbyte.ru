@@ -14,17 +14,16 @@ class CreateScenarioCommand extends BaseCommand {
     const PARAM_NAME = '-n';
     const PARAM_PRIORITY = '-p';
     const PARAM_TIME = '-t';
-
     const HIGH_PRIORITY_SHORTCUT = 'h';
     const MEDIUM_PRIORITY_SHORTCUT = 'm';
     const OPTIONAL_PRIORITY_SHORTCUT = 'o';
 
     private function availablePriorities() {
-       return array(
-           self::HIGH_PRIORITY_SHORTCUT => ScriptScenario::PRIORITY_HIGH,
-           self::MEDIUM_PRIORITY_SHORTCUT => ScriptScenario::PRIORITY_MEDIUM,
-           self::OPTIONAL_PRIORITY_SHORTCUT => ScriptScenario::PRIORITY_OPTIONAL,
-       );
+        return array(
+            self::HIGH_PRIORITY_SHORTCUT => ScriptScenario::PRIORITY_HIGH,
+            self::MEDIUM_PRIORITY_SHORTCUT => ScriptScenario::PRIORITY_MEDIUM,
+            self::OPTIONAL_PRIORITY_SHORTCUT => ScriptScenario::PRIORITY_OPTIONAL,
+        );
     }
 
     protected function initParams($params) {
@@ -56,7 +55,7 @@ class CreateScenarioCommand extends BaseCommand {
             $this->console
                 ->printLine('Enter priority(h - high, m - medium, o - optional):');
             $priority = $this->normalizePriority($this->console
-                ->readLine());
+                    ->readLine());
         }
         return $priority;
     }
@@ -75,19 +74,19 @@ class CreateScenarioCommand extends BaseCommand {
 
     public function execute($callback = false) {
         try {
-            $fileName = $this->module->createScenario($this->prepareName($this->getName()), $this->getPriority(), (int)$this->time);
+            $fileName = $this->module->createScenario($this->prepareName($this->getName()), $this->getPriority(), (int) $this->time);
         } catch (\Exception $e) {
             $this->console->printLine('An error occurred saving file', Console::OUTPUT_ERROR);
+            $this->console->printLine($e->getMessage());
             return;
         }
         $this->console->printLine($fileName, Console::OUTPUT_SUCCESS);
     }
 
     public function prepareName($name) {
-        if (LANG_CHARSET !== 'UTF-8' && mb_detect_encoding($name, 'UTF-8, Windows-1251') === 'UTF-8') {
-            $name = iconv('UTF-8', 'Windows-1251', $name);
-        }
-
+        /* @var \CMain */
+        global $APPLICATION;
+        $name = $APPLICATION->ConvertCharset($name, mb_detect_encoding($name), LANG_CHARSET);
         return $name;
     }
 

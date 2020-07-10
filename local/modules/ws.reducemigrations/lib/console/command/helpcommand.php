@@ -10,7 +10,7 @@ class HelpCommand extends BaseCommand {
     private $command;
 
     public function initParams($params) {
-        $this->command = $params[0] ? : false;
+        $this->command = $params[0] ?: false;
     }
 
     /**
@@ -23,8 +23,19 @@ class HelpCommand extends BaseCommand {
                 'params' => array(),
                 'examples' => array(),
             ),
+            'create' => array(
+                'info' => 'Create new migrations',
+                'params' => array(
+                    '-n=<name>' => 'migration name',
+                    '-p=<priority>' => 'migration priority: h - high, m - medium, o - optional',
+                    '-t=<time>' => 'migration approximately time in seconds',
+                ),
+                'examples' => array(
+                    $this->getCommandTemplate('createScenario', '-n="Hello world" -p=h -t=5'),
+                ),
+            ),
             'apply' => array(
-                'info' => 'Apply new migrations',
+                'info' => 'Apply prepared migrations from `list`',
                 'params' => array(
                     'hash' => 'apply migration with `hash`',
                     '-f' => 'apply migration without approve',
@@ -50,17 +61,6 @@ class HelpCommand extends BaseCommand {
                     $this->getCommandTemplate('rollback', '--to-hash=49ea590e'),
                 ),
             ),
-            'createScenario' => array(
-                'info' => 'Apply new migrations',
-                'params' => array(
-                    '-n=<name>' => 'migration name',
-                    '-p=<priority>' => 'migration priority: h - high, m - medium, o - optional',
-                    '-t=<time>' => 'migration approximately time in seconds',
-                ),
-                'examples' => array(
-                    $this->getCommandTemplate('createScenario', '-n="Hello world" -p=h -t=5'),
-                ),
-            ),
             'history' => array(
                 'info' => 'Create new migration scenario',
                 'params' => array(
@@ -71,6 +71,9 @@ class HelpCommand extends BaseCommand {
                     $this->getCommandTemplate('history', 4),
                 ),
             ),
+            'createScenario' => array(
+                'info' => 'Alias for `create`',
+            )
         );
 
         return $commands;
@@ -90,15 +93,14 @@ class HelpCommand extends BaseCommand {
         $commandInfo = $commands[$command];
 
         $params = implode(' ', array_map(function ($item) {
-            return '[' . $item . ']';
-        }, array_keys($commandInfo['params'])));
+                return '[' . $item . ']';
+            }, array_keys($commandInfo['params'])));
 
         if (!empty($commandInfo['params'])) {
             $table = new Table($this->console->colorize('Params:', Console::OUTPUT_PROGRESS), $this->console);
             foreach ($commandInfo['params'] as $param => $info) {
                 $table->addRow($this->console->colorize('   ' . $param, Console::OUTPUT_SUCCESS), $info);
             }
-
         }
         if (!empty($commandInfo['examples'])) {
             $exampleTable = new Table($this->console->colorize('Examples:', Console::OUTPUT_PROGRESS), $this->console);
@@ -133,12 +135,10 @@ class HelpCommand extends BaseCommand {
             ->printLine($table)
             ->printLine('Command params:', Console::OUTPUT_PROGRESS)
             ->printLine(sprintf('   %s           %s',
-                $this->console->colorize('--help', Console::OUTPUT_SUCCESS),
-                'Show full info for command'
+                    $this->console->colorize('--help', Console::OUTPUT_SUCCESS),
+                    'Show full info for command'
             ))
         ;
-
-
     }
 
     /**
@@ -148,6 +148,7 @@ class HelpCommand extends BaseCommand {
      * @return string
      */
     private function getCommandTemplate($command, $params = '') {
-        return "   php migrate {$command} {$params}";
+        return "   php bitrix/tools/migrate {$command} {$params}";
     }
+
 }

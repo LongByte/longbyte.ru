@@ -4,11 +4,12 @@ namespace WS\ReduceMigrations\Console\Command;
 
 use WS\ReduceMigrations\Console\Console;
 use WS\ReduceMigrations\Console\ConsoleException;
-use WS\ReduceMigrations\Console\Pear\Console_Table;
+use WS\ReduceMigrations\Console\Pear\ConsoleTable;
 use WS\ReduceMigrations\Entities\AppliedChangesLogModel;
 use WS\ReduceMigrations\Timer;
 
 class RollbackCommand extends BaseCommand {
+
     const TYPE_HASH = 0;
     const TYPE_COUNT = 1;
     const TYPE_TO_HASH = 2;
@@ -21,6 +22,7 @@ class RollbackCommand extends BaseCommand {
 
     const PARAM_COUNT = '--count';
     const PARAM_TO_HASH = '--to-hash';
+
     /** @var Timer  */
     private $timer;
 
@@ -31,7 +33,7 @@ class RollbackCommand extends BaseCommand {
 
     protected function initParams($params) {
         $this->migrationHash = isset($params[0]) ? $params[0] : null;
-        $this->count = isset($params[self::PARAM_COUNT]) ? (int)$params[self::PARAM_COUNT] : null;
+        $this->count = isset($params[self::PARAM_COUNT]) ? (int) $params[self::PARAM_COUNT] : null;
         if ($this->count && $this->count < 0) {
             $this->count = 0;
         }
@@ -94,7 +96,6 @@ class RollbackCommand extends BaseCommand {
                 $this->module->rollbackLastBatch($callback);
                 break;
         }
-
     }
 
     private function confirm($message) {
@@ -119,9 +120,14 @@ class RollbackCommand extends BaseCommand {
         if (empty($logs)) {
             return;
         }
-        $table = new Console_Table();
+        $table = new ConsoleTable();
+        $table->setCharset(LANG_CHARSET);
+
         $table->setHeaders(array(
             'Date', 'Name', 'Hash', 'Status'
+        ));
+        $table->setCellsLength(array(
+            19, 80, 10, 10
         ));
         foreach ($logs as $log) {
             $status = 'successful';
@@ -134,6 +140,12 @@ class RollbackCommand extends BaseCommand {
                 $log->getDate()->format('d.m.Y H:i:s'), $log->getName(), $log->getHash(), $status
             ));
         }
+        $table->addRow(array(
+            '-------------------', '---------------------', '----------', '----------'
+        ));
+        $table->addRow(array(
+            '', 'Total: ' . count($logs)
+        ));
         $this->console
             ->printLine('Migrations for rollback:')
             ->printLine($table->getTable());

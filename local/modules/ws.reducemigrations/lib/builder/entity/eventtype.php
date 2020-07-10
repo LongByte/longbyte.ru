@@ -98,11 +98,12 @@ class EventType extends Base {
      */
     private function findMessages() {
         $res = EventMessageTable::getList(array(
-            'filter' => array(
-                'EVENT_NAME' => $this->getEventName()
-            )
+                'filter' => array(
+                    'EVENT_NAME' => $this->getEventName()
+                )
         ));
 
         return $res->fetchAll();
     }
+
 }

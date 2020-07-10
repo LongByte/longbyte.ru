@@ -81,8 +81,70 @@ class Edit extends \Api\Core\Base\Controller {
                 ->setModifier($this->getRequest()->get('modifier'))
                 ->setLogMode($this->getRequest()->get('log_mode'))
                 ->setPrecision($this->getRequest()->get('precision'))
-                ->save()
+                ->setSort($this->getRequest()->get('sort'))
             ;
+            if ($obSensor->isChanged()) {
+                $obSensor->save();
+            }
+        }
+
+        $this->loadSystem();
+
+        $iSort = 0;
+        foreach ($this->obSystem->getSensorsCollection() as $obSensor) {
+            $iSort += 10;
+
+            $obSensor->setSort($iSort);
+            if ($obSensor->isChanged()) {
+                $obSensor->save();
+            }
+        }
+
+        $this->arResponse['data'] = $this->obSystem->getSensorsCollection()->toArray();
+
+        return $this->exitAction();
+    }
+
+    public function delete() {
+        if (!$this->loadSystem()) {
+            return $this->exitAction();
+        }
+
+        $iSensorId = $this->getRequest()->get('id');
+        $strMode = $this->getRequest()->get('mode');
+        /** @var \Api\Sensors\Sensor\Entity $obSensor */
+        $obSensor = $this->obSystem->getSensorsCollection()->getByKey($iSensorId);
+
+        if (!is_null($obSensor)) {
+            $arValuesFilter = array(
+                'SENSOR_ID' => $obSensor->getId(),
+                'SENSOR.SYSTEM_ID' => $this->obSystem->getId(),
+            );
+
+            if ($strMode == 'data' || $strMode == 'sensor') {
+                /** @var \Api\Sensors\Data\Collection $obValues */
+                $obValues = \Api\Sensors\Data\Model::getAll($arValuesFilter);
+                /** @var \Api\Sensors\Data\Entity $obValue */
+                foreach ($obValues as $obValue) {
+                    $obValue->delete();
+                }
+            }
+
+            if ($strMode == 'sensor') {
+                $obSensor->delete();
+            }
+        }
+
+        $this->loadSystem();
+
+        $iSort = 0;
+        foreach ($this->obSystem->getSensorsCollection() as $obSensor) {
+            $iSort += 10;
+
+            $obSensor->setSort($iSort);
+            if ($obSensor->isChanged()) {
+                $obSensor->save();
+            }
         }
 
         $this->arResponse['data'] = $this->obSystem->getSensorsCollection()->toArray();
@@ -108,30 +170,28 @@ class Edit extends \Api\Core\Base\Controller {
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
         /** @var \Api\Sensors\Data\Collection $obValues */
         /** @var \Api\Sensors\Data\Entity $obValue */
-        if (is_null($this->obSystem)) {
-            $this->obSystem = \Api\Sensors\System\Model::getOne(array(
-                    '=TOKEN' => $this->token,
-                    'ACTIVE' => true
-            ));
-        }
+        $this->obSystem = \Api\Sensors\System\Model::getOne(array(
+                '=TOKEN' => $this->token,
+                'ACTIVE' => true
+        ));
 
-        if ($this->obSystem) {
-            if ($this->obSystem->getSensorsCollection()->count() <= 0) {
-
-                $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
-                        'SYSTEM_ID' => $this->obSystem->getId(),
-                ));
-
-                $this->obSystem->setSensorsCollection($obSensors);
-            }
-
-            return true;
-        } else {
+        if (!$this->obSystem) {
             $this->arResponse['success'] = false;
             $this->arResponse['errors'][] = 'Неверный токен';
+
+            return false;
         }
 
-        return false;
+        $obSensors = \Api\Sensors\Sensor\Model::getAll(
+                array('SYSTEM_ID' => $this->obSystem->getId()),
+                0,
+                0,
+                array('order' => array('SORT' => 'ASC'))
+        );
+
+        $this->obSystem->setSensorsCollection($obSensors);
+
+        return true;
     }
 
 }

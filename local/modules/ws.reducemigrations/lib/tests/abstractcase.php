@@ -1,10 +1,10 @@
 <?php
+
 /**
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
  */
 
 namespace WS\ReduceMigrations\Tests;
-
 
 use WS\ReduceMigrations\Localization;
 use WS\ReduceMigrations\Module;
@@ -24,13 +24,13 @@ abstract class AbstractCase {
     }
 
     /**
-     * Генерация сообщения об ошибке
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
      * @param $path
      * @param null $replace
      * @return mixed
      */
     protected function errorMessage($path, $replace = null) {
-        return $this->localization->message('errors.'.$path, $replace);
+        return $this->localization->message('errors.' . $path, $replace);
     }
 
     static public function className() {
@@ -47,86 +47,94 @@ abstract class AbstractCase {
 
     protected function throwError($message, $dump = null) {
         $e = new ErrorException($message);
-        $dump  && $e->setDump($dump);
+        $dump && $e->setDump($dump);
         throw $e;
     }
 
     private function generateMessage($systemMessage, $userMassage) {
-        return $userMassage ? $systemMessage." with message: ".$userMassage : $systemMessage;
+        return $userMassage ? $systemMessage . " with message: " . $userMassage : $systemMessage;
     }
 
     protected function assertTrue($actual, $message = null) {
         $this->assertTake();
-        if  (!$actual) {
-            $this->throwError($this->generateMessage('Value `'.self::exportValue($actual).'` not asserted as true', $message));
+        if (!$actual) {
+            $this->throwError($this->generateMessage('Value `' . self::exportValue($actual) . '` not asserted as true', $message));
         }
     }
 
     protected function assertFalse($actual, $message = null) {
         $this->assertTake();
-        if  ($actual) {
-            $this->throwError($this->generateMessage('Value `'.self::exportValue($actual).'` not asserted as false', $message));
+        if ($actual) {
+            $this->throwError($this->generateMessage('Value `' . self::exportValue($actual) . '` not asserted as false', $message));
         }
     }
 
     protected function assertNotEmpty($actual, $message = null) {
         $this->assertTake();
-        if  (empty($actual)) {
-            $this->throwError($this->generateMessage('Value `'.self::exportValue($actual).'` not asserted as empty', $message));
+        if (empty($actual)) {
+            $this->throwError($this->generateMessage('Value `' . self::exportValue($actual) . '` not asserted as empty', $message));
         }
     }
 
     protected function assertEmpty($actual, $message = null) {
         $this->assertTake();
-        if  (!empty($actual)) {
-            $this->throwError($this->generateMessage('Value `'.self::exportValue($actual).'` asserted as empty', $message));
+        if (!empty($actual)) {
+            $this->throwError($this->generateMessage('Value `' . self::exportValue($actual) . '` asserted as empty', $message));
         }
     }
 
     protected function assertEquals($actual, $expected, $message = null) {
         $this->assertTake();
-        if  ($actual != $expected) {
-            $this->throwError($this->generateMessage('Value actual:`'.self::exportValue($actual).'` not equals expected:`'.self::exportValue($expected).'`', $message));
+        if ($actual != $expected) {
+            $this->throwError($this->generateMessage('Value actual:`' . self::exportValue($actual) . '` not equals expected:`' . self::exportValue($expected) . '`', $message));
         }
     }
 
     protected function assertNotEquals($actual, $expected, $message = null) {
         $this->assertTake();
-        if  ($actual == $expected) {
-            $this->throwError($this->generateMessage('Value actual:`'.self::exportValue($actual).'` expectation that not equals expected:`'.self::exportValue($expected).'`', $message));
+        if ($actual == $expected) {
+            $this->throwError($this->generateMessage('Value actual:`' . self::exportValue($actual) . '` expectation that not equals expected:`' . self::exportValue($expected) . '`', $message));
         }
     }
 
     protected function assertCount($arActual, $expectedCount, $message = null) {
         $this->assertTake();
-        if  (count($arActual) != $expectedCount) {
-            $this->throwError($this->generateMessage('Value actual:`'.self::exportValue($arActual).'` not equals count elements, expected:`'.self::exportValue($expectedCount).'`', $message));
+        if (count($arActual) != $expectedCount) {
+            $this->throwError($this->generateMessage('Value actual:`' . self::exportValue($arActual) . '` not equals count elements, expected:`' . self::exportValue($expectedCount) . '`', $message));
         }
     }
 
     protected function assertNotCount($arActual, $expectedCount, $message = null) {
         $this->assertTake();
-        if  (count($arActual) == $expectedCount) {
-            $this->throwError($this->generateMessage('Value actual:`'.self::exportValue($arActual).'` equals count elements, expected:`'.self::exportValue($expectedCount).'`', $message));
+        if (count($arActual) == $expectedCount) {
+            $this->throwError($this->generateMessage('Value actual:`' . self::exportValue($arActual) . '` equals count elements, expected:`' . self::exportValue($expectedCount) . '`', $message));
         }
     }
 
     protected function viewDump() {
         $values = func_get_args();
-        $res = 'Dump:'."\n";
+        $res = 'Dump:' . "\n";
         foreach ($values as $value) {
             $res .= self::exportValue($value);
         }
         $this->throwError($res);
     }
 
-    public function setUp() {}
+    public function setUp() {
+        
+    }
 
-    public function tearDown() {}
+    public function tearDown() {
+        
+    }
 
-    public function init() {}
+    public function init() {
+        
+    }
 
-    public function close() {}
+    public function close() {
+        
+    }
 
     /**
      * @return $this
@@ -146,4 +154,5 @@ abstract class AbstractCase {
     protected function module() {
         return Module::getInstance();
     }
+
 }

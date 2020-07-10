@@ -2,8 +2,8 @@
 
 namespace WS\ReduceMigrations;
 
-
 class TimeFormatter {
+
     const SECONDS_PRECISION = 3;
     const MINUTES_PRECISION = 2;
     const SECONDS_THRESHOLD_VALUE = 100;
@@ -30,4 +30,5 @@ class TimeFormatter {
         }
         return $time;
     }
+
 }

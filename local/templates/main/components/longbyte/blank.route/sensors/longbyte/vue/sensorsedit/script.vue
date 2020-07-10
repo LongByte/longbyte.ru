@@ -35,6 +35,17 @@
                             <option value="2" :selected="sensor.log_mode == 2">Каждое значение сегодня и среднее за прошлые дни</option>
                         </select>
                     </div>
+                    <div class="sensors-edit__sort">
+                        Порядок: 
+                        <button type="button" class="btn btn-info" @click.prevent="sortUp(sensor)">↑</button>
+                        <input class="form-control sensors-edit__input-text" 
+                               type="text"
+                               name="sort"
+                               :value="sensor.sort"
+                               @change="saveForm(sensor)"
+                               />
+                        <button type="button" class="btn btn-info" @click.prevent="sortDown(sensor)">↓</button>
+                    </div>
                 </div>
                 <div class="sensors-edit__col col-1">
                     <div class="">
@@ -169,11 +180,19 @@
                     </div>
                     <div>
                         <small>
-                        Допускается указать до двух арифметических действий. Например:<br>
-                        *1024, *0.98+6, +2*1.4 (первое действие всегда будет приоритетно)<br>
-                        Допустимы знаки +-*/. цифры и пробелы.<br>
-                        Учтите, что правила будут ориентироваться на уже измененное значение.
+                            Допускается указать до двух арифметических действий. Например:<br>
+                            *1024, *0.98+6, +2*1.4 (первое действие всегда будет приоритетно)<br>
+                            Допустимы знаки +-*/. цифры и пробелы.<br>
+                            Учтите, что правила будут ориентироваться на уже измененное значение.
                         </small>
+                    </div>
+                </div>
+                <div class="sensors-edit__col col-1">
+                    <div class="">
+                        <button type="button" class="btn btn-warning" @click.prevent="deleteData(sensor)">Удалить данные</button>
+                    </div>
+                    <div class="">
+                        <button type="button" class="btn btn-danger" @click.prevent="deleteSensor(sensor)">Удалить датчик</button>
                     </div>
                 </div>
             </form>
@@ -214,6 +233,38 @@
                     axios
                         .post('/api/sensors/edit/?token=' + window.vueData.system_token, formData)
                         .then(response => (this.sensors = response.data.data));
+                }
+            },
+            sortUp(sensor) {
+                if (this.allowSave) {
+                    let form = document.forms[this.getFormName(sensor)];
+                    form.sort.value = +form.sort.value - 1;
+                    this.saveForm(sensor);
+                }
+            },
+            sortDown(sensor) {
+                if (this.allowSave) {
+                    let form = document.forms[this.getFormName(sensor)];
+                    form.sort.value = +form.sort.value + 1;
+                    this.saveForm(sensor);
+                }
+            },
+            deleteData(sensor) {
+                if (this.allowSave) {
+                    if (window.confirm('Вы собираетесь удалить все данные по этому датчику. Вы уверены? Если датчик активен, данные за последние несколько минут могут все равно сохраниться.')) {
+                        axios
+                            .delete('/api/sensors/edit/?token=' + window.vueData.system_token + '&id=' + sensor.id + '&mode=data')
+                            .then(response => (this.sensors = response.data.data));
+                    }
+                }
+            },
+            deleteSensor(sensor) {
+                if (this.allowSave) {
+                    if (window.confirm('Вы собираетесь удалить датчик и все его данные. Вы уверены? Если данные датчика поступают с клиента то он будет вновь создан.')) {
+                        axios
+                            .delete('/api/sensors/edit/?token=' + window.vueData.system_token + '&id=' + sensor.id + '&mode=sensor')
+                            .then(response => (this.sensors = response.data.data));
+                    }
                 }
             },
             changeTemplate(sensor) {

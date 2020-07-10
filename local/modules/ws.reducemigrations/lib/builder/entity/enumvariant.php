@@ -58,7 +58,6 @@ class EnumVariant extends Base {
         return $this;
     }
 
-
     /**
      * @param bool $value
      *

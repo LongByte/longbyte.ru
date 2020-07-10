@@ -1,2 +1,3 @@
 <?php
-require $_SERVER['DOCUMENT_ROOT'].'/local/modules/ws.reducemigrations/admin/controller.php';
+
+require $_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/ws.reducemigrations/admin/controller.php';

@@ -163,4 +163,5 @@ class Options implements \Serializable, \ArrayAccess {
     public function toJson() {
         return json_encode($this->toArray());
     }
+
 }

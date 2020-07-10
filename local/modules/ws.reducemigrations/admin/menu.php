@@ -1,4 +1,5 @@
 <?php
+
 global $USER;
 if (!$USER->isAdmin()) {
     return array();
@@ -18,16 +19,16 @@ return array(
         'items' => array(
             array(
                 'text' => $loc->getDataByPath('apply'),
-                'url' => $inputUri.'main',
+                'url' => $inputUri . 'main',
             ),
             array(
                 'text' => $loc->getDataByPath('createScenario'),
-                'url' => $inputUri.'createScenario'
+                'url' => $inputUri . 'createScenario'
             ),
             array(
                 'text' => $loc->getDataByPath('log'),
-                'url' => $inputUri.'log',
-                'more_url' => array($inputUri.'detail')
+                'url' => $inputUri . 'log',
+                'more_url' => array($inputUri . 'detail')
             )
         )
     )

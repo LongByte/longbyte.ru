@@ -28,7 +28,7 @@ class IblockType extends Base {
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getId() {
         return $this->getAttribute('ID');
@@ -51,4 +51,5 @@ class IblockType extends Base {
         $this->setAttribute('IN_RSS', $inRss ? 'Y' : 'N');
         return $this;
     }
+
 }

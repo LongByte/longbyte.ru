@@ -2,6 +2,9 @@
 
 namespace WS\ReduceMigrations\Scenario;
 
+use WS\ReduceMigrations\DumbMessageOutput;
+use WS\ReduceMigrations\MessageOutputInterface;
+
 /**
  * Class ScriptScenario
  *
@@ -12,7 +15,6 @@ abstract class ScriptScenario {
     const PRIORITY_HIGH = 'high';
     const PRIORITY_MEDIUM = 'medium';
     const PRIORITY_OPTIONAL = 'optional';
-
     const SHORTENED_HASH_LENGTH = 8;
 
     /**
@@ -20,15 +22,25 @@ abstract class ScriptScenario {
      */
     private $data;
 
+    /**
+     * @var MessageOutputInterface
+     */
+    private $printer;
+
     public static function className() {
         return get_called_class();
     }
 
     /**
      * @param array $data
+     * @param MessageOutputInterface $printer
      */
-    public function __construct(array $data = array()) {
+    public function __construct(array $data = array(), MessageOutputInterface $printer = null) {
         $this->setData($data);
+        if ($printer === null) {
+            $printer = new DumbMessageOutput();
+        }
+        $this->printer = $printer;
     }
 
     /**
@@ -72,8 +84,9 @@ abstract class ScriptScenario {
     }
 
     static public function getShortenedHash() {
-        return substr(static::hash(), 0 , self::SHORTENED_HASH_LENGTH);
+        return substr(static::hash(), 0, self::SHORTENED_HASH_LENGTH);
     }
+
     /**
      * @return array
      */
@@ -132,6 +145,13 @@ abstract class ScriptScenario {
      */
     public static function priority() {
         return self::PRIORITY_HIGH;
+    }
+
+    /**
+     * @return MessageOutputInterface
+     */
+    protected function printer() {
+        return $this->printer;
     }
 
 }

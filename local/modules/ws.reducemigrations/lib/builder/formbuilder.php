@@ -43,6 +43,17 @@ class FormBuilder {
         return $form;
     }
 
+    /**
+     * @param string $sid
+     * @return boolean
+     */
+    public function removeForm($sid) {
+        $formData = $this->findForm($sid);
+        if (!$formData['ID']) {
+            return false;
+        }
+        return \CForm::Delete($formData['ID']);
+    }
 
     /**
      * @param Form $form
@@ -69,7 +80,7 @@ class FormBuilder {
     private function commitForm($form) {
         global $strError;
         if (!$form->isDirty()) {
-           return ;
+            return;
         }
         $formId = \CForm::Set($form->getData(), $form->getId(), 'N');
         if (!$formId) {
@@ -110,7 +121,7 @@ class FormBuilder {
         foreach ($field->getAnswers() as $answer) {
             if ($answer->needDelete()) {
                 if (!$gw->Delete($answer->getId())) {
-                    throw new BuilderException("Can't delete '{$answer->getAttribute('MESSAGE')}'. ". $strError);
+                    throw new BuilderException("Can't delete '{$answer->getAttribute('MESSAGE')}'. " . $strError);
                 }
             }
             $answer->setAttribute('QUESTION_ID', $field->getId());
@@ -149,26 +160,14 @@ class FormBuilder {
      */
     private function findForm($sid) {
         $data = \CForm::GetList($by = 'ID', $order = 'ASC', array(
-            'SID' => $sid
-        ), $isFiltered = false)->Fetch();
+                'SID' => $sid
+                ), $isFiltered = false)->Fetch();
 
         if (!$data) {
             throw new BuilderException("Form '{$sid}' not found");
         }
 
         return $data;
-    }
-
-    /**
-     * @param string $sid
-     * @return boolean
-     */
-    public function removeForm($sid) {
-        $formData = $this->findForm($sid);
-        if (!$formData['ID']) {
-            return false;
-        }
-        return \CForm::Delete($formData['ID']);
     }
 
 }

@@ -25,7 +25,7 @@ class FormAnswer extends Base {
     const TYPE_IMAGE = 'image';
     const TYPE_FILE = 'file';
     const TYPE_PASSWORD = 'password';
-    const TYPE_HIDDEN = 'hidden';
+
     private $id;
 
     public function __construct($message) {
@@ -78,6 +78,5 @@ class FormAnswer extends Base {
     public function markDelete() {
         $this->setAttribute('DEL', 'Y');
     }
-
 
 }

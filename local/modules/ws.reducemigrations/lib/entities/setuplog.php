@@ -1,10 +1,10 @@
 <?php
+
 /**
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
  */
 
 namespace WS\ReduceMigrations\Entities;
-
 
 use Bitrix\Main\Entity\DataManager;
 
@@ -41,4 +41,5 @@ class SetupLogTable extends DataManager {
             )
         );
     }
+
 }

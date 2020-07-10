@@ -2,7 +2,6 @@
 
 namespace WS\ReduceMigrations\Console\Formatter;
 
-
 use WS\ReduceMigrations\Console\Console;
 
 class Table {
@@ -62,9 +61,10 @@ class Table {
 
         return $result;
     }
+
 }
 
-function mb_str_pad($input, $pad_length, $pad_string=' ', $pad_type=STR_PAD_RIGHT) {
+function mb_str_pad($input, $pad_length, $pad_string = ' ', $pad_type = STR_PAD_RIGHT) {
     if (function_exists('mb_strlen')) {
         $diff = strlen($input) - mb_strlen($input);
         return str_pad($input, $pad_length + $diff, $pad_string, $pad_type);

@@ -5,21 +5,23 @@ use WS\ReduceMigrations\Console\Console;
 $DOCUMENT_ROOT = $_SERVER["DOCUMENT_ROOT"];
 
 define("NO_KEEP_STATISTIC", true);
-define("NOT_CHECK_PERMISSIONS",true);
+define("NOT_CHECK_PERMISSIONS", true);
 define('CHK_EVENT', true);
 
 @set_time_limit(0);
 
-require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_before.php");
-require_once(__DIR__."/../include.php");
-require_once(__DIR__."/../prolog.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_admin_before.php");
+require_once(__DIR__ . "/../include.php");
+require_once(__DIR__ . "/../prolog.php");
 
 
 $module = \WS\ReduceMigrations\Module::getInstance();
 $console = new Console($argv);
 
-$console
-    ->printLine('Migrations module for CMS Bitrix. Worksolutions company https://worksolutions.ru');
+$fCompanyLabel = function () use ($console) {
+    $console
+        ->printLine("Migrations module for CMS Bitrix. Worksolutions company https://worksolutions.ru \n");
+};
 
 $getShowProgress = function () use ($console) {
     $counter = new \WS\ReduceMigrations\Console\RuntimeCounter();
@@ -31,13 +33,13 @@ $getShowProgress = function () use ($console) {
         if ($type == 'start') {
             $counter->migrationNumber++;
             $console->printLine(sprintf(
-                '%s (%s/%s)',
-                $console->colorize($data['name'], Console::OUTPUT_PROGRESS),
-                $counter->migrationNumber, $counter->migrationCount
+                    '%s (%s/%s)',
+                    $console->colorize($data['name'], Console::OUTPUT_PROGRESS),
+                    $counter->migrationNumber, $counter->migrationCount
             ));
         }
         if ($type == 'end') {
-            /**@var \WS\ReduceMigrations\Entities\AppliedChangesLogModel $log */
+            /*             * @var \WS\ReduceMigrations\Entities\AppliedChangesLogModel $log */
             $log = $data['log'];
             $time = round($data['time'], 2);
             $message = '';
@@ -50,6 +52,7 @@ $getShowProgress = function () use ($console) {
                 $message = '  - skipped';
             }
             $console->printLine($message, $log->isFailed() ? Console::OUTPUT_ERROR : Console::OUTPUT_SUCCESS);
+            $console->printLine("");
         }
     };
 };
@@ -57,7 +60,8 @@ try {
     $console->printLine('');
     $command = $console->getCommand();
     $command->execute($getShowProgress());
+    $fCompanyLabel();
 } catch (\WS\ReduceMigrations\Console\ConsoleException $e) {
     $console->printLine($e->getMessage());
+    $fCompanyLabel();
 }
-

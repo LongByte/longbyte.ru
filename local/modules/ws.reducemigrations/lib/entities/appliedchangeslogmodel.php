@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
  */
@@ -11,14 +12,15 @@ use WS\ReduceMigrations\Module;
 use WS\ReduceMigrations\Scenario\ScriptScenario;
 
 class AppliedChangesLogModel extends BaseEntity {
+
     const STATUS_SKIPPED = 2;
     const STATUS_SUCCESS = 1;
     const STATUS_NOT_APPLIED = 0;
+
     public
         $id, $groupLabel, $date, $status,
         $migrationClassName, $hash, $updateData,
         $description, $setupLogId;
-
     private $setupLog;
 
     public function __construct() {
@@ -32,10 +34,10 @@ class AppliedChangesLogModel extends BaseEntity {
      */
     public static function findByHash($hash) {
         $logs = AppliedChangesLogModel::find(array(
-            'order' => array('id' => 'desc'),
-            'filter' => array(
-                'hash' => $hash . '%'
-            )
+                'order' => array('id' => 'desc'),
+                'filter' => array(
+                    'hash' => $hash . '%'
+                )
         ));
 
         return $logs;
@@ -53,8 +55,8 @@ class AppliedChangesLogModel extends BaseEntity {
             return array();
         }
         $logs = AppliedChangesLogModel::find(array(
-            'order' => array('id' => 'desc'),
-            'filter' => array('>id' => $logsByHash[0]->getId())
+                'order' => array('id' => 'desc'),
+                'filter' => array('>id' => $logsByHash[0]->getId())
         ));
 
         return $logs;
@@ -78,8 +80,8 @@ class AppliedChangesLogModel extends BaseEntity {
      */
     public static function findLastFewMigrations($count) {
         $logs = AppliedChangesLogModel::find(array(
-            'order' => array('id' => 'desc'),
-            'limit' => $count,
+                'order' => array('id' => 'desc'),
+                'limit' => $count,
         ));
 
         return $logs;
@@ -92,10 +94,10 @@ class AppliedChangesLogModel extends BaseEntity {
      */
     public static function hasMigrationsWithLog($setupLogId) {
         $logs = AppliedChangesLogModel::find(array(
-            'order' => array('id' => 'desc'),
-            'filter' => array(
-                '=setupLogId' => $setupLogId
-            )
+                'order' => array('id' => 'desc'),
+                'filter' => array(
+                    '=setupLogId' => $setupLogId
+                )
         ));
 
         return !empty($logs);
@@ -184,7 +186,7 @@ class AppliedChangesLogModel extends BaseEntity {
      * @return string
      */
     public function getName() {
-        return $this->description['name'] ? : '';
+        return $this->description['name'] ?: '';
     }
 
     /**
@@ -222,7 +224,7 @@ class AppliedChangesLogModel extends BaseEntity {
         if (!$this->setupLog) {
             $this->setupLog = SetupLogModel::findOne(array(
                     'filter' => array('=id' => $this->setupLogId)
-                )
+                    )
             );
         }
         return $this->setupLog;
@@ -319,4 +321,5 @@ class AppliedChangesLogModel extends BaseEntity {
     public function getSetupLogId() {
         return $this->setupLogId;
     }
+
 }

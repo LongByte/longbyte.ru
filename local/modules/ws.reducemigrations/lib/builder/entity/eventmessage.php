@@ -1,6 +1,7 @@
 <?php
 
 namespace WS\ReduceMigrations\Builder\Entity;
+
 use Bitrix\Main\Type\DateTime;
 
 /**
@@ -17,8 +18,10 @@ use Bitrix\Main\Type\DateTime;
  * @package WS\ReduceMigrations\Builder\Entity
  */
 class EventMessage extends Base {
+
     const BODY_TYPE_TEXT = 'text';
     const BODY_TYPE_HTML = 'html';
+
     private $forRemove;
     private $id;
 
@@ -32,7 +35,6 @@ class EventMessage extends Base {
             ->emailTo($to)
             ->siteId($siteId)
             ->dateUpdate(new DateTime());
-
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 return array(
     'name' => 'Reduce Migrations',
     'encoding' => 'Кодировка',

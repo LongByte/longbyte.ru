@@ -6,9 +6,12 @@ use WS\ReduceMigrations\Console\Console;
 use WS\ReduceMigrations\Module;
 
 abstract class BaseCommand {
+
     const CONFIRM_WORD = 'yes';
+
     /** @var Console  */
     protected $console;
+
     /** @var Module  */
     protected $module;
 
@@ -24,8 +27,10 @@ abstract class BaseCommand {
     static public function className() {
         return get_called_class();
     }
-    protected function initParams($params) {}
+
+    protected function initParams($params) {
+        
+    }
 
     abstract public function execute($callback = false);
-
 }

@@ -18,11 +18,10 @@ class AgentBuilderCase extends AbstractCase {
 
     public function close() {
         $agent = \CAgent::GetList(null, array(
-            'NAME' => 'abs(0);'
-        ))->Fetch();
+                'NAME' => 'abs(0);'
+            ))->Fetch();
         \CAgent::Delete($agent['ID']);
     }
-
 
     public function testAdd() {
         $date = new DateTime();
@@ -35,8 +34,8 @@ class AgentBuilderCase extends AbstractCase {
                 ->nextExec($date);
         });
         $agent = \CAgent::GetList(null, array(
-            'ID' => $obAgent->getId()
-        ))->Fetch();
+                'ID' => $obAgent->getId()
+            ))->Fetch();
 
         $this->assertNotEmpty($agent);
         $this->assertEquals($agent['NAME'], 'abs(0);');
@@ -45,19 +44,18 @@ class AgentBuilderCase extends AbstractCase {
         $this->assertEquals($agent['NEXT_EXEC'], $date->format('d.m.Y H:i:s'));
     }
 
-
     public function testUpdate() {
         $builder = new \WS\ReduceMigrations\Builder\AgentBuilder();
         $obAgent = $builder
             ->updateAgent('abs(0);', function (Agent $agent) {
-                $agent
-                    ->active(false)
-                    ->isPeriod(true);
-            });
+            $agent
+            ->active(false)
+            ->isPeriod(true);
+        });
 
         $agent = \CAgent::GetList(null, array(
-            'ID' => $obAgent->getId()
-        ))->Fetch();
+                'ID' => $obAgent->getId()
+            ))->Fetch();
 
         $this->assertNotEmpty($agent);
         $this->assertEquals($agent['ACTIVE'], 'N');

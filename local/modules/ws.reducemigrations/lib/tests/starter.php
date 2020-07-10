@@ -1,10 +1,10 @@
 <?php
+
 /**
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
  */
 
 namespace WS\ReduceMigrations\Tests;
-
 
 use WS\ReduceMigrations\Module;
 use WS\ReduceMigrations\Tests\Cases\AgentBuilderCase;
@@ -40,8 +40,8 @@ class Starter {
         );
     }
 
-    static private function getLocalizationByCase ($class) {
-        return static::getLocalization()->fork('cases.'.$class);
+    static private function getLocalizationByCase($class) {
+        return static::getLocalization()->fork('cases.' . $class);
     }
 
     /**
@@ -59,7 +59,7 @@ class Starter {
         foreach (self::cases() as $caseClass) {
             /** @var $case AbstractCase */
             $case = new $caseClass(static::getLocalizationByCase($caseClass));
-            $points[self::SECTION.'-'.$i++] = array(
+            $points[self::SECTION . '-' . $i++] = array(
                 'AUTO' => 'Y',
                 'NAME' => $case->name(),
                 'DESC' => $case->description(),
@@ -97,7 +97,7 @@ class Starter {
             return $result->toArray();
         }
         $refClass = new \ReflectionObject($testCase);
-        $testMethods  = array_filter($refClass->getMethods(), function (\ReflectionMethod $method) {
+        $testMethods = array_filter($refClass->getMethods(), function (\ReflectionMethod $method) {
             return strpos(strtolower($method->getName()), 'test') === 0;
         });
         try {
@@ -113,7 +113,7 @@ class Starter {
         } catch (\Exception $e) {
             $result->setSuccess(false)
                 ->setTrace($e->getTraceAsString());
-            $message = $method->getShortName(). ', '. $e->getMessage();
+            $message = $method->getShortName() . ', ' . $e->getMessage();
             if ($e instanceof \WS\ReduceMigrations\Tests\Cases\ErrorException) {
                 $e->getDump() && $message .= "\ndump: \n" . var_export($e->getDump(), true);
             }
@@ -122,7 +122,8 @@ class Starter {
         }
         $testCase->close();
         return $result->setSuccess(true)
-            ->setMessage(static::getLocalization()->message('run.report.completed').':'.$count."\n".static::getLocalization()->message('run.report.assertions').': '.$testCase->getAssertsCount())
-            ->toArray();
+                ->setMessage(static::getLocalization()->message('run.report.completed') . ':' . $count . "\n" . static::getLocalization()->message('run.report.assertions') . ': ' . $testCase->getAssertsCount())
+                ->toArray();
     }
+
 }

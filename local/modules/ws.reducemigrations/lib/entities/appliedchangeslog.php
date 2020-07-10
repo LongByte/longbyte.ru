@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
  */
@@ -8,6 +9,7 @@ namespace WS\ReduceMigrations\Entities;
 use Bitrix\Main\Entity\DataManager;
 
 class AppliedChangesLogTable extends DataManager {
+
     public static function className() {
         return get_called_class();
     }
@@ -58,4 +60,5 @@ class AppliedChangesLogTable extends DataManager {
             ),
         );
     }
+
 }

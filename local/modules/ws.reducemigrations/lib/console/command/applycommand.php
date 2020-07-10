@@ -6,14 +6,17 @@ use WS\ReduceMigrations\Console\Console;
 use WS\ReduceMigrations\Console\ConsoleException;
 use WS\ReduceMigrations\Timer;
 
-class ApplyCommand extends BaseCommand{
+class ApplyCommand extends BaseCommand {
+
     const FLAG_FORCE = '-f';
     const FLAG_SKIP_OPTIONAL = '--skip-optional';
 
     /** @var  bool */
     private $force;
+
     /** @var  bool */
     private $skipOptional;
+
     /** @var  string */
     private $migrationHash;
 
@@ -21,14 +24,35 @@ class ApplyCommand extends BaseCommand{
         $this->force = isset($params[self::FLAG_FORCE]) ? $params[self::FLAG_FORCE] : false;
         $this->skipOptional = isset($params[self::FLAG_SKIP_OPTIONAL]) ? $params[self::FLAG_SKIP_OPTIONAL] : false;
         $this->migrationHash = isset($params[0]) ? $params[0] : null;
-
     }
 
     public function execute($callback = false) {
+        $listCommand = new ListCommand($this->console, array($this->migrationHash));
+        $listCommand->execute();
+
+        $notAppliedScenarios = $this->module->getNotAppliedScenarios();
+        $count = $notAppliedScenarios->count();
+
+        if ($count == 0) {
+            return;
+        }
+        if ($this->migrationHash) {
+            $hasByHash = false;
+            foreach ($notAppliedScenarios->toArray() as $notAppliedScenario) {
+                if (strpos($notAppliedScenario::getShortenedHash(), $this->migrationHash) !== false) {
+                    $hasByHash = true;
+                    break;
+                }
+            }
+            if (!$hasByHash) {
+                return;
+            }
+        }
+
         $this->confirmAction();
 
         $this->console
-            ->printLine('Applying new migrations started....', Console::OUTPUT_PROGRESS);
+            ->printLine("\nApplying new migrations started...\n", Console::OUTPUT_PROGRESS);
 
         $timer = new Timer();
         $timer->start();
@@ -38,13 +62,12 @@ class ApplyCommand extends BaseCommand{
                 $this->module
                     ->applyMigrationByHash($this->migrationHash, $callback);
             } else {
-                $count = (int)$this->module
-                    ->applyMigrations($this->skipOptional, $callback);
+                $count = (int) $this->module
+                        ->applyMigrations($this->skipOptional, $callback);
             }
         } catch (\Exception $e) {
             throw new ConsoleException($e->getMessage());
         }
-
 
         $timer->stop();
         $time = $this->console->formatTime($timer->getTime());
@@ -56,18 +79,8 @@ class ApplyCommand extends BaseCommand{
         if ($this->force) {
             return true;
         }
-        $notAppliedScenarios = $this->module->getNotAppliedScenarios();
-        $count = count($notAppliedScenarios->toArray());
-        $time = $notAppliedScenarios->getApproximateTime();
-        if ($this->migrationHash) {
-            $migrations = $notAppliedScenarios->findByHash($this->migrationHash);
-            $count = count($migrations);
-            $time = array_reduce($migrations, function ($result, $item) {
-                return $result + (int)$item::approximatelyTime();
-            }, 0);
-        }
+
         $this->console
-            ->printLine(sprintf('Migrations for apply - %s, approximate time - %s', $count, $this->console->formatTime($time)))
             ->printLine('Are you sure? (yes|no):');
 
         $answer = $this->console->readLine();

@@ -1,4 +1,5 @@
 <?php
+
 namespace WS\ReduceMigrations;
 
 /**
@@ -8,8 +9,8 @@ namespace WS\ReduceMigrations;
  * @author <sokolovsky@worksolutions.ru>
  */
 final class ModuleOptions {
-    private $moduleName = 'ws.reducemigrations';
 
+    private $moduleName = 'ws.reducemigrations';
     private $cache = array();
 
     /**
@@ -63,4 +64,5 @@ final class ModuleOptions {
     private function setToCache($name, $value) {
         $this->cache[$name] = $value;
     }
+
 }

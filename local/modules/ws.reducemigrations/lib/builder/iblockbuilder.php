@@ -64,6 +64,7 @@ class IblockBuilder {
             throw new BuilderException("Error occurred removing iblockType `$type`");
         }
     }
+
     /**
      * @param string $iblockType
      * @param string $name
@@ -80,7 +81,6 @@ class IblockBuilder {
         return $iblock;
     }
 
-
     /**
      * @param integer $id
      * @param \Closure $callback
@@ -89,7 +89,7 @@ class IblockBuilder {
      * @throws BuilderException
      */
     public function updateIblock($id, $callback) {
-        $iblockData = \CIBlock::GetByID($id)->Fetch();
+        $iblockData = \CIBlock::GetList(array(), array('ID' => $id, 'CHECK_PERMISSIONS' => 'N'))->Fetch();
         if (!$iblockData) {
             throw new BuilderException("Iblock `{$id}` not found");
         }
@@ -101,6 +101,16 @@ class IblockBuilder {
         $this->commitIblock($iblock);
 
         return $iblock;
+    }
+
+    /**
+     * @param IblockPointer $pointer
+     * @param \Closure $callback
+     * @return Iblock
+     * @throws BuilderException
+     */
+    public function updateIblockByPointer(IblockPointer $pointer, $callback) {
+        return $this->updateIblock($this->getIblockIdByPointer($pointer), $callback);
     }
 
     /**
@@ -171,7 +181,6 @@ class IblockBuilder {
             $property->setId($propertyId);
             $this->commitEnum($property);
         }
-
     }
 
     /**
@@ -196,7 +205,41 @@ class IblockBuilder {
                 throw new BuilderException("Failed to add enum '{$variant->getAttribute('VALUE')}'");
             }
         }
+    }
 
+    /**
+     * @param IblockPointer $pointer
+     * @return integer
+     * @throws BuilderException
+     */
+    public function getIblockIdByPointer(IblockPointer $pointer) {
+        $filter = array();
+
+        if ($pointer->getType() === IblockPointer::TYPE_ID) {
+            $filter = array(
+                'ID' => (int) $pointer->getValue()
+            );
+        }
+        if ($pointer->getType() === IblockPointer::TYPE_CODE) {
+            $filter = array(
+                'CODE' => (string) $pointer->getValue(),
+            );
+        }
+        if ($pointer->getType() === IblockPointer::TYPE_NAME) {
+            $filter = array(
+                'NAME' => (string) $pointer->getValue(),
+            );
+        }
+
+        if (!$filter) {
+            throw new BuilderException('Type of pointer is not found');
+        }
+        $arIblock = \CIBlock::GetList(array(), $filter, false)->Fetch();
+        if (!$arIblock) {
+            throw new BuilderException("Iblock `{$pointer->getValue()}` doesn't exists");
+        }
+
+        return (int) $arIblock['ID'];
     }
 
     /**
@@ -208,8 +251,9 @@ class IblockBuilder {
      */
     public function removeIblock($iblockType, $name) {
         $dbRes = \CIBlock::GetList(null, array(
-            'NAME' => $name,
-            'TYPE' => $iblockType,
+                'NAME' => $name,
+                'TYPE' => $iblockType,
+                'CHECK_PERMISSIONS' => 'N',
         ));
         $count = $dbRes->SelectedRowsCount();
         if ($count == 0) {
@@ -222,6 +266,16 @@ class IblockBuilder {
         $iblock = $dbRes->Fetch();
 
         return $this->removeIblockById($iblock['ID']);
+    }
+
+    /**
+     * @param IblockPointer $pointer
+     * @return bool
+     * @throws BuilderException
+     */
+    public function removeIblockByPointer(IblockPointer $pointer) {
+        $id = $this->getIblockIdByPointer($pointer);
+        return $this->removeIblockById($id);
     }
 
     /**

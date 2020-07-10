@@ -48,7 +48,6 @@ class Property extends Base {
     const USER_TYPE_E_AUTOCOMPLETE = 'E:EAutocomplete';
     const USER_TYPE_DIRECTORY = 'S:directory';
     const USER_TYPE_SEQUENCE = 'N:Sequence';
-    const USER_TYPE_BANK_TABLE = 'S:custom_table';
 
     /** @var  EnumVariant[] */
     private $enumVariants;
@@ -97,7 +96,6 @@ class Property extends Base {
             'sort' => 'SORT',
             'code' => 'CODE',
             'hint' => 'HINT',
-            'default'=>'DEFAULT_VALUE'
         );
     }
 
@@ -135,20 +133,20 @@ class Property extends Base {
     public function type($propertyType, $userType = false) {
         if (!$userType) {
             $this
-                    ->setAttribute('PROPERTY_TYPE', $propertyType)
-                    ->setAttribute('USER_TYPE', $userType);
+                ->setAttribute('PROPERTY_TYPE', $propertyType)
+                ->setAttribute('USER_TYPE', $userType);
 
             return $this;
         }
         $type = explode(':', $userType);
         if (count($type) == 2) {
             $this
-                    ->setAttribute('PROPERTY_TYPE', $type[0])
-                    ->setAttribute('USER_TYPE', $type[1]);
+                ->setAttribute('PROPERTY_TYPE', $type[0])
+                ->setAttribute('USER_TYPE', $type[1]);
         } else {
             $this
-                    ->setAttribute('PROPERTY_TYPE', $type[0])
-                    ->setAttribute('USER_TYPE', '');
+                ->setAttribute('PROPERTY_TYPE', $type[0])
+                ->setAttribute('USER_TYPE', '');
         }
         return $this;
     }
@@ -200,8 +198,8 @@ class Property extends Base {
      */
     public function typeDropdown() {
         $this
-                ->type(self::TYPE_LIST)
-                ->listType('L');
+            ->type(self::TYPE_LIST)
+            ->listType('L');
         return $this;
     }
 
@@ -210,8 +208,8 @@ class Property extends Base {
      */
     public function typeCheckbox() {
         $this
-                ->type(self::TYPE_LIST)
-                ->listType('C');
+            ->type(self::TYPE_LIST)
+            ->listType('C');
         return $this;
     }
 
@@ -222,8 +220,8 @@ class Property extends Base {
      */
     public function typeElement($linkIblockId) {
         $this
-                ->type(self::TYPE_ELEMENT)
-                ->linkIblockId($linkIblockId);
+            ->type(self::TYPE_ELEMENT)
+            ->linkIblockId($linkIblockId);
         return $this;
     }
 
@@ -234,8 +232,8 @@ class Property extends Base {
      */
     public function typeSection($linkIblockId) {
         $this
-                ->type(self::TYPE_GROUP)
-                ->linkIblockId($linkIblockId);
+            ->type(self::TYPE_GROUP)
+            ->linkIblockId($linkIblockId);
         return $this;
     }
 
@@ -276,14 +274,6 @@ class Property extends Base {
      */
     public function typeVideo() {
         $this->type(self::TYPE_STRING, self::USER_TYPE_VIDEO);
-        return $this;
-    }
-    
-    /**
-     * @return Property
-     */
-    public function typeBankTable() {
-        $this->type(self::TYPE_STRING, self::USER_TYPE_BANK_TABLE);
         return $this;
     }
 
@@ -346,42 +336,13 @@ class Property extends Base {
             throw new BuilderException('Save Property before update enum');
         }
         $res = \CIBlockPropertyEnum::GetList(null, array(
-                    'PROPERTY_ID' => $this->id,
-                    'VALUE' => $name,
-                ))->Fetch();
+                'PROPERTY_ID' => $this->id,
+                'VALUE' => $name,
+            ))->Fetch();
         if (empty($res)) {
             throw new BuilderException("Enum `$name` not found");
         }
         return $res;
-    }
-
-    public function findEnumByXmlId($xml_id) {
-        if (!$this->getId()) {
-            throw new BuilderException('Save Property before update enum');
-        }
-        $res = \CIBlockPropertyEnum::GetList(null, array(
-                    'PROPERTY_ID' => $this->id,
-                    'XML_ID' => $xml_id,
-                ))->Fetch();
-        if (empty($res)) {
-            return null;
-        }
-        return $res;
-    }
-    
-    public function findEnums() {
-        if (!$this->getId()) {
-            throw new BuilderException('Save Property before update enum');
-        }
-        $res = \CIBlockPropertyEnum::GetList(null, array(
-                    'PROPERTY_ID' => $this->id,
-                ));
-        $arEnums = array();
-        
-        while($arEnum = $res->Fetch()) {
-            $arEnums[$arEnum['XML_ID']] = $arEnum;
-        }
-        return $arEnums;
     }
 
     /**
@@ -389,6 +350,19 @@ class Property extends Base {
      */
     public function getEnumVariants() {
         return $this->enumVariants;
+    }
+
+    /**
+     * 
+     * @param string $name
+     * @return EnumVariant
+     */
+    public function getEnum($name) {
+        if ($this->getId() <= 0 || !($arEnum = $this->findEnum($name))) {
+            return $this->addEnum($name);
+        } else {
+            return $this->updateEnum($arEnum['VALUE']);
+        }
     }
 
 }

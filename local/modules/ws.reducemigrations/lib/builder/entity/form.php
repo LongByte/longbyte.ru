@@ -122,8 +122,8 @@ class Form extends Base {
      */
     private function findStatus($title) {
         $status = \CFormStatus::GetList($this->getId(), $by, $order, array(
-            'TITLE' => $title,
-        ), $isFiltered)->Fetch();
+                'TITLE' => $title,
+                ), $isFiltered)->Fetch();
 
         if (empty($status)) {
             throw new BuilderException("Form status '{$title}' not found");
@@ -163,8 +163,8 @@ class Form extends Base {
      */
     private function findField($sid) {
         $field = \CFormField::GetList($this->getId(), 'ALL', $by, $order, array(
-            'SID' => $sid,
-        ), $isFiltered)->Fetch();
+                'SID' => $sid,
+                ), $isFiltered)->Fetch();
         if (empty($field)) {
             throw new BuilderException("Form field '{$sid}' not found");
         }

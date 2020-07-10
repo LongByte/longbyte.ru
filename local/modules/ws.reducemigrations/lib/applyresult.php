@@ -1,12 +1,13 @@
 <?php
+
 /**
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
  */
 
 namespace WS\ReduceMigrations;
 
-
 class ApplyResult {
+
     private $success;
     private $message;
     private $id;

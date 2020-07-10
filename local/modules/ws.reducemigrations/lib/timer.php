@@ -1,10 +1,10 @@
 <?php
+
 /**
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
  */
 
 namespace WS\ReduceMigrations;
-
 
 class Timer {
 
@@ -25,6 +25,7 @@ class Timer {
     }
 
     public function __toString() {
-        return (string)$this->getTime();
+        return (string) $this->getTime();
     }
+
 }

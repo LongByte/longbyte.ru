@@ -1,6 +1,7 @@
 <?php
 
 namespace WS\ReduceMigrations\Builder\Entity;
+
 use Bitrix\Main\Type\DateTime;
 
 /**

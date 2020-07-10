@@ -1,4 +1,5 @@
 <?php
+
 return array(
     'main' => array(
         'title' => 'Обновление платформы',
@@ -15,10 +16,10 @@ return array(
         'errorList' => 'Ошибки',
         'appliedList' => 'Список обновлений',
         'approximatelyTime' => 'Примерное время применения миграций:',
-        'timeLang' => [
+        'timeLang' => array(
             'minutes' => 'мин.',
             'seconds' => 'сек.'
-        ],
+        ),
         'btnRollback' => 'Отменить последнее обновление',
         'btnApply' => 'Обновить',
         'lastSetup' => array(

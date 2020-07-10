@@ -1,13 +1,12 @@
 <?php
+
 /**
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
  */
 
 namespace WS\ReduceMigrations\Tests\Cases;
 
-
-class ErrorException extends \Exception
-{
+class ErrorException extends \Exception {
 
     private $_dumpedValue;
 
@@ -18,4 +17,5 @@ class ErrorException extends \Exception
     public function getDump() {
         return $this->_dumpedValue;
     }
+
 }

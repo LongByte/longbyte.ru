@@ -108,6 +108,9 @@ class Table extends Main\Entity\DataManager {
             'PRECISION' => new Main\Entity\IntegerField('UF_PRECISION', array(
                 'title' => 'Количество знаков после запятой',
                 )),
+            'SORT' => new Main\Entity\IntegerField('UF_SORT', array(
+                'title' => 'Сортировка',
+                )),
         );
     }
 

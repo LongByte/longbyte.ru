@@ -2,7 +2,6 @@
 
 namespace WS\ReduceMigrations\Builder;
 
-
 use Bitrix\Main\Application;
 use WS\ReduceMigrations\Builder\Entity\Table;
 
@@ -58,7 +57,7 @@ class TableBuilder {
         $type = strtoupper($type);
         $sqlHelper = $database->getSqlHelper();
         $database
-            ->query('ALTER TABLE '. $sqlHelper->quote($tableName).' ADD '.$sqlHelper->quote($columnName) . ' ' . $type);
+            ->query('ALTER TABLE ' . $sqlHelper->quote($tableName) . ' ADD ' . $sqlHelper->quote($columnName) . ' ' . $type);
     }
 
     /**

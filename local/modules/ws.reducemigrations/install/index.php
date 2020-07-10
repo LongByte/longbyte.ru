@@ -1,10 +1,14 @@
 <?php
+
 use Bitrix\Main\Application;
+use Bitrix\Main\IO\Path;
 
-include __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'include.php';
+include __DIR__ . '/../include.php';
 
-class ws_reducemigrations extends CModule{
+class ws_reducemigrations extends CModule {
+
     const MODULE_ID = 'ws.reducemigrations';
+
     var $MODULE_ID = 'ws.reducemigrations';
     var $MODULE_VERSION;
     var $MODULE_VERSION_DATE;
@@ -22,12 +26,16 @@ class ws_reducemigrations extends CModule{
         $this->MODULE_VERSION_DATE = $arModuleVersion['VERSION_DATE'];
 
         $localization = \WS\ReduceMigrations\Module::getInstance()->getLocalization('info');
-        $needToConvert = LANG_CHARSET === 'UTF-8' && !$this->isUtfLangFiles();
+        $needToConvert = $this->needToConvertCharset();
         $this->MODULE_NAME = $this->message($localization->getDataByPath('name'), $needToConvert);
         $this->MODULE_DESCRIPTION = $this->message($localization->getDataByPath('description'), $needToConvert);
         $this->PARTNER_NAME = GetMessage('PARTNER_NAME');
         $this->PARTNER_NAME = $this->message($localization->getDataByPath('partner.name'), $needToConvert);
         $this->PARTNER_URI = 'http://worksolutions.ru';
+    }
+
+    private function needToConvertCharset() {
+        return (LANG_CHARSET === 'UTF-8' || LANG_CHARSET === 'utf-8') && !$this->isUtfLangFiles();
     }
 
     private function message($message, $needToConvert) {
@@ -46,7 +54,7 @@ class ws_reducemigrations extends CModule{
 
     public function UnInstallDB($arParams = array()) {
         global $DB;
-        $DB->RunSQLBatch(self::getModuleDir() .  '/install/db/uninstall.sql');
+        $DB->RunSQLBatch(self::getModuleDir() . '/install/db/uninstall.sql');
 
         return true;
     }
@@ -69,13 +77,13 @@ class ws_reducemigrations extends CModule{
 
     public function DoInstall($extendData = array()) {
         global $APPLICATION, $data;
-        if (LANG_CHARSET === 'UTF-8' && !$this->isUtfLangFiles()) {
+        if ($this->needToConvertCharset()) {
             $this->convertLangFilesToUtf();
         }
         $loc = \WS\ReduceMigrations\Module::getInstance()->getLocalization('setup');
         $options = \WS\ReduceMigrations\Module::getInstance()->getOptions();
         global $errors;
-        $data = array_merge((array)$data, $extendData);
+        $data = array_merge((array) $data, $extendData);
         $errors = array();
         if ($data['catalog']) {
             $dir = $this->docRoot() . $data['catalog'];
@@ -160,7 +168,7 @@ class ws_reducemigrations extends CModule{
      * @return bool|string
      */
     public static function getModuleDir() {
-        return dirname(__DIR__.'../');
+        return dirname(Path::normalize(__DIR__) . '../');
     }
 
     public function convertLangFilesToUtf() {
@@ -201,4 +209,5 @@ class ws_reducemigrations extends CModule{
 
         return true;
     }
+
 }

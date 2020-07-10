@@ -1,6 +1,7 @@
 <?php
 
 namespace WS\ReduceMigrations\Builder\Entity;
+
 use Bitrix\Main\Type\DateTime;
 
 /**
@@ -18,7 +19,6 @@ class Agent extends Base {
     private $id;
 
     const DEFAULT_SORT = 100;
-
     const DEFAULT_INTERVAL = 86400;
 
     public function __construct($callback) {

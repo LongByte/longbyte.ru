@@ -16,7 +16,6 @@ class DateTimeFactory {
      * @param \DateTime $date
      * @return \Bitrix\Main\Type\DateTime
      */
-
     public static function createBitrix(\DateTime $date) {
         $format = 'd.m.Y H:i:s';
         $object = new DateTime($date->format($format), $format, self::timeZone());
@@ -35,4 +34,5 @@ class DateTimeFactory {
             return new \DateTimeZone(self::DEFAULT_TIME_ZONE);
         }
     }
+
 }

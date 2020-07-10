@@ -3,19 +3,19 @@
 use WS\ReduceMigrations\Entities\AppliedChangesLogModel;
 
 $fDiff = function ($array1, $array2) use (& $fDiff) {
-    foreach($array1 as $key => $value) {
-        if(is_array($value)) {
-            if(!isset($array2[$key])) {
+    foreach ($array1 as $key => $value) {
+        if (is_array($value)) {
+            if (!isset($array2[$key])) {
                 $difference[$key] = $value;
-            } elseif(!is_array($array2[$key])) {
+            } elseif (!is_array($array2[$key])) {
                 $difference[$key] = $value;
             } else {
                 $new_diff = $fDiff($value, $array2[$key]);
-                if($new_diff != false) {
+                if ($new_diff != false) {
                     $difference[$key] = $new_diff;
                 }
             }
-        } elseif(!isset($array2[$key]) || $array2[$key] != $value) {
+        } elseif (!isset($array2[$key]) || $array2[$key] != $value) {
             $difference[$key] = $value;
         }
     }
@@ -31,7 +31,7 @@ $serviceLabels = array(
 );
 
 $label = $_GET['label'];
-$type  = $_GET['type'];
+$type = $_GET['type'];
 $data = array();
 switch ($type) {
     case 'applied':
@@ -57,7 +57,7 @@ switch ($type) {
 /** @var CMain $APPLICATION */
 $APPLICATION->SetTitle($localization->message('title', $arTitle));
 
-require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_after.php");
+require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_admin_after.php");
 $tabs = array(
     array(
         "DIV" => "edit1",
@@ -71,26 +71,26 @@ $tabs = array(
 $tabControl = new CAdminTabControl('ws_maigrations_label_detail', $tabs);
 $fSection = function ($label) use ($serviceLabels, $localization) {
     if (in_array($label, $serviceLabels, true)) {
-        $label = $localization->message('serviceLabels.'.$label);
+        $label = $localization->message('serviceLabels.' . $label);
     }
     ?>
     <tr class="heading">
         <td colspan="2">
-            <?=$label?>
-            <a href="#" style="text-decoration: none; border-bottom: 1px dashed;" class="show"><?=$localization->getDataByPath('message.show')?></a>
-            <a href="#" style="text-decoration: none; border-bottom: 1px dashed; display: none;" class="hide"><?=$localization->getDataByPath('message.hide')?></a>
+            <?= $label ?>
+            <a href="#" style="text-decoration: none; border-bottom: 1px dashed;" class="show"><?= $localization->getDataByPath('message.show') ?></a>
+            <a href="#" style="text-decoration: none; border-bottom: 1px dashed; display: none;" class="hide"><?= $localization->getDataByPath('message.hide') ?></a>
         </td>
     </tr>
     <?php
 };
 $fRow = function ($label, $value) use ($serviceLabels, $localization) {
     if (in_array($label, $serviceLabels, true)) {
-        $label = $localization->message('serviceLabels.'.$label);
+        $label = $localization->message('serviceLabels.' . $label);
     }
     ?>
     <tr>
-        <td width="30%" valign="top"><b><?=$label?>:</b></td>
-        <td width="60%"><?=is_array($value) ? \Bitrix\Main\Diag\Debug::dump($value) : $value?></td>
+        <td width="30%" valign="top"><b><?= $label ?>:</b></td>
+        <td width="60%"><?= is_array($value) ? \Bitrix\Main\Diag\Debug::dump($value) : $value ?></td>
     </tr>
     <?php
 };
@@ -180,3 +180,5 @@ CJSCore::Init(array('jquery'));
         });
     });
 </script>
+<?php
+require($_SERVER["DOCUMENT_ROOT"] . BX_ROOT . "/modules/main/include/epilog_admin_before.php");

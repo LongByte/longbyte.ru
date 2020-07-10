@@ -19,8 +19,8 @@ class IblockBuilderCase extends AbstractCase {
 
     public function close() {
         $iblock = \CIBlock::GetList(null, array(
-            '=NAME' => 'testAddBlock'
-        ))->Fetch();
+                '=NAME' => 'testAddBlock'
+            ))->Fetch();
         if ($iblock) {
             \CIBlock::Delete($iblock['ID']);
         }
@@ -31,7 +31,6 @@ class IblockBuilderCase extends AbstractCase {
         $iblockId = $this->add();
         $this->updateIblockType();
         $this->update($iblockId);
-
     }
 
     private function add() {
@@ -44,7 +43,7 @@ class IblockBuilderCase extends AbstractCase {
                     'ru' => array(
                         'NAME' => 'Тестовый тип иб'
                     ),
-                ));
+            ));
         });
 
         $iblock = $builder->createIblock('testAddType', 'testAddBlock', function (Iblock $iblock) {
@@ -72,13 +71,13 @@ class IblockBuilderCase extends AbstractCase {
 
         $arType = \CIBlockType::GetList(null, array(
                 'IBLOCK_TYPE_ID' => 'testAddType')
-        )->Fetch();
+            )->Fetch();
 
         $this->assertNotEmpty($arType, "iblockType wasn't created");
 
         $arIblock = \CIBlock::GetList(null, array(
-            'ID' => $iblock->getId()
-        ))->Fetch();
+                'ID' => $iblock->getId()
+            ))->Fetch();
 
         $this->assertNotEmpty($arIblock, "iblock wasn't created");
         $this->assertEquals($arIblock['CODE'], $iblock->getAttribute('CODE'));
@@ -87,7 +86,7 @@ class IblockBuilderCase extends AbstractCase {
         $this->assertEquals($arIblock['LID'], $iblock->getAttribute('SITE_ID'));
 
         $properties = \CIBlockProperty::GetList(null, array(
-            'IBLOCK_ID' => $iblock->getId()
+                'IBLOCK_ID' => $iblock->getId()
         ));
         $props = array(
             'Картинка' => array(
@@ -122,8 +121,8 @@ class IblockBuilderCase extends AbstractCase {
         });
 
         $arType = \CIBlockType::GetList(null, array(
-            '=ID' => 'testAddType'
-        ))->Fetch();
+                '=ID' => 'testAddType'
+            ))->Fetch();
 
         $this->assertEquals($arType['SORT'], $type->getAttribute('SORT'));
     }
@@ -145,15 +144,15 @@ class IblockBuilderCase extends AbstractCase {
         });
 
         $arIblock = \CIBlock::GetList(null, array(
-            'ID' => $iblockId
-        ))->Fetch();
+                'ID' => $iblockId
+            ))->Fetch();
 
 
         $this->assertEquals($arIblock['CODE'], $iblock->getAttribute('CODE'));
         $this->assertEquals($arIblock['VERSION'], $iblock->getAttribute('VERSION'));
 
         $properties = \CIBlockProperty::GetList(null, array(
-            'IBLOCK_ID' => $iblockId
+                'IBLOCK_ID' => $iblockId
         ));
         $props = array(
             'Картинка' => array(

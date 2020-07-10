@@ -1,6 +1,7 @@
 <?php
 
 namespace WS\ReduceMigrations\Builder\Entity;
+
 use Bitrix\Main\Type\DateTime;
 use WS\ReduceMigrations\Builder\BuilderException;
 
@@ -9,6 +10,7 @@ use WS\ReduceMigrations\Builder\BuilderException;
  *
  * @method Iblock name(string $value) - set NAME
  * @method Iblock code(string $value) - set CODE
+ * @method Iblock xmlId(string $value) - set XML_ID
  * @method Iblock iblockType(string $value) - set IBLOCK_TYPE_ID
  * @method Iblock sort(integer $value) - set SORT
  * @method Iblock siteId($value) - set SITE_ID array or string
@@ -24,7 +26,8 @@ use WS\ReduceMigrations\Builder\BuilderException;
  * @method Iblock sectionChooser($value) - set SECTION_CHOOSER
  * @package WS\ReduceMigrations\Builder\Entity
  */
-class Iblock  extends Base {
+class Iblock extends Base {
+
     const SECTION_CHOOSER_LIST = 'L';
     const SECTION_CHOOSER_DROPDOWN = 'D';
     const SECTION_CHOOSER_SEARCH_WINDOW = 'P';
@@ -33,9 +36,10 @@ class Iblock  extends Base {
     private $id;
     private $updateProperties;
     private $deleteProperties;
+    protected $obBuilder = null;
+    protected $arPropsCache = array();
 
     const DEFAULT_SORT = 500;
-
     const IBLOCK_FIRST_VERSION = 1;
     const IBLOCK_SECOND_VERSION = 2;
 
@@ -208,14 +212,51 @@ class Iblock  extends Base {
      */
     private function findProperty($name) {
         $property = \CIBlockProperty::GetList(null, array(
-            'IBLOCK_ID' => $this->getId(),
-            'NAME' => $name
-        ))->Fetch();
+                'IBLOCK_ID' => $this->getId(),
+                'NAME' => $name
+            ))->Fetch();
 
         if (!$property) {
             throw new BuilderException("Property `$name` not found");
         }
         return $property;
+    }
+
+    /**
+     * 
+     * @return \Realweb\Builder\IblockBuilder
+     */
+    protected function getBuilder() {
+        if (is_null($this->obBuilder)) {
+            $this->obBuilder = new \Realweb\Builder\IblockBuilder();
+        }
+        return $this->obBuilder;
+    }
+
+    /**
+     * 
+     * @param string $strPropertyCode
+     * @param string $strPropertyName
+     * @return Property
+     */
+    public function getProperty(string $strPropertyCode, string $strPropertyName) {
+        if (empty($this->arPropsCache[$this->getId()])) {
+            $this->arPropsCache[$this->getId()] = $this->getBuilder()->GetPropertiesByIblockId($this->getId());
+        }
+        $arProps = $this->arPropsCache[$this->getId()];
+
+        if (!isset($arProps[$strPropertyCode])) {
+            $obProperty = $this
+                ->addProperty($strPropertyName)
+                ->code($strPropertyCode)
+            ;
+        } else {
+            $obProperty = $this
+                ->updateProperty($strPropertyName)
+                ->code($strPropertyCode)
+            ;
+        }
+        return $obProperty;
     }
 
 }

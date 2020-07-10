@@ -1,6 +1,7 @@
 <?php
 
 namespace WS\ReduceMigrations\Builder\Entity;
+
 use WS\ReduceMigrations\Builder\BuilderException;
 
 /**
@@ -28,10 +29,10 @@ class FormField extends Base {
     const FIELD_TYPE_TEXT = 'text';
     const FIELD_TYPE_INTEGER = 'integer';
     const FIELD_TYPE_DATE = 'date';
+
     /** @var  FormAnswer[] */
     private $answers;
     private $id;
-
 
     public function __construct($sid) {
         $this->setAttribute('SID', $sid);
@@ -171,8 +172,8 @@ class FormField extends Base {
 
     private function findAnswer($message) {
         $data = \CFormAnswer::GetList($this->getId(), $by = null, $order = null, array(
-            'MESSAGE' => $message
-        ), $isFiltered = false)->Fetch();
+                'MESSAGE' => $message
+                ), $isFiltered = false)->Fetch();
 
         if (empty($data)) {
             throw new BuilderException("Answer '{$message}' not found");

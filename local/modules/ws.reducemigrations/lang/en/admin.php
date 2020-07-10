@@ -1,4 +1,5 @@
 <?php
+
 return array(
     'main' => array(
         'title' => 'Migrations management',

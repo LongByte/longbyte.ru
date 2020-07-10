@@ -19,11 +19,18 @@ class MigrationApplier {
     private $notAppliedScenarios;
     private $skipOptional = false;
     private $setupLog;
+    protected $migrationFileAllowedExt = array('php');
 
-    public function __construct($scenarioDir) {
+    /**
+     * @var MessageOutputInterface
+     */
+    private $output;
+
+    public function __construct($scenarioDir, MessageOutputInterface $output) {
         $this->scenarioDir = $scenarioDir;
         $userId = Module::getInstance()->getCurrentUser()->GetID();
-        $this->userId = $userId ? : 0;
+        $this->userId = $userId ?: 0;
+        $this->output = $output;
     }
 
     /**
@@ -76,10 +83,14 @@ class MigrationApplier {
 
         $files = array();
         foreach ($dir->getChildren() as $file) {
+            $name = $file->getName();
             if ($file->isDirectory()) {
                 continue;
             }
-            if (in_array($file->getName(), $usesGroups)) {
+            if (in_array($name, $usesGroups)) {
+                continue;
+            }
+            if (!$this->isCorrectMigrationFile($name)) {
                 continue;
             }
             $files[$file->getName()] = $file;
@@ -94,8 +105,8 @@ class MigrationApplier {
      */
     private function getAppliedMigrations() {
         $result = AppliedChangesLogTable::getList(array(
-            'select' => array('GROUP_LABEL'),
-            'group' => array('GROUP_LABEL'),
+                'select' => array('GROUP_LABEL'),
+                'group' => array('GROUP_LABEL'),
         ));
 
         $usesGroups = array_map(function ($row) {
@@ -146,6 +157,19 @@ class MigrationApplier {
     }
 
     /**
+     * @param string $fileName
+     * @return bool
+     */
+    protected function isCorrectMigrationFile($fileName) {
+        $ext = pathinfo($fileName, PATHINFO_EXTENSION);
+        if ($ext) {
+            return in_array($ext, $this->migrationFileAllowedExt);
+        }
+
+        return false;
+    }
+
+    /**
      * @param ScriptScenario $class
      * @param $callback
      */
@@ -159,7 +183,7 @@ class MigrationApplier {
         is_callable($callback) && $callback($data, 'start');
         /** @var ScriptScenario $object */
         $applyFixLog = AppliedChangesLogModel::createByParams($setupLog, $class);
-        $object = new $class(array());
+        $object = new $class(array(), $this->output);
         try {
             $this->commitScenario($object);
             $applyFixLog->setUpdateData($object->getData());

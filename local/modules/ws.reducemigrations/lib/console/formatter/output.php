@@ -2,7 +2,6 @@
 
 namespace WS\ReduceMigrations\Console\Formatter;
 
-
 class Output {
 
     private $color;
@@ -12,7 +11,7 @@ class Output {
         $this->color = isset($colors[$color]) ? $colors[$color] : $colors['default'];
     }
 
-    public function textColors () {
+    public function textColors() {
         return array(
             'black' => 30,
             'red' => 31,

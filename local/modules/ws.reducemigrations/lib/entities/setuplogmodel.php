@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
  */
@@ -10,13 +11,14 @@ use Bitrix\Main\UserTable;
 use WS\ReduceMigrations\factories\DateTimeFactory;
 
 class SetupLogModel extends BaseEntity {
+
     public
         $id, $userId;
+
     /**
      * @var \DateTime
      */
     public $date;
-
     private $userData = false;
 
     public function __construct() {
@@ -45,7 +47,7 @@ class SetupLogModel extends BaseEntity {
             $data['date'] = DateTimeFactory::createBase();
             $data['date']->setTimestamp($timestamp);
         } else {
-            $data['date']= DateTimeFactory::createBase($data['date']);
+            $data['date'] = DateTimeFactory::createBase($data['date']);
         }
         return $data;
     }
@@ -60,10 +62,10 @@ class SetupLogModel extends BaseEntity {
      */
     public function getAppliedLogs() {
         return AppliedChangesLogModel::find(array(
-            'order' => array('id' => 'desc'),
-            'filter' => array(
-                '=setupLogId' => $this->id
-            )
+                'order' => array('id' => 'desc'),
+                'filter' => array(
+                    '=setupLogId' => $this->id
+                )
         ));
     }
 
@@ -78,11 +80,12 @@ class SetupLogModel extends BaseEntity {
     }
 
     public function shortUserInfo() {
-        $res  = 'cli';
+        $res = 'cli';
         if ($this->userId) {
             $data = $this->getUserData();
-            $res = $data['NAME'].' '.$data['LAST_NAME'];
+            $res = $data['NAME'] . ' ' . $data['LAST_NAME'];
         }
         return $res;
     }
+
 }

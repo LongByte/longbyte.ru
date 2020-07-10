@@ -63,6 +63,8 @@ class Get extends \Api\Core\Base\Controller {
         $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
                 'SYSTEM_ID' => $this->obSystem->getId(),
                 'ACTIVE' => true,
+        ), 0, 0, array(
+            'order' => array('SORT' => 'ASC')
         ));
 
         $arValuesFilter = array(

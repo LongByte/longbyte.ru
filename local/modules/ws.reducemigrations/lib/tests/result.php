@@ -1,12 +1,13 @@
 <?php
+
 /**
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
  */
 
 namespace WS\ReduceMigrations\Tests;
 
-
 class Result {
+
     private $success;
     private $message;
     private $trace;

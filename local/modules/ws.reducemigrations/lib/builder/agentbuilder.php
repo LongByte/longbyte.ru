@@ -5,6 +5,7 @@ namespace WS\ReduceMigrations\Builder;
 use WS\ReduceMigrations\Builder\Entity\Agent;
 
 class AgentBuilder {
+
     /**
      * @var Agent
      */
@@ -61,7 +62,7 @@ class AgentBuilder {
                     $agent->getAttribute('MODULE_ID'),
                     $agent->getAttribute('IS_PERIOD'),
                     $agent->getAttribute('AGENT_INTERVAL'),
-                    '',//bitrix doesn't use this parameter
+                    '', //bitrix doesn't use this parameter
                     $agent->getAttribute('ACTIVE'),
                     $agent->getAttribute('NEXT_EXEC'),
                     $agent->getAttribute('SORT'),
@@ -72,7 +73,6 @@ class AgentBuilder {
                 }
                 $agent->setId($res);
             }
-
         } catch (BuilderException $e) {
             $DB->Rollback();
             throw new BuilderException($e->getMessage());
@@ -87,8 +87,8 @@ class AgentBuilder {
      */
     private function findAgent($callback) {
         $agent = \CAgent::GetList(null, array(
-            'NAME' => $callback,
-        ))->Fetch();
+                'NAME' => $callback,
+            ))->Fetch();
         if (empty($agent)) {
             throw new BuilderException("Agent {$callback} not found");
         }

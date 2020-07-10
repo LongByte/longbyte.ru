@@ -59,6 +59,9 @@ namespace Api\Sensors\Sensor;
  * @method string getPrecision()
  * @method $this setPrecision(string $strPrecision)
  * @method bool hasPrecision()
+ * @method int getSort()
+ * @method $this setSort(int $iSort)
+ * @method bool hasSort()
  */
 class Entity extends \Api\Core\Base\Entity {
 

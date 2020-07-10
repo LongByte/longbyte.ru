@@ -48,4 +48,5 @@ class Localization {
     public function getDataByPath($path) {
         return $this->getData()->get($path, '');
     }
+
 }

@@ -13,7 +13,6 @@ class HighLoadBlockBuilder {
         \CModule::IncludeModule('highloadblock');
     }
 
-
     /**
      * @param string $name
      * @param string $tableName
@@ -70,12 +69,12 @@ class HighLoadBlockBuilder {
      */
     public function findTable($tableName) {
         $hbRes = HighloadBlockTable::getList(array(
-            'filter' => array(
-                'TABLE_NAME' => $tableName
-            )
+                'filter' => array(
+                    'TABLE_NAME' => $tableName
+                )
         ));
-        if (!($table = $hbRes->fetch())){
-            throw new BuilderException('Cant find block by table name `'.$tableName.'` ');
+        if (!($table = $hbRes->fetch())) {
+            throw new BuilderException('Cant find block by table name `' . $tableName . '` ');
         }
         return $table;
     }
@@ -93,8 +92,8 @@ class HighLoadBlockBuilder {
             $highLoadBlock->setId($hbRes->getId());
         } elseif ($highLoadBlock->isDirty()) {
             $hbRes = HighloadBlockTable::update(
-                $highLoadBlock->getId(),
-                $highLoadBlock->getData()
+                    $highLoadBlock->getId(),
+                    $highLoadBlock->getData()
             );
             $isSuccess = $hbRes->isSuccess();
         }

@@ -1,6 +1,7 @@
 <?php
 
 namespace WS\ReduceMigrations\Builder\Entity;
+
 use WS\ReduceMigrations\Builder\BuilderException;
 
 /**
@@ -34,8 +35,7 @@ class UserField extends Base {
     const TYPE_IBLOCK_ELEMENT = 'iblock_element';
     const TYPE_STRING_FORMATTED = 'string_formatted';
     const TYPE_VOTE = 'vote';
-    const TYPE_ADDRESS = 'address';
-    const TYPE_HTML = 'sections_html_field';
+
     private $enumVariants;
     private $id;
 
@@ -91,6 +91,7 @@ class UserField extends Base {
         $this->filterLabel($label);
         return $this;
     }
+
     /**
      * @param bool $multiple
      * @return UserField
@@ -196,25 +197,11 @@ class UserField extends Base {
             throw new BuilderException('Save Field before update enum');
         }
         $res = \CUserFieldEnum::GetList(null, array(
-            'USER_FIELD_ID' => $this->getId(),
-            'VALUE' => $name,
-        ))->Fetch();
+                'USER_FIELD_ID' => $this->getId(),
+                'VALUE' => $name,
+            ))->Fetch();
         if (empty($res)) {
             throw new BuilderException("Enum for `$name` not found");
-        }
-        return $res;
-    }
-    
-     public function findEnumByXmlId($XML_ID) {
-        if (!$this->getId()) {
-            throw new BuilderException('Save Field before update enum');
-        }
-        $res = \CUserFieldEnum::GetList(null, array(
-            'USER_FIELD_ID' => $this->getId(),
-            'XML_ID' => $XML_ID,
-        ))->Fetch();
-        if (empty($res)) {
-            return false;
         }
         return $res;
     }

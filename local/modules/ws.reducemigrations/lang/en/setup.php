@@ -1,4 +1,5 @@
 <?php
+
 return array(
     'title' => 'Installing the Data migrations module',
     'name' => 'WS ReduceMigrations',

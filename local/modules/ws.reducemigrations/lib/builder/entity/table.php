@@ -2,7 +2,6 @@
 
 namespace WS\ReduceMigrations\Builder\Entity;
 
-
 use Bitrix\Main\Entity\BooleanField;
 use Bitrix\Main\Entity\DateField;
 use Bitrix\Main\Entity\DatetimeField;
@@ -100,8 +99,8 @@ class Table {
      */
     public function getPrimary() {
         return array_filter(array_map(function (FieldWrapper $field) {
-            return $field->isPrimary() ? $field->getName() : false;
-        }, $this->getFields()));
+                return $field->isPrimary() ? $field->getName() : false;
+            }, $this->getFields()));
     }
 
     /**
@@ -109,8 +108,8 @@ class Table {
      */
     public function getAutoincrement() {
         return array_filter(array_map(function (FieldWrapper $field) {
-            return $field->isAutoincrement() ? $field->getName() : false;
-        }, $this->getFields()));
+                return $field->isAutoincrement() ? $field->getName() : false;
+            }, $this->getFields()));
     }
 
     /**

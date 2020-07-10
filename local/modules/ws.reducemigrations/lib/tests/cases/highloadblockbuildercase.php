@@ -20,14 +20,13 @@ class HighLoadBlockBuilderCase extends AbstractCase {
 
     public function close() {
         $arIblock = HighloadBlockTable::getList(array(
-            'filter' => array(
-                'TABLE_NAME' => 'test_highloadblock'
-            )
-        ))->fetch();
+                'filter' => array(
+                    'TABLE_NAME' => 'test_highloadblock'
+                )
+            ))->fetch();
 
         HighloadBlockTable::delete($arIblock['ID']);
     }
-
 
     public function testAdd() {
         $builder = new HighLoadBlockBuilder();
@@ -80,24 +79,23 @@ class HighLoadBlockBuilderCase extends AbstractCase {
 
 
         $arIblock = HighloadBlockTable::getList(array(
-            'filter' => array(
-                'ID' => $block->getId()
-            )
-        ))->fetch();
+                'filter' => array(
+                    'ID' => $block->getId()
+                )
+            ))->fetch();
 
         $this->assertNotEmpty($arIblock, "hlblock wasn't created");
         $this->assertEquals($arIblock['TABLE_NAME'], $block->getAttribute('TABLE_NAME'));
         $this->assertEquals($arIblock['NAME'], $block->getAttribute('NAME'));
 
         $fields = \CUserTypeEntity::GetList(null, array(
-            'ENTITY_ID' => "HLBLOCK_" . $block->getId(),
+                'ENTITY_ID' => "HLBLOCK_" . $block->getId(),
         ));
 
         $this->assertEquals($fields->SelectedRowsCount(), 8);
         while ($field = $fields->Fetch()) {
             $field['NAME'] == 'uf_test5' && $this->assertEquals($field['USER_TYPE_ID'], UserField::TYPE_IBLOCK_ELEMENT);
         }
-
     }
 
     public function testUpdate() {
@@ -114,24 +112,24 @@ class HighLoadBlockBuilderCase extends AbstractCase {
         $prop = $block->updateField('uf_test1');
 
         $arIblock = HighloadBlockTable::getList(array(
-            'filter' => array(
-                'ID' => $block->getId()
-            )
-        ))->fetch();
+                'filter' => array(
+                    'ID' => $block->getId()
+                )
+            ))->fetch();
 
         $this->assertEquals($arIblock['NAME'], $block->getAttribute('NAME'));
 
         $res = \CUserFieldEnum::GetList(null, array(
-            'USER_FIELD_ID' => $block->getId(),
-            'VALUE' => 'Тест2',
-        ))->Fetch();
+                'USER_FIELD_ID' => $block->getId(),
+                'VALUE' => 'Тест2',
+            ))->Fetch();
 
         $this->assertEmpty($res);
 
         $res = \CUserFieldEnum::GetList(null, array(
-            'USER_FIELD_ID' => $prop->getId(),
-            'VALUE' => 'Тест1',
-        ))->Fetch();
+                'USER_FIELD_ID' => $prop->getId(),
+                'VALUE' => 'Тест1',
+            ))->Fetch();
 
         $this->assertNotEmpty($res);
         $this->assertEquals($res['XML_ID'], 'test1');

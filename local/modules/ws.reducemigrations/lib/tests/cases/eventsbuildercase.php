@@ -20,9 +20,9 @@ class EventsBuilderCase extends AbstractCase {
 
     public function close() {
         $eventType = \CEventType::GetList(array(
-            'TYPE_ID' => 'WS_MIGRATION_TEST_EVENT',
-            'LID' => 'en'
-        ))->Fetch();
+                'TYPE_ID' => 'WS_MIGRATION_TEST_EVENT',
+                'LID' => 'en'
+            ))->Fetch();
         $gw = new \CEventType;
         $gw->Delete($eventType['ID']);
     }
@@ -51,9 +51,9 @@ class EventsBuilderCase extends AbstractCase {
         });
 
         $eventType = \CEventType::GetList(array(
-            'TYPE_ID' => 'WS_MIGRATION_TEST_EVENT',
-            'LID' => 'ru'
-        ))->Fetch();
+                'TYPE_ID' => 'WS_MIGRATION_TEST_EVENT',
+                'LID' => 'ru'
+            ))->Fetch();
 
         $this->assertNotEmpty($eventType);
         $this->assertEquals($eventType['SORT'], 10);
@@ -61,9 +61,9 @@ class EventsBuilderCase extends AbstractCase {
         $this->assertNotEmpty($eventType['NAME'], 'Тестовое событие миграций');
 
         $res = EventMessageTable::getList(array(
-            'filter' => array(
-                'EVENT_NAME' => 'WS_MIGRATION_TEST_EVENT'
-            )
+                'filter' => array(
+                    'EVENT_NAME' => 'WS_MIGRATION_TEST_EVENT'
+                )
         ));
         $this->assertEquals($res->getSelectedRowsCount(), 2);
         while ($item = $res->fetch()) {
@@ -77,7 +77,6 @@ class EventsBuilderCase extends AbstractCase {
             }
         }
     }
-
 
     public function testUpdate() {
         $builder = new EventsBuilder();
@@ -95,16 +94,16 @@ class EventsBuilderCase extends AbstractCase {
         });
 
         $eventType = \CEventType::GetList(array(
-            'TYPE_ID' => 'WS_MIGRATION_TEST_EVENT',
-            'LID' => 'en'
-        ))->Fetch();
+                'TYPE_ID' => 'WS_MIGRATION_TEST_EVENT',
+                'LID' => 'en'
+            ))->Fetch();
         $this->assertTrue(!empty($eventType));
         $this->assertNotEmpty($eventType['NAME'], 'Тестовое событие');
 
         $res = EventMessageTable::getList(array(
-            'filter' => array(
-                'EVENT_NAME' => 'WS_MIGRATION_TEST_EVENT'
-            )
+                'filter' => array(
+                    'EVENT_NAME' => 'WS_MIGRATION_TEST_EVENT'
+                )
         ));
         $this->assertEquals($res->getSelectedRowsCount(), 1);
         while ($item = $res->fetch()) {

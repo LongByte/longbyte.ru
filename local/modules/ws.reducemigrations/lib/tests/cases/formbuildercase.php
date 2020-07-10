@@ -23,8 +23,8 @@ class FormBuilderCase extends AbstractCase {
 
     public function close() {
         $form = \CForm::GetList($by, $order, array(
-            'SID' => 'TestForm',
-        ), $isFiltered)->Fetch();
+                'SID' => 'TestForm',
+                ), $isFiltered)->Fetch();
         if (!$form) {
             return;
         }
@@ -34,16 +34,16 @@ class FormBuilderCase extends AbstractCase {
     public function testAdd() {
         $builder = new FormBuilder();
         $newForm = $builder->addForm('TestForm', 'TestForm', function (Form $form) {
-              $form
-                  ->arSiteId(array('s1'))
-                  ->sort(10)
-                  ->description('Description')
-                  ->useCaptcha(true)
-                  ->arGroup(array(
-                      '2' => 10
-                  ))
-                  ->arMenu(array("ru" => "Анкета посетителя", "en" => "Visitor Form"))
-                  ->descriptionType('html');
+            $form
+                ->arSiteId(array('s1'))
+                ->sort(10)
+                ->description('Description')
+                ->useCaptcha(true)
+                ->arGroup(array(
+                    '2' => 10
+                ))
+                ->arMenu(array("ru" => "Анкета посетителя", "en" => "Visitor Form"))
+                ->descriptionType('html');
 
             $form
                 ->addField('testQuestion')
@@ -73,8 +73,8 @@ class FormBuilderCase extends AbstractCase {
 
 
         $form = \CForm::GetList($by, $order, array(
-            'ID' => $newForm->getId(),
-        ), $isFiltered)->Fetch();
+                'ID' => $newForm->getId(),
+                ), $isFiltered)->Fetch();
 
         $this->assertNotEmpty($form);
         $this->assertEquals($form['C_SORT'], 10);
@@ -106,7 +106,6 @@ class FormBuilderCase extends AbstractCase {
         $this->assertEquals($res['DEFAULT_VALUE'], 'Y');
     }
 
-
     public function testUpdate() {
         $builder = new FormBuilder();
         $updatedForm = $builder->updateForm('TestForm', function (Form $form) {
@@ -129,8 +128,8 @@ class FormBuilderCase extends AbstractCase {
         });
 
         $form = \CForm::GetList($by, $order, array(
-            'ID' => $updatedForm->getId(),
-        ), $isFiltered)->Fetch();
+                'ID' => $updatedForm->getId(),
+                ), $isFiltered)->Fetch();
 
         $this->assertNotEmpty($form);
         $this->assertNotEmpty($form['NAME'], 'MyTestForm');

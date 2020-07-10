@@ -1,21 +1,20 @@
 <?php
+
 /**
  * @author Maxim Sokolovsky <sokolovsky@worksolutions.ru>
  */
 
 namespace WS\ReduceMigrations\Entities;
 
-
 use Bitrix\Main\NotImplementedException;
 
 abstract class BaseEntity {
+
     public $id;
-
     private $isNew = true;
-
     private $_errors = array();
-
     static private $_oneRequestsCache = array();
+
     /**
      * @param $props
      * @return $this
@@ -116,7 +115,7 @@ abstract class BaseEntity {
      * @return $this
      */
     static public function findOne($params = array()) {
-        $cacheKey = md5(get_called_class().serialize($params));
+        $cacheKey = md5(get_called_class() . serialize($params));
         if (!self::$_oneRequestsCache[$cacheKey]) {
             $params['limit'] = 1;
             $items = self::find($params);
@@ -140,7 +139,7 @@ abstract class BaseEntity {
 
     public function delete() {
         $res = static::callGatewayMethod('delete', $this->id);
-        return !(bool)$res->getErrors();
+        return !(bool) $res->getErrors();
     }
 
     public function insert() {
@@ -148,13 +147,13 @@ abstract class BaseEntity {
         $this->id = $res->getId();
         $this->_errors = $res->getErrors() ?: array();
         $this->isNew = false;
-        return !(bool)$res->getErrors();
+        return !(bool) $res->getErrors();
     }
 
     public function update() {
         $res = static::callGatewayMethod('update', $this->id, $this->getRawFields());
         $this->_errors = $res->getErrors() ?: array();
-        return !(bool)$res->getErrors();
+        return !(bool) $res->getErrors();
     }
 
     public function save() {
@@ -188,4 +187,5 @@ abstract class BaseEntity {
     static protected function modifyToDb($data) {
         return $data;
     }
+
 }

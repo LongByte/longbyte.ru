@@ -5,6 +5,7 @@ namespace WS\ReduceMigrations\Collection;
 use WS\ReduceMigrations\Scenario\ScriptScenario;
 
 class MigrationCollection {
+
     /** @var ScriptScenario[]  */
     private $elements;
 
@@ -31,7 +32,7 @@ class MigrationCollection {
     public function getApproximateTime() {
         $time = 0;
         foreach ($this->elements as $element) {
-            $time += (double)$element::approximatelyTime();
+            $time += (double) $element::approximatelyTime();
         }
         return $time;
     }
@@ -54,7 +55,7 @@ class MigrationCollection {
     }
 
     /**
-     * @return array
+     * @return ScriptScenario[]
      */
     public function toArray() {
         $migrations = $this->groupByPriority();
@@ -63,6 +64,13 @@ class MigrationCollection {
             $result[] = $item;
         });
         return $result;
+    }
+
+    /**
+     * @return int
+     */
+    public function count() {
+        return count($this->elements);
     }
 
     /**
@@ -80,6 +88,5 @@ class MigrationCollection {
         }
         return $list;
     }
-
 
 }

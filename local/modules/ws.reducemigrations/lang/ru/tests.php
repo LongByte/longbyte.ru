@@ -1,4 +1,5 @@
 <?php
+
 return array(
     'run' => array(
         'name' => 'WorkSolutions. Reduce Migrations',

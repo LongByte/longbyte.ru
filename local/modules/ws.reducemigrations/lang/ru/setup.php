@@ -1,4 +1,5 @@
 <?php
+
 return array(
     'title' => 'Установка модуля миграций данных',
     'name' => 'WS ReduceMigrations',

@@ -63,9 +63,9 @@ class EventsBuilder {
      */
     private function findEventType($type, $lid) {
         $data = \CEventType::GetList(array(
-            'TYPE_ID' => $type,
-            'LID' => $lid
-        ))->Fetch();
+                'TYPE_ID' => $type,
+                'LID' => $lid
+            ))->Fetch();
         if (empty($data)) {
             throw new BuilderException("EventType '{$type}' not found for lid '{$lid}'");
         }
@@ -88,7 +88,6 @@ class EventsBuilder {
                     throw new BuilderException('EventType update failed with error: ' . $APPLICATION->GetException()->GetString());
                 }
             }
-
         } else {
             $result = $gw->Add($eventType->getData());
             if (!$result) {
@@ -112,22 +111,21 @@ class EventsBuilder {
         foreach ($eventMessages as $message) {
             if ($message->getId() > 0) {
                 if ($message->isRemoved() && !$gw->Delete($message->getId())) {
-                    throw new BuilderException("EventType wasn't deleted: ". $APPLICATION->GetException()->GetString());
+                    throw new BuilderException("EventType wasn't deleted: " . $APPLICATION->GetException()->GetString());
                 }
                 if ($message->isDirty() && !$gw->Update($message->getId(), $message->getData())) {
-                    throw new BuilderException("EventType wasn't updated: ". $APPLICATION->GetException()->GetString());
+                    throw new BuilderException("EventType wasn't updated: " . $APPLICATION->GetException()->GetString());
                 }
             } else {
                 $id = $gw->Add(array_merge(
-                    $message->getData(),
-                    array('EVENT_NAME' => $eventName)
+                        $message->getData(),
+                        array('EVENT_NAME' => $eventName)
                 ));
                 if (!$id) {
                     throw new BuilderException("EventMessage add failed with error: " . $APPLICATION->GetException()->GetString());
                 }
                 $message->setId($id);
             }
-
         }
     }
 
