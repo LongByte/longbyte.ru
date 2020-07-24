@@ -34,13 +34,16 @@ class Webp {
         $obServer = Context::getCurrent()->getServer();
         $arGDInfo = gd_info();
 
+        $bBrowserSupport = strpos($obServer->get('HTTP_ACCEPT'), 'image/webp') !== false || $_SESSION['WEBP_BROWSER_SUPPORT'] === true;
+        $_SESSION['WEBP_BROWSER_SUPPORT'] = $bBrowserSupport;
+
         return (
-            $arGDInfo['WebP Support'] &&
-            function_exists('imagewebp') &&
-            strpos($obServer->get('HTTP_ACCEPT'), 'image/webp') !== false &&
-            strpos($APPLICATION->GetCurDir(), '/bitrix/') === false &&
-            $APPLICATION->GetProperty('enable_webp') != 'N'
-            );
+                $arGDInfo['WebP Support'] &&
+                function_exists('imagewebp') &&
+                $bBrowserSupport &&
+                strpos($APPLICATION->GetCurDir(), '/bitrix/') === false &&
+                $APPLICATION->GetProperty('enable_webp') != 'N'
+                );
     }
 
     /**
@@ -52,6 +55,7 @@ class Webp {
         if (self::checkSupport()) {
             $arPatterns = array(
                 '/<img[^>]* src="([^"]+\.(jpg|jpeg|png|bmp))"[^>]*>/',
+                '/<source[^>]* srcset="([^"]+\.(jpg|jpeg|png|bmp))"[^>]*>/',
                 '/<img[^>]* data-src="([^"]+\.(jpg|jpeg|png|bmp))"[^>]*>/',
                 '/<[^>]*style="[^"]*url\(\'?([^)]+\.(jpg|jpeg|png|bmp))\'?\)[^"]*"[^>]*>/',
             );
@@ -164,14 +168,14 @@ class Webp {
      * @return string
      */
     private function checkCorrectImage() {
-        if ($this->getTargetFile()->isExists() && $this->getTargetFile()->getSize() > 1) {
+        if ($this->getTargetFile()->isExists() && $this->getTargetFile()->getSize() > 0) {
             return $this->getTargetSrc();
         }
         return $this->getSourceSrc();
     }
 
     /**
-     * 
+     * Проверка даты обновления файла
      * @return bool
      */
     private function isNeedUpdate() {
@@ -179,7 +183,7 @@ class Webp {
     }
 
     /**
-     *
+     * 
      * @return bool
      */
     private function isPng() {
