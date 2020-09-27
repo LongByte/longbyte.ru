@@ -8,7 +8,7 @@ use \Bitrix\Main\Web\Json;
 class Vue {
 
     public static function includeVueJS() {
-        if (\Site::IsDevelop() || true) {
+        if (\Site::IsDevelop()) {
             Asset::getInstance()->addString('<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>');
         } else {
             Asset::getInstance()->addString('<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>');
