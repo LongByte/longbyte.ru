@@ -69,7 +69,6 @@ class Online extends \Api\Core\Base\Controller {
                 $this->arResponse['errors'][] = "Не удалось выполнить socket_connect().\nПричина: ($result) " . socket_last_error($obSocket) . "\n";
             } else {
 
-//                $arSensors = json_decode($jsonSensors, true);
                 $arData = array(
                     'token' => $this->token,
                     'command' => 'getDebug',
@@ -77,20 +76,15 @@ class Online extends \Api\Core\Base\Controller {
                 $jsonData = json_encode($arData);
                 $dataLendth = strlen($jsonData);
                 socket_write($obSocket, $jsonData, $dataLendth);
-//                echo "Send {$dataLendth} bytes.\n";
                 $rawMessage = socket_read($obSocket, 1024 * 1024);
                 $dataLendth = strlen($rawMessage);
                 $rawMessage = trim($rawMessage);
 
                 if (strlen($rawMessage) > 0) {
-//                    echo "Responce: [{$dataLendth}].\n";
-
                     $arMessage = json_decode($rawMessage, true);
                     $arMessage['post_data'] = json_decode($arMessage['post_data'], true);
 
                     $this->insertSensorsData($arMessage['post_data']);
-
-//                    print_r($arMessage);
                 }
                 if (socket_last_error($obSocket)) {
                     $this->arResponse['errors'][] = "Ошибка сокета.\nПричина: " . socket_last_error($obSocket) . "\n";
@@ -154,7 +148,7 @@ class Online extends \Api\Core\Base\Controller {
             $value = round($value, (int) $obSensor->getPrecision());
 
             $obDate = new DateTime();
-            
+
             $obValue = new \Api\Sensors\Data\Entity();
             $obValue
                 ->setSensor($obSensor)

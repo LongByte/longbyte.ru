@@ -9,7 +9,6 @@ Asset::getInstance()->addString('<script src="//cdnjs.cloudflare.com/ajax/libs/a
 Asset::getInstance()->addString('<meta name="robots" content="noindex, nofollow"/>', true);
 
 $APPLICATION->IncludeComponent("longbyte:vue", "sensorsonline", Array(
-//    'INCLUDE_COMPONENTS' => array('sensorbar', 'sensorline', 'sensorbool'),
     'STYLE_TO_COMPILER' => 'Y',
     ), $component->__parent
 );
