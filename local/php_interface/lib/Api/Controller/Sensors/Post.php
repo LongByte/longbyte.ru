@@ -129,8 +129,8 @@ class Post extends \Api\Core\Base\Controller {
     public function getDebug() {
         return json_encode(array(
             'post_data' => $this->getPostData(),
-            'sensors' => $this->obSystem->getSensorsCollection()->toArray(),
-            'today_values' => $this->obTodayValues->toArray(),
+            'sensors' => !is_null($this->obSystem) ? $this->obSystem->getSensorsCollection()->toArray() : array(),
+            'today_values' => !is_null($this->obTodayValues) ? $this->obTodayValues->toArray() : array(),
             'response' => $this->arResponse,
         ));
     }
