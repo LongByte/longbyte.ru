@@ -13,6 +13,7 @@ $APPLICATION->IncludeComponent(
         'SEF_URL_TEMPLATES' => array(
             "default" => "",
             "debug" => "debug/",
+            "online" => "#SYSTEM_NAME#-#SYSTEM_TOKEN#/online/",
             "system" => "#SYSTEM_NAME#-#SYSTEM_TOKEN#/",
             "edit" => "#SYSTEM_NAME#-#SYSTEM_TOKEN#/edit/",
             "stat" => "#SYSTEM_NAME#-#SYSTEM_TOKEN#/stat/",
