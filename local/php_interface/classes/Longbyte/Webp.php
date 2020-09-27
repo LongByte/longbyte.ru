@@ -38,12 +38,12 @@ class Webp {
         $_SESSION['WEBP_BROWSER_SUPPORT'] = $bBrowserSupport;
 
         return (
-                $arGDInfo['WebP Support'] &&
-                function_exists('imagewebp') &&
-                $bBrowserSupport &&
-                strpos($APPLICATION->GetCurDir(), '/bitrix/') === false &&
-                $APPLICATION->GetProperty('enable_webp') != 'N'
-                );
+            $arGDInfo['WebP Support'] &&
+            function_exists('imagewebp') &&
+            $bBrowserSupport &&
+            strpos($APPLICATION->GetCurDir(), '/bitrix/') === false &&
+            $APPLICATION->GetProperty('enable_webp') != 'N'
+            );
     }
 
     /**
@@ -116,6 +116,10 @@ class Webp {
                 $strTempSrc = str_replace('.webp', '_tmp.jpg', $this->getTargetFile()->getPath());
                 imagejpeg($obJpgImage, $strTempSrc, 100);
                 $obImage = imagecreatefromjpeg($strTempSrc);
+            } else {
+                imagepalettetotruecolor($obImage);
+                imagealphablending($obImage, true);
+                imagesavealpha($obImage, true);
             }
         } elseif ($this->isBmp()) {
             $obImage = imagecreatefrombmp($this->getSourceFile()->getPath());
