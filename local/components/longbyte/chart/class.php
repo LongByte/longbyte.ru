@@ -1,9 +1,7 @@
 <?php
 
 use Bitrix\Main\Loader;
-use Bitrix\Iblock\SectionTable;
-use Bitrix\Iblock\PropertyTable;
-use AB\Iblock\Element;
+use Bitrix\Main\Application;
 
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
     die();
@@ -27,7 +25,12 @@ class LongbyteChartComponent extends CBitrixComponent {
      * @var \Api\Chart\Systems\Element\Collection
      */
     private $obSystems = null;
-    private $arResults = array();
+
+    /**
+     *
+     * @var \Api\Chart\Firm\Collection
+     */
+    private $obFirms = null;
 
     /**
      * Check Required Modules
@@ -35,9 +38,6 @@ class LongbyteChartComponent extends CBitrixComponent {
      */
     protected function checkModules() {
         if (!Loader::includeModule('iblock')) {
-            throw new SystemException('Модуль инфоблоков не установлен');
-        }
-        if (!Loader::includeModule('ab.iblock')) {
             throw new SystemException('Модуль инфоблоков не установлен');
         }
     }
@@ -49,33 +49,39 @@ class LongbyteChartComponent extends CBitrixComponent {
 
         $this->checkModules();
 
-        if ($this->startResultCache(60 * 60)) {
+        $this->arResult = \Api\Core\Main\Cache::getInstance()
+            ->setIblockTag(IBLOCK_CHART_TESTS)
+            ->setIblockTag(IBLOCK_CHART_SYSTEMS)
+            ->setIblockTag(IBLOCK_CHART_RESULT)
+            ->setIblockTag(IBLOCK_CHART_FIRM)
+            ->setTime(60 * 60)
+            ->setId('chart')
+            ->get(function() {
             $this->arResult = array(
-                'TEST_TYPES' => array(),
+                'obData' => null,
                 'JS_DATA' => array(),
             );
 
             $this->_getData();
-            $this->_processTotalTest();
             $this->_prepareJsData();
+            $this->_prepareData();
 
-            $this->IncludeComponentTemplate();
-        }
+            return $this->arResult;
+        })
+        ;
+
+        $this->IncludeComponentTemplate();
     }
 
     /**
      * 
-     * @global \CCacheManager $CACHE_MANAGER
      */
     private function _getData() {
-        global $CACHE_MANAGER;
-        $CACHE_MANAGER->RegisterTag('iblock_id_' . IBLOCK_CHART_TESTS);
-        $CACHE_MANAGER->RegisterTag('iblock_id_' . IBLOCK_CHART_SYSTEMS);
-        $CACHE_MANAGER->RegisterTag('iblock_id_' . IBLOCK_CHART_RESULT);
         $this->getTestTypes();
         $this->getTests();
+        $this->getFirms();
         $this->getSystems();
-        $this->_getResults();
+        $this->getResults();
     }
 
     /**
@@ -89,7 +95,6 @@ class LongbyteChartComponent extends CBitrixComponent {
             /** @var \Api\Chart\Tests\Section\Collection $obTestTypes */
             $this->obTestTypes = \Api\Chart\Tests\Section\Model::getAll(array('=ACTIVE' => 'Y'), array(
                     'order' => array('SORT' => 'ASC'),
-                    'select' => array('ID', 'NAME', 'TYPE' => 'CODE', 'DESCRIPTION')
             ));
         }
         return $this->obTestTypes;
@@ -108,15 +113,27 @@ class LongbyteChartComponent extends CBitrixComponent {
 
             /** @var \Api\Chart\Tests\Element\Entity $obTest */
             foreach ($this->obTests as $obTest) {
-                $this
-                    ->getTestTypes()
-                    ->getByKey($obTest->getTestTypeId())
-                    ->getTests()
-                    ->addItem($obTest)
-                ;
+                $obTestType = $this->getTestTypes()->getByKey($obTest->getTestTypeId());
+                if (!is_null($obTestType)) {
+                    $obTestType->getTests()->addItem($obTest);
+                    $obTest->setTestType($obTestType);
+                }
             }
         }
         return $this->obTests;
+    }
+
+    /**
+     * 
+     * @return \Api\Chart\Firm\Collection
+     */
+    private function getFirms() {
+
+        if (is_null($this->obFirms)) {
+            /** @var \Api\Chart\Firm\Collection $obFirms */
+            $this->obFirms = \Api\Chart\Firm\Model::getAll(array('=ACTIVE' => 'Y'));
+        }
+        return $this->obFirms;
     }
 
     /**
@@ -128,6 +145,25 @@ class LongbyteChartComponent extends CBitrixComponent {
         if (is_null($this->obSystems)) {
             /** @var \Api\Chart\Systems\Element\Collection $obSystems */
             $this->obSystems = \Api\Chart\Systems\Element\Model::getAll(array('=ACTIVE' => 'Y'));
+
+            /** @var \Api\Chart\Systems\Element\Entity $obSystem */
+            foreach ($this->getSystems() as $obSystem) {
+                if ($obSystem->getCpuFirmId() > 0) {
+                    if ($obFirm = $this->getFirms()->getByKey($obSystem->getCpuFirmId())) {
+                        $obSystem->setCpuFirm($obFirm);
+                    }
+                }
+                if ($obSystem->getGpuFirmId() > 0) {
+                    if ($obFirm = $this->getFirms()->getByKey($obSystem->getGpuFirmId())) {
+                        $obSystem->setGpuFirm($obFirm);
+                    }
+                }
+                if ($obSystem->getHdFirmId() > 0) {
+                    if ($obFirm = $this->getFirms()->getByKey($obSystem->getHdFirmId())) {
+                        $obSystem->setHdFirm($obFirm);
+                    }
+                }
+            }
         }
         return $this->obSystems;
     }
@@ -135,18 +171,21 @@ class LongbyteChartComponent extends CBitrixComponent {
     /**
      * 
      */
-    private function _getResults() {
+    private function getResults() {
 
         $obResults = \Api\Chart\Result\Element\Model::getAll(array('=ACTIVE' => 'Y'));
 
         /** @var \Api\Chart\Result\Element\Entity $obResult */
         foreach ($obResults as $obResult) {
-            $this
-                ->getTests()
-                ->getByKey($obResult->getTestId())
-                ->getResults()
-                ->addItem($obResult)
-            ;
+            $obTest = $this->getTests()->getByKey($obResult->getTestId());
+            $obSystem = $this->getSystems()->getByKey($obResult->getSystemId());
+
+            if (!is_null($obTest) && !is_null($obSystem)) {
+                $obTest->getResults()->addItem($obResult);
+                $obResult->setTest($obTest);
+
+                $obResult->setSystem($obSystem);
+            }
         }
     }
 
@@ -168,18 +207,18 @@ class LongbyteChartComponent extends CBitrixComponent {
                         continue;
                     }
 
-                    $obResult->prepareData();
+//                    $obResult->prepareData();
 
-                    $arRes = array($arResult['RESULT']);
-                    if (!empty($arResult['RESULT2']))
-                        $arRes[] = $arResult['RESULT2'];
-                    if (!empty($arResult['RESULT3']))
-                        $arRes[] = $arResult['RESULT3'];
+                    $arRes = array($obResult->getResult());
+                    if (!empty($obResult->getResult2()))
+                        $arRes[] = $obResult->getResult2();
+                    if (!empty($obResult->getResult3()))
+                        $arRes[] = $obResult->getResult3();
 
                     $arDataItem = array(
-                        $arResult['NAME']
+                        $obResult->getSystem()->getFullName($obTestType) //$arResult['NAME']
                     );
-                    foreach (explode(',', $arResult['COLOR']) as $colorPart) {
+                    foreach (explode(',', '0, 0, 0') as $colorPart) {
                         $arDataItem[] = (int) trim($colorPart);
                     }
                     foreach ($arRes as $oneRes) {
@@ -187,23 +226,16 @@ class LongbyteChartComponent extends CBitrixComponent {
                     }
                     $arDataTests[] = $arDataItem;
                 }
-                unset($arResult);
                 $this->arResult['JS_DATA'][] = $arDataTests;
             }
-            unset($arTest);
         }
-        unset($arTestType);
     }
 
     /**
      * 
-     * @param int|float $va1ue_1
-     * @param int|float $va1ue_2
-     * @param int $presicion
-     * @return int
      */
-    private function _percent($va1ue_1, $va1ue_2, $presicion = 0) {
-        return round(($va1ue_1 / $va1ue_2 - 1) * 100, $presicion);
+    private function _prepareData() {
+        $this->arResult['obData'] = $this->getTestTypes();
     }
 
 }

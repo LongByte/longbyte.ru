@@ -7,7 +7,7 @@ use Bitrix\Main\Page\Asset;
 LongByte\Babel::includeBabel(LongByte\Babel::BABEL_SERVER_CLIENT);
 LongByte\Vue::includeVueJS();
 ?>
-
+<!DOCTYPE html>
 <html>
     <head>
         <title><? $APPLICATION->ShowTitle(); ?></title>

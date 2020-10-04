@@ -106,4 +106,21 @@ class Collection extends \Api\Core\Base\Collection {
         return $fMin;
     }
 
+    /**
+     * 
+     * @return \Api\Chart\Systems\Element\Collection
+     */
+    public function getHasResultSystems() {
+
+        $obSystemsCollection = new \Api\Chart\Systems\Element\Collection();
+
+        /** @var Entity $obResult */
+        foreach ($this->getCollection() as $obResult) {
+            if ($obResult->getResult() > 0.0) {
+                $obSystemsCollection->addItem($obResult->getSystem());
+            }
+        }
+        return $obSystemsCollection;
+    }
+
 }

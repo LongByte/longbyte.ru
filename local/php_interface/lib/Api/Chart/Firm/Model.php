@@ -10,7 +10,7 @@ class Model extends \Api\Core\Iblock\Element\Model {
     protected static $_iblockId = IBLOCK_CHART_FIRM;
 
     public static function getEntity() {
-        
+        return Entity::class;
     }
 
 }

@@ -6,23 +6,12 @@ namespace Api\Chart\Tests\Element;
  * Class \Api\Chart\Tests\Element\Entity
  * 
  * @method int getId()
- * @method $this setId($iId)
  * @method string getName()
- * @method $this setName(string $strName)
- * @method mixed getDescription()
- * @method $this setDescription(mixed $mixedDescription)
- * @method mixed getTestTypeId()
- * @method $this setTestTypeId(mixed $mixedTestTypeId)
  * @method mixed getUnits()
- * @method $this setUnits(mixed $mixedUnits)
  * @method mixed getLessBetter()
- * @method $this setLessBetter(mixed $mixedLessBetter)
  * @method mixed getUse4sum()
- * @method $this setUse4sum(mixed $mixedUse4sum)
  * @method mixed getUse4sum2()
- * @method $this setUse4sum2(mixed $mixedUse4sum2)
  * @method mixed getUse4sum3()
- * @method $this setUse4sum3(mixed $mixedUse4sum3)
  */
 class Entity extends \Api\Core\Iblock\Element\Entity {
 
@@ -36,12 +25,48 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
 
     /**
      *
+     * @var \Api\Chart\Tests\Section\Entity 
+     */
+    protected $obTestType = null;
+
+    /**
+     *
      * @var \Api\Chart\Result\Element\Collection
      */
     protected $obResults = null;
 
+    /**
+     *
+     * @var array
+     */
+    protected static $arFields = array(
+        'ID',
+        'NAME',
+        'SORT',
+        'IBLOCK_SECTION_ID',
+        'PREVIEW_TEXT'
+    );
+
     public static function getModel() {
         return Model::class;
+    }
+
+    /**
+     * 
+     * @return \Api\Chart\Tests\Section\Entity 
+     */
+    public function getTestType() {
+        return $this->obTestType;
+    }
+
+    /**
+     * 
+     * @param \Api\Chart\Tests\Section\Entity $obTestType
+     * @return $this
+     */
+    public function setTestType(\Api\Chart\Tests\Section\Entity $obTestType) {
+        $this->obTestType = $obTestType;
+        return $this;
     }
 
     /**
@@ -150,5 +175,38 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
         }
         return null;
     }
-    
+
+    /**
+     * 
+     * @return int
+     */
+    public function getTestTypeId() {
+        return (int) $this->getIblockSectionId();
+    }
+
+    /**
+     * 
+     * @param int $iTestTypeId
+     * @return $this
+     */
+    public function setTestTypeId(int $iTestTypeId) {
+        return $this->setIblockSectionId($iTestTypeId);
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getDescription() {
+        return $this->getPreviewText();
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getTitle() {
+        return $this->getName() . ($this->getUnits() ? ', ' . $this->getUnits() : '') . ($this->getLessBetter() ? ' (меньше - лучше)' : '');
+    }
+
 }

@@ -7,13 +7,21 @@ namespace Api\Chart\Tests\Section;
  * 
  * @method int getId()
  * @method string getName()
- * @method $this setName(string $strName)
- * @method mixed getType()
- * @method $this setType(mixed $mixedType)
+ * @method string getCode()
  * @method mixed getDescription()
- * @method $this setDescription(mixed $mixedDescription)
  */
 class Entity extends \Api\Core\Iblock\Section\Entity {
+
+    /**
+     *
+     * @var array
+     */
+    protected static $arFields = array(
+        'ID',
+        'NAME',
+        'CODE',
+        'DESCRIPTION',
+    );
 
     /**
      *
