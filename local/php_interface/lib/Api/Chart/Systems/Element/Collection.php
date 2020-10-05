@@ -10,9 +10,9 @@ class Collection extends \Api\Core\Base\Collection {
     /**
      * 
      * @param type $strKey
-     * @return Entity
+     * @return \Api\Chart\Systems\Element\Entity|null
      */
-    public function getByKey($strKey) {
+    public function getByKey($strKey): ?Entity {
         return parent::getByKey($strKey);
     }
 

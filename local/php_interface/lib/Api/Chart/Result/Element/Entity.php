@@ -7,22 +7,24 @@ namespace Api\Chart\Result\Element;
  * 
  * @method int getId()
  * @method string getName()
- * @method $this setName(string $strName)
- * @method mixed getInfo()
- * @method $this setInfo(mixed $mixedInfo)
- * @method mixed getTestTypeId()
+ * @method mixed getPreviewText()
  * @method mixed getTestId()
- * @method $this setTestId(mixed $mixedTestId)
  * @method mixed getSystemId()
- * @method $this setSystemId(mixed $mixedSystemId)
  * @method mixed getResult()
- * @method $this setResult(mixed $mixedResult)
  * @method mixed getResult2()
- * @method $this setResult2(mixed $mixedResult2)
  * @method mixed getResult3()
- * @method $this setResult3(mixed $mixedResult3)
  */
 class Entity extends \Api\Core\Iblock\Element\Entity {
+
+    /**
+     *
+     * @var array
+     */
+    protected static $arFields = array(
+        'ID',
+        'NAME',
+        'PREVIEW_TEXT',
+    );
 
     /**
      *
@@ -36,34 +38,114 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      */
     protected $obTest = null;
 
-    public static function getModel() {
+    /**
+     * 
+     * @return string
+     */
+    public static function getModel(): string {
         return Model::class;
     }
 
     /**
      * 
-     * @return \Api\Chart\Systems\Element\Entity
+     * @return string
      */
-    public function getSystem() {
-        return $this->obSystem;
+    public static function getCollection(): string {
+        return Collection::class;
+    }
+
+    /**
+     * 
+     * @return \Api\Chart\Tests\Element\Entity
+     */
+    public function getTest(): ?\Api\Chart\Tests\Element\Entity {
+        return $this->obTest;
     }
 
     /**
      * 
      * @param \Api\Chart\Tests\Element\Entity $obTest
+     * @return \self
      */
-    public function setTest(\Api\Chart\Tests\Element\Entity $obTest) {
+    public function setTest(\Api\Chart\Tests\Element\Entity $obTest): self {
         $this->obTest = $obTest;
         return $this;
     }
 
     /**
      * 
-     * @param \Api\Chart\Systems\Element\Entity $obSystem
+     * @return \Api\Chart\Systems\Element\Entity
      */
-    public function setSystem(\Api\Chart\Systems\Element\Entity $obSystem) {
+    public function getSystem(): ?\Api\Chart\Systems\Element\Entity {
+        return $this->obSystem;
+    }
+
+    /**
+     * 
+     * @param \Api\Chart\Systems\Element\Entity $obSystem
+     * @return \self
+     */
+    public function setSystem(\Api\Chart\Systems\Element\Entity $obSystem): self {
         $this->obSystem = $obSystem;
         return $this;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getFullName(): string {
+
+        $strName = '';
+        $strName .= '<span';
+        if (!empty($this->getPreviewText())) {
+            $strName .= ' title="' . nl2br($this->getPreviewText()) . '"';
+        }
+        $strName .= '>';
+        $strName .= $this->getSystem()->getFullName($this->getTest()->getTestType());
+        $strName .= '</span>';
+
+        return $strName;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getColor(): string {
+        $strColor = '127, 127, 127';
+        $isActual = empty($this->getSystem()->getActualFor()) && $this->getSystem()->getActual() || !empty($this->getSystem()->getActualFor()) && in_array($this->getTest()->getTestType()->getId(), $this->getSystem()->getActualFor());
+        if ($isActual) {
+
+            switch ($this->getTest()->getTestType()->getCode()) {
+                case 'GPU':
+                    $strColor = $this->getSystem()->getGpuFirm()->getActiveColor();
+                    break;
+                case 'CPU':
+                case 'RAM':
+                    $strColor = $this->getSystem()->getCpuFirm()->getActiveColor();
+                    break;
+                case 'DRIVE':
+                    $strColor = $this->getSystem()->getHdFirm()->getActiveColor();
+                    break;
+            }
+        } else {
+
+            switch ($this->getTest()->getTestType()->getCode()) {
+                case 'GPU':
+                    $strColor = $this->getSystem()->getGpuFirm()->getPassiveColor();
+                    break;
+                case 'CPU':
+                case 'RAM':
+                    $strColor = $this->getSystem()->getCpuFirm()->getPassiveColor();
+                    break;
+                case 'DRIVE':
+                    $strColor = $this->getSystem()->getHdFirm()->getPassiveColor();
+                    break;
+            }
+        }
+
+        return $strColor;
     }
 
 }

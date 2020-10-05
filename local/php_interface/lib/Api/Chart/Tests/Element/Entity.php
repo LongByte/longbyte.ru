@@ -7,6 +7,7 @@ namespace Api\Chart\Tests\Element;
  * 
  * @method int getId()
  * @method string getName()
+ * @method string getPreviewText()
  * @method mixed getUnits()
  * @method mixed getLessBetter()
  * @method mixed getUse4sum()
@@ -14,14 +15,6 @@ namespace Api\Chart\Tests\Element;
  * @method mixed getUse4sum3()
  */
 class Entity extends \Api\Core\Iblock\Element\Entity {
-
-    public $max = null;
-    public $max2 = null;
-    public $max3 = null;
-    public $min = null;
-    public $min2 = null;
-    public $min3 = null;
-    public $iTestsCount = null;
 
     /**
      *
@@ -44,27 +37,39 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
         'NAME',
         'SORT',
         'IBLOCK_SECTION_ID',
-        'PREVIEW_TEXT'
+        'PREVIEW_TEXT',
     );
 
-    public static function getModel() {
+    /**
+     * 
+     * @return string
+     */
+    public static function getModel(): string {
         return Model::class;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public static function getCollection(): string {
+        return Collection::class;
     }
 
     /**
      * 
      * @return \Api\Chart\Tests\Section\Entity 
      */
-    public function getTestType() {
+    public function getTestType(): ?\Api\Chart\Tests\Section\Entity {
         return $this->obTestType;
     }
 
     /**
      * 
      * @param \Api\Chart\Tests\Section\Entity $obTestType
-     * @return $this
+     * @return \self
      */
-    public function setTestType(\Api\Chart\Tests\Section\Entity $obTestType) {
+    public function setTestType(\Api\Chart\Tests\Section\Entity $obTestType): self {
         $this->obTestType = $obTestType;
         return $this;
     }
@@ -73,7 +78,7 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * 
      * @return \Api\Chart\Result\Element\Collection
      */
-    public function getResults() {
+    public function getResults(): \Api\Chart\Result\Element\Collection {
         if (is_null($this->obResults)) {
             $this->obResults = new \Api\Chart\Result\Element\Collection();
         }
@@ -82,130 +87,17 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
 
     /**
      * 
-     * @return float|null
-     */
-    public function getMax() {
-
-        if (!is_null($this->max)) {
-            return $this->max;
-        }
-
-        if ($this->getUse4sum()) {
-            return $this->getResults()->getMax();
-        }
-        return null;
-    }
-
-    /**
-     * 
-     * @return float|null
-     */
-    public function getMax2() {
-
-        if (!is_null($this->max2)) {
-            return $this->max2;
-        }
-
-        if ($this->getUse4sum2()) {
-            return $this->getResults()->getMax2();
-        }
-        return null;
-    }
-
-    /**
-     * 
-     * @return float|null
-     */
-    public function getMax3() {
-
-        if (!is_null($this->max3)) {
-            return $this->max3;
-        }
-
-        if ($this->getUse4sum3()) {
-            return $this->getResults()->getMax3();
-        }
-        return null;
-    }
-
-    /**
-     * 
-     * @return float|null
-     */
-    public function getMin() {
-
-        if (!is_null($this->min)) {
-            return $this->min;
-        }
-
-        if ($this->getUse4sum()) {
-            return $this->getResults()->getMin();
-        }
-        return null;
-    }
-
-    /**
-     * 
-     * @return float|null
-     */
-    public function getMin2() {
-
-        if (!is_null($this->min2)) {
-            return $this->min2;
-        }
-
-        if ($this->getUse4sum2()) {
-            return $this->getResults()->getMin2();
-        }
-        return null;
-    }
-
-    /**
-     * 
-     * @return float|null
-     */
-    public function getMin3() {
-
-        if (!is_null($this->min3)) {
-            return $this->min3;
-        }
-
-        if ($this->getUse4sum3()) {
-            return $this->getResults()->getMin3();
-        }
-        return null;
-    }
-
-    /**
-     * 
      * @return int
      */
-    public function getTestTypeId() {
+    public function getTestTypeId(): int {
         return (int) $this->getIblockSectionId();
     }
 
     /**
      * 
-     * @param int $iTestTypeId
-     * @return $this
-     */
-    public function setTestTypeId(int $iTestTypeId) {
-        return $this->setIblockSectionId($iTestTypeId);
-    }
-
-    /**
-     * 
      * @return string
      */
-    public function getDescription() {
-        return $this->getPreviewText();
-    }
-
-    /**
-     * 
-     * @return string
-     */
-    public function getTitle() {
+    public function getTitle(): string {
         return $this->getName() . ($this->getUnits() ? ', ' . $this->getUnits() : '') . ($this->getLessBetter() ? ' (меньше - лучше)' : '');
     }
 

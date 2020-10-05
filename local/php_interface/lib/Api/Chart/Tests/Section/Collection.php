@@ -12,7 +12,7 @@ class Collection extends \Api\Core\Base\Collection {
      * @param type $strKey
      * @return Entity
      */
-    public function getByKey($strKey) {
+    public function getByKey($strKey): ?Entity {
         return parent::getByKey($strKey);
     }
 

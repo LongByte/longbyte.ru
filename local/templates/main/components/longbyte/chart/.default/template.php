@@ -56,11 +56,11 @@ $obData = $arResult['obData'];
                 <div class="graphic <?= $obTestType->getCode() ?>">
                     <center>
                         <h3><?= $obTest->getTitle() ?></h3>
-                        <? if (!empty($obTest->getDescription())): ?>
+                        <? if (!empty($obTest->getPreviewText())): ?>
                             <div class="lb-spoiler spoiler-desc">
                                 <div class="spoiler-title">Описание теста</div>
                                 <div class="spoiler-text">
-                                    <?= $obTest->getDescription() ?>
+                                    <?= $obTest->getPreviewText() ?>
                                 </div>
                             </div>
                         <? endif; ?>

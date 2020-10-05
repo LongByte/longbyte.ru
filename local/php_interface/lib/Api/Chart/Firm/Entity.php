@@ -13,7 +13,23 @@ namespace Api\Chart\Firm;
  */
 class Entity extends \Api\Core\Iblock\Element\Entity {
 
-    public static function getModel() {
+    /**
+     *
+     * @var array
+     */
+    protected static $arFields = array(
+        'ID',
+        'NAME',
+        'XML_ID',
+        'PREVIEW_TEXT',
+        'DETAIL_TEXT',
+    );
+
+    /**
+     * 
+     * @return string
+     */
+    public static function getModel(): string {
         return Model::class;
     }
 
@@ -21,7 +37,15 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * 
      * @return string
      */
-    public function getTextColor() {
+    public static function getCollection(): string {
+        return Collection::class;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getTextColor(): string {
         return $this->getXmlId();
     }
 
@@ -29,7 +53,7 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * 
      * @return string
      */
-    public function getPassiveColor() {
+    public function getPassiveColor(): string {
         return $this->getPreviewText();
     }
 
@@ -37,7 +61,7 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * 
      * @return string
      */
-    public function getActiveColor() {
+    public function getActiveColor(): string {
         return $this->getDetailText();
     }
 

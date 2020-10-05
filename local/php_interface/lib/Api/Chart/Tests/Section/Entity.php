@@ -29,15 +29,27 @@ class Entity extends \Api\Core\Iblock\Section\Entity {
      */
     protected $obTests = null;
 
-    public static function getModel() {
+    /**
+     * 
+     * @return string
+     */
+    public static function getModel(): string {
         return Model::class;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public static function getCollection(): string {
+        return Collection::class;
     }
 
     /**
      * 
      * @return \Api\Chart\Tests\Element\Collection
      */
-    public function getTests() {
+    public function getTests(): \Api\Chart\Tests\Element\Collection {
         if (is_null($this->obTests)) {
             $this->obTests = new \Api\Chart\Tests\Element\Collection();
         }

@@ -49,7 +49,7 @@ class LongbyteChartComponent extends CBitrixComponent {
 
         $this->checkModules();
 
-        $this->arResult = \Api\Core\Main\Cache::getInstance()
+        $this->obTestTypes = \Api\Core\Main\Cache::getInstance()
             ->setIblockTag(IBLOCK_CHART_TESTS)
             ->setIblockTag(IBLOCK_CHART_SYSTEMS)
             ->setIblockTag(IBLOCK_CHART_RESULT)
@@ -57,18 +57,15 @@ class LongbyteChartComponent extends CBitrixComponent {
             ->setTime(60 * 60)
             ->setId('chart')
             ->get(function() {
-            $this->arResult = array(
-                'obData' => null,
-                'JS_DATA' => array(),
-            );
 
             $this->_getData();
-            $this->_prepareJsData();
-            $this->_prepareData();
 
-            return $this->arResult;
+            return $this->getTestTypes();
         })
         ;
+
+        $this->_prepareData();
+        $this->_prepareJsData();
 
         $this->IncludeComponentTemplate();
     }
@@ -88,7 +85,7 @@ class LongbyteChartComponent extends CBitrixComponent {
      * 
      * @return \Api\Chart\Tests\Section\Collection
      */
-    private function getTestTypes() {
+    private function getTestTypes(): \Api\Chart\Tests\Section\Collection {
 
         if (is_null($this->obTestTypes)) {
 
@@ -104,7 +101,7 @@ class LongbyteChartComponent extends CBitrixComponent {
      * 
      * @return \Api\Chart\Tests\Element\Collection
      */
-    private function getTests() {
+    private function getTests(): \Api\Chart\Tests\Element\Collection {
 
         if (is_null($this->obTests)) {
 
@@ -127,7 +124,7 @@ class LongbyteChartComponent extends CBitrixComponent {
      * 
      * @return \Api\Chart\Firm\Collection
      */
-    private function getFirms() {
+    private function getFirms(): \Api\Chart\Firm\Collection {
 
         if (is_null($this->obFirms)) {
             /** @var \Api\Chart\Firm\Collection $obFirms */
@@ -140,7 +137,7 @@ class LongbyteChartComponent extends CBitrixComponent {
      * 
      * @return \Api\Chart\Systems\Element\Collection
      */
-    private function getSystems() {
+    private function getSystems(): \Api\Chart\Systems\Element\Collection {
 
         if (is_null($this->obSystems)) {
             /** @var \Api\Chart\Systems\Element\Collection $obSystems */
@@ -207,8 +204,6 @@ class LongbyteChartComponent extends CBitrixComponent {
                         continue;
                     }
 
-//                    $obResult->prepareData();
-
                     $arRes = array($obResult->getResult());
                     if (!empty($obResult->getResult2()))
                         $arRes[] = $obResult->getResult2();
@@ -216,9 +211,9 @@ class LongbyteChartComponent extends CBitrixComponent {
                         $arRes[] = $obResult->getResult3();
 
                     $arDataItem = array(
-                        $obResult->getSystem()->getFullName($obTestType) //$arResult['NAME']
+                        $obResult->getFullName()
                     );
-                    foreach (explode(',', '0, 0, 0') as $colorPart) {
+                    foreach (explode(',', $obResult->getColor()) as $colorPart) {
                         $arDataItem[] = (int) trim($colorPart);
                     }
                     foreach ($arRes as $oneRes) {

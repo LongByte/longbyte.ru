@@ -8,59 +8,32 @@ namespace Api\Chart\Systems\Element;
  * @method mixed getId()
  * @method mixed getIblockId()
  * @method mixed getCpu()
- * @method $this setCpu(mixed $mixedCpu)
  * @method mixed getCpuFirmId()
- * @method $this setCpuFirmId(mixed $mixedCpuFirmId)
  * @method mixed getCpuFreq()
- * @method $this setCpuFreq(mixed $mixedCpuFreq)
  * @method mixed getCpuBfreq()
- * @method $this setCpuBfreq(mixed $mixedCpuBfreq)
  * @method mixed getCpuConfig()
- * @method $this setCpuConfig(mixed $mixedCpuConfig)
  * @method mixed getCpuVcore()
- * @method $this setCpuVcore(mixed $mixedCpuVcore)
  * @method mixed getRam()
- * @method $this setRam(mixed $mixedRam)
  * @method mixed getRamFreq()
- * @method $this setRamFreq(mixed $mixedRamFreq)
  * @method mixed getRamBfreq()
- * @method $this setRamBfreq(mixed $mixedRamBfreq)
  * @method mixed getRamTimings()
- * @method $this setRamTimings(mixed $mixedRamTimings)
  * @method mixed getGpu()
- * @method $this setGpu(mixed $mixedGpu)
  * @method mixed getGpuFirmId()
- * @method $this setGpuFirmId(mixed $mixedGpuFirmId)
  * @method mixed getGpuCoreFreq()
- * @method $this setGpuCoreFreq(mixed $mixedGpuCoreFreq)
  * @method mixed getGpuCoreBfreq()
- * @method $this setGpuCoreBfreq(mixed $mixedGpuCoreBfreq)
  * @method mixed getGpuVramFreq()
- * @method $this setGpuVramFreq(mixed $mixedGpuVramFreq)
  * @method mixed getGpuVramBfreq()
- * @method $this setGpuVramBfreq(mixed $mixedGpuVramBfreq)
  * @method mixed getGpuVcore()
- * @method $this setGpuVcore(mixed $mixedGpuVcore)
  * @method mixed getGpuPcie()
- * @method $this setGpuPcie(mixed $mixedGpuPcie)
  * @method mixed getGpuCf()
- * @method $this setGpuCf(mixed $mixedGpuCf)
  * @method mixed getHd()
- * @method $this setHd(mixed $mixedHd)
  * @method mixed getHdCapacity()
- * @method $this setHdCapacity(mixed $mixedHdCapacity)
  * @method mixed getHdInterface()
- * @method $this setHdInterface(mixed $mixedHdInterface)
  * @method mixed getHdChipset()
- * @method $this setHdChipset(mixed $mixedHdChipset)
  * @method mixed getActual()
- * @method $this setActual(mixed $mixedActual)
  * @method mixed getGpuSli()
- * @method $this setGpuSli(mixed $mixedGpuSli)
  * @method mixed getHdFirmId()
- * @method $this setHdFirmId(mixed $mixedHdFirmId)
  * @method mixed getActualFor()
- * @method $this setActualFor(mixed $mixedActualFor)
  */
 class Entity extends \Api\Core\Iblock\Element\Entity {
 
@@ -78,28 +51,46 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
 
     /**
      *
+     * @var \Api\Chart\Tests\Section\Entity 
+     */
+    private $_obTestType = null;
+
+    /**
+     *
      * @var \Api\Chart\Firm\Entity 
      */
     protected $obHdFirm = null;
 
-    public static function getModel() {
+    /**
+     * 
+     * @return string
+     */
+    public static function getModel(): string {
         return Model::class;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public static function getCollection(): string {
+        return Collection::class;
     }
 
     /**
      * 
      * @return \Api\Chart\Firm\Entity 
      */
-    public function getCpuFirm() {
+    public function getCpuFirm(): ?\Api\Chart\Firm\Entity {
         return $this->obCpuFirm;
     }
 
     /**
      * 
      * @param \Api\Chart\Firm\Entity $obFirm
-     * @return $this
+     * @return \self
      */
-    public function setCpuFirm(\Api\Chart\Firm\Entity $obFirm) {
+    public function setCpuFirm(\Api\Chart\Firm\Entity $obFirm): self {
         $this->obCpuFirm = $obFirm;
         return $this;
     }
@@ -108,17 +99,17 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * 
      * @return \Api\Chart\Firm\Entity 
      */
-    public function getGpuFirm() {
+    public function getGpuFirm(): ?\Api\Chart\Firm\Entity {
         return $this->obGpuFirm;
     }
 
     /**
      * 
      * @param \Api\Chart\Firm\Entity $obFirm
-     * @return $this
+     * @return \self
      */
-    public function setGpuFirm(\Api\Chart\Firm\Entity $obFirm) {
-        $this->obCpuFirm = $obFirm;
+    public function setGpuFirm(\Api\Chart\Firm\Entity $obFirm): self {
+        $this->obGpuFirm = $obFirm;
         return $this;
     }
 
@@ -126,18 +117,26 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * 
      * @return \Api\Chart\Firm\Entity 
      */
-    public function getHdFirm() {
+    public function getHdFirm(): ?\Api\Chart\Firm\Entity {
         return $this->obHdFirm;
     }
 
     /**
      * 
      * @param \Api\Chart\Firm\Entity $obFirm
-     * @return $this
+     * @return \self
      */
-    public function setHdFirm(\Api\Chart\Firm\Entity $obFirm) {
-        $this->obCpuFirm = $obFirm;
+    public function setHdFirm(\Api\Chart\Firm\Entity $obFirm): self {
+        $this->obHdFirm = $obFirm;
         return $this;
+    }
+
+    /**
+     * 
+     * @return \Api\Chart\Tests\Section\Entity 
+     */
+    private function _getTestType(): ?\Api\Chart\Tests\Section\Entity {
+        return $this->_obTestType;
     }
 
     /**
@@ -145,9 +144,10 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * @param \Api\Chart\Tests\Section\Entity $obTestType
      * @return string
      */
-    public function getFullName(\Api\Chart\Tests\Section\Entity $obTestType) {
+    public function getFullName(\Api\Chart\Tests\Section\Entity $obTestType): string {
 
         $strName = $this->getName();
+        $this->_obTestType = $obTestType;
 
         switch ($obTestType->getCode()) {
             case 'GPU':
@@ -165,36 +165,91 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
         return $strName;
     }
 
-    public function prepareData() {
-
-
-        $arResult['COLOR'] = '127, 127, 127';
-
-        $strName = '<span';
-        if (!empty($arResult['INFO']))
-            $strName .= ' title="' . nl2br($arResult['INFO']) . '"';
-        $strName .= '>';
-
-        switch ($arResult['TEST_TYPE']['TYPE']) {
-            case 'GPU':
-                $this->_prepareGPUs($arResult);
-                break;
-            case 'CPU':
-            case 'RAM':
-                $this->_prepareCPU_RAMs($arResult);
-                break;
-            case 'DRIVE':
-                $this->_prepareHDDs($arResult);
-                break;
-        }
-        $strName .= '</span>';
+    /**
+     * 
+     * @param \Api\Chart\Tests\Section\Entity $obTestType
+     * @return string
+     */
+    public function getClearFullName(\Api\Chart\Tests\Section\Entity $obTestType): string {
+        return \strip_tags($this->getFullName($obTestType));
     }
 
     /**
      * 
      * @return string
      */
-    private function _appendGpuFreq() {
+    private function _prepareGPUs(): string {
+        $strName = '';
+        $strName .= '<span style="color: rgb(' . $this->getGpuFirm()->getTextColor() . ')">' . $this->getGpu();
+        $strName .= $this->_appendGpuFreq();
+        $strName .= $this->_appendGpuOc();
+        $strName .= $this->_appendGpuVcore();
+        $strName .= $this->_appendPcie();
+        $strName .= $this->_appendMGpu();
+        $strName .= '</span>';
+        $strName .= ', ';
+
+        $strName .= '<span style="color: rgb(' . $this->getCpuFirm()->getTextColor() . ')">' . $this->getCpu();
+        $strName .= $this->_appendCpuFreq();
+        $strName .= $this->_appendCpuOc();
+        $strName .= $this->_appendCpuVcore();
+        $strName .= $this->_appendCpuConfig();
+        $strName .= '</span>, ';
+
+        $strName .= $this->getRam();
+        $strName .= $this->_appendRamFreq();
+        $strName .= $this->_appendRamOc();
+        $strName .= $this->_appendRamTimings();
+
+        $strName .= '<a name="' . $this->_getTestType()->getCode() . '_' . $this->getId() . '"></a>';
+
+        return $strName;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    private function _prepareCPU_RAMs(): string {
+        $strName = '';
+        $strName .= '<span style="color: rgb(' . $this->getCpuFirm()->getTextColor() . ')">' . $this->getCpu();
+        $strName .= $this->_appendCpuFreq();
+        $strName .= $this->_appendCpuOc();
+        $strName .= $this->_appendCpuVcore();
+        $strName .= $this->_appendCpuConfig();
+        $strName .= '</span>, ';
+
+        $strName .= $this->getRam();
+        $strName .= $this->_appendRamFreq();
+        $strName .= $this->_appendRamOc();
+        $strName .= $this->_appendRamTimings();
+
+        $strName .= '<a name="' . $this->_getTestType()->getCode() . '_' . $this->getId() . '"></a>';
+
+        return $strName;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    private function _prepareHDDs(): string {
+        $strName = '';
+        $strName .= '<span style="color: rgb(' . $this->getHdFirm()->getTextColor() . ')">' . $this->getHd() . '</span> ';
+
+        $strName .= $this->getHdCapacity();
+        $strName .= ' <span class="comment">' . $this->getHdInterface() . ', ' . $this->getHdChipset() . '</span>';
+
+        $strName .= '<a name="' . $this->_getTestType()->getCode() . '_' . $this->getId() . '"></a>';
+
+        return $strName;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    private function _appendGpuFreq(): string {
         $strName = '';
         if (!empty($this->getGpuCoreFreq())) {
             $strName .= '@' . $this->getGpuCoreFreq();
@@ -209,7 +264,7 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * 
      * @return float
      */
-    private function _getGpuOcCoreFreq() {
+    private function _getGpuOcCoreFreq(): string {
         $ocCore = 0.0;
         if (!empty($this->getGpuCoreBfreq()) && $this->getGpuCoreBfreq() != $this->getGpuCoreFreq()) {
             $ocCore = $this->_percent($this->getGpuCoreFreq(), $this->getGpuCoreBfreq());
@@ -221,7 +276,7 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * 
      * @return float
      */
-    private function _getGpuOcVRamFreq() {
+    private function _getGpuOcVRamFreq(): string {
         $ocRam = 0.0;
         if (!empty($this->getGpuVramBfreq()) && $this->getGpuVramBfreq() != $this->getGpuVramFreq()) {
             $ocRam = $this->_percent($this->getGpuVramFreq(), $this->getGpuVramBfreq());
@@ -233,7 +288,7 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * 
      * @return string
      */
-    private function _appendGpuOc() {
+    private function _appendGpuOc(): string {
         $strName = '';
         $ocCore = $this->_getGpuOcCoreFreq();
         $ocRam = $this->_getGpuOcVRamFreq();
@@ -257,7 +312,7 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * 
      * @return string
      */
-    private function _appendGpuVcore() {
+    private function _appendGpuVcore(): string {
         $strName = '';
         if (!empty($this->getGpuVcore())) {
             $strName .= '<span class="comment">' . $this->getGpuVcore() . 'V</span>';
@@ -269,9 +324,9 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * 
      * @return string
      */
-    private function _appendPcie() {
+    private function _appendPcie(): string {
         $strName = '';
-        if (!empty($this['PROP_GPU_PCIE'])) {
+        if (!empty($this->getGpuPcie())) {
             $strName .= '<span class="comment">PCI-E ' . $this->getGpuPcie() . '</span>';
         }
         return $strName;
@@ -281,7 +336,7 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * 
      * @return string
      */
-    private function _appendMGpu() {
+    private function _appendMGpu(): string {
         $strName = '';
         if ($this->getGpuCf())
             $strName .= '<span class="oc"> CF</span>';
@@ -292,137 +347,96 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
 
     /**
      * 
-     * @param array $arResult
+     * @return string
      */
-    private function _prepareGPUs() {
-//        $arTestType = &$arResult['TEST_TYPE'];
+    private function _appendCpuFreq(): string {
         $strName = '';
-        $strName .= '<span style="color: rgb(' . $this->getGpuFirm()->getTextColor() . ')">' . $this->getGpu();
-        $strName .= $this->_appendGpuFreq();
-        $strName .= $this->_appendGpuOc();
-        $strName .= $this->_appendGpuVcore();
-        $strName .= $this->_appendPcie();
-        $strName .= '</span>';
-        $strName .= ', ';
-
-        $strName .= '<span style="color: rgb(' . $this['PROP_CPU_FIRM_TEXT_COLOR'] . ')">' . $this['PROP_CPU'];
-        if (!empty($this['PROP_CPU_FREQ'])) {
-            $strName .= '@' . $this['PROP_CPU_FREQ'];
+        if (!empty($this->getCpuFreq())) {
+            $strName .= '@' . $this->getCpuFreq();
         }
-        $ocCore = 0;
-        if (!empty($this['PROP_CPU_BFREQ']) && $this['PROP_CPU_BFREQ'] != $this['PROP_CPU_FREQ']) {
-            $ocCore = $this->_percent($this['PROP_CPU_FREQ'], $this['PROP_CPU_BFREQ']);
-        }
-
-        if ($ocCore > 0) {
-            $ocCore = '+' . $ocCore;
-            $strName .= '<span class="oc"> ' . $ocCore . '%</span>';
-        }
-        if (!empty($this['PROP_CPU_VCORE'])) {
-            $strName .= '<span class="comment">' . $this['PROP_CPU_VCORE'] . 'V</span>';
-        }
-        if (!empty($this['PROP_CPU_CONFIG'])) {
-            $strName .= '<span class="comment">' . $this['PROP_CPU_CONFIG'] . '</span>';
-        }
-        $strName .= '</span>, ';
-
-        $strName .= $this['PROP_RAM'];
-        if (!empty($this['PROP_RAM_FREQ'])) {
-            $strName .= '@' . $this['PROP_RAM_FREQ'];
-        }
-        $ocRam = 0;
-        if (!empty($this['PROP_RAM_BFREQ']) && $this['PROP_RAM_BFREQ'] != $this['PROP_RAM_FREQ']) {
-            $ocRam = $this->_percent($this['PROP_RAM_FREQ'], $this['PROP_RAM_BFREQ']);
-        }
-
-        if ($ocRam > 0) {
-            $ocRam = '+' . $ocRam;
-            $strName .= '<span class="oc"> ' . $ocRam . '%</span>';
-        }
-        if (!empty($this['PROP_RAM_TIMINGS'])) {
-            $strName .= '<span class="comment">' . $this['PROP_RAM_TIMINGS'] . '</span>';
-        }
-        $strName .= '<a name="' . $arTestType['TYPE'] . '_' . $this['ID'] . '"></a>';
-
-        if (empty($this['PROP_ACTUAL_FOR']) && $this['PROP_ACTUAL'] || !empty($this['PROP_ACTUAL_FOR']) && in_array($arTestType['ID'], $this['PROP_ACTUAL_FOR'])) {
-            $arResult['COLOR'] = $this['PROP_GPU_FIRM_ACTIVE_COLOR'];
-        } else {
-            $arResult['COLOR'] = $this['PROP_GPU_FIRM_PASSIVE_COLOR'];
-        }
+        return $strName;
     }
 
     /**
      * 
-     * @param array $arResult
+     * @return string
      */
-    private function _prepareCPU_RAMs(&$arResult) {
-        $this = &$arResult['SYSTEM'];
-        $arTestType = &$arResult['TEST_TYPE'];
-        $strName .= '<span style="color: rgb(' . $this['PROP_CPU_FIRM_TEXT_COLOR'] . ')">' . $this['PROP_CPU'];
-        if (!empty($this['PROP_CPU_FREQ'])) {
-            $strName .= '@' . $this['PROP_CPU_FREQ'];
-        }
+    private function _appendCpuOc(): string {
+        $strName = '';
         $ocCore = 0;
-        if (!empty($this['PROP_CPU_BFREQ']) && $this['PROP_CPU_BFREQ'] != $this['PROP_CPU_FREQ']) {
-            $ocCore = $this->_percent($this['PROP_CPU_FREQ'], $this['PROP_CPU_BFREQ']);
+        if (!empty($this->getCpuBfreq()) && $this->getCpuBfreq() != $this->getCpuFreq()) {
+            $ocCore = $this->_percent($this->getCpuFreq(), $this->getCpuBfreq());
         }
-
         if ($ocCore > 0) {
             $ocCore = '+' . $ocCore;
             $strName .= '<span class="oc"> ' . $ocCore . '%</span>';
         }
-        if (!empty($this['PROP_CPU_VCORE'])) {
-            $strName .= '<span class="comment">' . $this['PROP_CPU_VCORE'] . 'V</span>';
-        }
-        if (!empty($this['PROP_CPU_CONFIG'])) {
-            $strName .= '<span class="comment">' . $this['PROP_CPU_CONFIG'] . '</span>';
-        }
-        $strName .= '</span>, ';
-
-        $strName .= $this['PROP_RAM'];
-        if (!empty($this['PROP_RAM_FREQ'])) {
-            $strName .= '@' . $this['PROP_RAM_FREQ'];
-        }
-        $ocRam = 0;
-        if (!empty($this['PROP_RAM_BFREQ']) && $this['PROP_RAM_BFREQ'] != $this['PROP_RAM_FREQ']) {
-            $ocRam = $this->_percent($this['PROP_RAM_FREQ'], $this['PROP_RAM_BFREQ']);
-        }
-
-        if ($ocRam > 0) {
-            $ocRam = '+' . $ocRam;
-            $strName .= '<span class="oc"> ' . $ocRam . '%</span>';
-        }
-        if (!empty($this['PROP_RAM_TIMINGS'])) {
-            $strName .= '<span class="comment">' . $this['PROP_RAM_TIMINGS'] . '</span>';
-        }
-        $strName .= '<a name="' . $arTestType['TYPE'] . '_' . $this['ID'] . '"></a>';
-
-        if (empty($this['PROP_ACTUAL_FOR']) && $this['PROP_ACTUAL'] || !empty($this['PROP_ACTUAL_FOR']) && in_array($arTestType['ID'], $this['PROP_ACTUAL_FOR'])) {
-            $arResult['COLOR'] = $this['PROP_CPU_FIRM_ACTIVE_COLOR'];
-        } else {
-            $arResult['COLOR'] = $this['PROP_CPU_FIRM_PASSIVE_COLOR'];
-        }
+        return $strName;
     }
 
     /**
      * 
-     * @param array $arResult
+     * @return string
      */
-    private function _prepareHDDs(&$arResult) {
-        $this = &$arResult['SYSTEM'];
-        $arTestType = &$arResult['TEST_TYPE'];
-        $strName .= '<span style="color: rgb(' . $this['PROP_HD_FIRM_TEXT_COLOR'] . ')">' . $this['PROP_HD'] . '</span> ';
-
-        $strName .= $this['PROP_HD_CAPACITY'];
-        $strName .= ' <span class="comment">' . $this['PROP_HD_INTERFACE'] . ', ' . $this['PROP_HD_CHIPSET'] . '</span>';
-
-        $strName .= '<a name="' . $arTestType['TYPE'] . '_' . $this['ID'] . '"></a>';
-
-        if (empty($this['PROP_ACTUAL_FOR']) && $this['PROP_ACTUAL'] || !empty($this['PROP_ACTUAL_FOR']) && in_array($arTestType['ID'], $this['PROP_ACTUAL_FOR'])) {
-            $arResult['COLOR'] = $this['PROP_HD_FIRM_ACTIVE_COLOR'];
-        } else {
-            $arResult['COLOR'] = $this['PROP_HD_FIRM_PASSIVE_COLOR'];
+    private function _appendCpuConfig(): string {
+        $strName = '';
+        if (!empty($this->getCpuConfig())) {
+            $strName .= '<span class="comment">' . $this->getCpuConfig() . '</span>';
         }
+        return $strName;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    private function _appendCpuVcore(): string {
+        $strName = '';
+        if (!empty($this->getCpuVcore())) {
+            $strName .= '<span class="comment">' . $this->getCpuVcore() . 'V</span>';
+        }
+        return $strName;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    private function _appendRamFreq(): string {
+        $strName = '';
+        if (!empty($this->getRamFreq())) {
+            $strName .= '@' . $this->getRamFreq();
+        }
+        return $strName;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    private function _appendRamOc(): string {
+        $strName = '';
+        $ocCore = 0;
+        if (!empty($this->getRamBfreq()) && $this->getRamBfreq() != $this->getRamFreq()) {
+            $ocCore = $this->_percent($this->getRamFreq(), $this->getRamBfreq());
+        }
+        if ($ocCore > 0) {
+            $ocCore = '+' . $ocCore;
+            $strName .= '<span class="oc"> ' . $ocCore . '%</span>';
+        }
+        return $strName;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    private function _appendRamTimings(): string {
+        $strName = '';
+        if (!empty($this->getRamTimings())) {
+            $strName .= '<span class="comment">' . $this->getRamTimings() . 'V</span>';
+        }
+        return $strName;
     }
 
     /**
@@ -432,7 +446,7 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * @param int $presicion
      * @return int
      */
-    private function _percent($va1ue_1, $va1ue_2, $presicion = 0) {
+    private function _percent($va1ue_1, $va1ue_2, int $presicion = 0): int {
         return round(($va1ue_1 / $va1ue_2 - 1) * 100, $presicion);
     }
 
