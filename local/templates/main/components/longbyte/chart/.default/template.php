@@ -1,6 +1,13 @@
 <?
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
     die();
+
+/** @var \Api\Chart\Tests\Section\Collection $obData */
+/** @var \Api\Chart\Tests\Section\Entity $obTestType */
+/** @var \Api\Chart\Tests\Element\Entity $obTest */
+/** @var \Api\Chart\Result\Element\Entity $obResult */
+/** @var \Api\Chart\Systems\Element\Entity $obSystem */
+$obData = $arResult['obData'];
 ?>
 <h2 style="text-align: center;">Добро пожаловать на сборник результатов бенчмарков</h2>
 <h3 style="text-align: center;">Выберите интересующий вид тестов</h3>
@@ -11,7 +18,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
         [0]
     ];
 
-    var serviceCount = <?= count($arResult['TEST_TYPES']) ?>;
+    var serviceCount = <?= $obData->count() ?>;
 
     var lineCol = 'A0A0A0';
     var axisCol = '808080';
@@ -19,58 +26,41 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
     var data = <?= CUtil::PhpToJSObject($arResult['JS_DATA'], false, false, true) ?>
 </script>
 
-<? foreach ($arResult['TEST_TYPES'] as $arTestType) { ?>
-    <div class="ilex-dialog" id="filter-<?= $arTestType['TYPE'] ?>">
+<? foreach ($obData->getCollection() as $obTestType): ?>
+    <div class="ilex-dialog" id="filter-<?= $obTestType->getCode() ?>">
         <div class="dialog-content">
             <input type="checkbox" name="hide" value="hideOc" id="filterHideOc" autocomplete="off">
             <label for="filterHideOc">Скрыть % разгона</label><br>
             <input type="checkbox" name="hide" value="hideComment" id="filterHideComment" autocomplete="off">
             <label for="filterHideComment">Скрыть тайминги, напряжения и прочую фигню</label><br>
-            <?
-            $arFilter = array();
-            foreach ($arTestType['TESTS'] as $i => $arTest) {
-                foreach ($arTest['RESULTS'] as $j => $arTestResult) {
-                    if (floatval($arTestResult['RESULT']) == 0.0)
-                        continue;
-                    $arFilter[preg_replace('/ title="[^"]+"/', '', $arTestResult['NAME'])] = $arTestResult['SYSTEM']['ID'];
-                }
-            }
-            ?>
-            <input type="checkbox" autocomplete="off" checked name="line-all" value="<?= $arTestType['TYPE'] . '_all' ?>" id="filter<?= $arTestType['TYPE'] . '_all' ?>">
-            <label for="filter<?= $arTestType['TYPE'] . '_all' ?>">Все</label><br>
-            <?
-            ksort($arFilter);
-            foreach ($arFilter as $name => $number) {
-                ?>
-                <input type="checkbox" autocomplete="off" checked name="line" value="<?= $arTestType['TYPE'] . '_' . $number ?>" id="filter<?= $arTestType['TYPE'] . '_' . $number ?>">
-                <label for="filter<?= $arTestType['TYPE'] . '_' . $number ?>"><?= $name ?></label><br>
-                <?
-            }
-            ?>
+            <input type="checkbox" autocomplete="off" checked name="line-all" value="<?= $obTestType->getCode() . '_all' ?>" id="filter<?= $obTestType->getCode() . '_all' ?>">
+            <label for="filter<?= $obTestType->getCode() . '_all' ?>">Все</label><br>
+            <? foreach ($obTestType->getTests()->getFilterCollection() as $obSystem): ?>
+                <input type="checkbox" autocomplete="off" checked name="line" value="<?= $obTestType->getCode() . '_' . $obSystem->getId() ?>" id="filter<?= $obTestType->getCode() . '_' . $obSystem->getId() ?>">
+                <label for="filter<?= $obTestType->getCode() . '_' . $obSystem->getId() ?>"><?= $obSystem->getFullName($obTestType) ?></label><br>
+            <? endforeach; ?>
         </div>
     </div>
-    <?
-}
-$i = 0;
-foreach ($arResult['TEST_TYPES'] as $arTestType):
-    ?>
+<? endforeach; ?>
+<? $i = 0; ?>
+<? foreach ($obData->getCollection() as $obTestType): ?>
     <div class="lb-spoiler spoiler-type">
-        <div class="spoiler-title" data-filter="<?= $arTestType['TYPE'] ?>"><?= $arTestType['NAME'] ?></div>
+        <div class="spoiler-title" data-filter="<?= $obTestType->getCode() ?>"><?= $obTestType->getName() ?></div>
         <div class="spoiler-text">
             <div class="btn-wrapper">
-                <a class="filter-call" href="#" onclick="return OpenFilter('<?= $arTestType['TYPE'] ?>')">Фильтр</a>
+                <a class="filter-call" href="#" onclick="return OpenFilter('<?= $obTestType->getCode() ?>')">Фильтр</a>
             </div>
             <?
-            foreach ($arTestType['TESTS'] as $arTest):
+            foreach ($obTestType->getTests() as $obTest):
                 ?>
-                <div class="graphic <?= $arTestType['TYPE'] ?> <?= strpos($arTest['NAME'], 'Итог') !== false ? 'SUMMARY' : '' ?>">
+                <div class="graphic <?= $obTestType->getCode() ?>">
                     <center>
-                        <h3><?= $arTest['NAME'] . ($arTest['UNITS'] ? ', ' . $arTest['UNITS'] : '') . ($arTest['LESS_BETTER'] ? ' (меньше - лучше)' : '') ?></h3>
-                        <? if (!empty($arTest['DESCRIPTION'])): ?>
+                        <h3><?= $obTest->getTitle() ?></h3>
+                        <? if (!empty($obTest->getPreviewText())): ?>
                             <div class="lb-spoiler spoiler-desc">
                                 <div class="spoiler-title">Описание теста</div>
                                 <div class="spoiler-text">
-                                    <?= $arTest['DESCRIPTION'] ?>
+                                    <?= $obTest->getPreviewText() ?>
                                 </div>
                             </div>
                         <? endif; ?>
@@ -83,7 +73,7 @@ foreach ($arResult['TEST_TYPES'] as $arTestType):
                                 dataBorder: true,
                                 fontSize: 14,
                                 srt: true,
-        <? if ($arTest['LESS_BETTER']): ?> srtAsc: true,<? endif; ?>
+        <? if ($obTest->getLessBetter()): ?> srtAsc: true,<? endif; ?>
                             });</script>
                     </center>
                 </div>
