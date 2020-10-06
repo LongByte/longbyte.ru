@@ -70,7 +70,7 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * 
      * @return string
      */
-    public static function getModel() {
+    public static function getModel(): string {
         return Model::class;
     }
 
@@ -78,7 +78,7 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * 
      * @return string
      */
-    public function getPrintYear() {
+    public function getPrintYear(): string {
         return $this->_strPrintYear;
     }
 
@@ -87,7 +87,7 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * @param string $strPrintYear
      * @return $this
      */
-    public function setPrintYear(string $strPrintYear) {
+    public function setPrintYear(string $strPrintYear): self {
         $this->_strPrintYear = $strPrintYear;
         return $this;
     }
@@ -96,7 +96,7 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * 
      * @return array
      */
-    public function toArray() {
+    public function toArray(): array {
         $arData = parent::toArray();
 
         $arData['preview_src'] = $this->getPreviewPictureFile()->setResize(100, 10000)->convertToWebp()->getSrc();

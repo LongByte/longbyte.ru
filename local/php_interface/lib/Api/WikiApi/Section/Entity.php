@@ -51,15 +51,15 @@ class Entity extends \Api\Core\Iblock\Section\Entity {
      * 
      * @return string
      */
-    public static function getModel() {
+    public static function getModel(): string {
         return Model::class;
     }
 
     /**
      * 
-     * @return type
+     * @return string
      */
-    public function getClassLink() {
+    public function getClassLink(): string {
 
         /** @var \Api\Core\Base\Collection $obSections */
         $obSections = \Api\WikiApi\Section\Model::getAll();

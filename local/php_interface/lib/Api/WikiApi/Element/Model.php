@@ -16,7 +16,7 @@ class Model extends \Api\Core\Iblock\Element\Model {
      * 
      * @return string
      */
-    public static function getEntity() {
+    public static function getEntity(): string {
         return Entity::class;
     }
 

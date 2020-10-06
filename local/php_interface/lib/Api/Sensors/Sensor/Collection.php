@@ -12,9 +12,9 @@ class Collection extends \Api\Core\Base\Collection {
      * @param string $strSensorApp
      * @param string $strSensorClass
      * @param string $strSensorName
-     * @return null|\Api\Sensors\Sensor\Entity
+     * @return \Api\Sensors\Sensor\Entity|null
      */
-    public function getByParams(string $strSensorApp, string $strSensorClass, string $strSensorName) {
+    public function getByParams(string $strSensorApp, string $strSensorClass, string $strSensorName): ?\Api\Sensors\Sensor\Entity {
 
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
         foreach ($this->getCollection() as $obSensor) {
@@ -35,7 +35,7 @@ class Collection extends \Api\Core\Base\Collection {
      * @param string $string
      * @return string
      */
-    private function normalize($string) {
+    private function normalize($string): string {
         return str_replace(' ', '', $string);
     }
 

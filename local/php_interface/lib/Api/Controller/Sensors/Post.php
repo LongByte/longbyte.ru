@@ -7,9 +7,28 @@ namespace Api\Controller\Sensors;
  */
 class Post extends \Api\Core\Base\Controller {
 
+    /**
+     *
+     * @var int
+     */
     private $saveEvery = 60;
+
+    /**
+     *
+     * @var int
+     */
     private $alertEvery = 5 * 60;
+
+    /**
+     *
+     * @var string
+     */
     private $token = null;
+
+    /**
+     *
+     * @var array
+     */
     private $arResponse = array(
         'data' => array(),
         'errors' => array(),
@@ -60,10 +79,6 @@ class Post extends \Api\Core\Base\Controller {
         $this->obAlerts->setUniqueMode(true);
     }
 
-    /**
-     * 
-     * @return string
-     */
     public function post() {
         $this->resetResponse();
         $arData = json_decode($this->getPostData());
@@ -85,10 +100,6 @@ class Post extends \Api\Core\Base\Controller {
         return $this->exitAction();
     }
 
-    /**
-     * 
-     * @return string
-     */
     public function get() {
         $obHttp = new \Bitrix\Main\Web\HttpClient();
         $rawGet = $obHttp->get('http://localhost:55555/');
@@ -126,7 +137,7 @@ class Post extends \Api\Core\Base\Controller {
      * 
      * @return string
      */
-    public function getDebug() {
+    public function getDebug(): string {
         return json_encode(array(
             'post_data' => $this->getPostData(),
             'sensors' => !is_null($this->obSystem) ? $this->obSystem->getSensorsCollection()->toArray() : array(),
@@ -139,7 +150,7 @@ class Post extends \Api\Core\Base\Controller {
      * 
      * @return string
      */
-    private function exitAction() {
+    private function exitAction(): string {
         $this->sendAlerts();
         header('Content-Type: application/json');
         return json_encode($this->arResponse);
@@ -147,9 +158,9 @@ class Post extends \Api\Core\Base\Controller {
 
     /**
      * 
-     * @return boolean
+     * @return bool
      */
-    private function getSystem() {
+    private function getSystem(): bool {
         /** @var \Api\Sensors\Sensor\Collection $obSensors */
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
         /** @var \Api\Sensors\Data\Collection $obValues */
@@ -487,7 +498,7 @@ class Post extends \Api\Core\Base\Controller {
      * 
      * @return \Api\Core\Base\Collection
      */
-    private function getAlertCollection() {
+    private function getAlertCollection(): \Api\Core\Base\Collection {
         return $this->obAlerts;
     }
 

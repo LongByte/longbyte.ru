@@ -2,7 +2,7 @@
 
 namespace Api\Sensors\System;
 
-use Bitrix\Main;
+use Bitrix\Main\ORM;
 use Bitrix\Main\Localization\Loc;
 
 Loc::loadMessages(__FILE__);
@@ -10,21 +10,24 @@ Loc::loadMessages(__FILE__);
 /**
  * Class \Api\Sensors\System\Table
  */
-class Table extends Main\Entity\DataManager {
+class Table extends ORM\Data\DataManager {
 
     /**
-     * Returns DB table name for entity.
      *
      * @return string
      */
-    public static function getTableName() {
+    public static function getTableName(): string {
         return 'sensors_system';
     }
 
-    public static function getScalarFields() {
+    /**
+     * 
+     * @return array
+     */
+    public static function getScalarFields(): array {
         $arFields = array();
         foreach (self::getMap() as $strId => $obField) {
-            if ($obField instanceof \Bitrix\Main\Entity\ScalarField) {
+            if ($obField instanceof ORM\Fields\ScalarField) {
                 $arFields[$strId] = $obField;
             }
         }
@@ -32,49 +35,20 @@ class Table extends Main\Entity\DataManager {
     }
 
     /**
-     * Returns entity map definition.
      *
      * @return array
      */
     public static function getMap() {
         return array(
-            'ID' => new Main\Entity\IntegerField('ID', array(
-                'primary' => true,
-                'autocomplete' => true,
-                'title' => 'ID',
-                )),
-            'ACTIVE' => new Main\Entity\BooleanField('UF_ACTIVE', array(
-                'title' => 'Активность',
-                )),
-            'NAME' => new Main\Entity\StringField('UF_NAME', array(
-                'required' => true,
-                'title' => 'Название',
-                )),
-            'TOKEN' => new Main\Entity\StringField('UF_TOKEN', array(
-                'required' => true,
-                'title' => 'Токен',
-                )),
-            'EMAIL' => new Main\Entity\StringField('UF_EMAIL', array(
-                'required' => true,
-                'title' => 'E-mail для уведомлений',
-                )),
-            'LAST_UPDATE' => new Main\Entity\DateTimeField('UF_LAST_UPDATE', array(
-                'required' => true,
-                'title' => 'Последнее обновление данных',
-                )),
-            'LAST_RECEIVE' => new Main\Entity\DateTimeField('UF_LAST_RECEIVE', array(
-                'required' => true,
-                'title' => 'Последнее получение данных',
-                )),
-            'USER_ID' => new Main\Entity\IntegerField('UF_USER_ID', array(
-                'required' => true,
-                'title' => 'Пользователь',
-                )),
-            'USER' => new Main\Entity\ReferenceField(
-                'USER',
-                '\Bitrix\Main\User',
-                array('this.USER_ID' => 'ref.ID'),
-                array('join_type' => 'LEFT')
+            'ID' => (new ORM\Fields\IntegerField('ID'))->configureTitle('ID')->configureAutocomplete()->configurePrimary(),
+            'ACTIVE' => (new ORM\Fields\BooleanField('UF_ACTIVE'))->configureTitle('Активность')->configureRequired(),
+            'NAME' => (new ORM\Fields\StringField('UF_NAME'))->configureRequired()->configureTitle('Название'),
+            'TOKEN' => (new ORM\Fields\StringField('UF_TOKEN'))->configureRequired()->configureTitle('Токен'),
+            'EMAIL' => (new ORM\Fields\StringField('UF_EMAIL'))->configureRequired()->configureTitle('E-mail для уведомлений'),
+            'LAST_UPDATE' => (new ORM\Fields\DateTimeField('UF_LAST_UPDATE'))->configureRequired()->configureTitle('Последнее обновление данных'),
+            'LAST_RECEIVE' => (new ORM\Fields\DateTimeField('UF_LAST_RECEIVE'))->configureRequired()->configureTitle('Последнее получение данных'),
+            'USER_ID' => (new ORM\Fields\IntegerField('UF_USER_ID'))->configureRequired()->configureTitle('Пользователь'),
+            'USER' => new ORM\Fields\Relations\Reference('USER', \Bitrix\Main\UserTable::getEntity(), array('this.USER_ID' => 'ref.ID'), array('join_type' => 'LEFT')
             ),
         );
     }

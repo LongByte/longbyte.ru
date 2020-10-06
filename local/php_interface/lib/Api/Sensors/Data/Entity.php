@@ -42,7 +42,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return array
      */
-    public function getFields() {
+    public function getFields(): array {
         return array_keys(static::getModel()::getTable()::getScalarFields());
     }
 
@@ -50,7 +50,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return string
      */
-    public static function getCollection() {
+    public static function getCollection(): string {
         return Collection::class;
     }
 
@@ -58,7 +58,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return string
      */
-    public static function getModel() {
+    public static function getModel(): string {
         return Model::class;
     }
 
@@ -66,7 +66,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return array
      */
-    public function toArray() {
+    public function toArray(): array {
         $obSensor = $this->getSensor();
 
         $obNow = new \Bitrix\Main\Type\DateTime();
@@ -98,7 +98,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return \Api\Sensors\Sensor\Entity 
      */
-    public function getSensor() {
+    public function getSensor(): \Api\Sensors\Sensor\Entity {
         if (is_null($this->_obSensor)) {
             $this->_obSensor = new \Api\Sensors\Sensor\Entity($this->getSensorId());
         }
@@ -110,7 +110,7 @@ class Entity extends \Api\Core\Base\Entity {
      * @param \Api\Sensors\Sensor\Entity $obSensor
      * @return $this
      */
-    public function setSensor(\Api\Sensors\Sensor\Entity $obSensor) {
+    public function setSensor(\Api\Sensors\Sensor\Entity $obSensor): self {
         $this->_obSensor = $obSensor;
         $this->setSensorId($obSensor->getId());
         return $this;

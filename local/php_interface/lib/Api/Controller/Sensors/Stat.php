@@ -49,8 +49,8 @@ class Stat extends \Api\Core\Base\Controller {
         $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
                 'SYSTEM_ID' => $this->obSystem->getId(),
                 'ACTIVE' => true,
-        ), 0, 0, array(
-            'order' => array('SORT' => 'ASC')
+                ), 0, 0, array(
+                'order' => array('SORT' => 'ASC')
         ));
 
         $arValuesFilter = array(
@@ -106,7 +106,7 @@ class Stat extends \Api\Core\Base\Controller {
      * 
      * @return string
      */
-    private function exitAction() {
+    private function exitAction(): string {
         $this->arrayValueToNumber($this->arResponse);
         header('Content-Type: application/json');
         return json_encode($this->arResponse);
@@ -129,9 +129,9 @@ class Stat extends \Api\Core\Base\Controller {
 
     /**
      * 
-     * @return boolean
+     * @return bool
      */
-    private function getSystem() {
+    private function getSystem(): bool {
 
         $this->obSystem = \Api\Sensors\System\Model::getOne(array(
                 '=TOKEN' => $this->token,

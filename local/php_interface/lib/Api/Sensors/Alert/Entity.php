@@ -36,7 +36,7 @@ class Entity extends \Api\Core\Base\Virtual\Entity {
      * 
      * @return string
      */
-    public static function getCollection() {
+    public static function getCollection(): string {
         return Collection::class;
     }
 
@@ -44,7 +44,7 @@ class Entity extends \Api\Core\Base\Virtual\Entity {
      * 
      * @return string
      */
-    public static function getModel() {
+    public static function getModel(): string {
         return Model::class;
     }
 
@@ -52,7 +52,7 @@ class Entity extends \Api\Core\Base\Virtual\Entity {
      * 
      * @return bool
      */
-    public function isAlert() {
+    public function isAlert(): bool {
         return $this->getAlert() == true;
     }
 

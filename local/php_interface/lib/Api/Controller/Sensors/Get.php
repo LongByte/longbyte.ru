@@ -9,8 +9,22 @@ use Bitrix\Main\Type\DateTime;
  */
 class Get extends \Api\Core\Base\Controller {
 
+    /**
+     *
+     * @var string
+     */
     private $token = null;
+
+    /**
+     *
+     * @var string
+     */
     private $name = null;
+
+    /**
+     *
+     * @var array
+     */
     private $arResponse = array(
         'data' => array(),
         'errors' => array(),
@@ -32,9 +46,9 @@ class Get extends \Api\Core\Base\Controller {
 
     /**
      * 
-     * @return json
+     * @return string
      */
-    public function get() {
+    public function get(): string {
 
         /** @var \Api\Sensors\Sensor\Collection $obSensors */
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
@@ -63,8 +77,8 @@ class Get extends \Api\Core\Base\Controller {
         $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
                 'SYSTEM_ID' => $this->obSystem->getId(),
                 'ACTIVE' => true,
-        ), 0, 0, array(
-            'order' => array('SORT' => 'ASC')
+                ), 0, 0, array(
+                'order' => array('SORT' => 'ASC')
         ));
 
         $arValuesFilter = array(
@@ -117,7 +131,7 @@ class Get extends \Api\Core\Base\Controller {
      * 
      * @return string
      */
-    private function exitAction() {
+    private function exitAction(): string {
         $this->arrayValueToNumber($this->arResponse);
         header('Content-Type: application/json');
         return json_encode($this->arResponse);
@@ -142,7 +156,7 @@ class Get extends \Api\Core\Base\Controller {
      * 
      * @return boolean
      */
-    private function loadSystem() {
+    private function loadSystem(): bool {
 
         $this->obSystem = \Api\Sensors\System\Model::getOne(array(
                 '=NAME' => $this->name,

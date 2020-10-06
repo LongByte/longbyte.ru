@@ -9,14 +9,14 @@ use Bitrix\Main\Type\DateTime;
  */
 class CollapseDay extends \Api\Core\Base\Controller {
 
+    /**
+     *
+     * @var array
+     */
     private $arResponse = array(
         'success' => true,
     );
 
-    /**
-     * 
-     * @return json
-     */
     public function get() {
 
         /** @var \Api\Sensors\System\Collection $obSystems */

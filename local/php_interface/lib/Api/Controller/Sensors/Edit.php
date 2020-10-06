@@ -7,6 +7,10 @@ namespace Api\Controller\Sensors;
  */
 class Edit extends \Api\Core\Base\Controller {
 
+    /**
+     *
+     * @var array
+     */
     private $arResponse = array(
         'data' => array(),
         'errors' => array(),
@@ -31,10 +35,6 @@ class Edit extends \Api\Core\Base\Controller {
         }
     }
 
-    /**
-     * 
-     * @return string
-     */
     public function get() {
         if (!$this->loadSystem()) {
             return $this->exitAction();
@@ -156,16 +156,16 @@ class Edit extends \Api\Core\Base\Controller {
      * 
      * @return string
      */
-    private function exitAction() {
+    private function exitAction(): string {
         header('Content-Type: application/json');
         return json_encode($this->arResponse);
     }
 
     /**
      * 
-     * @return boolean
+     * @return bool
      */
-    private function loadSystem() {
+    private function loadSystem(): bool {
         /** @var \Api\Sensors\Sensor\Collection $obSensors */
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
         /** @var \Api\Sensors\Data\Collection $obValues */

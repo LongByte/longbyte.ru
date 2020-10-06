@@ -7,7 +7,7 @@ namespace Api\Sensors\Alert;
  */
 class Model extends \Api\Core\Base\Virtual\Model {
 
-    public static function getEntity() {
+    public static function getEntity(): string {
         return Entity::class;
     }
 

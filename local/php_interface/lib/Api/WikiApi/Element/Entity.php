@@ -61,7 +61,7 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * 
      * @return string
      */
-    public static function getModel() {
+    public static function getModel(): string {
         return Model::class;
     }
 
@@ -69,7 +69,7 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
      * 
      * @return array
      */
-    public function getReturnDisplayArray() {
+    public function getReturnDisplayArray(): array {
 
         $arResult = array();
 

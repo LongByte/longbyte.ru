@@ -99,7 +99,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return array
      */
-    public function getFields() {
+    public function getFields(): array {
         return array_keys(static::getModel()::getTable()::getScalarFields());
     }
 
@@ -107,7 +107,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return string
      */
-    public static function getCollection() {
+    public static function getCollection(): string {
         return Collection::class;
     }
 
@@ -115,7 +115,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return string
      */
-    public static function getModel() {
+    public static function getModel(): string {
         return Model::class;
     }
 
@@ -123,7 +123,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return bool
      */
-    public function isModeAvg() {
+    public function isModeAvg(): bool {
         return $this->getLogMode() == Table::MODE_AVG;
     }
 
@@ -131,7 +131,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return bool
      */
-    public function isModeEach() {
+    public function isModeEach(): bool {
         return $this->getLogMode() == Table::MODE_EACH;
     }
 
@@ -139,7 +139,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return bool
      */
-    public function isModeEachLastDay() {
+    public function isModeEachLastDay(): bool {
         return $this->getLogMode() == Table::MODE_EACH_LAST_DAY;
     }
 
@@ -147,7 +147,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return bool
      */
-    public function isBooleanSensor() {
+    public function isBooleanSensor(): bool {
         return $this->getSensorUnit() == 'Yes/No';
     }
 
@@ -155,7 +155,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return boolean
      */
-    public function isAllowAlert() {
+    public function isAllowAlert(): bool {
         if (!$this->getAlertEnable()) {
             return false;
         }
@@ -174,7 +174,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return array
      */
-    public function toArray() {
+    public function toArray(): array {
         $arData = parent::toArray();
         $arData['alert'] = $this->getAlert()->toArray();
         $arData['values'] = $this->getValuesCollection()->toArray();
@@ -198,7 +198,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return \Api\Sensors\Alert\Entity
      */
-    public function getAlert() {
+    public function getAlert(): \Api\Sensors\Alert\Entity {
         if (is_null($this->_obAlert)) {
             $this->_obAlert = new \Api\Sensors\Alert\Entity(array(
                 'SENSOR_ID' => $this->getId(),
@@ -216,7 +216,7 @@ class Entity extends \Api\Core\Base\Entity {
      * @param \Api\Sensors\Alert\Entity $obAlert
      * @return $this
      */
-    public function setAlert(\Api\Sensors\Alert\Entity $obAlert) {
+    public function setAlert(\Api\Sensors\Alert\Entity $obAlert): self {
         $this->_obAlert = $obAlert;
         return $this;
     }
@@ -225,7 +225,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return bool
      */
-    public function hasAlert() {
+    public function hasAlert(): bool {
         return !is_null($this->_obAlert);
     }
 
@@ -233,7 +233,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return \Api\Sensors\Data\Collection
      */
-    public function getValuesCollection() {
+    public function getValuesCollection(): \Api\Sensors\Data\Collection {
         if (is_null($this->_obValuesCollection)) {
             $this->_obValuesCollection = new \Api\Sensors\Data\Collection();
         }
@@ -244,7 +244,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return \Api\Sensors\System\Entity 
      */
-    public function getSystem() {
+    public function getSystem(): \Api\Sensors\System\Entity {
         if (is_null($this->_obSystem)) {
             $this->_obSystem = new \Api\Sensors\System\Entity($this->getSensorId());
         }
@@ -256,7 +256,7 @@ class Entity extends \Api\Core\Base\Entity {
      * @param \Api\Sensors\System\Entity $obSystem
      * @return $this
      */
-    public function setSystem(\Api\Sensors\System\Entity $obSystem) {
+    public function setSystem(\Api\Sensors\System\Entity $obSystem): self {
         $this->_obSystem = $obSystem;
         $this->setSystemId($obSystem->getId());
         return $this;
@@ -266,7 +266,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return bool
      */
-    public function isToday() {
+    public function isToday(): bool {
         return $this->_bToday;
     }
 
@@ -275,7 +275,7 @@ class Entity extends \Api\Core\Base\Entity {
      * @param bool $bToday
      * @return $this
      */
-    public function setToday(bool $bToday = true) {
+    public function setToday(bool $bToday = true): self {
         $this->_bToday = $bToday;
         return $this;
     }
@@ -284,7 +284,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return bool
      */
-    public function isNew() {
+    public function isNew(): bool {
         return $this->_bNew;
     }
 
@@ -293,7 +293,7 @@ class Entity extends \Api\Core\Base\Entity {
      * @param bool $bNew
      * @return $this
      */
-    public function setNew(bool $bNew = true) {
+    public function setNew(bool $bNew = true): self {
         $this->_bNew = $bNew;
         return $this;
     }

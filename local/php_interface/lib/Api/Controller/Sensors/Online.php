@@ -9,8 +9,22 @@ use Bitrix\Main\Type\DateTime;
  */
 class Online extends \Api\Core\Base\Controller {
 
+    /**
+     *
+     * @var string
+     */
     private $token = null;
+
+    /**
+     *
+     * @var string
+     */
     private $name = null;
+
+    /**
+     *
+     * @var array
+     */
     private $arResponse = array(
         'data' => array(),
         'errors' => array(),
@@ -30,10 +44,6 @@ class Online extends \Api\Core\Base\Controller {
         $this->token = $this->obRequest->get('token');
     }
 
-    /**
-     * 
-     * @return json
-     */
     public function get() {
 
         /** @var \Api\Sensors\Sensor\Collection $obSensors */
@@ -195,7 +205,7 @@ class Online extends \Api\Core\Base\Controller {
      * 
      * @return string
      */
-    private function exitAction() {
+    private function exitAction(): string {
         $this->arrayValueToNumber($this->arResponse);
         header('Content-Type: application/json');
         return json_encode($this->arResponse);
@@ -220,7 +230,7 @@ class Online extends \Api\Core\Base\Controller {
      * 
      * @return boolean
      */
-    private function loadSystem() {
+    private function loadSystem(): bool {
 
         $this->obSystem = \Api\Sensors\System\Model::getOne(array(
                 '=NAME' => $this->name,

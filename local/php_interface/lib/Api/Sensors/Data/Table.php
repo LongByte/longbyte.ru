@@ -2,7 +2,7 @@
 
 namespace Api\Sensors\Data;
 
-use Bitrix\Main;
+use Bitrix\Main\ORM;
 use Bitrix\Main\Localization\Loc;
 
 Loc::loadMessages(__FILE__);
@@ -10,21 +10,24 @@ Loc::loadMessages(__FILE__);
 /**
  * Class \Api\Sensors\Data\Table
  */
-class Table extends Main\Entity\DataManager {
+class Table extends ORM\Data\DataManager {
 
     /**
-     * Returns DB table name for entity.
      *
      * @return string
      */
-    public static function getTableName() {
+    public static function getTableName(): string {
         return 'sensors_data';
     }
 
-    public static function getScalarFields() {
+    /**
+     * 
+     * @return array
+     */
+    public static function getScalarFields(): array {
         $arFields = array();
         foreach (self::getMap() as $strId => $obField) {
-            if ($obField instanceof \Bitrix\Main\Entity\ScalarField) {
+            if ($obField instanceof ORM\Fields\ScalarField) {
                 $arFields[$strId] = $obField;
             }
         }
@@ -32,46 +35,20 @@ class Table extends Main\Entity\DataManager {
     }
 
     /**
-     * Returns entity map definition.
      *
      * @return array
      */
     public static function getMap() {
         return array(
-            'ID' => new Main\Entity\IntegerField('ID', array(
-                'primary' => true,
-                'autocomplete' => true,
-                'title' => 'ID',
-                )),
-            'SENSOR_ID' => new Main\Entity\IntegerField('UF_SENSOR_ID', array(
-                'required' => true,
-                'title' => 'Сенсор',
-                )),
-            'SENSOR' => new Main\Entity\ReferenceField(
-                'SENSOR',
-                '\Api\Sensors\Sensor\Table',
-                array('this.SENSOR_ID' => 'ref.ID'),
-                array('join_type' => 'INNER')
-            ),
-            'DATE' => new Main\Entity\DatetimeField('UF_DATE', array(
-                'required' => true,
-                'title' => 'Дата',
-                )),
-            'VALUE_MIN' => new Main\Entity\FloatField('UF_VALUE_MIN', array(
-                'title' => 'Минимальное значение',
-                )),
-            'VALUE_AVG' => new Main\Entity\FloatField('UF_VALUE_AVG', array(
-                'title' => 'Значение',
-                )),
-            'VALUE_MAX' => new Main\Entity\FloatField('UF_VALUE_MAX', array(
-                'title' => 'Максимальное значение',
-                )),
-            'VALUES_COUNT' => new Main\Entity\IntegerField('UF_VALUES_COUNT', array(
-                'title' => 'Количество значений',
-                )),
-            'VALUE' => new Main\Entity\FloatField('UF_VALUE', array(
-                'title' => 'Текущее/последнее значение',
-                )),
+            'ID' => (new ORM\Fields\IntegerField('ID'))->configureTitle('ID')->configurePrimary()->configureAutocomplete(),
+            'SENSOR_ID' => (new ORM\Fields\IntegerField('UF_SENSOR_ID'))->configureTitle('Сенсор')->configureRequired(),
+            'SENSOR' => (new ORM\Fields\Relations\Reference('SENSOR', \Api\Sensors\Sensor\Table::getEntity(), array('this.SENSOR_ID' => 'ref.ID'), array('join_type' => 'INNER'))),
+            'DATE' => (new ORM\Fields\IntegerField('UF_DATE'))->configureTitle('Дата')->configureRequired(),
+            'VALUE_MIN' => (new ORM\Fields\FloatField('UF_VALUE_MIN'))->configureTitle('Минимальное значение'),
+            'VALUE_AVG' => (new ORM\Fields\FloatField('UF_VALUE_AVG'))->configureTitle('Значение'),
+            'VALUE_MAX' => (new ORM\Fields\FloatField('UF_VALUE_MAX'))->configureTitle('Максимальное значение'),
+            'VALUES_COUNT' => (new ORM\Fields\IntegerField('UF_VALUES_COUNT'))->configureTitle('Количество значений'),
+            'VALUE' => (new ORM\Fields\FloatField('UF_VALUE'))->configureTitle('Текущее/последнее значение'),
         );
     }
 

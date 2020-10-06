@@ -42,7 +42,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return array
      */
-    public function getFields() {
+    public function getFields(): array {
         return array_keys(static::getModel()::getTable()::getScalarFields());
     }
 
@@ -50,7 +50,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return string
      */
-    public static function getCollection() {
+    public static function getCollection(): string {
         return Collection::class;
     }
 
@@ -58,7 +58,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return string
      */
-    public static function getModel() {
+    public static function getModel(): string {
         return Model::class;
     }
 
@@ -66,7 +66,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return \Api\Sensors\Sensor\Collection
      */
-    public function getSensorsCollection() {
+    public function getSensorsCollection(): \Api\Sensors\Sensor\Collection {
         if (is_null($this->_obSensorsCollection)) {
             $this->_obSensorsCollection = new \Api\Sensors\Sensor\Collection();
         }
@@ -78,7 +78,7 @@ class Entity extends \Api\Core\Base\Entity {
      * @param \Api\Sensors\Sensor\Collection $obSensorsCollection
      * @return $this
      */
-    public function setSensorsCollection(\Api\Sensors\Sensor\Collection $obSensorsCollection) {
+    public function setSensorsCollection(\Api\Sensors\Sensor\Collection $obSensorsCollection): self {
         $this->_obSensorsCollection = $obSensorsCollection;
         return $this;
     }
@@ -87,7 +87,7 @@ class Entity extends \Api\Core\Base\Entity {
      * 
      * @return array
      */
-    public function toArray() {
+    public function toArray(): array {
         $arData = parent::toArray();
         $arData['last_update'] = $this->getLastUpdate()->format('d.m.Y H:i:s');
         $arData['last_receive'] = $this->getLastReceive()->format('d.m.Y H:i:s');

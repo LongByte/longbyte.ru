@@ -23,7 +23,7 @@ class Entity extends \Api\Core\Iblock\Section\Entity {
      * 
      * @return string
      */
-    public static function getModel() {
+    public static function getModel(): string {
         return Model::class;
     }
 
@@ -31,7 +31,7 @@ class Entity extends \Api\Core\Iblock\Section\Entity {
      * 
      * @return array
      */
-    public function toArray() {
+    public function toArray(): array {
         $arData = parent::toArray();
 
         $arData['section_page_url'] = $this->getSectionPageUrl();
