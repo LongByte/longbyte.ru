@@ -70,12 +70,12 @@ if (!$arSystem) {
                 'filter' => array('IBLOCK_ID' => IBLOCK_CHART_RESULT, '=ACTIVE' => 'Y', 'PROPERTY.SYSTEM.ID' => $arSystem['ID']),
                 'select' => array(
                     'ID',
-                    'TEST' => 'PROPERTY.TEST.ID',
+                    'TEST_ID' => 'PROPERTY.TEST_ID.ID',
                 ),
         ));
 
         while ($arOneResult = $rsResults->fetch()) {
-            $arResults[$arOneResult['TEST']] = $arOneResult;
+            $arResults[$arOneResult['TEST_ID']] = $arOneResult;
         }
 
         $arResultsData = $obRequest->get('result');
@@ -99,8 +99,8 @@ if (!$arSystem) {
                         'RESULT' => $arTestResult['result'],
                         'RESULT2' => $arTestResult['result2'],
                         'RESULT3' => $arTestResult['result3'],
-                        'TEST' => $iTestId,
-                        'SYSTEM' => $arSystem['ID'],
+                        'TEST_ID' => $iTestId,
+                        'SYSTEM_ID' => $arSystem['ID'],
                     )
                 );
                 $obElement->Add($arResultFields);
@@ -341,26 +341,26 @@ if (!$arSystem) {
     }
 
     $rsResults = Element::getList(array(
-            'filter' => array('IBLOCK_ID' => IBLOCK_CHART_RESULT, 'ACTIVE' => 'Y', 'PROPERTY.SYSTEM.ID' => $arSystem['ID']),
+            'filter' => array('IBLOCK_ID' => IBLOCK_CHART_RESULT, 'ACTIVE' => 'Y', 'PROPERTY.SYSTEM_ID.ID' => $arSystem['ID']),
             'select' => array(
                 'ID',
                 'NAME',
                 'INFO' => 'PREVIEW_TEXT',
-                'TEST' => 'PROPERTY.TEST.ID',
+                'TEST_ID' => 'PROPERTY.TEST_ID.ID',
                 'TEST_TYPE' => 'PROPERTY.TEST.IBLOCK_SECTION_ID',
                 'RESULT' => 'PROPERTY.RESULT',
                 'RESULT2' => 'PROPERTY.RESULT2',
                 'RESULT3' => 'PROPERTY.RESULT3',
-                'SYSTEM' => 'PROPERTY.SYSTEM.ID',
+                'SYSTEM_ID' => 'PROPERTY.SYSTEM_ID.ID',
             ),
     ));
 
 
     while ($arRes = $rsResults->fetch()) {
         if (isset($arResult['TEST_TYPES'][$arRes['TEST_TYPE']])) {
-            if (isset($arResult['TEST_TYPES'][$arRes['TEST_TYPE']]['TESTS'][$arRes['TEST']])) {
-                if (isset($arSystems[$arRes['SYSTEM']])) {
-                    $arResult['TEST_TYPES'][$arRes['TEST_TYPE']]['TESTS'][$arRes['TEST']]['RESULT'] = $arRes;
+            if (isset($arResult['TEST_TYPES'][$arRes['TEST_TYPE']]['TESTS'][$arRes['TEST_ID']])) {
+                if (isset($arSystems[$arRes['SYSTEM_ID']])) {
+                    $arResult['TEST_TYPES'][$arRes['TEST_TYPE']]['TESTS'][$arRes['TEST_ID']]['RESULT'] = $arRes;
                 }
             }
         }

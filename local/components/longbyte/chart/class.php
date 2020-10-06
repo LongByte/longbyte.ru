@@ -54,7 +54,7 @@ class LongbyteChartComponent extends CBitrixComponent {
             ->setIblockTag(IBLOCK_CHART_SYSTEMS)
             ->setIblockTag(IBLOCK_CHART_RESULT)
             ->setIblockTag(IBLOCK_CHART_FIRM)
-            ->setTime(60 * 60)
+            ->setTime(0)
             ->setId('chart')
             ->get(function() {
 
