@@ -43,7 +43,7 @@ class Table extends ORM\Data\DataManager {
             'ID' => (new ORM\Fields\IntegerField('ID'))->configureTitle('ID')->configurePrimary()->configureAutocomplete(),
             'SENSOR_ID' => (new ORM\Fields\IntegerField('UF_SENSOR_ID'))->configureTitle('Сенсор')->configureRequired(),
             'SENSOR' => (new ORM\Fields\Relations\Reference('SENSOR', \Api\Sensors\Sensor\Table::getEntity(), array('this.SENSOR_ID' => 'ref.ID'), array('join_type' => 'INNER'))),
-            'DATE' => (new ORM\Fields\IntegerField('UF_DATE'))->configureTitle('Дата')->configureRequired(),
+            'DATE' => (new ORM\Fields\DatetimeField('UF_DATE'))->configureTitle('Дата')->configureRequired(),
             'VALUE_MIN' => (new ORM\Fields\FloatField('UF_VALUE_MIN'))->configureTitle('Минимальное значение'),
             'VALUE_AVG' => (new ORM\Fields\FloatField('UF_VALUE_AVG'))->configureTitle('Значение'),
             'VALUE_MAX' => (new ORM\Fields\FloatField('UF_VALUE_MAX'))->configureTitle('Максимальное значение'),
