@@ -60,6 +60,13 @@ class Stat extends \Api\Core\Base\Controller {
             '>VALUES_COUNT' => 0
         );
 
+        $strSince = $this->obRequest->get('since');
+        if (strlen($strSince) > 0) {
+            $obSince = new \Bitrix\Main\Type\Date();
+            $obSince->add($strSince);
+            $arValuesFilter['>=DATE'] = $obSince;
+        }
+
         $obValues = \Api\Sensors\Data\Model::getAll($arValuesFilter, 0, 0, array(
                 'order' => array('DATE' => 'ASC')
         ));

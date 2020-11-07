@@ -28,6 +28,9 @@
         methods: {
             loadData() {
                 let url = '/api/sensors/stat/?token=' + window.vueData.system_token;
+                if (window.vueData.since) {
+                    url += '&since='+window.vueData.since;
+                }
                 axios
                     .get(url)
                     .then(function (response) {
