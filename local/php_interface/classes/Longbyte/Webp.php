@@ -54,10 +54,10 @@ class Webp {
 
         if (self::checkSupport()) {
             $arPatterns = array(
-                '/<img[^>]* src="([^"]+\.(jpg|jpeg|png|bmp))"[^>]*>/',
-                '/<source[^>]* srcset="([^"]+\.(jpg|jpeg|png|bmp))"[^>]*>/',
-                '/<img[^>]* data-src="([^"]+\.(jpg|jpeg|png|bmp))"[^>]*>/',
-                '/<[^>]*style="[^"]*url\(\'?([^)]+\.(jpg|jpeg|png|bmp))\'?\)[^"]*"[^>]*>/',
+                '/<img[^>]* src="([^"]+\.(jpg|jpeg|png|bmp))"[^>]*>/i',
+                '/<source[^>]* srcset="([^"]+\.(jpg|jpeg|png|bmp))"[^>]*>/i',
+                '/<img[^>]* data-src="([^"]+\.(jpg|jpeg|png|bmp))"[^>]*>/i',
+                '/<[^>]*style="[^"]*url\(\'?([^)]+\.(jpg|jpeg|png|bmp))\'?\)[^"]*"[^>]*>/i',
             );
 
             foreach ($arPatterns as $strPattern) {
@@ -168,11 +168,11 @@ class Webp {
     }
 
     /**
-     * Проверка, что файл существует и имеет размер больше 0 (сконвертировался корректно)
+     * Проверка, что файл существует и имеет размер больше 1 (сконвертировался корректно)
      * @return string
      */
     private function checkCorrectImage() {
-        if ($this->getTargetFile()->isExists() && $this->getTargetFile()->getSize() > 0) {
+        if ($this->getTargetFile()->isExists() && $this->getTargetFile()->getSize() > 1) {
             return $this->getTargetSrc();
         }
         return $this->getSourceSrc();
@@ -191,7 +191,7 @@ class Webp {
      * @return bool
      */
     private function isPng() {
-        return $this->getSourceFile()->getExtension() == 'png' && $this->getSourceFile()->getContentType() == 'image/png';
+        return strtolower($this->getSourceFile()->getExtension()) == 'png' && $this->getSourceFile()->getContentType() == 'image/png';
     }
 
     /**
@@ -199,7 +199,7 @@ class Webp {
      * @return bool
      */
     private function isBmp() {
-        return $this->getSourceFile()->getExtension() == 'bmp' && $this->getSourceFile()->getContentType() == 'image/bmp';
+        return strtolower($this->getSourceFile()->getExtension()) == 'bmp' && $this->getSourceFile()->getContentType() == 'image/bmp';
     }
 
     /**
@@ -207,7 +207,7 @@ class Webp {
      * @return bool
      */
     private function isJpg() {
-        return in_array($this->getSourceFile()->getExtension(), array('jpg', 'jpeg')) && $this->getSourceFile()->getContentType() == 'image/jpeg';
+        return in_array(strtolower($this->getSourceFile()->getExtension()), array('jpg', 'jpeg')) && $this->getSourceFile()->getContentType() == 'image/jpeg';
     }
 
     /**
