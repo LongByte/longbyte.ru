@@ -70,15 +70,18 @@ class Entity extends \Api\Core\Base\Entity {
         $obSensor = $this->getSensor();
 
         $obNow = new \Bitrix\Main\Type\DateTime();
-        $obNow->setTime(0, 0, 0);
+        $obToday = (new \Bitrix\Main\Type\DateTime())->setTime(0, 0, 0);
+        $obYesturday = (new \Bitrix\Main\Type\DateTime())->setTime(0, 0, 0)->add('-1day');
         $obValueDate = clone $this->getDate();
         $obValueDate->setTime(0, 0, 0);
-        $bToday = $obNow->getTimestamp() == $obValueDate->getTimestamp();
+        $bToday = $obToday->getTimestamp() == $obValueDate->getTimestamp();
 
-        if ($obSensor->isModeAvg() || $obSensor->isModeEachLastDay() && !$bToday) {
+        $bYesturday = $obYesturday->getTimestamp() == $obValueDate->getTimestamp() && $obNow->format('H') < 6;
+
+        if ($obSensor->isModeAvg() || $obSensor->isModeEachLastDay() && !($bToday && $bYesturday)) {
             $strDate = $this->getDate()->format('d.m.Y');
         }
-        if ($obSensor->isModeEach() || $obSensor->isModeEachLastDay() && $bToday) {
+        if ($obSensor->isModeEach() || $obSensor->isModeEachLastDay() && ($bToday || $bYesturday)) {
             $strDate = $this->getDate()->format('H:i');
         }
 

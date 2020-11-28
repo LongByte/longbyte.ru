@@ -1,6 +1,10 @@
 <template id="sensors-edit-template">
     <div class="sensors-edit">
 
+        <div class="sensors-edit__links">
+            <a href="../stat/">Статистика за все время</a>
+            <a href="../">Текущая статистика</a>
+        </div>
 
         <div class="sensors-edit__list container">
             <div class="sensors-edit__item row">

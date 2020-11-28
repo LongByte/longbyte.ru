@@ -1,5 +1,9 @@
 <template id="sensors-template">
     <div class="sensors">
+        <div class="sensors__links">
+            <a href="../edit/">Настроить датчики</a>
+            <a href="../">Текущая статистика</a>
+        </div>
         <div class="sensors__list">
             <div class="sensors__item" v-for="sensorData in store.sensors">
                 <sensorline v-if="sensorData.values.length > 0" :sensor="sensorData" />
