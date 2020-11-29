@@ -241,7 +241,10 @@
                     let formData = new FormData(document.forms[this.getFormName(sensor)]);
                     axios
                         .post('/api/sensors/edit/?token=' + window.vueData.system_token, formData)
-                        .then(response => (this.sensors = response.data.data));
+                        .then(response => {
+                            this.sensors = response.data.data.sensors;
+                            this.links = response.data.data.links;
+                        });
                 }
             },
             sortUp(sensor) {
@@ -263,7 +266,10 @@
                     if (window.confirm('Вы собираетесь удалить все данные по этому датчику. Вы уверены?')) {
                         axios
                             .delete('/api/sensors/edit/?token=' + window.vueData.system_token + '&id=' + sensor.id + '&mode=data')
-                            .then(response => (this.sensors = response.data.data));
+                            .then(response => {
+                                this.sensors = response.data.data.sensors;
+                                this.links = response.data.data.links;
+                            });
                     }
                 }
             },
@@ -272,7 +278,10 @@
                     if (window.confirm('Вы собираетесь удалить датчик и все его данные. Вы уверены? Если данные датчика поступают с клиента то он будет вновь создан.')) {
                         axios
                             .delete('/api/sensors/edit/?token=' + window.vueData.system_token + '&id=' + sensor.id + '&mode=sensor')
-                            .then(response => (this.sensors = response.data.data));
+                            .then(response => {
+                                this.sensors = response.data.data.sensors;
+                                this.links = response.data.data.links;
+                            });
                     }
                 }
             },
