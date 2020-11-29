@@ -40,8 +40,8 @@ class Online extends \Api\Core\Base\Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->name = $this->obRequest->get('name');
-        $this->token = $this->obRequest->get('token');
+        $this->name = $this->getRequest()->get('name');
+        $this->token = $this->getRequest()->get('token');
     }
 
     public function get() {
@@ -55,13 +55,13 @@ class Online extends \Api\Core\Base\Controller {
         }
 
         $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
-                'SYSTEM_ID' => $this->obSystem->getId(),
+                'SYSTEM_ID' => $this->getSystem()->getId(),
                 'ACTIVE' => true,
                 ), 0, 0, array(
                 'order' => array('SORT' => 'ASC')
         ));
 
-        $this->obSystem->setSensorsCollection($obSensors);
+        $this->getSystem()->setSensorsCollection($obSensors);
 
         $remoteSensorsSocket = 'longbyte.ru';
         $remotePort = 56999;
@@ -105,7 +105,7 @@ class Online extends \Api\Core\Base\Controller {
 
 
         $arVue = array(
-            'system' => $this->obSystem->toArray(),
+            'system' => $this->getSystem()->toArray(),
             'sensors' => $obSensors->toArray(),
         );
 
@@ -126,10 +126,10 @@ class Online extends \Api\Core\Base\Controller {
         /** @var \Api\Sensors\Data\Entity $obValue */
         foreach ($arData as $arInputValue) {
 
-            $this->arResponse['data']['read_values'] ++;
+            $this->arResponse['data']['read_values']++;
             $value = floatval(str_replace(',', '.', $arInputValue['SensorValue']));
 
-            $obSensor = $this->obSystem->getSensorsCollection()->getByParams($arInputValue['SensorApp'], $arInputValue['SensorClass'], $arInputValue['SensorName']);
+            $obSensor = $this->getSystem()->getSensorsCollection()->getByParams($arInputValue['SensorApp'], $arInputValue['SensorClass'], $arInputValue['SensorName']);
 
             if (is_null($obSensor)) {
                 continue;
@@ -246,6 +246,14 @@ class Online extends \Api\Core\Base\Controller {
         }
 
         return false;
+    }
+
+    /**
+     * 
+     * @return \Api\Sensors\System\Entity|null
+     */
+    private function getSystem(): ?\Api\Sensors\System\Entity {
+        return $this->obSystem;
     }
 
 }

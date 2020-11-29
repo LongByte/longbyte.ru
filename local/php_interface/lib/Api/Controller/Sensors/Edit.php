@@ -29,7 +29,7 @@ class Edit extends \Api\Core\Base\Controller {
      */
     public function __construct($strToken = null) {
         parent::__construct();
-        $this->token = $this->obRequest->get('token');
+        $this->token = $this->getRequest()->get('token');
         if (!is_null($strToken)) {
             $this->token = $strToken;
         }
@@ -40,7 +40,11 @@ class Edit extends \Api\Core\Base\Controller {
             return $this->exitAction();
         }
 
-        $this->arResponse['data'] = $this->obSystem->getSensorsCollection()->toArray();
+        $this->arResponse['data'] = array(
+            'sensors' => $this->getSystem()->getSensorsCollection()->toArray(),
+            'links' => $this->getLinks(),
+        );
+
 
         return $this->exitAction();
     }
@@ -52,7 +56,7 @@ class Edit extends \Api\Core\Base\Controller {
 
         $iSensorId = $this->getRequest()->get('id');
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
-        $obSensor = $this->obSystem->getSensorsCollection()->getByKey($iSensorId);
+        $obSensor = $this->getSystem()->getSensorsCollection()->getByKey($iSensorId);
 
         if (!is_null($obSensor)) {
             $strAlertMuteTill = $this->getRequest()->get('alert_mute_till');
@@ -91,7 +95,7 @@ class Edit extends \Api\Core\Base\Controller {
         $this->loadSystem();
 
         $iSort = 0;
-        foreach ($this->obSystem->getSensorsCollection() as $obSensor) {
+        foreach ($this->getSystem()->getSensorsCollection() as $obSensor) {
             $iSort += 10;
 
             $obSensor->setSort($iSort);
@@ -100,7 +104,10 @@ class Edit extends \Api\Core\Base\Controller {
             }
         }
 
-        $this->arResponse['data'] = $this->obSystem->getSensorsCollection()->toArray();
+        $this->arResponse['data'] = array(
+            'sensors' => $this->getSystem()->getSensorsCollection()->toArray(),
+            'links' => $this->getLinks(),
+        );
 
         return $this->exitAction();
     }
@@ -113,12 +120,12 @@ class Edit extends \Api\Core\Base\Controller {
         $iSensorId = $this->getRequest()->get('id');
         $strMode = $this->getRequest()->get('mode');
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
-        $obSensor = $this->obSystem->getSensorsCollection()->getByKey($iSensorId);
+        $obSensor = $this->getSystem()->getSensorsCollection()->getByKey($iSensorId);
 
         if (!is_null($obSensor)) {
             $arValuesFilter = array(
                 'SENSOR_ID' => $obSensor->getId(),
-                'SENSOR.SYSTEM_ID' => $this->obSystem->getId(),
+                'SENSOR.SYSTEM_ID' => $this->getSystem()->getId(),
             );
 
             if ($strMode == 'data' || $strMode == 'sensor') {
@@ -138,7 +145,7 @@ class Edit extends \Api\Core\Base\Controller {
         $this->loadSystem();
 
         $iSort = 0;
-        foreach ($this->obSystem->getSensorsCollection() as $obSensor) {
+        foreach ($this->getSystem()->getSensorsCollection() as $obSensor) {
             $iSort += 10;
 
             $obSensor->setSort($iSort);
@@ -147,7 +154,7 @@ class Edit extends \Api\Core\Base\Controller {
             }
         }
 
-        $this->arResponse['data'] = $this->obSystem->getSensorsCollection()->toArray();
+        $this->arResponse['data'] = $this->getSystem()->getSensorsCollection()->toArray();
 
         return $this->exitAction();
     }
@@ -192,6 +199,33 @@ class Edit extends \Api\Core\Base\Controller {
         $this->obSystem->setSensorsCollection($obSensors);
 
         return true;
+    }
+
+    /**
+     * 
+     * @return \Api\Sensors\System\Entity|null
+     */
+    private function getSystem(): ?\Api\Sensors\System\Entity {
+        return $this->obSystem;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    private function getLinks(): array {
+        $arLinks = array(
+            array(
+                'href' => \Api\Sensors\Links::getInstance()->getSystemUrl($this->getSystem()->getNameToken()),
+                'title' => 'Текущая статистика'
+            ),
+            array(
+                'href' => \Api\Sensors\Links::getInstance()->getStatUrl($this->getSystem()->getNameToken()),
+                'title' => 'Статистика за все время'
+            ),
+        );
+
+        return $arLinks;
     }
 
 }

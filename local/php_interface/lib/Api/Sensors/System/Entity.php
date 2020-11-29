@@ -85,6 +85,14 @@ class Entity extends \Api\Core\Base\Entity {
 
     /**
      * 
+     * @return string
+     */
+    public function getNameToken(): string {
+        return $this->getName() . '-' . $this->getToken();
+    }
+
+    /**
+     * 
      * @return array
      */
     public function toArray(): array {

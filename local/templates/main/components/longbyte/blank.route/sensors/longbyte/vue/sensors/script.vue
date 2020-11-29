@@ -13,11 +13,26 @@
         </div>
         <div class="sensors__last-update">Последнее обновление: {{store.system.last_update}}</div>
         <div class="sensors__last-update" v-if="store.system.last_update != store.system.last_receive">Последнее получение данных {{store.system.last_receive}}</div>
-        <div class="sensors__links">
-            <a href="edit/">Настроить датчики</a>
-            <a href="stat/">Статистика за все время</a>
+        <div class="sensors__options">
+            <div class="sensors__options-item">
+                В 3 колонки:
+                <input type="checkbox"
+                       @change="toggleThreeCol()"
+                       />
+            </div>
+            <div class="sensors__options-item">
+                За последний час:
+                <input type="checkbox"
+                       @change="toggleLastHour()"
+                       />
+            </div>
         </div>
-        <div class="sensors__list">
+        <div class="sensors__links">
+            <template v-for="link in store.links">
+                <a :href="link.href" v-html="link.title"></a>
+            </template>
+        </div>
+        <div :class="getSensorsListClass()">
             <template v-for="sensorData in store.sensors">
                 <template v-if="sensorData.view=='bool'">
                     <div class="sensorbool">
@@ -45,8 +60,11 @@
             return {
                 store: {
                     system: {},
-                    sensors: []
+                    sensors: [],
+                    links: [],
                 },
+                showThreeCol: false,
+                showLastHour: false,
             };
         },
         template: `#sensors-template`,
@@ -87,6 +105,9 @@
                     url += '&date=' + strDate;
                 } else {
                     this.startCountdown();
+                    if (this.isLastHour()) {
+                        url += '&since=-1hour';
+                    }
                 }
                 axios
                     .get(url)
@@ -94,6 +115,22 @@
                         this.store = response.data.data;
                     }.bind(this))
                     ;
+            },
+            getSensorsListClass() {
+                return 'sensors__list' + (this.isThreeCol() ? ' sensors__list--three-col' : '');
+            },
+            isThreeCol() {
+                return this.showThreeCol;
+            },
+            toggleThreeCol() {
+                this.showThreeCol = !this.showThreeCol;
+            },
+            isLastHour() {
+                return this.showLastHour;
+            },
+            toggleLastHour() {
+                this.showLastHour = !this.showLastHour;
+                this.refresh();
             },
         }
     })

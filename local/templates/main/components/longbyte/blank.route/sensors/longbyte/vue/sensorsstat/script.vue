@@ -1,8 +1,9 @@
 <template id="sensors-template">
     <div class="sensors">
         <div class="sensors__links">
-            <a href="../edit/">Настроить датчики</a>
-            <a href="../">Текущая статистика</a>
+            <template v-for="link in store.links">
+                <a :href="link.href" v-html="link.title"></a>
+            </template>
         </div>
         <div class="sensors__list">
             <div class="sensors__item" v-for="sensorData in store.sensors">
@@ -18,7 +19,8 @@
             return {
                 store: {
                     system: {},
-                    sensors: []
+                    sensors: [],
+                    links: [],
                 },
             };
         },
@@ -33,7 +35,7 @@
             loadData() {
                 let url = '/api/sensors/stat/?token=' + window.vueData.system_token;
                 if (window.vueData.since) {
-                    url += '&since='+window.vueData.since;
+                    url += '&since=' + window.vueData.since;
                 }
                 axios
                     .get(url)

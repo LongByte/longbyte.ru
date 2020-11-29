@@ -40,8 +40,8 @@ class Get extends \Api\Core\Base\Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->name = $this->obRequest->get('name');
-        $this->token = $this->obRequest->get('token');
+        $this->name = $this->getRequest()->get('name');
+        $this->token = $this->getRequest()->get('token');
     }
 
     /**
@@ -61,7 +61,9 @@ class Get extends \Api\Core\Base\Controller {
         $obToday = new DateTime();
         $obToday->setTime(0, 0, 0);
 
-        $date = $this->obRequest->get('date');
+        $date = $this->getRequest()->get('date');
+        $strSince = $this->getRequest()->get('since');
+
         if (strlen($date) > 0) {
             $obDate = new DateTime($date, 'd.m.Y');
         } else {
@@ -74,8 +76,12 @@ class Get extends \Api\Core\Base\Controller {
         $obDateTo = clone $obDate;
         $obDateTo->add('+1day');
 
+        if (strlen($strSince) > 0) {
+            $obDate = (new DateTime())->add('-1hour');
+        }
+
         $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
-                'SYSTEM_ID' => $this->obSystem->getId(),
+                'SYSTEM_ID' => $this->getSystem()->getId(),
                 'ACTIVE' => true,
                 ), 0, 0, array(
                 'order' => array('SORT' => 'ASC')
@@ -83,7 +89,7 @@ class Get extends \Api\Core\Base\Controller {
 
         $arValuesFilter = array(
             'SENSOR.ACTIVE' => true,
-            'SENSOR.SYSTEM_ID' => $this->obSystem->getId(),
+            'SENSOR.SYSTEM_ID' => $this->getSystem()->getId(),
             '>=DATE' => $obDate,
             '<DATE' => $obDateTo,
         );
@@ -96,8 +102,8 @@ class Get extends \Api\Core\Base\Controller {
             $obSensor = $obSensors->getByKey($obValue->getSensorId());
             $obSensor->setToday($bToday);
 
-            $this->obSystem->getSensorsCollection()->addItem($obSensor);
-            $obSensor->setSystem($this->obSystem);
+            $this->getSystem()->getSensorsCollection()->addItem($obSensor);
+            $obSensor->setSystem($this->getSystem());
 
             $obSensor->getValuesCollection()->addItem($obValue);
             $obValue->setSensor($obSensor);
@@ -117,9 +123,10 @@ class Get extends \Api\Core\Base\Controller {
         }
 
         $arVue = array(
-            'system' => $this->obSystem->toArray(),
+            'system' => $this->getSystem()->toArray(),
             'sensors' => $obSensors->toArray(),
             'date' => $obDate->format('d.m.Y'),
+            'links' => $this->getLinks(),
         );
 
         $this->arResponse['data'] = $arVue;
@@ -172,6 +179,33 @@ class Get extends \Api\Core\Base\Controller {
         }
 
         return false;
+    }
+
+    /**
+     * 
+     * @return \Api\Sensors\System\Entity|null
+     */
+    private function getSystem(): ?\Api\Sensors\System\Entity {
+        return $this->obSystem;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    private function getLinks(): array {
+        $arLinks = array(
+            array(
+                'href' => \Api\Sensors\Links::getInstance()->getEditUrl($this->getSystem()->getNameToken()),
+                'title' => 'Настроить датчики'
+            ),
+            array(
+                'href' => \Api\Sensors\Links::getInstance()->getStatUrl($this->getSystem()->getNameToken()),
+                'title' => 'Статистика за все время'
+            ),
+        );
+
+        return $arLinks;
     }
 
 }

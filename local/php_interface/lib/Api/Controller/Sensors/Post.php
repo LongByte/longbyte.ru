@@ -71,7 +71,7 @@ class Post extends \Api\Core\Base\Controller {
      */
     public function __construct($strToken = null) {
         parent::__construct();
-        $this->token = $this->obRequest->get('token');
+        $this->token = $this->getRequest()->get('token');
         if (!is_null($strToken)) {
             $this->token = $strToken;
         }

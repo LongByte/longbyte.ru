@@ -2,8 +2,9 @@
     <div class="sensors-edit">
 
         <div class="sensors-edit__links">
-            <a href="../stat/">Статистика за все время</a>
-            <a href="../">Текущая статистика</a>
+            <template v-for="link in links">
+                <a :href="link.href" v-html="link.title"></a>
+            </template>
         </div>
 
         <div class="sensors-edit__list container">
@@ -212,6 +213,7 @@
                 sensors: [],
                 showActive: true,
                 allowSave: true,
+                links: [],
             };
         },
         template: `#sensors-edit-template`,
@@ -229,7 +231,10 @@
                 let url = '/api/sensors/edit/?token=' + window.vueData.system_token;
                 axios
                     .get(url)
-                    .then(response => (this.sensors = response.data.data));
+                    .then(response => {
+                        this.sensors = response.data.data.sensors;
+                        this.links = response.data.data.links;
+                    });
             },
             saveForm(sensor) {
                 if (this.allowSave) {

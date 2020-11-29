@@ -31,7 +31,7 @@ class Stat extends \Api\Core\Base\Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->token = $this->obRequest->get('token');
+        $this->token = $this->getRequest()->get('token');
     }
 
     public function get() {
@@ -40,14 +40,14 @@ class Stat extends \Api\Core\Base\Controller {
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
         /** @var \Api\Sensors\Data\Collection $obValues */
         /** @var \Api\Sensors\Data\Entity $obValue */
-        if (!$this->getSystem()) {
+        if (!$this->loadSystem()) {
             return $this->exitAction();
         }
 
         $obToday = new \Bitrix\Main\Type\Date();
 
         $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
-                'SYSTEM_ID' => $this->obSystem->getId(),
+                'SYSTEM_ID' => $this->getSystem()->getId(),
                 'ACTIVE' => true,
                 ), 0, 0, array(
                 'order' => array('SORT' => 'ASC')
@@ -55,12 +55,12 @@ class Stat extends \Api\Core\Base\Controller {
 
         $arValuesFilter = array(
             'SENSOR.ACTIVE' => true,
-            'SENSOR.SYSTEM_ID' => $this->obSystem->getId(),
+            'SENSOR.SYSTEM_ID' => $this->getSystem()->getId(),
             '<DATE' => (new \Bitrix\Main\Type\Date()),
             '>VALUES_COUNT' => 0
         );
 
-        $strSince = $this->obRequest->get('since');
+        $strSince = $this->getRequest()->get('since');
         if (strlen($strSince) > 0) {
             $obSince = new \Bitrix\Main\Type\Date();
             $obSince->add($strSince);
@@ -77,10 +77,10 @@ class Stat extends \Api\Core\Base\Controller {
                 continue;
             }
 
-            if (!$this->obSystem->getSensorsCollection()->getByKey($obSensor->getId())) {
-                $this->obSystem->getSensorsCollection()->addItem($obSensor);
+            if (!$this->getSystem()->getSensorsCollection()->getByKey($obSensor->getId())) {
+                $this->getSystem()->getSensorsCollection()->addItem($obSensor);
             }
-            $obSensor->setSystem($this->obSystem);
+            $obSensor->setSystem($this->getSystem());
 
             $obSensor->getValuesCollection()->addItem($obValue);
             $obValue->setSensor($obSensor);
@@ -100,8 +100,9 @@ class Stat extends \Api\Core\Base\Controller {
         }
 
         $arVue = array(
-            'system' => $this->obSystem->toArray(),
+            'system' => $this->getSystem()->toArray(),
             'sensors' => $obSensors->toArray(),
+            'links' => $this->getLinks(),
         );
 
         $this->arResponse['data'] = $arVue;
@@ -138,7 +139,7 @@ class Stat extends \Api\Core\Base\Controller {
      * 
      * @return bool
      */
-    private function getSystem(): bool {
+    private function loadSystem(): bool {
 
         $this->obSystem = \Api\Sensors\System\Model::getOne(array(
                 '=TOKEN' => $this->token,
@@ -153,6 +154,45 @@ class Stat extends \Api\Core\Base\Controller {
         }
 
         return false;
+    }
+
+    /**
+     * 
+     * @return \Api\Sensors\System\Entity|null
+     */
+    private function getSystem(): ?\Api\Sensors\System\Entity {
+        return $this->obSystem;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    private function getLinks(): array {
+        $arLinks = array(
+            array(
+                'href' => \Api\Sensors\Links::getInstance()->getSystemUrl($this->getSystem()->getNameToken()),
+                'title' => 'Текущая статистика'
+            ),
+            array(
+                'href' => \Api\Sensors\Links::getInstance()->getEditUrl($this->getSystem()->getNameToken()),
+                'title' => 'Настроить датчики'
+            ),
+            array(
+                'href' => \Api\Sensors\Links::getInstance()->getStatUrl($this->getSystem()->getNameToken()),
+                'title' => 'Статистика за все время'
+            ),
+            array(
+                'href' => \Api\Sensors\Links::getInstance()->getStatSinceUrl($this->getSystem()->getNameToken(), '-1month'),
+                'title' => 'за месяц'
+            ),
+            array(
+                'href' => \Api\Sensors\Links::getInstance()->getStatSinceUrl($this->getSystem()->getNameToken(), '-6months'),
+                'title' => 'за пол года'
+            ),
+        );
+
+        return $arLinks;
     }
 
 }
