@@ -41,6 +41,7 @@ class Edit extends \Api\Core\Base\Controller {
         }
 
         $this->arResponse['data'] = array(
+            'system' => $this->getSystem()->toArray(),
             'sensors' => $this->getSystem()->getSensorsCollection()->toArray(),
             'links' => $this->getLinks(),
         );
@@ -105,6 +106,7 @@ class Edit extends \Api\Core\Base\Controller {
         }
 
         $this->arResponse['data'] = array(
+            'system' => $this->getSystem()->toArray(),
             'sensors' => $this->getSystem()->getSensorsCollection()->toArray(),
             'links' => $this->getLinks(),
         );

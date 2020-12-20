@@ -7,6 +7,7 @@ Bitrix\Main\Page\Asset::getInstance()->addString('<script src="//cdnjs.cloudflar
 Bitrix\Main\Page\Asset::getInstance()->addString('<meta name="robots" content="noindex, nofollow"/>', true);
 
 $APPLICATION->IncludeComponent("longbyte:vue", "sensorsedit", Array(
+    'INCLUDE_COMPONENTS' => array('sensorsedit-item'),
     'STYLE_TO_COMPILER' => 'Y',
     ), $component->__parent
 );
