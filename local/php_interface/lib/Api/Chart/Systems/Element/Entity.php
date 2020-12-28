@@ -434,7 +434,7 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
     private function _appendRamTimings(): string {
         $strName = '';
         if (!empty($this->getRamTimings())) {
-            $strName .= '<span class="comment">' . $this->getRamTimings() . 'V</span>';
+            $strName .= '<span class="comment">' . $this->getRamTimings() . '</span>';
         }
         return $strName;
     }
