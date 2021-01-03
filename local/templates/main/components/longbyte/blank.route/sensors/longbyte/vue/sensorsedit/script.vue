@@ -10,16 +10,20 @@
         <div class="sensors-edit__list container">
             <div class="sensors-edit__item row">
                 <div class="sensors-edit__col col-3">
-                    Покаывать только включенные датчики:
-                    <input type="checkbox"
-                           checked
-                           @change="toggleShowActive()"
-                           />
+                    <div class="pretty-checkbox">
+                        <input type="checkbox"
+                               checked
+                               @change="toggleShowActive()"
+                               id="toggleShowActive"
+                               />
+                        <label for="toggleShowActive">Покаывать только включенные датчики</label>
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <template v-for="sensor in sensors">
                     <sensorsedit-item
+                        :sensors="sensors"
                         :sensor="sensor"
                         :show-active="showActive"
                         :system-token="system.token"

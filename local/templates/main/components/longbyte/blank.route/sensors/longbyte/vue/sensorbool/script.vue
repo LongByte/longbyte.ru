@@ -1,6 +1,6 @@
 <template id="sensorbool">
     <div :class="getSensorboolClass()">
-        <div class="sensorbool__title" v-html="getTitle()"></div>
+        <div class="sensorbool__title" v-html="fullName"></div>
         <div class="sensorbool__value" v-if="sensor.values.length > 0">
             <div class="sensorbool__value-avg" v-if="getLastValue()">Current: <span class="sensorbool__value-current-value" v-html="getLastValue()"></span></div>
             <div class="sensorbool__value-avg">Avg: <span class="sensorbool__value-avg-value" v-html="getAvgValue()"></span></div>
@@ -18,6 +18,15 @@
         },
         watch: {
 
+        },
+        computed: {
+            fullName() {
+                if (!!this.sensor.label && this.sensor.label.length > 0) {
+                    return this.sensor.label;
+                } else {
+                    return this.sensor.sensor_device + ' ' + this.sensor.sensor_name;
+                }
+            }
         },
         methods: {
             getTitle() {

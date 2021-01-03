@@ -16,6 +16,15 @@
                 this.render();
             }
         },
+        computed: {
+            fullName() {
+                if (!!this.sensor.label && this.sensor.label.length > 0) {
+                    return this.sensor.label + ' (' + this.sensor.sensor_unit + ')';
+                } else {
+                    return this.sensor.sensor_device + ' ' + this.sensor.sensor_name + ' (' + this.sensor.sensor_unit + ')';
+                }
+            }
+        },
         methods: {
             render() {
                 let datasets = [];
@@ -135,7 +144,7 @@
                     },
                     title: {
                         display: true,
-                        text: this.sensor.sensor_device + ' ' + this.sensor.sensor_name + ' (' + this.sensor.sensor_unit + ')'
+                        text: this.fullName
                     },
                     legend: {
                         display: false,

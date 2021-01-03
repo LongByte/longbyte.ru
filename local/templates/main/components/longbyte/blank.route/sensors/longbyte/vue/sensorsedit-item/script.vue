@@ -5,29 +5,57 @@
             <form :id="getFormName()" :name="getFormName()" class="row">
                 <input type="hidden" :value="sensor.id" name="id" />
                 <div class="col-12">
-                    <input type="checkbox"
-                           value="1" 
-                           name="active" 
-                           :checked="isChecked(sensor.active)" 
-                           @change="saveForm()"
-                           />
-                    <span class="sensors-edit-item__name">
-                        <template v-if="isAliasEdit">
-                            <input name="alias" value="" :placeholder="fullName" @blur="toggleAliasEdit" />
-                        </template>
-                        <template v-else>
-                            <span v-html="fullName" @click="toggleAliasEdit"></span>
-                        </template>
-                    </span>
-                    <button>...</button>
-                    <template v-if="false">
-                        <div class="" v-if="sensor.active == false">
-                            <button type="button" class="btn btn-warning" @click.prevent="deleteData()">Удалить данные</button>
+                    <div class="sensors-edit-item__first-line">
+                        <div class="pretty-checkbox">
+                            <input type="hidden"
+                                   value="0" 
+                                   name="active" 
+                                   />
+                            <input type="checkbox"
+                                   value="1" 
+                                   name="active" 
+                                   :id="'sensor-active-'+sensor.id"
+                                   :checked="isChecked(sensor.active)" 
+                                   @change="saveForm()"
+                                   />
+                            <label :for="'sensor-active-'+sensor.id"></label>
                         </div>
-                        <div class="" v-if="sensor.active == false">
-                            <button type="button" class="btn btn-danger" @click.prevent="deleteSensor()">Удалить датчик</button>
+                        <span class="sensors-edit-item__name">
+                            <template v-if="isLabelEdit">
+                                <input class="form-control form-control--inline" name="label" :value="sensor.label" :placeholder="fullName" @blur="blurLabelEdit" />
+                            </template>
+                            <template v-else>
+                                <span v-html="fullName" @click="toggleLabelEdit"></span>
+                            </template>
+                        </span>
+                        <div class="sensors-edit-item__context-menu" @blur="blurContextMenu">
+                            <button @click.prevent="toggleContextMenu" class="btn btn-info">...</button>
+                            <template v-if="isContextMenu">
+                                <div class="sensors-edit-item__context-menu-popup">
+                                    <div class="">
+                                        <div class="sensors-edit-item__context-menu-popup__merge-line">
+                                            <select name="merge" class="form-control form-control--inline">
+                                                <template v-for="onesensor in sensors">
+                                                    <option
+                                                        v-if="onesensor.id != sensor.id"
+                                                        :value="onesensor.id"
+                                                        v-html="onesensor.sensor_app + ' ' + onesensor.sensor_device + ' ' + onesensor.sensor_name"
+                                                        ></option>
+                                                </template>
+                                            </select>
+                                            <button type="button" class="btn btn-warning" @click.prevent="mergeSensors()">Объединить</button>
+                                        </div>
+                                        <div class="" v-if="sensor.active == false">
+                                            <button type="button" class="btn btn-warning" @click.prevent="deleteData()">Удалить данные</button>
+                                        </div>
+                                        <div class="" v-if="sensor.active == false">
+                                            <button type="button" class="btn btn-danger" @click.prevent="deleteSensor()">Удалить датчик</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
                         </div>
-                    </template>
+                    </div>
                 </div>
                 <div class="col-12">
 
@@ -192,6 +220,7 @@
 <script>
     Vue.component('sensorsedit-item', {
         props: {
+            sensors: [Array, Object],
             sensor: [Array, Object],
             showActive: [Boolean],
             systemToken: [String]
@@ -200,7 +229,8 @@
         data() {
             return {
                 allowSave: true,
-                isAliasEdit: false,
+                isLabelEdit: false,
+                isContextMenu: false
             };
         },
         components: {
@@ -211,11 +241,14 @@
         },
         computed: {
             fullName() {
-                return this.sensor.sensor_app + ' ' + this.sensor.sensor_device + ' ' + this.sensor.sensor_name;
+                if (!!this.sensor.label && this.sensor.label.length > 0) {
+                    return this.sensor.label;
+                } else {
+                    return this.sensor.sensor_app + ' ' + this.sensor.sensor_device + ' ' + this.sensor.sensor_name;
+                }
             }
         },
         methods: {
-
             saveForm() {
                 if (this.allowSave) {
                     let formData = new FormData(document.forms[this.getFormName()]);
@@ -223,6 +256,8 @@
                         .post('/api/sensors/edit/?token=' + this.systemToken, formData)
                         .then(response => {
                             this.$emit('refreshdata', response);
+                            this.isLabelEdit = false;
+                            this.isContextMenu = false;
                         });
                 }
             },
@@ -260,6 +295,19 @@
                                 this.$emit('refreshData');
                             });
                     }
+                }
+            },
+            mergeSensors() {
+                if (window.confirm('Вы собираетесь передать все данные выбранного датчика и удалить его. Вы уверены?')) {
+                    let obForm = document.forms[this.getFormName()];
+                    let obFormData = new FormData();
+                    obFormData.append('from_id', obForm.querySelector('select[name=merge]').value);
+                    obFormData.append('to_id', this.sensor.id);
+                    axios
+                        .post('/api/sensors/merge/?token=' + this.systemToken, obFormData)
+                        .then(response => {
+                            this.$emit('refreshdata', response);
+                        });
                 }
             },
             changeTemplate() {
@@ -375,15 +423,25 @@
             isRowVisible() {
                 return this.isChecked(this.sensor.active) || !this.showActive;
             },
-            toggleAliasEdit() {
-                this.isAliasEdit = !this.isAliasEdit;
-                if (this.isAliasEdit) {
+            toggleLabelEdit() {
+                this.isLabelEdit = !this.isLabelEdit;
+                if (this.isLabelEdit) {
                     setTimeout(param => {
                         let form = document.forms[this.getFormName()];
-                        let obInput = form.querySelector('[name=alias]');
+                        let obInput = form.querySelector('[name=label]');
                         obInput.focus();
                     }, 10);
                 }
+            },
+            toggleContextMenu() {
+                this.isContextMenu = !this.isContextMenu;
+            },
+            blurLabelEdit() {
+                this.saveForm();
+                this.toggleLabelEdit();
+            },
+            blurContextMenu() {
+                this.isContextMenu = false;
             }
         }
     })

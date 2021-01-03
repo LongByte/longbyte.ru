@@ -6,8 +6,6 @@ namespace Api\Sensors\Sensor;
  * Class \Api\Sensors\Sensor\Entity
  * 
  * @method int getId()
- * @method $this setId(int $iId)
- * @method bool hasId()
  * @method boolean getActive()
  * @method $this setActive(boolean $bActive)
  * @method bool hasActive()
@@ -56,12 +54,15 @@ namespace Api\Sensors\Sensor;
  * @method string getModifier()
  * @method $this setModifier(string $strModifier)
  * @method bool hasModifier()
- * @method string getPrecision()
- * @method $this setPrecision(string $strPrecision)
+ * @method int getPrecision()
+ * @method $this setPrecision(int $iPrecision)
  * @method bool hasPrecision()
  * @method int getSort()
  * @method $this setSort(int $iSort)
  * @method bool hasSort()
+ * @method string getLabel()
+ * @method $this setLabel(string $strLabel)
+ * @method bool hasLabel()
  */
 class Entity extends \Api\Core\Base\Entity {
 
