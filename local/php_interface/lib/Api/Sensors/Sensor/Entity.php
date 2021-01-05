@@ -97,6 +97,12 @@ class Entity extends \Api\Core\Base\Entity {
     protected $_bNew = false;
 
     /**
+     *
+     * @var \Api\Sensors\Sensor\Statistic\Entity
+     */
+    protected $_obStatistic = null;
+
+    /**
      * 
      * @return array
      */
@@ -192,6 +198,11 @@ class Entity extends \Api\Core\Base\Entity {
                 $arData['view'] = 'bar';
             }
         }
+
+        if (!is_null($this->_obStatistic)) {
+            $arData['statistic'] = $this->_obStatistic->toArray();
+        }
+
         return $arData;
     }
 
@@ -296,6 +307,16 @@ class Entity extends \Api\Core\Base\Entity {
      */
     public function setNew(bool $bNew = true): self {
         $this->_bNew = $bNew;
+        return $this;
+    }
+
+    /**
+     * 
+     * @param \Api\Sensors\Sensor\Statistic\Entity $obStatistic
+     * @return $this
+     */
+    public function setStatistic(\Api\Sensors\Sensor\Statistic\Entity $obStatistic): self {
+        $this->_obStatistic = $obStatistic;
         return $this;
     }
 

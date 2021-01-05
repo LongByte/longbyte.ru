@@ -35,10 +35,16 @@ class Edit extends \Api\Core\Base\Controller {
         }
     }
 
+    /**
+     * 
+     * @return mixed
+     */
     public function get() {
         if (!$this->loadSystem()) {
             return $this->exitAction();
         }
+        
+        $this->getStatistic();
 
         $this->arResponse['data'] = array(
             'system' => $this->getSystem()->toArray(),
@@ -50,6 +56,10 @@ class Edit extends \Api\Core\Base\Controller {
         return $this->exitAction();
     }
 
+    /**
+     * 
+     * @return mixed
+     */
     public function post() {
         if (!$this->loadSystem()) {
             return $this->exitAction();
@@ -127,6 +137,8 @@ class Edit extends \Api\Core\Base\Controller {
                 $obSensor->save();
             }
         }
+        
+        $this->getStatistic();
 
         $this->arResponse['data'] = array(
             'system' => $this->getSystem()->toArray(),
@@ -251,6 +263,57 @@ class Edit extends \Api\Core\Base\Controller {
         );
 
         return $arLinks;
+    }
+
+    /**
+     * 
+     */
+    protected function getStatistic() {
+
+        $obQuery = new \Bitrix\Main\ORM\Query\Query(\Api\Sensors\Data\Table::getEntity());
+        $obQuery
+            ->where('SENSOR.SYSTEM_ID', '=', $this->obSystem->getId())
+            ->setGroup('SENSOR_ID')
+            ->registerRuntimeField(
+                'TOTAL_MIN',
+                new \Bitrix\Main\ORM\Fields\ExpressionField(
+                    'TOTAL_MIN',
+                    'MIN(%s)',
+                    array('VALUE_MIN')
+                )
+            )
+            ->registerRuntimeField(
+                'TOTAL_MAX',
+                new \Bitrix\Main\ORM\Fields\ExpressionField(
+                    'TOTAL_MAX',
+                    'MAX(%s)',
+                    array('VALUE_MAX')
+                )
+            )
+            ->registerRuntimeField(
+                'DATA_COUNT',
+                new \Bitrix\Main\ORM\Fields\ExpressionField(
+                    'DATA_COUNT',
+                    'COUNT(%s)',
+                    array('ID')
+                )
+            )
+            ->setSelect(array('SENSOR_ID', 'TOTAL_MIN', 'TOTAL_MAX', 'DATA_COUNT'))
+        ;
+
+        $rsResult = $obQuery->exec();
+        while ($arData = $rsResult->fetch()) {
+            $obStatistic = new \Api\Sensors\Sensor\Statistic\Entity();
+            $obStatistic
+                ->setValueMin($arData['TOTAL_MIN'])
+                ->setValueMax($arData['TOTAL_MAX'])
+                ->setValuesCount($arData['DATA_COUNT'])
+            ;
+            /** @var \Api\Sensors\Sensor\Entity $obSensor */
+            if ($obSensor = $this->getSystem()->getSensorsCollection()->getByKey($arData['SENSOR_ID'])) {
+                $obSensor->setStatistic($obStatistic);
+            }
+        }
     }
 
 }

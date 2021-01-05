@@ -1,87 +1,55 @@
-.sensors-edit-item {
+body {
+    .sensors-edit-item {
 
-    margin: 24px 0;
-    padding: 8px;
-    background: #f3f3f3;
+        padding-top: 8px;
+        padding-bottom: 8px;
 
-    &__input-text {
-        display: inline-block;
-        width: 100px;
-    }
-
-    &__sort {
-        margin-top: 8px;
-
-        input {
-            width: 65px;
-            vertical-align: middle;
+        &:nth-child(odd) {
+            background: #f5f5f5;
         }
-    }
 
-    &__first-line {
-        display: flex;
-        justify-content: stretch;
-        align-items: center;
-    }
+        &__input-text {
+            display: inline-block;
+            width: 100px;
+        }
 
-    &__name {
-        width: 100%;
-    }
+        &__sort {
+            margin-top: 8px;
 
-    &__context-menu {
-        position: relative;
-        display: inline-block;
-        margin-left: auto;
+            input {
+                width: 65px;
+                vertical-align: middle;
+            }
+        }
 
-        &-popup {
-            position: absolute;
-            right: 0;
-            background: white;
-            z-index: 1;
-            padding: 4px;
-            box-shadow: 0 0 10px 5px gray;
-            border-radius: 4px;
+        &__first-line {
+            display: flex;
+            justify-content: stretch;
+            align-items: center;
+        }
 
-            &__merge-line {
-                display: flex;
-                width: 300px;
+        &__name {
+            width: 100%;
+        }
+
+        .form-control {
+            &--inline {
+                display: inline-block;
+            }
+        }
+
+        select.short {
+            width: 20px;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        
+        &__action {
+            margin-bottom: 4px;
+            
+            select {
+                vertical-align: middle;
             }
         }
     }
-
-    .form-control {
-        height: 1.4em;
-        padding: 2px;
-
-        &--size1 {
-            width: 15px;
-        }
-        &--size2 {
-            width: 28px;
-        }
-        &--size3 {
-            width: 41px;
-        }
-        &--size4 {
-            width: 54px;
-        }
-        &--size5 {
-            width: 67px;
-        }
-
-        &--inline {
-            display: inline-block;
-        }
-    }
-
-    select.form-control {
-        padding-top: 0px;
-        padding-bottom: 0px;
-    }
-
-    .btn {
-        height: 1.4em;
-        padding: 0 2px;
-    }
-
 }

@@ -1,151 +1,89 @@
 <template id="sensors-edit-item-template">
 
-    <div class="col-12 col-sm-6 col-md-4" v-if="isRowVisible()">
-        <div class="sensors-edit-item">
-            <form :id="getFormName()" :name="getFormName()" class="row">
-                <input type="hidden" :value="sensor.id" name="id" />
-                <div class="col-12">
-                    <div class="sensors-edit-item__first-line">
-                        <div class="pretty-checkbox">
-                            <input type="hidden"
-                                   value="0" 
-                                   name="active" 
-                                   />
-                            <input type="checkbox"
-                                   value="1" 
-                                   name="active" 
-                                   :id="'sensor-active-'+sensor.id"
-                                   :checked="isChecked(sensor.active)" 
-                                   @change="saveForm()"
-                                   />
-                            <label :for="'sensor-active-'+sensor.id"></label>
-                        </div>
-                        <span class="sensors-edit-item__name">
-                            <template v-if="isLabelEdit">
-                                <input class="form-control form-control--inline" name="label" :value="sensor.label" :placeholder="fullName" @blur="blurLabelEdit" />
-                            </template>
-                            <template v-else>
-                                <span v-html="fullName" @click="toggleLabelEdit"></span>
-                            </template>
-                        </span>
-                        <div class="sensors-edit-item__context-menu" @blur="blurContextMenu">
-                            <button @click.prevent="toggleContextMenu" class="btn btn-info">...</button>
-                            <template v-if="isContextMenu">
-                                <div class="sensors-edit-item__context-menu-popup">
-                                    <div class="">
-                                        <div class="sensors-edit-item__context-menu-popup__merge-line">
-                                            <select name="merge" class="form-control form-control--inline">
-                                                <template v-for="onesensor in sensors">
-                                                    <option
-                                                        v-if="onesensor.id != sensor.id"
-                                                        :value="onesensor.id"
-                                                        v-html="onesensor.sensor_app + ' ' + onesensor.sensor_device + ' ' + onesensor.sensor_name"
-                                                        ></option>
-                                                </template>
-                                            </select>
-                                            <button type="button" class="btn btn-warning" @click.prevent="mergeSensors()">Объединить</button>
-                                        </div>
-                                        <div class="" v-if="sensor.active == false">
-                                            <button type="button" class="btn btn-warning" @click.prevent="deleteData()">Удалить данные</button>
-                                        </div>
-                                        <div class="" v-if="sensor.active == false">
-                                            <button type="button" class="btn btn-danger" @click.prevent="deleteSensor()">Удалить датчик</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </template>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
-
-                    <span class="">
-                        Единицы:
-                        <input class="form-control form-control--size2 form-control--inline sensors-edit__input-text" 
-                               type="text"
-                               name="sensor_unit"
-                               :value="sensor.sensor_unit"
+    <div class="col-12 sensors-edit-item" v-if="isRowVisible">
+        <form :id="formName" :name="formName" class="row">
+            <input type="hidden" :value="sensor.id" name="id" />
+            <div class="col-12">
+                <div class="sensors-edit-item__first-line">
+                    <select class="short form-control" @change="saveForm()" name="log_mode">
+                        <option value="0" :selected="sensor.log_mode == 0">Среднее за сутки</option>
+                        <option value="1" :selected="sensor.log_mode == 1">Каждое значение</option>
+                        <option value="2" :selected="sensor.log_mode == 2">Каждое значение сегодня и среднее за прошлые дни</option>
+                    </select>
+                    <span class="pretty-checkbox">
+                        <input type="hidden"
+                               value="0" 
+                               name="active" 
+                               />
+                        <input type="checkbox"
+                               value="1" 
+                               name="active" 
+                               :id="'sensor-active-'+sensor.id"
+                               :checked="isChecked(sensor.active)" 
                                @change="saveForm()"
                                />
+                        <label :for="'sensor-active-'+sensor.id"></label>
                     </span>
-                    <span class="">
-                        Точность:
-                        <input class="form-control form-control--size1 form-control--inline sensors-edit__input-text" 
-                               type="text"
-                               name="precision"
-                               :value="sensor.precision"
-                               @change="saveForm()"
-                               />
-                        ?
-                    </span>
-
-                    <span>
-                        Формула:
-                        <input class="form-control form-control--size5 form-control--inline" 
-                               type="text"
-                               name="modifier"
-                               :value="sensor.modifier" 
-                               @change="saveForm()"
-                               />
-                        ?
-                        <template v-if="false">
-                            Допускается указать до двух арифметических действий. Например:<br>
-                            *1024, *0.98+6, +2*1.4 (первое действие всегда будет приоритетно)<br>
-                            Допустимы знаки +-*/. цифры и пробелы.<br>
-                            Учтите, что правила будут ориентироваться на уже измененное значение.
+                    <div class="sensors-edit-item__name">
+                        <template v-if="isLabelEdit">
+                            <input class="form-control form-control--inline" name="label" :value="sensor.label" :placeholder="fullName" @blur="blurLabelEdit" />
                         </template>
-
-                    </span>
+                        <template v-else>
+                            <span class="sensors-edit-item__name-label" v-html="fullName" @click="toggleLabelEdit"></span>
+                        </template>
+                    </div>
                 </div>
-                <div class="col-6">
-                    <div class="">
-                        <span>
-                            Порядок: 
-                        </span>
-                        <input class="form-control form-control--size4 form-control--inline sensors-edit__input-text" 
+            </div>
+            <div class="sensors-edit-item__col col-3">
+                <div class="sensors-edit-item__sort">
+                    Порядок: 
+                    <button type="button" class="btn btn-info" @click.prevent="sortUp()">↑</button>
+                    <input class="form-control sensors-edit-item__input-text" 
+                           type="text"
+                           name="sort"
+                           :value="sensor.sort"
+                           @change="saveForm(sensor)"
+                           />
+                    <button type="button" class="btn btn-info" @click.prevent="sortDown()">↓</button>
+                </div>
+                <div class="sensors-edit-item__sort">
+                    Единицы:
+                    <input class="form-control sensors-edit-item__input-text" 
+                           type="text"
+                           name="sensor_unit"
+                           :value="sensor.sensor_unit"
+                           @change="saveForm()"
+                           />
+                    Точность:
+                    <input class="form-control sensors-edit-item__input-text" 
+                           type="text"
+                           name="precision"
+                           :value="sensor.precision"
+                           @change="saveForm()"
+                           />
+                </div>
+
+            </div>
+            <div class="sensors-edit-item__col col-4">
+                <div class="row">
+                    <div class="col-4">
+                        Оповещать при выходе за пределы:
+                    </div> 
+                    <div class="col-8">
+                        <input class="form-control sensors-edit-item__input-text" 
                                type="text"
-                               name="sort"
-                               :value="sensor.sort"
+                               name="alert_value_min"
+                               :value="sensor.alert_value_min"
                                @change="saveForm()"
                                />
-                        <span>
-                            <button type="button" class="btn btn-info" @click.prevent="sortUp(sensor)">↑</button>
-                            <button type="button" class="btn btn-info" @click.prevent="sortDown(sensor)">↓</button>
-                        </span>
-                    </div>
-                    <div class="">
-                        Режим логирования:
-                        <select class="sensors-edit__template-select form-control form-control--inline" @change="saveForm()" name="log_mode">
-                            <option value="0" :selected="sensor.log_mode == 0">Среднее за сутки</option>
-                            <option value="1" :selected="sensor.log_mode == 1">Каждое значение</option>
-                            <option value="2" :selected="sensor.log_mode == 2">Каждое значение сегодня и среднее за прошлые дни</option>
-                        </select>
-                    </div>
-                    <div class="">
-                        Группы:
-                        todo
-                    </div>
-                </div>
-                <div class="col-6">
-
-
-                    <div class="">
-                        График: 
-                        <input class="form-control form-control--size5 form-control--inline sensors-edit__input-text"
-                               type="text"
-                               name="visual_min"
-                               :value="sensor.visual_min" 
-                               @change="saveForm()"
-                               /> 
                         - 
-                        <input class="form-control form-control--size5 form-control--inline sensors-edit__input-text" 
+                        <input class="form-control sensors-edit-item__input-text" 
                                type="text" 
-                               name="visual_max"
-                               :value="sensor.visual_max" 
+                               name="alert_value_max"
+                               :value="sensor.alert_value_max" 
                                @change="saveForm()"
                                />
-
-                        <select class="sensors-edit__template-select form-control form-control--size1 form-control--inline" @change="changeTemplate()" name="template">
+                        <select class="short form-control form-control--inline" @change="changeTemplate()" name="template">
                             <option value="">Выбрать шаблон</option>
                             <option value="manual">Пользовательский</option>
                             <option value="percent">Проценты</option>
@@ -158,63 +96,134 @@
                             <option value="volt5">Напряжение 5V</option>
                             <option value="volt12">Напряжение 12V</option>
                         </select>
-                    </div>
-                    <div class="">
-                        Значения:
-                        <input class="form-control form-control--size5 form-control--inline sensors-edit__input-text" 
+                    </div> 
+                </div> 
+                <div class="row">
+                    <div class="col-4">
+                        Не принимать вне диапазона:
+                    </div> 
+                    <div class="col-8">
+                        <input class="form-control sensors-edit-item__input-text" 
                                type="text"
                                name="ignore_less"
                                :value="sensor.ignore_less"
                                @change="saveForm()"
                                />
                         - 
-                        <input class="form-control form-control--size5 form-control--inline sensors-edit__input-text" 
+                        <input class="form-control sensors-edit-item__input-text" 
                                type="text" 
                                name="ignore_more"
                                :value="sensor.ignore_more" 
                                @change="saveForm()"
                                />
-                    </div>
-                    <div class="">
-                        Нормальные:
-                        <input class="form-control form-control--size5 form-control--inline sensors-edit__input-text" 
+                    </div> 
+                </div> 
+                <div class="row">
+                    <div class="col-4">
+                        График:
+                    </div> 
+                    <div class="col-8">
+                        <input class="form-control sensors-edit-item__input-text"
                                type="text"
-                               name="alert_value_min"
-                               :value="sensor.alert_value_min"
+                               name="visual_min"
+                               :value="sensor.visual_min" 
                                @change="saveForm()"
-                               />
+                               /> 
                         - 
-                        <input class="form-control form-control--size5 form-control--inline sensors-edit__input-text" 
+                        <input class="form-control sensors-edit-item__input-text" 
                                type="text" 
-                               name="alert_value_max"
-                               :value="sensor.alert_value_max" 
+                               name="visual_max"
+                               :value="sensor.visual_max" 
                                @change="saveForm()"
                                />
-                    </div>
-                    <div class="">
-                        Оповещать:
-                        <input type="checkbox"
-                               value="1" 
-                               name="alert_enable" 
-                               :checked="isChecked(sensor.alert_enable)" 
-                               @change="saveForm()"
-                               />
-                    </div>
-                    <div class="" v-if="isChecked(sensor.alert_enable)">
-                        Приостановить до:
-                        <input class="form-control sensors-edit__input-date" 
+                    </div> 
+                </div> 
+                <div class="row" v-if="!!sensor.statistic">
+                    <div class="col-4">
+                        Принятые значения:
+                    </div> 
+                    <div class="col-8">
+                        <input class="form-control sensors-edit-item__input-text"
                                type="text"
-                               name="alert_mute_till"
-                               :value="sensor.alert_mute_till" 
-                               @change="saveForm()"
+                               disabled
+                               :value="sensor.statistic.value_min" 
+                               /> 
+                        - 
+                        <input class="form-control sensors-edit-item__input-text" 
+                               type="text" 
+                               disabled
+                               :value="sensor.statistic.value_max" 
                                />
-                    </div>
-
+                    </div> 
+                </div> 
+            </div>
+            <div class="sensors-edit-item__col col-2">
+                <div class="pretty-checkbox">
+                    <input type="hidden"
+                           value="0" 
+                           name="alert_enable" 
+                           />
+                    <input type="checkbox"
+                           value="1" 
+                           name="alert_enable" 
+                           :id="'sensor-alert-enable-'+sensor.id"
+                           :checked="isChecked(sensor.alert_enable)" 
+                           @change="saveForm()"
+                           />
+                    <label :for="'sensor-alert-enable-'+sensor.id">включить оповещения</label>
                 </div>
-
-            </form>
-
-        </div>
+                <div class="">
+                    Приостановить оповещения до:
+                    <input class="form-control sensors-edit-item__input-date" 
+                           type="text"
+                           name="alert_mute_till"
+                           :value="sensor.alert_mute_till" 
+                           @change="saveForm()"
+                           />
+                </div>
+            </div>
+            <div class="sensors-edit-item__col col-2">
+                <div>
+                    Модицифировать значение:
+                </div>
+                <div>
+                    <input class="form-control" 
+                           type="text"
+                           name="modifier"
+                           :value="sensor.modifier" 
+                           @change="saveForm()"
+                           />
+                </div>
+                <div>
+                    <small>
+                        Допускается указать до двух арифметических действий. Например:<br>
+                        *1024, *0.98+6, +2*1.4 (первое действие всегда будет приоритетно)<br>
+                        Допустимы знаки +-*/. цифры и пробелы.<br>
+                        Учтите, что правила будут ориентироваться на уже измененное значение.
+                    </small>
+                </div>
+            </div>
+            <div class="sensors-edit-item__col col-1">
+                <div class="sensors-edit-item__action">
+                    <select name="merge" class="short form-control form-control--inline">
+                        <template v-for="onesensor in sensors">
+                            <option
+                                v-if="onesensor.id != sensor.id"
+                                :value="onesensor.id"
+                                v-html="onesensor.sensor_app + ' ' + onesensor.sensor_device + ' ' + onesensor.sensor_name"
+                                ></option>
+                        </template>
+                    </select>
+                    <button type="button" class="btn btn-warning" @click.prevent="mergeSensors()">Объединить</button>
+                </div>
+                <div class="sensors-edit-item__action" v-if="sensor.active == false">
+                    <button type="button" class="btn btn-warning" @click.prevent="deleteData(sensor)">Удалить данные<template v-if="!!sensor.statistic"> ({{sensor.statistic.values_count}})</template></button>
+                </div>
+                <div class="sensors-edit-item__action" v-if="sensor.active == false">
+                    <button type="button" class="btn btn-danger" @click.prevent="deleteSensor(sensor)">Удалить датчик</button>
+                </div>
+            </div>
+        </form>
     </div>
 </template>
 <script>
@@ -230,11 +239,10 @@
             return {
                 allowSave: true,
                 isLabelEdit: false,
-                isContextMenu: false
             };
         },
         components: {
-
+            
         },
         mounted() {
 
@@ -246,12 +254,18 @@
                 } else {
                     return this.sensor.sensor_app + ' ' + this.sensor.sensor_device + ' ' + this.sensor.sensor_name;
                 }
-            }
+            },
+            formName() {
+                return 'form_' + this.sensor.id;
+            },
+            isRowVisible() {
+                return this.isChecked(this.sensor.active) || !this.showActive;
+            },
         },
         methods: {
             saveForm() {
                 if (this.allowSave) {
-                    let formData = new FormData(document.forms[this.getFormName()]);
+                    let formData = new FormData(document.forms[this.formName]);
                     axios
                         .post('/api/sensors/edit/?token=' + this.systemToken, formData)
                         .then(response => {
@@ -263,14 +277,14 @@
             },
             sortUp() {
                 if (this.allowSave) {
-                    let form = document.forms[this.getFormName()];
+                    let form = document.forms[this.formName];
                     form.sort.value = +form.sort.value - 1;
                     this.saveForm();
                 }
             },
             sortDown() {
                 if (this.allowSave) {
-                    let form = document.forms[this.getFormName()];
+                    let form = document.forms[this.formName];
                     form.sort.value = +form.sort.value + 1;
                     this.saveForm();
                 }
@@ -298,8 +312,8 @@
                 }
             },
             mergeSensors() {
-                if (window.confirm('Вы собираетесь передать все данные выбранного датчика и удалить его. Вы уверены?')) {
-                    let obForm = document.forms[this.getFormName()];
+                let obForm = document.forms[this.formName];
+                if (window.confirm('Вы собираетесь передать все данные датчика ' + obForm.querySelector('select[name=merge] option[value="' + obForm.querySelector('select[name=merge]').value + '"]').innerHTML + ' и удалить его. Вы уверены?')) {
                     let obFormData = new FormData();
                     obFormData.append('from_id', obForm.querySelector('select[name=merge]').value);
                     obFormData.append('to_id', this.sensor.id);
@@ -369,7 +383,7 @@
                     },
                 };
 
-                let form = document.forms[this.getFormName()];
+                let form = document.forms[this.formName];
                 let obSelect = form.querySelector('select[name=template]');
                 if (!!obTemplateData[obSelect.value]) {
                     let obSelectedTemplate = obTemplateData[obSelect.value];
@@ -414,35 +428,23 @@
                 this.allowSave = true;
                 this.saveForm();
             },
-            getFormName() {
-                return 'form_' + this.sensor.id;
-            },
             isChecked(active) {
                 return active == 1;
-            },
-            isRowVisible() {
-                return this.isChecked(this.sensor.active) || !this.showActive;
             },
             toggleLabelEdit() {
                 this.isLabelEdit = !this.isLabelEdit;
                 if (this.isLabelEdit) {
                     setTimeout(param => {
-                        let form = document.forms[this.getFormName()];
+                        let form = document.forms[this.formName];
                         let obInput = form.querySelector('[name=label]');
                         obInput.focus();
                     }, 10);
                 }
             },
-            toggleContextMenu() {
-                this.isContextMenu = !this.isContextMenu;
-            },
             blurLabelEdit() {
                 this.saveForm();
                 this.toggleLabelEdit();
             },
-            blurContextMenu() {
-                this.isContextMenu = false;
-            }
         }
     })
 </script>
