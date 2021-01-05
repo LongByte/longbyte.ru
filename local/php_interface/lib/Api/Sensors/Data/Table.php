@@ -42,7 +42,7 @@ class Table extends ORM\Data\DataManager {
         return array(
             'ID' => (new ORM\Fields\IntegerField('ID'))->configureTitle('ID')->configurePrimary()->configureAutocomplete(),
             'SENSOR_ID' => (new ORM\Fields\IntegerField('UF_SENSOR_ID'))->configureTitle('Сенсор')->configureRequired(),
-            'SENSOR' => (new ORM\Fields\Relations\Reference('SENSOR', \Api\Sensors\Sensor\Table::getEntity(), array('this.SENSOR_ID' => 'ref.ID'), array('join_type' => 'INNER'))),
+            'SENSOR' => (new ORM\Fields\Relations\Reference('SENSOR', \Api\Sensors\Sensor\Table::getEntity(), ORM\Query\Query::filter()->whereColumn('this.SENSOR_ID', '=', 'ref.ID')))->configureJoinType('left'),
             'DATE' => (new ORM\Fields\DatetimeField('UF_DATE'))->configureTitle('Дата')->configureRequired(),
             'VALUE_MIN' => (new ORM\Fields\FloatField('UF_VALUE_MIN'))->configureTitle('Минимальное значение'),
             'VALUE_AVG' => (new ORM\Fields\FloatField('UF_VALUE_AVG'))->configureTitle('Значение'),

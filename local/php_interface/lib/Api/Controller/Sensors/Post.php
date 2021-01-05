@@ -79,6 +79,10 @@ class Post extends \Api\Core\Base\Controller {
         $this->obAlerts->setUniqueMode(true);
     }
 
+    /**
+     * 
+     * @return mixed
+     */
     public function post() {
         $this->resetResponse();
         $arData = json_decode($this->getPostData());
@@ -100,6 +104,10 @@ class Post extends \Api\Core\Base\Controller {
         return $this->exitAction();
     }
 
+    /**
+     * 
+     * @return mixed
+     */
     public function get() {
         $obHttp = new \Bitrix\Main\Web\HttpClient();
         $rawGet = $obHttp->get('http://localhost:55555/');
@@ -276,7 +284,7 @@ class Post extends \Api\Core\Base\Controller {
                     ->setSensorDevice($obInputValue->SensorClass)
                     ->setSensorName($obInputValue->SensorName)
                     ->setSensorUnit($obInputValue->SensorUnit)
-                    ->setLogMode(\Api\Sensors\Sensor\Table::MODE_AVG)
+                    ->setLogMode(\Api\Sensors\Sensor\Table::MODE_EACH_LAST_DAY)
                     ->setAlertEnable(false)
                     ->setSort($this->obSystem->getSensorsCollection()->end()->getSort() + 10)
                     ->save()

@@ -5,7 +5,11 @@
                 Дата: 
             </div>
             <div class="sensors__date-component">
-                <vuejs-datepicker @selected="changeDate" />
+                <vuejs-datepicker 
+                    @selected="changeDate"
+                    :monday-first="true"
+                    :value="initDate"
+                    />
             </div>
             <div class="sensors__date-refresh">
                 <button @click="refresh">Обновить</button>
@@ -70,6 +74,11 @@
         template: `#sensors-template`,
         components: {
             vuejsDatepicker
+        },
+        computed: {
+            initDate() {
+                return new Date();
+            }
         },
         mounted() {
             this.loadData();

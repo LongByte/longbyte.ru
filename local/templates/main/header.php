@@ -4,7 +4,6 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 
 use Bitrix\Main\Page\Asset;
 
-LongByte\Babel::includeBabel(LongByte\Babel::BABEL_SERVER_CLIENT);
 LongByte\Vue::includeVueJS();
 ?>
 <!DOCTYPE html>

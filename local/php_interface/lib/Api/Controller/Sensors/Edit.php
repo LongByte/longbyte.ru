@@ -11,7 +11,7 @@ class Edit extends \Api\Core\Base\Controller {
      *
      * @var array
      */
-    private $arResponse = array(
+    protected $arResponse = array(
         'data' => array(),
         'errors' => array(),
         'success' => true,
@@ -21,7 +21,7 @@ class Edit extends \Api\Core\Base\Controller {
      *
      * @var \Api\Sensors\System\Entity
      */
-    private $obSystem = null;
+    protected $obSystem = null;
 
     /**
      * 
@@ -35,12 +35,19 @@ class Edit extends \Api\Core\Base\Controller {
         }
     }
 
+    /**
+     * 
+     * @return mixed
+     */
     public function get() {
         if (!$this->loadSystem()) {
             return $this->exitAction();
         }
+        
+        $this->getStatistic();
 
         $this->arResponse['data'] = array(
+            'system' => $this->getSystem()->toArray(),
             'sensors' => $this->getSystem()->getSensorsCollection()->toArray(),
             'links' => $this->getLinks(),
         );
@@ -49,6 +56,10 @@ class Edit extends \Api\Core\Base\Controller {
         return $this->exitAction();
     }
 
+    /**
+     * 
+     * @return mixed
+     */
     public function post() {
         if (!$this->loadSystem()) {
             return $this->exitAction();
@@ -59,34 +70,57 @@ class Edit extends \Api\Core\Base\Controller {
         $obSensor = $this->getSystem()->getSensorsCollection()->getByKey($iSensorId);
 
         if (!is_null($obSensor)) {
-            $strAlertMuteTill = $this->getRequest()->get('alert_mute_till');
-            if (strlen($strAlertMuteTill) <= 0) {
-                $obAlertMuteTill = null;
-            } else {
-                $obAlertMuteTill = \Bitrix\Main\Type\DateTime::tryParse($strAlertMuteTill, 'd.m.Y H:i:s');
-                if (!is_null($obAlertMuteTill)) {
-                    if ($obAlertMuteTill->getTimestamp() < (new \Bitrix\Main\Type\DateTime())->getTimestamp()) {
-                        $obAlertMuteTill = null;
-                    }
+
+
+            $arFields = array(
+                'active',
+                'sensor_unit',
+                'alert_value_min',
+                'alert_value_max',
+                'ignore_less',
+                'ignore_more',
+                'visual_min',
+                'visual_max',
+                'alert_enable',
+                'alert_mute_till',
+                'modifier',
+                'log_mode',
+                'precision',
+                'sort',
+                'label',
+            );
+
+            foreach ($arFields as $strField) {
+                if (is_null($this->getRequest()->get($strField))) {
+                    continue;
+                }
+
+                switch ($strField) {
+                    case 'alert_mute_till':
+                        $strAlertMuteTill = $this->getRequest()->get($strField);
+                        if (strlen($strAlertMuteTill) <= 0) {
+                            $obAlertMuteTill = null;
+                        } else {
+                            $obAlertMuteTill = \Bitrix\Main\Type\DateTime::tryParse($strAlertMuteTill, 'd.m.Y H:i:s');
+                            if (!is_null($obAlertMuteTill)) {
+                                if ($obAlertMuteTill->getTimestamp() < (new \Bitrix\Main\Type\DateTime())->getTimestamp()) {
+                                    $obAlertMuteTill = null;
+                                }
+                            }
+                        }
+                        $obSensor->set(strtoupper($strField), $obAlertMuteTill);
+                        break;
+                    case 'active':
+                    case 'alert_enable':
+                        $obSensor->set(strtoupper($strField), $this->getRequest()->get($strField) == 1);
+                        break;
+                    default :
+                        $obSensor->set(strtoupper($strField), $this->getRequest()->get($strField));
+                        break;
                 }
             }
 
-            $obSensor
-                ->setActive($this->getRequest()->get('active') == 1)
-                ->setSensorUnit($this->getRequest()->get('sensor_unit'))
-                ->setAlertValueMin($this->getRequest()->get('alert_value_min'))
-                ->setAlertValueMax($this->getRequest()->get('alert_value_max'))
-                ->setIgnoreLess($this->getRequest()->get('ignore_less'))
-                ->setIgnoreMore($this->getRequest()->get('ignore_more'))
-                ->setVisualMin($this->getRequest()->get('visual_min'))
-                ->setVisualMax($this->getRequest()->get('visual_max'))
-                ->setAlertEnable($this->getRequest()->get('alert_enable') == 1)
-                ->setAlertMuteTill($obAlertMuteTill)
-                ->setModifier($this->getRequest()->get('modifier'))
-                ->setLogMode($this->getRequest()->get('log_mode'))
-                ->setPrecision($this->getRequest()->get('precision'))
-                ->setSort($this->getRequest()->get('sort'))
-            ;
+
             if ($obSensor->isChanged()) {
                 $obSensor->save();
             }
@@ -103,8 +137,11 @@ class Edit extends \Api\Core\Base\Controller {
                 $obSensor->save();
             }
         }
+        
+        $this->getStatistic();
 
         $this->arResponse['data'] = array(
+            'system' => $this->getSystem()->toArray(),
             'sensors' => $this->getSystem()->getSensorsCollection()->toArray(),
             'links' => $this->getLinks(),
         );
@@ -163,7 +200,7 @@ class Edit extends \Api\Core\Base\Controller {
      * 
      * @return string
      */
-    private function exitAction(): string {
+    protected function exitAction(): string {
         header('Content-Type: application/json');
         return json_encode($this->arResponse);
     }
@@ -172,7 +209,7 @@ class Edit extends \Api\Core\Base\Controller {
      * 
      * @return bool
      */
-    private function loadSystem(): bool {
+    protected function loadSystem(): bool {
         /** @var \Api\Sensors\Sensor\Collection $obSensors */
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
         /** @var \Api\Sensors\Data\Collection $obValues */
@@ -205,7 +242,7 @@ class Edit extends \Api\Core\Base\Controller {
      * 
      * @return \Api\Sensors\System\Entity|null
      */
-    private function getSystem(): ?\Api\Sensors\System\Entity {
+    protected function getSystem(): ?\Api\Sensors\System\Entity {
         return $this->obSystem;
     }
 
@@ -213,7 +250,7 @@ class Edit extends \Api\Core\Base\Controller {
      * 
      * @return array
      */
-    private function getLinks(): array {
+    protected function getLinks(): array {
         $arLinks = array(
             array(
                 'href' => \Api\Sensors\Links::getInstance()->getSystemUrl($this->getSystem()->getNameToken()),
@@ -226,6 +263,57 @@ class Edit extends \Api\Core\Base\Controller {
         );
 
         return $arLinks;
+    }
+
+    /**
+     * 
+     */
+    protected function getStatistic() {
+
+        $obQuery = new \Bitrix\Main\ORM\Query\Query(\Api\Sensors\Data\Table::getEntity());
+        $obQuery
+            ->where('SENSOR.SYSTEM_ID', '=', $this->obSystem->getId())
+            ->setGroup('SENSOR_ID')
+            ->registerRuntimeField(
+                'TOTAL_MIN',
+                new \Bitrix\Main\ORM\Fields\ExpressionField(
+                    'TOTAL_MIN',
+                    'MIN(%s)',
+                    array('VALUE_MIN')
+                )
+            )
+            ->registerRuntimeField(
+                'TOTAL_MAX',
+                new \Bitrix\Main\ORM\Fields\ExpressionField(
+                    'TOTAL_MAX',
+                    'MAX(%s)',
+                    array('VALUE_MAX')
+                )
+            )
+            ->registerRuntimeField(
+                'DATA_COUNT',
+                new \Bitrix\Main\ORM\Fields\ExpressionField(
+                    'DATA_COUNT',
+                    'COUNT(%s)',
+                    array('ID')
+                )
+            )
+            ->setSelect(array('SENSOR_ID', 'TOTAL_MIN', 'TOTAL_MAX', 'DATA_COUNT'))
+        ;
+
+        $rsResult = $obQuery->exec();
+        while ($arData = $rsResult->fetch()) {
+            $obStatistic = new \Api\Sensors\Sensor\Statistic\Entity();
+            $obStatistic
+                ->setValueMin($arData['TOTAL_MIN'])
+                ->setValueMax($arData['TOTAL_MAX'])
+                ->setValuesCount($arData['DATA_COUNT'])
+            ;
+            /** @var \Api\Sensors\Sensor\Entity $obSensor */
+            if ($obSensor = $this->getSystem()->getSensorsCollection()->getByKey($arData['SENSOR_ID'])) {
+                $obSensor->setStatistic($obStatistic);
+            }
+        }
     }
 
 }

@@ -47,7 +47,7 @@ class Table extends ORM\Data\DataManager {
             'ID' => (new ORM\Fields\IntegerField('ID'))->configureAutocomplete()->configurePrimary()->configureTitle('ID'),
             'ACTIVE' => (new ORM\Fields\BooleanField('UF_ACTIVE'))->configureTitle('Активность'),
             'SYSTEM_ID' => (new ORM\Fields\IntegerField('UF_SYSTEM_ID'))->configureRequired()->configureTitle('Система'),
-            'SYSTEM' => new ORM\Fields\Relations\Reference('SYSTEM', \Api\Sensors\System\Table::getEntity(), array('this.SYSTEM_ID' => 'ref.ID'), array('join_type' => 'INNER')),
+            'SYSTEM' => (new ORM\Fields\Relations\Reference('SYSTEM', \Api\Sensors\System\Table::getEntity(), ORM\Query\Query::filter()->whereColumn('this.SYSTEM_ID', '=', 'ref.ID')))->configureJoinType('inner'),
             'SENSOR_APP' => (new ORM\Fields\StringField('UF_SENSOR_APP'))->configureTitle('Приложение'),
             'SENSOR_DEVICE' => (new ORM\Fields\StringField('UF_SENSOR_DEVICE'))->configureTitle('Устройство'),
             'SENSOR_NAME' => (new ORM\Fields\StringField('UF_SENSOR_NAME'))->configureRequired()->configureTitle('Сенсор'),
@@ -64,6 +64,7 @@ class Table extends ORM\Data\DataManager {
             'MODIFIER' => (new ORM\Fields\StringField('UF_MODIFIER'))->configureTitle('Формула для модификации значения'),
             'PRECISION' => (new ORM\Fields\IntegerField('UF_PRECISION'))->configureTitle('Количество знаков после запятой'),
             'SORT' => (new ORM\Fields\IntegerField('UF_SORT'))->configureTitle('Сортировка'),
+            'LABEL' => (new ORM\Fields\StringField('UF_LABEL'))->configureTitle('Свое название'),
         );
     }
 

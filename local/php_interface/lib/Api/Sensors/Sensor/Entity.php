@@ -6,8 +6,6 @@ namespace Api\Sensors\Sensor;
  * Class \Api\Sensors\Sensor\Entity
  * 
  * @method int getId()
- * @method $this setId(int $iId)
- * @method bool hasId()
  * @method boolean getActive()
  * @method $this setActive(boolean $bActive)
  * @method bool hasActive()
@@ -56,12 +54,15 @@ namespace Api\Sensors\Sensor;
  * @method string getModifier()
  * @method $this setModifier(string $strModifier)
  * @method bool hasModifier()
- * @method string getPrecision()
- * @method $this setPrecision(string $strPrecision)
+ * @method int getPrecision()
+ * @method $this setPrecision(int $iPrecision)
  * @method bool hasPrecision()
  * @method int getSort()
  * @method $this setSort(int $iSort)
  * @method bool hasSort()
+ * @method string getLabel()
+ * @method $this setLabel(string $strLabel)
+ * @method bool hasLabel()
  */
 class Entity extends \Api\Core\Base\Entity {
 
@@ -94,6 +95,12 @@ class Entity extends \Api\Core\Base\Entity {
      * @var bool
      */
     protected $_bNew = false;
+
+    /**
+     *
+     * @var \Api\Sensors\Sensor\Statistic\Entity
+     */
+    protected $_obStatistic = null;
 
     /**
      * 
@@ -191,6 +198,11 @@ class Entity extends \Api\Core\Base\Entity {
                 $arData['view'] = 'bar';
             }
         }
+
+        if (!is_null($this->_obStatistic)) {
+            $arData['statistic'] = $this->_obStatistic->toArray();
+        }
+
         return $arData;
     }
 
@@ -295,6 +307,16 @@ class Entity extends \Api\Core\Base\Entity {
      */
     public function setNew(bool $bNew = true): self {
         $this->_bNew = $bNew;
+        return $this;
+    }
+
+    /**
+     * 
+     * @param \Api\Sensors\Sensor\Statistic\Entity $obStatistic
+     * @return $this
+     */
+    public function setStatistic(\Api\Sensors\Sensor\Statistic\Entity $obStatistic): self {
+        $this->_obStatistic = $obStatistic;
         return $this;
     }
 

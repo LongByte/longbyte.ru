@@ -1,9 +1,9 @@
 <?php
 
-namespace Api\Sensors\Data;
+namespace Api\Sensors\GroupSensor;
 
 /**
- * Class \Api\Sensors\Data\Model
+ * Class \Api\Sensors\GroupSensor\Model
  */
 class Model extends \Api\Core\Base\Model {
 
