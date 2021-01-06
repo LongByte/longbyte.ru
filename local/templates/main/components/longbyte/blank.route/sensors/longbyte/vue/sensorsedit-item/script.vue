@@ -217,10 +217,10 @@
                     <button type="button" class="btn btn-warning" @click.prevent="mergeSensors()">Объединить</button>
                 </div>
                 <div class="sensors-edit-item__action" v-if="sensor.active == false">
-                    <button type="button" class="btn btn-warning" @click.prevent="deleteData(sensor)">Удалить данные<template v-if="!!sensor.statistic"> ({{sensor.statistic.values_count}})</template></button>
+                    <button type="button" class="btn btn-warning" @click.prevent="deleteData()">Удалить данные<template v-if="!!sensor.statistic"> ({{sensor.statistic.values_count}})</template></button>
                 </div>
                 <div class="sensors-edit-item__action" v-if="sensor.active == false">
-                    <button type="button" class="btn btn-danger" @click.prevent="deleteSensor(sensor)">Удалить датчик</button>
+                    <button type="button" class="btn btn-danger" @click.prevent="deleteSensor()">Удалить датчик</button>
                 </div>
             </div>
         </form>
@@ -295,7 +295,7 @@
                         axios
                             .delete('/api/sensors/edit/?token=' + this.systemToken + '&id=' + this.sensor.id + '&mode=data')
                             .then(response => {
-                                this.$emit('refreshData');
+                                this.$emit('refreshdata', response);
                             });
                     }
                 }
@@ -306,7 +306,7 @@
                         axios
                             .delete('/api/sensors/edit/?token=' + this.systemToken + '&id=' + this.sensor.id + '&mode=sensor')
                             .then(response => {
-                                this.$emit('refreshData');
+                                this.$emit('refreshdata', response);
                             });
                     }
                 }

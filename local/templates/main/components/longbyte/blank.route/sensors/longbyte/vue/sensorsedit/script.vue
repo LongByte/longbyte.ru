@@ -19,16 +19,38 @@
                         <label for="toggleShowActive">Покаывать только включенные датчики</label>
                     </div>
                 </div>
+                <div class="sensors-edit__col col-3">
+                    <div class="pretty-checkbox">
+                        <input type="checkbox"
+                               @change="toggleGroupDevice()"
+                               id="toggleGroupDevice"
+                               />
+                        <label for="toggleGroupDevice">Группировать по устройству</label>
+                    </div>
+                </div>
             </div>
             <div class="row">
-                <template v-for="sensor in sensors">
-                    <sensorsedit-item
-                        :sensors="sensors"
-                        :sensor="sensor"
-                        :show-active="showActive"
-                        :system-token="system.token"
-                        @refreshdata="refreshData"
-                        ></sensorsedit-item>
+                <template v-if="groupDevice">
+                    <template v-for="device in devices">
+                        <sensorsedit-device
+                            :sensors="sensors"
+                            :device="device"
+                            :show-active="showActive"
+                            :system-token="system.token"
+                            @refreshdata="refreshdata"
+                            ></sensorsedit-device>
+                    </template>
+                </template>
+                <template v-else>
+                    <template v-for="sensor in sensors">
+                        <sensorsedit-item
+                            :sensors="sensors"
+                            :sensor="sensor"
+                            :show-active="showActive"
+                            :system-token="system.token"
+                            @refreshdata="refreshdata"
+                            ></sensorsedit-item>
+                    </template>
                 </template>
             </div>
         </div>
@@ -41,8 +63,10 @@
             return {
                 system: {},
                 sensors: [],
+                devices: [],
                 links: [],
                 showActive: true,
+                groupDevice: false,
             };
         },
         template: `#sensors-edit-template`,
@@ -53,9 +77,10 @@
             this.loadData();
         },
         methods: {
-            refreshData(response) {
+            refreshdata(response) {
                 this.system = response.data.data.system;
                 this.sensors = response.data.data.sensors;
+                this.devices = response.data.data.devices;
                 this.links = response.data.data.links;
             },
             loadData() {
@@ -63,12 +88,15 @@
                 axios
                     .get(url)
                     .then(response => {
-                        this.refreshData(response);
+                        this.refreshdata(response);
                     });
             },
             toggleShowActive() {
                 this.showActive = !this.showActive;
-            }
+            },
+            toggleGroupDevice() {
+                this.groupDevice = !this.groupDevice;
+            },
         }
     })
 </script>

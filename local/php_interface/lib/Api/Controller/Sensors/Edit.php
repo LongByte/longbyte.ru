@@ -43,11 +43,24 @@ class Edit extends \Api\Core\Base\Controller {
         if (!$this->loadSystem()) {
             return $this->exitAction();
         }
-        
+
         $this->getStatistic();
+
+        $obDeviceCollection = new \Api\Sensors\Device\Collection();
+        /** @var \Api\Sensors\Sensor\Entity $obSensor */
+        foreach ($this->getSystem()->getSensorsCollection() as $obSensor) {
+            $obDevice = $obDeviceCollection->getByKey($obSensor->getSensorDevice());
+            if (!$obDevice) {
+                $obDevice = new \Api\Sensors\Device\Entity();
+                $obDevice->setName($obSensor->getSensorDevice());
+                $obDeviceCollection->addItem($obDevice);
+            }
+            $obDevice->getSensorsCollection()->addItem($obSensor);
+        }
 
         $this->arResponse['data'] = array(
             'system' => $this->getSystem()->toArray(),
+            'devices' => $obDeviceCollection->toArray(),
             'sensors' => $this->getSystem()->getSensorsCollection()->toArray(),
             'links' => $this->getLinks(),
         );
@@ -137,16 +150,8 @@ class Edit extends \Api\Core\Base\Controller {
                 $obSensor->save();
             }
         }
-        
-        $this->getStatistic();
 
-        $this->arResponse['data'] = array(
-            'system' => $this->getSystem()->toArray(),
-            'sensors' => $this->getSystem()->getSensorsCollection()->toArray(),
-            'links' => $this->getLinks(),
-        );
-
-        return $this->exitAction();
+        return $this->get();
     }
 
     public function delete() {
@@ -191,9 +196,7 @@ class Edit extends \Api\Core\Base\Controller {
             }
         }
 
-        $this->arResponse['data'] = $this->getSystem()->getSensorsCollection()->toArray();
-
-        return $this->exitAction();
+        return $this->get();
     }
 
     /**
