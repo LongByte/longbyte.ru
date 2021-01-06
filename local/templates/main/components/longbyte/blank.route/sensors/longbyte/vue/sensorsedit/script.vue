@@ -38,6 +38,7 @@
                             :show-active="showActive"
                             :system-token="system.token"
                             @refreshdata="refreshdata"
+                            @setpreloader="setpreloader"
                             ></sensorsedit-device>
                     </template>
                 </template>
@@ -49,11 +50,33 @@
                             :show-active="showActive"
                             :system-token="system.token"
                             @refreshdata="refreshdata"
+                            @setpreloader="setpreloader"
                             ></sensorsedit-item>
                     </template>
                 </template>
             </div>
         </div>
+        <template v-if="preloader">
+            <div class="preloader">
+                <div class="windows8">
+                    <div class="wBall" id="wBall_1">
+                        <div class="wInnerBall"></div>
+                    </div>
+                    <div class="wBall" id="wBall_2">
+                        <div class="wInnerBall"></div>
+                    </div>
+                    <div class="wBall" id="wBall_3">
+                        <div class="wInnerBall"></div>
+                    </div>
+                    <div class="wBall" id="wBall_4">
+                        <div class="wInnerBall"></div>
+                    </div>
+                    <div class="wBall" id="wBall_5">
+                        <div class="wInnerBall"></div>
+                    </div>
+                </div>
+            </div>
+        </template>
     </div>
 </template>
 <script>
@@ -67,6 +90,7 @@
                 links: [],
                 showActive: true,
                 groupDevice: false,
+                preloader: false,
             };
         },
         template: `#sensors-edit-template`,
@@ -82,8 +106,10 @@
                 this.sensors = response.data.data.sensors;
                 this.devices = response.data.data.devices;
                 this.links = response.data.data.links;
+                this.setpreloader(false);
             },
             loadData() {
+                this.setpreloader(true);
                 let url = '/api/sensors/edit/?token=' + window.vueData.system_token;
                 axios
                     .get(url)
@@ -96,6 +122,9 @@
             },
             toggleGroupDevice() {
                 this.groupDevice = !this.groupDevice;
+            },
+            setpreloader(visible) {
+                this.preloader = !!visible;
             },
         }
     })

@@ -263,8 +263,12 @@
             },
         },
         methods: {
+            setpreloader(visible) {
+                this.$emit('setpreloader', visible);
+            },
             saveForm() {
                 if (this.allowSave) {
+                    this.setpreloader(true);
                     let formData = new FormData(document.forms[this.formName]);
                     axios
                         .post('/api/sensors/edit/?token=' + this.systemToken, formData)
@@ -292,6 +296,7 @@
             deleteData() {
                 if (this.allowSave) {
                     if (window.confirm('Вы собираетесь удалить все данные по этому датчику. Вы уверены?')) {
+                        this.setpreloader(true);
                         axios
                             .delete('/api/sensors/edit/?token=' + this.systemToken + '&id=' + this.sensor.id + '&mode=data')
                             .then(response => {
@@ -303,6 +308,7 @@
             deleteSensor() {
                 if (this.allowSave) {
                     if (window.confirm('Вы собираетесь удалить датчик и все его данные. Вы уверены? Если данные датчика поступают с клиента то он будет вновь создан.')) {
+                        this.setpreloader(true);
                         axios
                             .delete('/api/sensors/edit/?token=' + this.systemToken + '&id=' + this.sensor.id + '&mode=sensor')
                             .then(response => {
@@ -314,6 +320,7 @@
             mergeSensors() {
                 let obForm = document.forms[this.formName];
                 if (window.confirm('Вы собираетесь передать все данные датчика ' + obForm.querySelector('select[name=merge] option[value="' + obForm.querySelector('select[name=merge]').value + '"]').innerHTML + ' и удалить его. Вы уверены?')) {
+                    this.setpreloader(true);
                     let obFormData = new FormData();
                     obFormData.append('from_id', obForm.querySelector('select[name=merge]').value);
                     obFormData.append('to_id', this.sensor.id);

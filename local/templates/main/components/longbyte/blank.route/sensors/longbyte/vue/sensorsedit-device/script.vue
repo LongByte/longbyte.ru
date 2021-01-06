@@ -19,6 +19,7 @@
                         :show-active="showActive"
                         :system-token="systemToken"
                         @refreshdata="refreshdata"
+                        @setpreloader="setpreloader"
                         ></sensorsedit-item>
                 </template>
             </template>
@@ -53,8 +54,12 @@
             refreshdata(response) {
                 this.$emit('refreshdata', response);
             },
+            setpreloader(visible) {
+                this.$emit('setpreloader', visible);
+            },
             deleteData() {
                 if (window.confirm('Вы собираетесь удалить все данные неактивных датчиков этого устройства. Вы уверены?')) {
+                    this.setpreloader(true);
                     axios
                         .delete('/api/sensors/device/?token=' + this.systemToken + '&id=' + encodeURIComponent(this.device.name) + '&mode=data')
                         .then(response => {
@@ -64,6 +69,7 @@
             },
             deleteSensors() {
                 if (window.confirm('Вы собираетесь удалить все неактивные датчики устройства и все их данные. Вы уверены? Если данные датчика поступают с клиента то он будет вновь создан.')) {
+                    this.setpreloader(true);
                     axios
                         .delete('/api/sensors/device/?token=' + this.systemToken + '&id=' + encodeURIComponent(this.device.name) + '&mode=sensor')
                         .then(response => {
