@@ -7,6 +7,10 @@ namespace Api\Controller\Sensors;
  */
 class Merge extends Edit {
 
+    /**
+     * 
+     * @return mixed
+     */
     public function post() {
         if (!$this->loadSystem()) {
             return $this->exitAction();
@@ -55,13 +59,7 @@ class Merge extends Edit {
             $obSensorFrom->delete();
         }
 
-        $this->arResponse['data'] = array(
-            'system' => $this->getSystem()->toArray(),
-            'sensors' => $this->getSystem()->getSensorsCollection()->toArray(),
-            'links' => $this->getLinks(),
-        );
-
-        return $this->exitAction();
+        return $this->get();
     }
 
 }

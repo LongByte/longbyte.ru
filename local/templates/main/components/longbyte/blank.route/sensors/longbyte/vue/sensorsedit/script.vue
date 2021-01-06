@@ -19,19 +19,64 @@
                         <label for="toggleShowActive">Покаывать только включенные датчики</label>
                     </div>
                 </div>
+                <div class="sensors-edit__col col-3">
+                    <div class="pretty-checkbox">
+                        <input type="checkbox"
+                               @change="toggleGroupDevice()"
+                               id="toggleGroupDevice"
+                               />
+                        <label for="toggleGroupDevice">Группировать по устройству</label>
+                    </div>
+                </div>
             </div>
             <div class="row">
-                <template v-for="sensor in sensors">
-                    <sensorsedit-item
-                        :sensors="sensors"
-                        :sensor="sensor"
-                        :show-active="showActive"
-                        :system-token="system.token"
-                        @refreshdata="refreshData"
-                        ></sensorsedit-item>
+                <template v-if="groupDevice">
+                    <template v-for="device in devices">
+                        <sensorsedit-device
+                            :sensors="sensors"
+                            :device="device"
+                            :show-active="showActive"
+                            :system-token="system.token"
+                            @refreshdata="refreshdata"
+                            @setpreloader="setpreloader"
+                            ></sensorsedit-device>
+                    </template>
+                </template>
+                <template v-else>
+                    <template v-for="sensor in sensors">
+                        <sensorsedit-item
+                            :sensors="sensors"
+                            :sensor="sensor"
+                            :show-active="showActive"
+                            :system-token="system.token"
+                            @refreshdata="refreshdata"
+                            @setpreloader="setpreloader"
+                            ></sensorsedit-item>
+                    </template>
                 </template>
             </div>
         </div>
+        <template v-if="preloader">
+            <div class="preloader">
+                <div class="windows8">
+                    <div class="wBall" id="wBall_1">
+                        <div class="wInnerBall"></div>
+                    </div>
+                    <div class="wBall" id="wBall_2">
+                        <div class="wInnerBall"></div>
+                    </div>
+                    <div class="wBall" id="wBall_3">
+                        <div class="wInnerBall"></div>
+                    </div>
+                    <div class="wBall" id="wBall_4">
+                        <div class="wInnerBall"></div>
+                    </div>
+                    <div class="wBall" id="wBall_5">
+                        <div class="wInnerBall"></div>
+                    </div>
+                </div>
+            </div>
+        </template>
     </div>
 </template>
 <script>
@@ -41,8 +86,11 @@
             return {
                 system: {},
                 sensors: [],
+                devices: [],
                 links: [],
                 showActive: true,
+                groupDevice: false,
+                preloader: false,
             };
         },
         template: `#sensors-edit-template`,
@@ -53,22 +101,31 @@
             this.loadData();
         },
         methods: {
-            refreshData(response) {
+            refreshdata(response) {
                 this.system = response.data.data.system;
                 this.sensors = response.data.data.sensors;
+                this.devices = response.data.data.devices;
                 this.links = response.data.data.links;
+                this.setpreloader(false);
             },
             loadData() {
+                this.setpreloader(true);
                 let url = '/api/sensors/edit/?token=' + window.vueData.system_token;
                 axios
                     .get(url)
                     .then(response => {
-                        this.refreshData(response);
+                        this.refreshdata(response);
                     });
             },
             toggleShowActive() {
                 this.showActive = !this.showActive;
-            }
+            },
+            toggleGroupDevice() {
+                this.groupDevice = !this.groupDevice;
+            },
+            setpreloader(visible) {
+                this.preloader = !!visible;
+            },
         }
     })
 </script>

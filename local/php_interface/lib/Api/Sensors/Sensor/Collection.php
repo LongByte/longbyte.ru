@@ -19,24 +19,15 @@ class Collection extends \Api\Core\Base\Collection {
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
         foreach ($this->getCollection() as $obSensor) {
             if (
-                $this->normalize($obSensor->getSensorApp()) == $this->normalize($strSensorApp) &&
-                $this->normalize($obSensor->getSensorDevice()) == $this->normalize($strSensorClass) &&
-                $this->normalize($obSensor->getSensorName()) == $this->normalize($strSensorName)
+                \Api\Sensors\Sensor\Model::normalize($obSensor->getSensorApp()) == \Api\Sensors\Sensor\Model::normalize($strSensorApp) &&
+                \Api\Sensors\Sensor\Model::normalize($obSensor->getSensorDevice()) == \Api\Sensors\Sensor\Model::normalize($strSensorClass) &&
+                \Api\Sensors\Sensor\Model::normalize($obSensor->getSensorName()) == \Api\Sensors\Sensor\Model::normalize($strSensorName)
             ) {
                 return $obSensor;
             }
         }
 
         return null;
-    }
-
-    /**
-     * 
-     * @param string $string
-     * @return string
-     */
-    private function normalize($string): string {
-        return str_replace(' ', '', $string);
     }
 
 }
