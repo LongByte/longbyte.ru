@@ -347,7 +347,7 @@ if (!$arSystem) {
                 'NAME',
                 'INFO' => 'PREVIEW_TEXT',
                 'TEST_ID' => 'PROPERTY.TEST_ID.ID',
-                'TEST_TYPE' => 'PROPERTY.TEST.IBLOCK_SECTION_ID',
+                'TEST_TYPE' => 'PROPERTY.TEST_ID.IBLOCK_SECTION_ID',
                 'RESULT' => 'PROPERTY.RESULT',
                 'RESULT2' => 'PROPERTY.RESULT2',
                 'RESULT3' => 'PROPERTY.RESULT3',
