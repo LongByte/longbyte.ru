@@ -67,7 +67,7 @@ if (!$arSystem) {
 
         $arResults = array();
         $rsResults = Element::getList(array(
-                'filter' => array('IBLOCK_ID' => IBLOCK_CHART_RESULT, '=ACTIVE' => 'Y', 'PROPERTY.SYSTEM.ID' => $arSystem['ID']),
+                'filter' => array('IBLOCK_ID' => IBLOCK_CHART_RESULT, '=ACTIVE' => 'Y', 'PROPERTY.SYSTEM_ID.ID' => $arSystem['ID']),
                 'select' => array(
                     'ID',
                     'TEST_ID' => 'PROPERTY.TEST_ID.ID',

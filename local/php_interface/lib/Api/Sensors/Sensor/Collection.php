@@ -30,4 +30,15 @@ class Collection extends \Api\Core\Base\Collection {
         return null;
     }
 
+    /**
+     * 
+     * @return int
+     */
+    public function getLastSort(): int {
+        if ($this->count() > 0) {
+            return end($this->getCollection())->getSort();
+        }
+        return 0;
+    }
+
 }

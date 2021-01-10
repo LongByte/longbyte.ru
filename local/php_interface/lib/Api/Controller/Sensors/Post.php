@@ -286,7 +286,7 @@ class Post extends \Api\Core\Base\Controller {
                     ->setSensorUnit($obInputValue->SensorUnit)
                     ->setLogMode(\Api\Sensors\Sensor\Table::MODE_EACH_LAST_DAY)
                     ->setAlertEnable(false)
-                    ->setSort($this->obSystem->getSensorsCollection()->end()->getSort() + 10)
+                    ->setSort($this->obSystem->getSensorsCollection()->getLastSort() + 10)
                     ->save()
                 ;
 

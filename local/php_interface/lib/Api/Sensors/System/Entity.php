@@ -97,8 +97,12 @@ class Entity extends \Api\Core\Base\Entity {
      */
     public function toArray(): array {
         $arData = parent::toArray();
-        $arData['last_update'] = $this->getLastUpdate()->format('d.m.Y H:i:s');
-        $arData['last_receive'] = $this->getLastReceive()->format('d.m.Y H:i:s');
+        if (!is_null($this->getLastUpdate())) {
+            $arData['last_update'] = $this->getLastUpdate()->format('d.m.Y H:i:s');
+        }
+        if (!is_null($this->getLastReceive())) {
+            $arData['last_receive'] = $this->getLastReceive()->format('d.m.Y H:i:s');
+        }
         return $arData;
     }
 
