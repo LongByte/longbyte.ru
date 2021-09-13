@@ -1,0 +1,31 @@
+{
+    "name": "longbyte/site",
+    "description": "longbyte",
+    "version": "1.0.0",
+    "config": {
+        "vendor-dir": "./local/vendor"
+    },
+    "require": {
+        "php": ">=7.4",
+        "longbyte/api": "dev-master",
+        "telegram-bot/api": "3.0.*"
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "installer-paths": {
+            "./local/php_interface/lib/Api/Core": [
+                "longbyte/api"
+            ]
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@bitbucket.org:longbyte51/longbyte.api.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:TelegramBot/Api.git"
+        }
+    ]
+}

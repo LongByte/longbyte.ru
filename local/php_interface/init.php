@@ -30,4 +30,5 @@ EventManager::getInstance()->addEventHandler('main', 'OnEndBufferContent', array
 EventManager::getInstance()->addEventHandler('main', 'OnEndBufferContent', array('\LongByte\Webp', 'convertAllToWebp'));
 EventManager::getInstance()->addEventHandler('main', 'OnEndBufferContent', array('\Longbyte\Page', 'onEndBufferContent'));
 
+include_once(Application::getDocumentRoot() . '/local/vendor/autoload.php');
 include_once(Application::getDocumentRoot() . '/local/php_interface/lib/Api/Autoloader.php');
