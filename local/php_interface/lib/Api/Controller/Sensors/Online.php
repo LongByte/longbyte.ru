@@ -205,7 +205,7 @@ class Online extends \Api\Core\Base\Controller {
      * 
      * @return string
      */
-    private function exitAction(): string {
+    protected function exitAction(): string {
         $this->arrayValueToNumber($this->arResponse);
         header('Content-Type: application/json');
         return json_encode($this->arResponse);

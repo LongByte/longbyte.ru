@@ -5,7 +5,8 @@ namespace Api\Controller\Sensors;
 /**
  * class \Api\Controller\Sensors\Post
  */
-class Post extends \Api\Core\Base\Controller {
+class Post extends \Api\Core\Base\Controller
+{
 
     /**
      *
@@ -43,13 +44,13 @@ class Post extends \Api\Core\Base\Controller {
 
     /**
      *
-     * @var \Api\Sensors\Data\Collection 
+     * @var \Api\Sensors\Data\Collection
      */
     private $obTodayValues = null;
 
     /**
      *
-     * @var \Bitrix\Main\Type\DateTime 
+     * @var \Bitrix\Main\Type\DateTime
      */
     private $obLastAlert = null;
 
@@ -61,15 +62,16 @@ class Post extends \Api\Core\Base\Controller {
 
     /**
      *
-     * @var \Bitrix\Main\Type\DateTime 
+     * @var \Bitrix\Main\Type\DateTime
      */
     private $obLastSave = null;
 
     /**
-     * 
+     *
      * @param string|null $strToken
      */
-    public function __construct($strToken = null) {
+    public function __construct($strToken = null)
+    {
         parent::__construct();
         $this->token = $this->getRequest()->get('token');
         if (!is_null($strToken)) {
@@ -80,10 +82,11 @@ class Post extends \Api\Core\Base\Controller {
     }
 
     /**
-     * 
+     *
      * @return mixed
      */
-    public function post() {
+    public function post()
+    {
         $this->resetResponse();
         $arData = json_decode($this->getPostData());
         if (!$this->getSystem()) {
@@ -105,10 +108,11 @@ class Post extends \Api\Core\Base\Controller {
     }
 
     /**
-     * 
+     *
      * @return mixed
      */
-    public function get() {
+    public function get()
+    {
         $obHttp = new \Bitrix\Main\Web\HttpClient();
         $rawGet = $obHttp->get('http://localhost:55555/');
         $arData = json_decode($rawGet);
@@ -131,9 +135,10 @@ class Post extends \Api\Core\Base\Controller {
     }
 
     /**
-     * 
+     *
      */
-    public function emergencySave() {
+    public function emergencySave()
+    {
         if (!is_null($this->obLastSave)) {
             $this->obTodayValues->save($this->arResponse['errors']);
             $this->obLastSave = new \Bitrix\Main\Type\DateTime();
@@ -142,10 +147,11 @@ class Post extends \Api\Core\Base\Controller {
     }
 
     /**
-     * 
+     *
      * @return string
      */
-    public function getDebug(): string {
+    public function getDebug(): string
+    {
         return json_encode(array(
             'post_data' => $this->getPostData(),
             'sensors' => !is_null($this->obSystem) ? $this->obSystem->getSensorsCollection()->toArray() : array(),
@@ -155,20 +161,22 @@ class Post extends \Api\Core\Base\Controller {
     }
 
     /**
-     * 
+     *
      * @return string
      */
-    private function exitAction(): string {
+    protected function exitAction(): string
+    {
         $this->sendAlerts();
         header('Content-Type: application/json');
         return json_encode($this->arResponse);
     }
 
     /**
-     * 
+     *
      * @return bool
      */
-    private function getSystem(): bool {
+    private function getSystem(): bool
+    {
         /** @var \Api\Sensors\Sensor\Collection $obSensors */
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
         /** @var \Api\Sensors\Data\Collection $obValues */
@@ -195,11 +203,11 @@ class Post extends \Api\Core\Base\Controller {
                 }
 
                 $arTodayValue = \Api\Sensors\Data\Model::getAllAsArray(array(
-                        'SENSOR.SYSTEM_ID' => $this->obSystem->getId(),
-                        '>=DATE' => $obDate,
-                        '<DATE' => $obDateTo,
-                        ), 0, 0, array(
-                        'order' => array('DATE' => 'DESC')
+                    'SENSOR.SYSTEM_ID' => $this->obSystem->getId(),
+                    '>=DATE' => $obDate,
+                    '<DATE' => $obDateTo,
+                ), 0, 0, array(
+                    'order' => array('DATE' => 'DESC')
                 ));
 
                 $this->obTodayValues = new \Api\Sensors\Data\Collection();
@@ -224,21 +232,23 @@ class Post extends \Api\Core\Base\Controller {
     }
 
     /**
-     * 
+     *
      */
-    private function loadSystem() {
+    private function loadSystem()
+    {
         $this->obSystem = \Api\Sensors\System\Model::getOne(array(
-                '=TOKEN' => $this->token,
-                'ACTIVE' => true
+            '=TOKEN' => $this->token,
+            'ACTIVE' => true
         ));
     }
 
     /**
-     * 
+     *
      */
-    private function loadSensors() {
+    private function loadSensors()
+    {
         $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
-                'SYSTEM_ID' => $this->obSystem->getId(),
+            'SYSTEM_ID' => $this->obSystem->getId(),
         ));
 
         if (!is_null($this->obSystem)) {
@@ -259,17 +269,18 @@ class Post extends \Api\Core\Base\Controller {
     }
 
     /**
-     * 
+     *
      * @param array $arData
      */
-    private function insertSensorsData(array $arData) {
+    private function insertSensorsData(array $arData)
+    {
 
         /** @var \Api\Sensors\Sensor\Collection $obSensors */
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
         /** @var \Api\Sensors\Data\Collection $obValues */
         /** @var \Api\Sensors\Data\Entity $obValue */
         foreach ($arData as $obInputValue) {
-            $this->arResponse['data']['read_values'] ++;
+            $this->arResponse['data']['read_values']++;
             $value = floatval(str_replace(',', '.', $obInputValue->SensorValue));
 
             $obSensor = $this->obSystem->getSensorsCollection()->getByParams($obInputValue->SensorApp, $obInputValue->SensorClass, $obInputValue->SensorName);
@@ -316,7 +327,7 @@ class Post extends \Api\Core\Base\Controller {
                     }
                 }
             } catch (ParseError $exc) {
-                
+
             }
 
             $value = round($value, (int) $obSensor->getPrecision());
@@ -334,7 +345,7 @@ class Post extends \Api\Core\Base\Controller {
             $obDate = new \Bitrix\Main\Type\DateTime();
             $obDate->setTime(0, 0, 0);
             if ($obSensor->isModeAvg()) {
-                
+
             }
 
             if ($obSensor->isModeEach() || $obSensor->isModeEachLastDay()) {
@@ -401,10 +412,11 @@ class Post extends \Api\Core\Base\Controller {
     }
 
     /**
-     * 
+     *
      * @param \Api\Sensors\Data\Entity $obValue
      */
-    private function checkAlert(\Api\Sensors\Data\Entity $obValue) {
+    private function checkAlert(\Api\Sensors\Data\Entity $obValue)
+    {
 
         $obSensor = $obValue->getSensor();
 
@@ -421,7 +433,7 @@ class Post extends \Api\Core\Base\Controller {
         if ($obSensor->getAlertValueMin() != 0 && $obValue->getValue() < $obSensor->getAlertValueMin()) {
             if ($obSensor->getAlert()->getValueMin() == 0 || $obValue->getValue() < $obSensor->getAlert()->getValueMin()) {
                 $obSensor->getAlert()->setAlert(true);
-                $obSensor->getAlert()->setDirection(-1);
+                $obSensor->getAlert()->setTooLow();
                 $obSensor->getAlert()->setValueMin($obValue->getValue());
             }
         }
@@ -429,21 +441,22 @@ class Post extends \Api\Core\Base\Controller {
         if ($obSensor->getAlertValueMax() != 0 && $obValue->getValue() > $obSensor->getAlertValueMax()) {
             if ($obSensor->getAlert()->getValueMax() == 0 || $obValue->getValue() > $obSensor->getAlert()->getValueMax()) {
                 $obSensor->getAlert()->setAlert(true);
-                $obSensor->getAlert()->setDirection(1);
+                $obSensor->getAlert()->setTooHigh();
                 $obSensor->getAlert()->setValueMax($obValue->getValue());
             }
         }
     }
 
     /**
-     * 
+     *
      */
-    private function sendAlerts() {
+    private function sendAlerts()
+    {
         if (
             strlen($this->obSystem->getEmail()) > 0 &&
             (
-            is_null($this->obLastAlert) ||
-            !is_null($this->obLastAlert) && $this->obLastAlert->getTimestamp() + $this->alertEvery < (new \Bitrix\Main\Type\DateTime())->getTimestamp()
+                is_null($this->obLastAlert) ||
+                !is_null($this->obLastAlert) && $this->obLastAlert->getTimestamp() + $this->alertEvery < (new \Bitrix\Main\Type\DateTime())->getTimestamp()
             )
         ) {
 
@@ -452,18 +465,7 @@ class Post extends \Api\Core\Base\Controller {
             /** @var \Api\Sensors\Sensor\Entity $obSensor */
             foreach ($this->obSystem->getSensorsCollection() as $obSensor) {
                 if ($obSensor->getActive() && $obSensor->getAlert()->isAlert() && $obSensor->isAllowAlert()) {
-
-                    $message = '';
-                    $message .= 'Значение на датчике ' . $obSensor->getSensorApp() . ' > ' . $obSensor->getSensorDevice() . ' > ' . $obSensor->getSensorName() . ' = ';
-                    if ($obSensor->getAlert()->getDirection() == -1) {
-                        $message .= $obSensor->getAlert()->getValueMin() . $obSensor->getSensorUnit() . ' и меньше допустимого ' . $obSensor->getAlertValueMin();
-                    }
-                    if ($obSensor->getAlert()->getDirection() == 1) {
-                        $message .= $obSensor->getAlert()->getValueMax() . $obSensor->getSensorUnit() . ' и больше допустимого ' . $obSensor->getAlertValueMax();
-                    }
-                    $message .= $obSensor->getSensorUnit();
-                    $arAlerts[] = $message;
-
+                    $arAlerts[] = $obSensor->getAlert()->getEmailMessage();
                     $obSensor->getAlert()->setAlert(false);
                 }
                 if ($obSensor->isNew()) {
@@ -495,18 +497,20 @@ class Post extends \Api\Core\Base\Controller {
     }
 
     /**
-     * 
+     *
      */
-    private function resetResponse() {
+    private function resetResponse()
+    {
         $this->arResponse['errors'] = array();
         $this->arResponse['success'] = true;
     }
 
     /**
-     * 
+     *
      * @return \Api\Core\Base\Collection
      */
-    private function getAlertCollection(): \Api\Core\Base\Collection {
+    private function getAlertCollection(): \Api\Core\Base\Collection
+    {
         return $this->obAlerts;
     }
 
