@@ -2,6 +2,7 @@
 
 set_time_limit(0);
 error_reporting(E_ALL);
+ob_implicit_flush();
 
 $token = '46327846328746873264732';
 $sendEverySecond = 1;
@@ -10,6 +11,7 @@ $localSensorsServer = 'http://localhost:55555';
 $arRemoteSensorsSockets = array(
     'longbyte.ru',
     'svarog.longbyte.ru',
+    '127.0.0.1',
 );
 $remotePort = 56999;
 
@@ -53,15 +55,15 @@ while (true) {
             'data' => $arSensors,
         );
         $jsonData = json_encode($arData);
-        $dataLendth = strlen($jsonData);
-        socket_write($obSocket, $jsonData, $dataLendth);
-        echo "Send {$dataLendth} bytes.\n";
-        $rawMessage = socket_read($obSocket, 128 * 1024);
-        $dataLendth = strlen($rawMessage);
-        $rawMessage = trim($rawMessage);
-        if (strlen($rawMessage) > 0) {
-            echo "Responce: [{$dataLendth}] {$rawMessage}.\n";
-        }
+        $dataLength = strlen($jsonData);
+        socket_write($obSocket, $jsonData, $dataLength);
+        echo "Send {$dataLength} bytes.\n";
+//        $rawMessage = socket_read($obSocket, 128 * 1024);
+//        $dataLength = strlen($rawMessage);
+//        $rawMessage = trim($rawMessage);
+//        if (strlen($rawMessage) > 0) {
+//            echo "Response: [{$dataLength}] {$rawMessage}.\n";
+//        }
         if (socket_last_error($obSocket)) {
             echo "Ошибка сокета.\nПричина: " . socket_last_error($obSocket) . "\n";
             socket_close($obSocket);

@@ -26,8 +26,8 @@ ob_implicit_flush();
 $obLog = new \Bitrix\Main\IO\File(\Bitrix\Main\Application::getDocumentRoot() . '/upload/socket.log');
 SocketLog($obLog, 'Start server.');
 
-$serverAddress = '88.201.179.4';
-//$serverAddress = '127.0.0.1';
+//$serverAddress = '192.168.0.2';
+$serverAddress = '127.0.0.1';
 $serverPort = 56999;
 $maxClients = 16;
 $arClientSockets = array();
@@ -67,9 +67,9 @@ do {
             /* Новые данные в клиентском сокете? Прочитать и ответить */
             if (in_array($obClient, $arSockets)) {
                 $rawMessage = socket_read($obClient, 128 * 1024);
-                SocketLog($obLog, "Read mesage " . strlen($rawMessage) . " bytes");
+                SocketLog($obLog, "Read message " . strlen($rawMessage) . " bytes");
 
-                if ($rawMessage === false) {
+                if ($rawMessage === false || strlen($rawMessage) == 0) {
                     socket_shutdown($obClient);
                     unset($arClientSockets[$key]);
                     SocketLog($obLog, "Client disconnected.");
@@ -80,6 +80,9 @@ do {
                     }
                 } else {
                     $arBuffer[$key] .= $rawMessage;
+                    if ($arBuffer[$key] > 128 * 1024) {
+                        $arBuffer[$key] = '';
+                    }
                     $arData = json_decode($arBuffer[$key], true);
                     if ($arData) {
                         $arBuffer[$key] = '';
@@ -101,7 +104,7 @@ do {
 
                     switch ($strCommand) {
                         case 'shutdown785423755':
-                            $jsonResponse = json_encode(array('Shutdown command recived.'));
+                            $jsonResponse = json_encode(array('Shutdown command received.'));
                             global $shutdown;
                             $shutdown = true;
                             break;
@@ -121,8 +124,8 @@ do {
                             break;
                     }
 
-                    $dataLendth = strlen($jsonResponse);
-                    SocketLog($obLog, "Responce: [{$dataLendth}] {$jsonResponse}");
+                    $dataLength = strlen($jsonResponse);
+                    SocketLog($obLog, "Response: [{$dataLength}] {$jsonResponse}");
                     socket_write($obClient, $jsonResponse, $dataLendth);
                 }
             }
@@ -148,15 +151,18 @@ foreach ($arClientSockets as $obClient) {
     socket_close($obClient);
 }
 
-function SocketLog($obLog, $str) {
+function SocketLog($obLog, $str)
+{
     global $logEnable;
     if ($logEnable) {
         $obLog->putContents($str . "\n", \Bitrix\Main\IO\File::APPEND);
         echo $str . "\n";
+        ob_flush();
     }
 }
 
-function SIGTERM_handler($signo) {
+function SIGTERM_handler($signo)
+{
     global $shutdown;
     global $obLog;
 
