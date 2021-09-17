@@ -26,8 +26,8 @@ ob_implicit_flush();
 $obLog = new \Bitrix\Main\IO\File(\Bitrix\Main\Application::getDocumentRoot() . '/upload/socket.log');
 SocketLog($obLog, 'Start server.');
 
-//$serverAddress = '192.168.0.2';
-$serverAddress = '127.0.0.1';
+$serverAddress = '192.168.0.2';
+//$serverAddress = '127.0.0.1';
 $serverPort = 56999;
 $maxClients = 16;
 $arClientSockets = array();
@@ -136,7 +136,7 @@ do {
     $arSockets[] = $obSocket;
 
     if (date('H:i:s') == '06:00:00') {
-        $shutdown = true;
+        //$shutdown = true;
     }
 } while (!$shutdown);
 
