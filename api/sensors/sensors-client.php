@@ -7,26 +7,37 @@ $token = '46327846328746873264732';
 $sendEverySecond = 1;
 $reconnectTimeOut = 5;
 $localSensorsServer = 'http://localhost:55555';
-$remoteSensorsSocket = 'longbyte.ru';
-//$remoteSensorsSocket = '127.0.0.1';
+$arRemoteSensorsSockets = array(
+    'longbyte.ru',
+    'svarog.longbyte.ru',
+);
 $remotePort = 56999;
-
 
 
 while (true) {
 
-    $remoteSensorsSocketIP = gethostbyname($remoteSensorsSocket);
-
     $obSocket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+
     if ($obSocket === false) {
         echo "Не удалось выполнить socket_create(): причина: " . socket_last_error($obSocket) . "\n";
         die;
     }
 
-    echo "Пытаемся соединиться с '$remoteSensorsSocketIP' на порту '$remotePort'...";
-    $result = socket_connect($obSocket, $remoteSensorsSocketIP, $remotePort);
+    $result = false;
+    foreach ($arRemoteSensorsSockets as $remoteSensorsSocket) {
+        $remoteSensorsSocketIP = gethostbyname($remoteSensorsSocket);
+
+        echo "Пытаемся соединиться с '$remoteSensorsSocketIP' на порту '$remotePort'...";
+        $result = socket_connect($obSocket, $remoteSensorsSocketIP, $remotePort);
+
+        if ($result === false) {
+            echo "Не удалось выполнить socket_connect().\nПричина: " . socket_last_error($obSocket) . "\n";
+        } else {
+            break;
+        }
+    }
     if ($result === false) {
-        echo "Не удалось выполнить socket_connect().\nПричина: ($result) " . socket_last_error($obSocket) . "\n";
+        echo "Не удалось выполнить socket_connect().\nПричина: " . socket_last_error($obSocket) . "\n";
         echo "Переподключение через {$reconnectTimeOut} сек.\n";
         sleep($reconnectTimeOut);
         continue;
