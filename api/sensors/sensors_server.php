@@ -26,7 +26,7 @@ ob_implicit_flush();
 $obLog = new \Bitrix\Main\IO\File(\Bitrix\Main\Application::getDocumentRoot() . '/upload/socket.log');
 SocketLog($obLog, 'Start server.');
 
-$serverAddress = '194.226.61.252';
+$serverAddress = '88.201.179.4';
 //$serverAddress = '127.0.0.1';
 $serverPort = 56999;
 $maxClients = 16;
@@ -36,17 +36,14 @@ $arBuffer = array();
 $arControllers = array();
 
 if (($obSocket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)) === false) {
-    echo "Не удалось выполнить socket_create(): причина: " . socket_strerror(socket_last_error()) . "\n";
     SocketLog($obLog, "Не удалось выполнить socket_create(): причина: " . socket_strerror(socket_last_error()));
 }
 
 if (socket_bind($obSocket, $serverAddress, $serverPort) === false) {
-    echo "Не удалось выполнить socket_bind(): причина: " . socket_strerror(socket_last_error($obSocket)) . "\n";
     SocketLog($obLog, "Не удалось выполнить socket_bind(): причина: " . socket_strerror(socket_last_error($obSocket)));
 }
 
 if (socket_listen($obSocket, 5) === false) {
-    echo "Не удалось выполнить socket_listen(): причина: " . socket_strerror(socket_last_error($obSocket)) . "\n";
     SocketLog($obLog, "Не удалось выполнить socket_listen(): причина: " . socket_strerror(socket_last_error($obSocket)));
 }
 
@@ -62,7 +59,6 @@ do {
         if (in_array($obSocket, $arSockets)) {
             if (count($arClientSockets) < $maxClients) {
                 $arClientSockets[] = socket_accept($obSocket);
-                echo "Принято подключение (" . count($arClientSockets) . " of $maxClients clients)\n";
                 SocketLog($obLog, "Принято подключение (" . count($arClientSockets) . " of $maxClients clients)");
             }
         }
@@ -156,6 +152,7 @@ function SocketLog($obLog, $str) {
     global $logEnable;
     if ($logEnable) {
         $obLog->putContents($str . "\n", \Bitrix\Main\IO\File::APPEND);
+        echo $str . "\n";
     }
 }
 
