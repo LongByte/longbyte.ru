@@ -6,7 +6,7 @@
         "vendor-dir": "./local/vendor"
     },
     "require": {
-        "php": ">=7.4",
+        "php": ">=7.3",
         "longbyte/api": "dev-master",
         "telegram-bot/api": "3.0.*"
     },
