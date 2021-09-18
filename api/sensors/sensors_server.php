@@ -136,7 +136,7 @@ do {
     $arSockets[] = $obSocket;
 
     if (date('H:i:s') == '06:00:00') {
-        //$shutdown = true;
+        $shutdown = true;
     }
 } while (!$shutdown);
 
