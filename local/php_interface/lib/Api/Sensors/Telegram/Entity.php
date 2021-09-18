@@ -5,7 +5,13 @@ namespace Api\Sensors\Telegram;
 /**
  * Class \Api\Sensors\Telegram\Entity
  *
-
+ * @method int getId()
+ * @method boolean getActive()
+ * @method $this setActive(boolean $bActive)
+ * @method int getSystemId()
+ * @method $this setSystemId(int $iSystemId)
+ * @method string getChatId()
+ * @method $this setChatId(string $strChatId)
  */
 class Entity extends \Api\Core\Base\Entity
 {

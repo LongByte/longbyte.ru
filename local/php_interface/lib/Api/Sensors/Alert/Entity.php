@@ -22,7 +22,7 @@ class Entity extends \Api\Core\Base\Virtual\Entity
     protected static $_primaryField = 'SENSOR_ID';
 
     /** @var \Api\Sensors\Sensor\Entity|null */
-    protected ?\Api\Sensors\Sensor\Entity $obSensor = null;
+    protected $obSensor = null;
 
     /**
      *
@@ -173,10 +173,10 @@ class Entity extends \Api\Core\Base\Virtual\Entity
                 case '°C':
                     $strMessage .= '🌡';
                     if ($this->isTooLow()) {
-                        return '❄';
+                        $strMessage .= '❄';
                     }
                     if ($this->isTooHigh()) {
-                        return '🔥';
+                        $strMessage .= '🔥';
                     }
                     break;
 
@@ -187,7 +187,7 @@ class Entity extends \Api\Core\Base\Virtual\Entity
                     break;
 
                 case 'Yes/No':
-                    $strMessage .= '⚠';
+                    $strMessage .= '🛠';
                     break;
 
                 case 'RPM':
@@ -195,7 +195,7 @@ class Entity extends \Api\Core\Base\Virtual\Entity
                     break;
             }
 
-            $strMessage .= 'Значение на датчике ' . $this->getSensor()->getSensorApp() . ' > ' . $this->getSensor()->getSensorDevice() . ' > ' . $this->getSensor()->getSensorName() . ' = ';
+            $strMessage .= $this->getSensor()->getSensorDevice() . ' > ' . $this->getSensor()->getSensorName() . ' = ';
             if ($this->isTooLow()) {
                 $strMessage .= '<b>' . $this->getSensor()->getAlert()->getValueMin() . $this->getSensor()->getSensorUnit() . '</b> и меньше допустимого ' . $this->getSensor()->getAlertValueMin();
             }

@@ -164,7 +164,8 @@ class Post extends \Api\Core\Base\Controller
      *
      * @return string
      */
-    protected function exitAction(): string {
+    protected function exitAction(): string
+    {
         $this->sendAlerts();
         header('Content-Type: application/json');
         return json_encode($this->arResponse);
@@ -459,26 +460,28 @@ class Post extends \Api\Core\Base\Controller
             )
         ) {
 
-            $arAlerts = array();
+            $arEmailAlerts = array();
+            $arTelegramAlerts = array();
 
             /** @var \Api\Sensors\Sensor\Entity $obSensor */
             foreach ($this->obSystem->getSensorsCollection() as $obSensor) {
                 if ($obSensor->getActive() && $obSensor->getAlert()->isAlert() && $obSensor->isAllowAlert()) {
-                    $arAlerts[] = $obSensor->getAlert()->getEmailMessage();
+                    $arEmailAlerts[] = $obSensor->getAlert()->getEmailMessage();
+                    $arTelegramAlerts[] = $obSensor->getAlert()->getTelegramMessage();
                     $obSensor->getAlert()->setAlert(false);
                 }
                 if ($obSensor->isNew()) {
-                    $arAlerts[] = 'Обнаружен новый датчик: ' . $obSensor->getSensorApp() . ' > ' . $obSensor->getSensorDevice() . ' > ' . $obSensor->getSensorName() . ' . Перейдите в настройки, чтобы активировать его.';
+                    $arEmailAlerts[] = 'Обнаружен новый датчик: ' . $obSensor->getSensorApp() . ' > ' . $obSensor->getSensorDevice() . ' > ' . $obSensor->getSensorName() . ' . Перейдите в настройки, чтобы активировать его.';
+                    $arTelegramAlerts[] = '➕ Обнаружен новый датчик: ' . $obSensor->getSensorApp() . ' > ' . $obSensor->getSensorDevice() . ' > ' . $obSensor->getSensorName() . ' . Перейдите в настройки, чтобы активировать его.';
                     $obSensor->setNew(false);
                 }
             }
 
-            if (count($arAlerts) > 0) {
-
-                $strUrl = 'https://longbyte.ru/sensors/' . $this->obSystem->getName() . '-' . $this->obSystem->getToken() . '/';
+            if (count($arEmailAlerts) > 0) {
+                $strUrl = 'https://longbyte.ru/sensors/' . $this->obSystem->getNameToken() . '/';
 
                 $message = 'Контроль сенсоров на системе <a href="' . $strUrl . '">' . $this->obSystem->getName() . '</a>. Некоторые значения вне допустимого диапазона.<br><br>';
-                $message .= implode('<br>', $arAlerts);
+                $message .= implode('<br>', $arEmailAlerts);
 
                 \Bitrix\Main\Mail\Event::send(array(
                     'EVENT_NAME' => 'SENSORS_ALERT',
@@ -489,6 +492,22 @@ class Post extends \Api\Core\Base\Controller
                         'MESSAGE' => $message
                     )
                 ));
+
+                /** @var \Api\Sensors\Telegram\Collection $obTelegrams */
+                $obTelegrams = \Api\Sensors\Telegram\Model::getAll(array(
+                    'SYSTEM_ID' => $this->obSystem->getId(),
+                ));
+
+                if ($obTelegrams->count() > 0) {
+                    $message = 'Контроль сенсоров на системе [' . $this->obSystem->getName() . '](' . $strUrl . ')' . "\n";
+                    $message .= implode("\n", $arTelegramAlerts);
+
+                    $obBot = new \TelegramBot\Api\Client(\Api\Sensors\Telegram\Model::getToken());
+                    /** @var \Api\Sensors\Telegram\Entity $obTelegram */
+                    foreach ($obTelegrams as $obTelegram) {
+                        $obBot->sendMessage($obTelegram->getChatId(), $message, 'html', false);
+                    }
+                }
 
                 $this->obLastAlert = new \Bitrix\Main\Type\DateTime();
             }
