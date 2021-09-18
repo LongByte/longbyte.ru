@@ -168,7 +168,7 @@ class Telegram extends \Api\Core\Base\Controller
 
             if ($obTelegrams->count() > 0) {
                 /** @var \Api\Sensors\System\Collection $obSystems */
-                $obSystems = \Api\Sensors\System\Model::getAll(array('ID' => $obTelegrams->getKeys()));
+                $obSystems = \Api\Sensors\System\Model::getAll(array('ID' => $obTelegrams->getSystemIds()));
                 $arSystems = array();
                 /** @var \Api\Sensors\System\Entity $obSystem */
                 foreach ($obSystems as $obSystem) {
