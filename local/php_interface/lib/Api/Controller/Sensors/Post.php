@@ -496,6 +496,7 @@ class Post extends \Api\Core\Base\Controller
                 /** @var \Api\Sensors\Telegram\Collection $obTelegrams */
                 $obTelegrams = \Api\Sensors\Telegram\Model::getAll(array(
                     'SYSTEM_ID' => $this->obSystem->getId(),
+                    'ACTIVE' => 1,
                 ));
 
                 if ($obTelegrams->count() > 0) {

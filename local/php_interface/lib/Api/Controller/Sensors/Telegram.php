@@ -152,7 +152,7 @@ class Telegram extends \Api\Core\Base\Controller
             /** @var \Api\Sensors\Telegram\Entity $obTelegram */
             foreach ($obTelegrams as $obTelegram) {
                 $obTelegram
-                    ->setActive(0)
+                    ->setActive(1)
                     ->save()
                 ;
             }
