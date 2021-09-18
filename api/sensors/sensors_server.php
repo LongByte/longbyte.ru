@@ -26,7 +26,7 @@ ob_implicit_flush();
 $obLog = new \Bitrix\Main\IO\File(\Bitrix\Main\Application::getDocumentRoot() . '/upload/socket.log');
 SocketLog($obLog, 'Start server.');
 
-$serverAddress = '194.226.61.252';
+$serverAddress = '62.152.44.247';
 //$serverAddress = '127.0.0.1';
 $serverPort = 56999;
 $maxClients = 16;
@@ -36,17 +36,14 @@ $arBuffer = array();
 $arControllers = array();
 
 if (($obSocket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)) === false) {
-    echo "Не удалось выполнить socket_create(): причина: " . socket_strerror(socket_last_error()) . "\n";
     SocketLog($obLog, "Не удалось выполнить socket_create(): причина: " . socket_strerror(socket_last_error()));
 }
 
 if (socket_bind($obSocket, $serverAddress, $serverPort) === false) {
-    echo "Не удалось выполнить socket_bind(): причина: " . socket_strerror(socket_last_error($obSocket)) . "\n";
     SocketLog($obLog, "Не удалось выполнить socket_bind(): причина: " . socket_strerror(socket_last_error($obSocket)));
 }
 
 if (socket_listen($obSocket, 5) === false) {
-    echo "Не удалось выполнить socket_listen(): причина: " . socket_strerror(socket_last_error($obSocket)) . "\n";
     SocketLog($obLog, "Не удалось выполнить socket_listen(): причина: " . socket_strerror(socket_last_error($obSocket)));
 }
 
@@ -62,7 +59,6 @@ do {
         if (in_array($obSocket, $arSockets)) {
             if (count($arClientSockets) < $maxClients) {
                 $arClientSockets[] = socket_accept($obSocket);
-                echo "Принято подключение (" . count($arClientSockets) . " of $maxClients clients)\n";
                 SocketLog($obLog, "Принято подключение (" . count($arClientSockets) . " of $maxClients clients)");
             }
         }
@@ -71,9 +67,9 @@ do {
             /* Новые данные в клиентском сокете? Прочитать и ответить */
             if (in_array($obClient, $arSockets)) {
                 $rawMessage = socket_read($obClient, 128 * 1024);
-                SocketLog($obLog, "Read mesage " . strlen($rawMessage) . " bytes");
+                SocketLog($obLog, "Read message " . strlen($rawMessage) . " bytes");
 
-                if ($rawMessage === false) {
+                if ($rawMessage === false || strlen($rawMessage) == 0) {
                     socket_shutdown($obClient);
                     unset($arClientSockets[$key]);
                     SocketLog($obLog, "Client disconnected.");
@@ -84,6 +80,9 @@ do {
                     }
                 } else {
                     $arBuffer[$key] .= $rawMessage;
+                    if ($arBuffer[$key] > 128 * 1024) {
+                        $arBuffer[$key] = '';
+                    }
                     $arData = json_decode($arBuffer[$key], true);
                     if ($arData) {
                         $arBuffer[$key] = '';
@@ -105,7 +104,7 @@ do {
 
                     switch ($strCommand) {
                         case 'shutdown785423755':
-                            $jsonResponse = json_encode(array('Shutdown command recived.'));
+                            $jsonResponse = json_encode(array('Shutdown command received.'));
                             global $shutdown;
                             $shutdown = true;
                             break;
@@ -125,8 +124,8 @@ do {
                             break;
                     }
 
-                    $dataLendth = strlen($jsonResponse);
-                    SocketLog($obLog, "Responce: [{$dataLendth}] {$jsonResponse}");
+                    $dataLength = strlen($jsonResponse);
+                    SocketLog($obLog, "Response: [{$dataLength}] {$jsonResponse}");
                     socket_write($obClient, $jsonResponse, $dataLendth);
                 }
             }
@@ -152,14 +151,18 @@ foreach ($arClientSockets as $obClient) {
     socket_close($obClient);
 }
 
-function SocketLog($obLog, $str) {
+function SocketLog($obLog, $str)
+{
     global $logEnable;
     if ($logEnable) {
         $obLog->putContents($str . "\n", \Bitrix\Main\IO\File::APPEND);
+        echo $str . "\n";
+        ob_flush();
     }
 }
 
-function SIGTERM_handler($signo) {
+function SIGTERM_handler($signo)
+{
     global $shutdown;
     global $obLog;
 

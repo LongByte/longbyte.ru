@@ -164,8 +164,7 @@ class Post extends \Api\Core\Base\Controller
      *
      * @return string
      */
-    protected function exitAction(): string
-    {
+    protected function exitAction(): string {
         $this->sendAlerts();
         header('Content-Type: application/json');
         return json_encode($this->arResponse);
