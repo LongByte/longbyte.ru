@@ -9,6 +9,16 @@ namespace Api\Controller\Sensors;
 class Telegram extends \Api\Core\Base\Controller
 {
 
+    /** @var string */
+    protected static $strHelp = "Добро пожаловать в систему мониторинга. Доступны следующие команды:
+/add token - добавление отслеживания системы
+/del token - прекращение отслеживания системы
+/clear - прекращение отслеживания всех систем
+/mute [token] - отключение уведомлений
+/unmute [token] - включение уведомлений
+/list - список отслеживаемых систем
+/help - это сообщение";
+
     public function post()
     {
 
@@ -16,22 +26,12 @@ class Telegram extends \Api\Core\Base\Controller
 
         $obBot->command('start', function ($obMessage) use ($obBot) {
             /** @var \TelegramBot\Api\Types\Message $obMessage */
-            $obBot->sendMessage($obMessage->getChat()->getId(),
-                "Добро пожаловать в систему мониторинга. Доступны следующие команды:
-/add token - добавление отслеживания системы
-/del token - прекращение отслеживания системы
-/clear - прекращение отслеживания всех систем
-/mute [token] - отключение уведомлений
-/unmute [token] - включение уведомлений
-/list - список отслеживаемых систем"
-            );
-            $obTg = new \Api\Sensors\Telegram\Entity();
-            $obTg
-                ->setChatId($obMessage->getChat()->getId())
-                ->setSystemId('1')
-                ->setActive(1)
-                ->save()
-            ;
+            $obBot->sendMessage($obMessage->getChat()->getId(), static::$strHelp);
+        });
+
+        $obBot->command('help', function ($obMessage) use ($obBot) {
+            /** @var \TelegramBot\Api\Types\Message $obMessage */
+            $obBot->sendMessage($obMessage->getChat()->getId(), static::$strHelp);
         });
 
         $obBot->command('add', function ($obMessage) use ($obBot) {
@@ -99,7 +99,7 @@ class Telegram extends \Api\Core\Base\Controller
 
         $obBot->command('mute', function ($obMessage) use ($obBot) {
             /** @var \TelegramBot\Api\Types\Message $obMessage */
-            $strText = preg_replace('/^\/mute\s+/', '', $obMessage->getText());
+            $strText = preg_replace('/^\/mute\s*/', '', $obMessage->getText());
             if (strlen($strText) > 0) {
                 $obSystem = \Api\Sensors\System\Model::getOne(array('TOKEN' => $strText));
                 if (!is_null($obSystem)) {
@@ -130,7 +130,7 @@ class Telegram extends \Api\Core\Base\Controller
 
         $obBot->command('unmute', function ($obMessage) use ($obBot) {
             /** @var \TelegramBot\Api\Types\Message $obMessage */
-            $strText = preg_replace('/^\/unmute\s+/', '', $obMessage->getText());
+            $strText = preg_replace('/^\/unmute\s*/', '', $obMessage->getText());
             if (strlen($strText) > 0) {
                 $obSystem = \Api\Sensors\System\Model::getOne(array('TOKEN' => $strText));
                 if (!is_null($obSystem)) {
@@ -156,7 +156,7 @@ class Telegram extends \Api\Core\Base\Controller
                     ->save()
                 ;
             }
-            $obBot->sendMessage($obMessage->getChat()->getId(), 'Оповещения выключены');
+            $obBot->sendMessage($obMessage->getChat()->getId(), 'Оповещения включены');
         });
 
         $obBot->command('list', function ($obMessage) use ($obBot) {
@@ -172,9 +172,10 @@ class Telegram extends \Api\Core\Base\Controller
                 $arSystems = array();
                 /** @var \Api\Sensors\System\Entity $obSystem */
                 foreach ($obSystems as $obSystem) {
-                    $arSystems[] = $obSystem->getName() . ' [' . $obSystem->getToken() . ']';
+                    $strUrl = 'https://longbyte.ru/sensors/' . $obSystem->getNameToken() . '/';
+                    $arSystems[] = '<a href="' . $strUrl . '">' . $obSystem->getName() . '</a> [' . $obSystem->getToken() . ']';
                 }
-                $obBot->sendMessage($obMessage->getChat()->getId(), implode("\n", $arSystems));
+                $obBot->sendMessage($obMessage->getChat()->getId(), implode("\n", $arSystems), 'html', false);
             } else {
                 $obBot->sendMessage($obMessage->getChat()->getId(), 'Ни одна система не отслеживается');
             }

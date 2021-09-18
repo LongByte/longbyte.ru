@@ -19,9 +19,6 @@ Loader::registerAutoLoadClasses(null, array(
     '\Migration\Builder\HLBuilder' => '/local/php_interface/classes/Migration/Builder/HLBuilder.php',
     //orm
     '\Bitrix\Iblock\ElementPropertyTable' => '/local/php_interface/lib/elementproperty.php',
-    //telegram
-    '\LongByte\Telegram\SessionTable' => '/local/php_interface/classes/Telegram/Longbyte/SessionTable.php',
-    '\LongByte\Telegram\Bot' => '/local/php_interface/classes/Telegram/Longbyte/Bot.php',
 ));
 
 EventManager::getInstance()->addEventHandler('main', 'OnPageStart', array('Site', 'onPageStart'));
