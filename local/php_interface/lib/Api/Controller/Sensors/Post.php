@@ -254,6 +254,7 @@ class Post extends \Api\Core\Base\Controller
         if (!is_null($this->obSystem)) {
             $this->obSystem->setSensorsCollection($obSensors);
 
+            /** @var \Api\Sensors\Sensor\Entity $obSensor */
             foreach ($this->obSystem->getSensorsCollection() as $obSensor) {
                 $obAlert = $this->getAlertCollection()->getByKey($obSensor->getId());
                 if (is_null($obAlert)) {
@@ -500,7 +501,7 @@ class Post extends \Api\Core\Base\Controller
                 ));
 
                 if ($obTelegrams->count() > 0) {
-                    $message = 'Контроль сенсоров на системе [' . $this->obSystem->getName() . '](' . $strUrl . ')' . "\n";
+                    $message = 'Контроль сенсоров на системе <a href="' . $strUrl . '">' . $this->obSystem->getName() . '</a>' . "\n";
                     $message .= implode("\n", $arTelegramAlerts);
 
                     $obBot = new \TelegramBot\Api\Client(\Api\Sensors\Telegram\Model::getToken());

@@ -219,6 +219,7 @@ class Entity extends \Api\Core\Base\Entity {
                 'VALUE_MIN' => 0,
                 'VALUE_MAX' => 0,
             ));
+            $this->_obAlert->setSensor($this);
         }
         return $this->_obAlert;
     }
@@ -230,6 +231,7 @@ class Entity extends \Api\Core\Base\Entity {
      */
     public function setAlert(\Api\Sensors\Alert\Entity $obAlert): self {
         $this->_obAlert = $obAlert;
+        $this->_obAlert->setSensor($this);
         return $this;
     }
 
