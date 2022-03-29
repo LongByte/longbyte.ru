@@ -3,13 +3,16 @@
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
     die();
 
-Bitrix\Main\Page\Asset::getInstance()->addString('<script src="//cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>', true);
-Bitrix\Main\Page\Asset::getInstance()->addString('<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>', true);
-Bitrix\Main\Page\Asset::getInstance()->addString('<script src="//unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>', true);
+use \Bitrix\Main\Page\Asset;
+
+Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/lib/axios.min.js');
+Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/lib/Chart.min.js');
+Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/lib/vue-chartjs.min.js');
+
 Bitrix\Main\Page\Asset::getInstance()->addString('<meta name="robots" content="noindex, nofollow"/>', true);
 
-$APPLICATION->IncludeComponent("longbyte:vue", "sensorsstat", Array(
+$APPLICATION->IncludeComponent("longbyte:vue", "sensorsstat", array(
     'INCLUDE_COMPONENTS' => array('sensorline'),
     'STYLE_TO_COMPILER' => 'Y',
-    ), $component->__parent
+), $component->getParent()
 );

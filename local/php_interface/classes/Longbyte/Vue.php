@@ -5,41 +5,35 @@ namespace LongByte;
 use \Bitrix\Main\Page\Asset;
 use \Bitrix\Main\Web\Json;
 
-class Vue {
+/**
+ * Class \LongByte\Vue
+ */
+class Vue
+{
 
-    public static function includeVueJS() {
+    public static function includeVueJS(): void
+    {
         if (\Site::IsDevelop()) {
-            Asset::getInstance()->addString('<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>');
+            Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/lib/vue-dev.js');
         } else {
-            Asset::getInstance()->addString('<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>');
+            Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/lib/vue.js');
         }
     }
 
-    /**
-     * 
-     * @param array $arData
-     * @return string
-     */
-    public static function toJson($arData) {
+    public static function toJson($arData): string
+    {
         self::arrayKeyToLower($arData);
         return Json::encode($arData);
     }
-    
-    /**
-     * 
-     * @param array $arData
-     * @return string
-     */
-    public static function toVueJson($arData) {
+
+    public static function toVueJson($arData): string
+    {
         self::arrayKeyToLower($arData);
         return \CUtil::PhpToJSObject($arData, false, true, true);
     }
 
-    /**
-     * 
-     * @param array $array
-     */
-    public static function arrayKeyToLower(array &$array) {
+    public static function arrayKeyToLower(array &$array): void
+    {
         foreach ($array as $key => $value) {
             if (is_array($value)) {
                 self::arrayKeyToLower($value);

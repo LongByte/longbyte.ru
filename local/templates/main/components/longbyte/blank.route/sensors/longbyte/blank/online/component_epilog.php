@@ -5,10 +5,10 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
 
 use \Bitrix\Main\Page\Asset;
 
-Asset::getInstance()->addString('<script src="//cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>', true);
+Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . '/js/lib/axios.min.js');
 Asset::getInstance()->addString('<meta name="robots" content="noindex, nofollow"/>', true);
 
-$APPLICATION->IncludeComponent("longbyte:vue", "sensorsonline", Array(
+$APPLICATION->IncludeComponent("longbyte:vue", "sensorsonline", array(
     'STYLE_TO_COMPILER' => 'Y',
-    ), $component->__parent
+), $component->getParent()
 );
