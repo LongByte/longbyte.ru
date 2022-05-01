@@ -26,7 +26,7 @@ ob_implicit_flush();
 $obLog = new \Bitrix\Main\IO\File(\Bitrix\Main\Application::getDocumentRoot() . '/upload/socket.log');
 SocketLog($obLog, 'Start server.');
 
-$serverAddress = '62.152.44.247';
+$serverAddress = '194.226.61.201';
 //$serverAddress = '127.0.0.1';
 $serverPort = 56999;
 $maxClients = 16;

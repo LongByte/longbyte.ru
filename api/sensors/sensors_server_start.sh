@@ -1,10 +1,10 @@
-cd ~/web/longbyte.ru/public_html/api/sensors
+cd ~/www/api/sensors
 read PID<sensors_server.pid
 if (( $PID > 0 )); then
     echo 'Pid found.';
     if ! [ -d /proc/$PID/ ]; then
         echo 'Restarting...'
-        /srv/php/php-7.3.2/bin/php sensors_server.php $1 &
+        php sensors_server.php $1 &
         rm -f sensors_server.pid
         echo $! >>sensors_server.pid
         echo $!
@@ -13,7 +13,7 @@ if (( $PID > 0 )); then
     fi
 else
     echo 'Starting...'
-    /srv/php/php-7.3.2/bin/php sensors_server.php $1 &
+   php sensors_server.php $1 &
     rm -f sensors_server.pid
     echo $! >>sensors_server.pid
     echo $!

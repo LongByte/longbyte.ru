@@ -1,4 +1,4 @@
-cd ~/web/longbyte.ru/public_html/api/sensors
+cd ~/www/api/sensors
 read PID<sensors_server.pid
 echo $PID;
 kill -16 $PID
