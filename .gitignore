@@ -18,5 +18,4 @@ tmp.less
 /local/php_interface/lib/Api/Core/
 /local/php_interface/lib/Api/Core/*
 /local/vendor
-/composer.lock
 /.idea
