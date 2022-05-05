@@ -1,0 +1,32 @@
+stages:
+  - deploy
+
+variables:
+  PROD_HOST: $PROD_HOST
+  PROD_PORT: $PROD_PORT
+  PROD_USER: $PROD_USER
+  PROD_ROOT: $PROD_ROOT
+
+deploy-production:
+  stage: deploy
+  resource_group: production
+  variables:
+    DEPLOY_USER: $PROD_USER
+    DEPLOY_PORT: $PROD_POST
+    DEPLOY_HOST: $PROD_HOST
+    DEPLOY_ROOT: $PROD_ROOT
+  only:
+    - master
+  when: manual
+  script:
+    - |
+      ssh $DEPLOY_USER:$DEPLOY_PORT@$DEPLOY_HOST /bin/bash -e <<EOF
+        cd $DEPLOY_ROOT
+        git add -A
+        git reset --hard
+        git pull
+        composer update --no-interaction --ignore-platform-reqs
+        php ~/www/bitrix/tools/migrate apply -f
+        ~/sensors_server_stop.sh
+        ~/sensors_server_start.sh
+      EOF

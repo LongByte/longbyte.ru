@@ -21,7 +21,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "git@bitbucket.org:longbyte51/longbyte.api.bx.git"
+            "url": "git@gitlab.vdstech.ru:longbyte/longbyte.api.bx.git"
         },
         {
             "type": "vcs",

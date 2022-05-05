@@ -10,7 +10,6 @@ yandex*.html
 tmp.less
 *.compiled.svg
 /node_modules
-/package-lock.json
 *.log
 *.pid
 .git

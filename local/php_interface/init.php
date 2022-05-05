@@ -29,3 +29,26 @@ EventManager::getInstance()->addEventHandler('main', 'OnEndBufferContent', array
 
 include_once(Application::getDocumentRoot() . '/local/vendor/autoload.php');
 include_once(Application::getDocumentRoot() . '/local/php_interface/lib/Api/Autoloader.php');
+
+if (!function_exists('custom_mail') && \Bitrix\Main\Config\Option::get('webprostor.smtp', 'USE_MODULE') == 'Y') {
+    /**
+     * @param string $to
+     * @param string $subject
+     * @param string $message
+     * @param string $additional_headers
+     * @param string $additional_parameters
+     * @return bool
+     */
+    function custom_mail($to, $subject, $message, $additional_headers = '', $additional_parameters = '')
+    {
+        if (Loader::includeModule('webprostor.smtp')) {
+            $obCWebprostorSmtp = new \CWebprostorSmtp('s1');
+            $bResult = $obCWebprostorSmtp->SendMail($to, $subject, $message, $additional_headers, $additional_parameters);
+
+            if ($bResult) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
