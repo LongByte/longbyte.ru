@@ -4,7 +4,7 @@ deploy-production:
   variables:
     GIT_STRATEGY: clone
     DEPLOY_USER: $PROD_USER
-    DEPLOY_PORT: $PROD_POST
+    DEPLOY_PORT: $PROD_PORT
     DEPLOY_HOST: $PROD_HOST
     DEPLOY_ROOT: $PROD_ROOT
   stage: deploy
@@ -14,7 +14,7 @@ deploy-production:
   when: manual
   script:
     - |
-      ssh -p$DEPLOY_PORT $DEPLOY_USER@$DEPLOY_HOST /bin/bash -e <<EOF
+      ssh -p $DEPLOY_PORT $DEPLOY_USER@$DEPLOY_HOST /bin/bash -e <<EOF
         cd $DEPLOY_ROOT
         git add -A
         git reset --hard
