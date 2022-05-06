@@ -5,22 +5,16 @@ namespace Api\Chart\Tests\Element;
 /**
  * Class \Api\Chart\Tests\Element\Collection
  */
-class Collection extends \Api\Core\Base\Collection {
+class Collection extends \Api\Core\Base\Collection
+{
 
-    /**
-     * 
-     * @param type $strKey
-     * @return Entity
-     */
-    public function getByKey($strKey): ?Entity {
+    public function getByKey($strKey): ?Entity
+    {
         return parent::getByKey($strKey);
     }
 
-    /**
-     * 
-     * @return \Api\Chart\Systems\Element\Collection
-     */
-    public function getFilterCollection(): \Api\Chart\Systems\Element\Collection {
+    public function getFilterCollection(): \Api\Chart\Systems\Element\Collection
+    {
         $obCollection = new \Api\Chart\Systems\Element\Collection();
 
         /** @var \Api\Chart\Tests\Element\Entity $obTest */
@@ -36,7 +30,7 @@ class Collection extends \Api\Core\Base\Collection {
 
         $arSortCollection = $obCollection->getCollection();
 
-        usort($arSortCollection, function($obSystem1, $obSystem2) use ($obTest) {
+        usort($arSortCollection, function ($obSystem1, $obSystem2) use ($obTest) {
             /** @var \Api\Chart\Systems\Element\Entity $obSystem1 */
             /** @var \Api\Chart\Systems\Element\Entity $obSystem2 */
             return $obSystem1->getClearFullName($obTest->getTestType()) <=> $obSystem2->getClearFullName($obTest->getTestType());

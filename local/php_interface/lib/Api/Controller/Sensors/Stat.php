@@ -3,39 +3,29 @@
 namespace Api\Controller\Sensors;
 
 /**
- * class \Api\Controller\Sensors\Stat
+ * Class \Api\Controller\Sensors\Stat
  */
-class Stat extends \Api\Core\Base\Controller {
+class Stat extends \Api\Core\Base\Controller
+{
 
-    /**
-     *
-     * @var string
-     */
-    private $token = null;
+    private ?string $token = null;
 
-    /**
-     *
-     * @var array
-     */
-    private $arResponse = array(
+    private array $arResponse = array(
         'data' => array(),
         'errors' => array(),
         'success' => true,
     );
 
-    /**
-     *
-     * @var \Api\Sensors\System\Entity
-     */
-    private $obSystem = null;
+    private ?\Api\Sensors\System\Entity $obSystem = null;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->token = $this->getRequest()->get('token');
     }
 
-    public function get() {
-
+    public function get()
+    {
         /** @var \Api\Sensors\Sensor\Collection $obSensors */
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
         /** @var \Api\Sensors\Data\Collection $obValues */
@@ -47,10 +37,10 @@ class Stat extends \Api\Core\Base\Controller {
         $obToday = new \Bitrix\Main\Type\Date();
 
         $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
-                'SYSTEM_ID' => $this->getSystem()->getId(),
-                'ACTIVE' => true,
-                ), 0, 0, array(
-                'order' => array('SORT' => 'ASC')
+            'SYSTEM_ID' => $this->getSystem()->getId(),
+            'ACTIVE' => true,
+        ), 0, 0, array(
+            'order' => array('SORT' => 'ASC')
         ));
 
         $arValuesFilter = array(
@@ -68,7 +58,7 @@ class Stat extends \Api\Core\Base\Controller {
         }
 
         $obValues = \Api\Sensors\Data\Model::getAll($arValuesFilter, 0, 0, array(
-                'order' => array('DATE' => 'ASC')
+            'order' => array('DATE' => 'ASC')
         ));
 
         foreach ($obValues as $obValue) {
@@ -110,21 +100,15 @@ class Stat extends \Api\Core\Base\Controller {
         return $this->exitAction();
     }
 
-    /**
-     * 
-     * @return string
-     */
-    protected function exitAction(): string {
+    protected function exitAction(): string
+    {
         $this->arrayValueToNumber($this->arResponse);
         header('Content-Type: application/json');
         return json_encode($this->arResponse);
     }
 
-    /**
-     * 
-     * @param array $array
-     */
-    private function arrayValueToNumber(array &$array) {
+    private function arrayValueToNumber(array &$array)
+    {
         foreach ($array as $key => &$value) {
             if (is_array($value)) {
                 self::arrayValueToNumber($value);
@@ -135,15 +119,12 @@ class Stat extends \Api\Core\Base\Controller {
         }
     }
 
-    /**
-     * 
-     * @return bool
-     */
-    private function loadSystem(): bool {
+    private function loadSystem(): bool
+    {
 
         $this->obSystem = \Api\Sensors\System\Model::getOne(array(
-                '=TOKEN' => $this->token,
-                'ACTIVE' => true
+            '=TOKEN' => $this->token,
+            'ACTIVE' => true
         ));
 
         if ($this->obSystem) {
@@ -156,19 +137,13 @@ class Stat extends \Api\Core\Base\Controller {
         return false;
     }
 
-    /**
-     * 
-     * @return \Api\Sensors\System\Entity|null
-     */
-    private function getSystem(): ?\Api\Sensors\System\Entity {
+    private function getSystem(): ?\Api\Sensors\System\Entity
+    {
         return $this->obSystem;
     }
 
-    /**
-     * 
-     * @return array
-     */
-    private function getLinks(): array {
+    private function getLinks(): array
+    {
         $arLinks = array(
             array(
                 'href' => \Api\Sensors\Links::getInstance()->getSystemUrl($this->getSystem()->getNameToken()),

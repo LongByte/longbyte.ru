@@ -5,20 +5,13 @@ namespace Api\Sensors\Data;
 /**
  * Class \Api\Sensors\Data\Collection
  */
-class Collection extends \Api\Core\Base\Collection {
+class Collection extends \Api\Core\Base\Collection
+{
 
-    /**
-     *
-     * @var \Bitrix\Main\Type\Date
-     */
-    protected $obDate = null;
+    protected ?\Bitrix\Main\Type\Date $obDate = null;
 
-    /**
-     * 
-     * @param int $iSensorId
-     * @return \Api\Sensors\Data\Entity|null
-     */
-    public function getBySensorId(int $iSensorId): ?\Api\Sensors\Data\Entity {
+    public function getBySensorId(int $iSensorId): ?\Api\Sensors\Data\Entity
+    {
         /** @var \Api\Sensors\Data\Entity $obValue */
         foreach (array_reverse($this->getCollection()) as $obValue) {
             if ($obValue->getSensorId() == $iSensorId) {
@@ -28,13 +21,8 @@ class Collection extends \Api\Core\Base\Collection {
         return null;
     }
 
-    /**
-     * 
-     * @param \Bitrix\Main\Type\DateTime $obDateTime
-     * @param int $iSensorId
-     * @return \Api\Sensors\Data\Entity|null
-     */
-    public function getByDateAndSensorId(\Bitrix\Main\Type\DateTime $obDateTime, int $iSensorId): ?\Api\Sensors\Data\Entity {
+    public function getByDateAndSensorId(\Bitrix\Main\Type\DateTime $obDateTime, int $iSensorId): ?\Api\Sensors\Data\Entity
+    {
         $obDateTime = clone $obDateTime;
         $obDateTime->setTime(0, 0, 0);
         /** @var \Api\Sensors\Data\Entity $obValue */
@@ -48,30 +36,19 @@ class Collection extends \Api\Core\Base\Collection {
         return null;
     }
 
-    /**
-     * 
-     * @return \Bitrix\Main\Type\Date|null
-     */
-    public function getDate(): ?\Bitrix\Main\Type\Date {
+    public function getDate(): ?\Bitrix\Main\Type\Date
+    {
         return $this->obDate;
     }
 
-    /**
-     * 
-     * @param \Bitrix\Main\Type\Date $obDate
-     * @return $this
-     */
-    public function setDate(\Bitrix\Main\Type\Date $obDate): self {
+    public function setDate(\Bitrix\Main\Type\Date $obDate): self
+    {
         $this->obDate = $obDate;
         return $this;
     }
 
-    /**
-     * 
-     * @param array $arErrors
-     * @return $this
-     */
-    public function save(array &$arErrors): self {
+    public function save(array &$arErrors): self
+    {
         /** @var \Api\Sensors\Data\Entity $obValue */
         foreach ($this->getCollection() as $obValue) {
             if ($obValue->isChanged()) {

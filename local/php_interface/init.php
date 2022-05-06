@@ -52,3 +52,13 @@ if (!function_exists('custom_mail') && \Bitrix\Main\Config\Option::get('webprost
         return false;
     }
 }
+
+if (false) { //for IDE
+    define('IBLOCK_CHART_FIRM', 0);
+    define('IBLOCK_CHART_RESULT', 0);
+    define('IBLOCK_CHART_SYSTEMS', 0);
+    define('IBLOCK_CHART_TESTS', 0);
+    define('IBLOCK_FILES_FILES', 0);
+    define('IBLOCK_MAIN_PORTFOLIO', 0);
+    define('IBLOCK_MAIN_WIKI_API', 0);
+}

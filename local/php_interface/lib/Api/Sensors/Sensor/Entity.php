@@ -4,7 +4,7 @@ namespace Api\Sensors\Sensor;
 
 /**
  * Class \Api\Sensors\Sensor\Entity
- * 
+ *
  * @method int getId()
  * @method boolean getActive()
  * @method $this setActive(boolean $bActive)
@@ -64,105 +64,53 @@ namespace Api\Sensors\Sensor;
  * @method $this setLabel(string $strLabel)
  * @method bool hasLabel()
  */
-class Entity extends \Api\Core\Base\Entity {
+class Entity extends \Api\Core\Base\Entity
+{
 
-    /**
-     *
-     * @var \Api\Sensors\System\Entity 
-     */
-    protected $_obSystem = null;
+    protected ?\Api\Sensors\System\Entity $_obSystem = null;
+    protected ?\Api\Sensors\Data\Collection $_obValuesCollection = null;
+    protected ?\Api\Sensors\Alert\Entity $_obAlert = null;
+    protected bool $_bToday = false;
+    protected bool $_bNew = false;
+    protected ?\Api\Sensors\Sensor\Statistic\Entity $_obStatistic = null;
 
-    /**
-     *
-     * @var \Api\Sensors\Data\Collection
-     */
-    protected $_obValuesCollection = null;
-
-    /**
-     *
-     * @var \Api\Sensors\Alert\Entity
-     */
-    protected $_obAlert = null;
-
-    /**
-     *
-     * @var bool
-     */
-    protected $_bToday = false;
-
-    /**
-     *
-     * @var bool
-     */
-    protected $_bNew = false;
-
-    /**
-     *
-     * @var \Api\Sensors\Sensor\Statistic\Entity
-     */
-    protected $_obStatistic = null;
-
-    /**
-     * 
-     * @return array
-     */
-    public function getFields(): array {
+    public function getFields(): array
+    {
         return array_keys(static::getModel()::getTable()::getScalarFields());
     }
 
-    /**
-     * 
-     * @return string
-     */
-    public static function getCollection(): string {
+    public static function getCollection(): string
+    {
         return Collection::class;
     }
 
-    /**
-     * 
-     * @return string
-     */
-    public static function getModel(): string {
+    public static function getModel(): string
+    {
         return Model::class;
     }
 
-    /**
-     * 
-     * @return bool
-     */
-    public function isModeAvg(): bool {
+    public function isModeAvg(): bool
+    {
         return $this->getLogMode() == Table::MODE_AVG;
     }
 
-    /**
-     * 
-     * @return bool
-     */
-    public function isModeEach(): bool {
+    public function isModeEach(): bool
+    {
         return $this->getLogMode() == Table::MODE_EACH;
     }
 
-    /**
-     * 
-     * @return bool
-     */
-    public function isModeEachLastDay(): bool {
+    public function isModeEachLastDay(): bool
+    {
         return $this->getLogMode() == Table::MODE_EACH_LAST_DAY;
     }
 
-    /**
-     * 
-     * @return bool
-     */
-    public function isBooleanSensor(): bool {
+    public function isBooleanSensor(): bool
+    {
         return $this->getSensorUnit() == 'Yes/No';
     }
 
-    /**
-     * 
-     * @return boolean
-     */
-    public function isAllowAlert(): bool {
+    public function isAllowAlert(): bool
+    {
         if (!$this->getAlertEnable()) {
             return false;
         }
@@ -177,11 +125,8 @@ class Entity extends \Api\Core\Base\Entity {
         return true;
     }
 
-    /**
-     * 
-     * @return array
-     */
-    public function toArray(): array {
+    public function toArray(): array
+    {
         $arData = parent::toArray();
         $arData['alert'] = $this->getAlert()->toArray();
         $arData['values'] = $this->getValuesCollection()->toArray();
@@ -206,11 +151,8 @@ class Entity extends \Api\Core\Base\Entity {
         return $arData;
     }
 
-    /**
-     * 
-     * @return \Api\Sensors\Alert\Entity
-     */
-    public function getAlert(): \Api\Sensors\Alert\Entity {
+    public function getAlert(): \Api\Sensors\Alert\Entity
+    {
         if (is_null($this->_obAlert)) {
             $this->_obAlert = new \Api\Sensors\Alert\Entity(array(
                 'SENSOR_ID' => $this->getId(),
@@ -224,100 +166,65 @@ class Entity extends \Api\Core\Base\Entity {
         return $this->_obAlert;
     }
 
-    /**
-     * 
-     * @param \Api\Sensors\Alert\Entity $obAlert
-     * @return $this
-     */
-    public function setAlert(\Api\Sensors\Alert\Entity $obAlert): self {
+    public function setAlert(\Api\Sensors\Alert\Entity $obAlert): self
+    {
         $this->_obAlert = $obAlert;
         $this->_obAlert->setSensor($this);
         return $this;
     }
 
-    /**
-     * 
-     * @return bool
-     */
-    public function hasAlert(): bool {
+    public function hasAlert(): bool
+    {
         return !is_null($this->_obAlert);
     }
 
-    /**
-     * 
-     * @return \Api\Sensors\Data\Collection
-     */
-    public function getValuesCollection(): \Api\Sensors\Data\Collection {
+    public function getValuesCollection(): \Api\Sensors\Data\Collection
+    {
         if (is_null($this->_obValuesCollection)) {
             $this->_obValuesCollection = new \Api\Sensors\Data\Collection();
         }
         return $this->_obValuesCollection;
     }
 
-    /**
-     * 
-     * @return \Api\Sensors\System\Entity 
-     */
-    public function getSystem(): \Api\Sensors\System\Entity {
+    public function getSystem(): \Api\Sensors\System\Entity
+    {
         if (is_null($this->_obSystem)) {
             $this->_obSystem = new \Api\Sensors\System\Entity($this->getSensorId());
         }
         return $this->_obSystem;
     }
 
-    /**
-     * 
-     * @param \Api\Sensors\System\Entity $obSystem
-     * @return $this
-     */
-    public function setSystem(\Api\Sensors\System\Entity $obSystem): self {
+    public function setSystem(\Api\Sensors\System\Entity $obSystem): self
+    {
         $this->_obSystem = $obSystem;
         $this->setSystemId($obSystem->getId());
         return $this;
     }
 
-    /**
-     * 
-     * @return bool
-     */
-    public function isToday(): bool {
+    public function isToday(): bool
+    {
         return $this->_bToday;
     }
 
-    /**
-     * 
-     * @param bool $bToday
-     * @return $this
-     */
-    public function setToday(bool $bToday = true): self {
+    public function setToday(bool $bToday = true): self
+    {
         $this->_bToday = $bToday;
         return $this;
     }
 
-    /**
-     * 
-     * @return bool
-     */
-    public function isNew(): bool {
+    public function isNew(): bool
+    {
         return $this->_bNew;
     }
 
-    /**
-     * 
-     * @param bool $bNew
-     * @return $this
-     */
-    public function setNew(bool $bNew = true): self {
+    public function setNew(bool $bNew = true): self
+    {
         $this->_bNew = $bNew;
         return $this;
     }
 
-    /**
-     * 
-     * @param \Api\Sensors\Sensor\Statistic\Entity $obStatistic
-     * @return $this
-     */
-    public function setStatistic(\Api\Sensors\Sensor\Statistic\Entity $obStatistic): self {
+    public function setStatistic(\Api\Sensors\Sensor\Statistic\Entity $obStatistic): self
+    {
         $this->_obStatistic = $obStatistic;
         return $this;
     }

@@ -4,7 +4,7 @@ namespace Api\Portfolio\Element;
 
 /**
  * Class \Api\Portfolio\Element\Entity
- * 
+ *
  * @method mixed getId()
  * @method $this setId(mixed $mixedId)
  * @method bool hasId()
@@ -36,13 +36,10 @@ namespace Api\Portfolio\Element;
  * @method $this setYearFinish(mixed $mixedYearFinish)
  * @method bool hasYearFinish()
  */
-class Entity extends \Api\Core\Iblock\Element\Entity {
+class Entity extends \Api\Core\Iblock\Element\Entity
+{
 
-    /**
-     *
-     * @var array
-     */
-    protected static $arFields = array(
+    protected static array $arFields = array(
         'ID',
         'NAME',
         'DETAIL_TEXT',
@@ -51,52 +48,32 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
         'DETAIL_PICTURE',
     );
 
-    /**
-     * @var array
-     */
-    protected static $arProps = array(
+    protected static array $arProps = array(
         'URL',
         'YEAR_START',
         'YEAR_FINISH',
     );
 
-    /**
-     *
-     * @var string
-     */
-    protected $_strPrintYear = '';
+    protected string $_strPrintYear = '';
 
-    /**
-     * 
-     * @return string
-     */
-    public static function getModel(): string {
+    public static function getModel(): string
+    {
         return Model::class;
     }
 
-    /**
-     * 
-     * @return string
-     */
-    public function getPrintYear(): string {
+    public function getPrintYear(): string
+    {
         return $this->_strPrintYear;
     }
 
-    /**
-     * 
-     * @param string $strPrintYear
-     * @return $this
-     */
-    public function setPrintYear(string $strPrintYear): self {
+    public function setPrintYear(string $strPrintYear): self
+    {
         $this->_strPrintYear = $strPrintYear;
         return $this;
     }
 
-    /**
-     * 
-     * @return array
-     */
-    public function toArray(): array {
+    public function toArray(): array
+    {
         $arData = parent::toArray();
 
         $arData['preview_src'] = $this->getPreviewPictureFile()->setResize(100, 10000)->convertToWebp()->getSrc();

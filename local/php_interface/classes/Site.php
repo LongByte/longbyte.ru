@@ -10,27 +10,22 @@ use Bitrix\Conversion\Internals\MobileDetect;
 
 Bitrix\Main\Localization\Loc::loadMessages(__FILE__);
 
-class Site {
+class Site
+{
 
-    public static $IS_PRINT = null;
-    public static $isMobile = null;
-    public static $isMainPage = null;
+    public static ?bool $IS_PRINT = null;
+    public static ?bool $isMobile = null;
+    public static ?bool $isMainPage = null;
 
-    /**
-     * 
-     * @return bool
-     */
-    public static function isDevelop() {
+    public static function isDevelop(): bool
+    {
         $APPLICATION_ENV = getenv('APPLICATION_ENV');
         $obServer = Context::getCurrent()->getServer();
         return $APPLICATION_ENV === 'develop' || preg_match('/\.local$/', $obServer->getServerName());
     }
 
-    /**
-     * 
-     * @return bool
-     */
-    public static function isPrint() {
+    public static function isPrint(): bool
+    {
         if (is_null(static::$IS_PRINT)) {
             $IS_PRINT = false;
             $request = Context::getCurrent()->getRequest();
@@ -44,11 +39,8 @@ class Site {
         return static::$IS_PRINT;
     }
 
-    /**
-     * 
-     * @return bool
-     */
-    public static function isMobile() {
+    public static function isMobile(): bool
+    {
         if (is_null(self::$isMobile)) {
             if (Loader::includeModule('conversion')) {
                 $device = new MobileDetect();
@@ -59,28 +51,18 @@ class Site {
         return self::$isMobile;
     }
 
-    /**
-     * 
-     * @return bool
-     */
-    public static function isIE() {
+    public static function isIE(): bool
+    {
         return strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false || strpos($_SERVER['HTTP_USER_AGENT'], 'rv:11.0') !== false;
     }
 
-    /**
-     * 
-     * @return bool
-     */
-    public static function isEdge() {
+    public static function isEdge(): bool
+    {
         return preg_match('/Edge/i', $_SERVER['HTTP_USER_AGENT']);
     }
 
-    /**
-     * 
-     * @global \CMain $APPLICATION
-     * @return bool
-     */
-    public static function isMainPage() {
+    public static function isMainPage(): bool
+    {
         if (is_null(self::$isMainPage)) {
             global $APPLICATION;
             self::$isMainPage = $APPLICATION->GetCurPage() == '/';
@@ -88,21 +70,19 @@ class Site {
         return self::$isMainPage;
     }
 
-    /**
-     * 
-     */
-    public static function Definders() {
+    public static function Definders(): void
+    {
 
         if (Loader::includeModule('iblock')) {
 
             $result = IblockTable::getList(array(
-                    'select' => array('ID', 'IBLOCK_TYPE_ID', 'CODE'),
+                'select' => array('ID', 'IBLOCK_TYPE_ID', 'CODE'),
             ));
             while ($row = $result->fetch()) {
                 $row['CODE'] = str_replace('-', '_', $row['CODE']);
                 $CONSTANT = ToUpper(implode('_', array('IBLOCK', $row['IBLOCK_TYPE_ID'], $row['CODE'])));
                 if (!defined($CONSTANT)) {
-                    define($CONSTANT, $row['ID']);
+                    define($CONSTANT, (int) $row['ID']);
                 }
             }
         }
@@ -122,7 +102,7 @@ class Site {
         if (Loader::includeModule('iblock') && Loader::includeModule('highloadblock')) {
 
             $result = HighloadBlockTable::getList(array(
-                    'select' => array('ID', 'NAME'),
+                'select' => array('ID', 'NAME'),
             ));
             while ($row = $result->fetch()) {
                 $row['NAME'] = str_replace('-', '_', $row['NAME']);
@@ -135,36 +115,29 @@ class Site {
     }
 
     /**
-     * 
-     * @param float $fPrice
+     *
+     * @param float|int $fPrice
      * @return string
      */
-    public static function FormatPrice($fPrice) {
+    public static function FormatPrice($fPrice): string
+    {
         return number_format($fPrice, 0, '&nbsp;', '&nbsp;');
     }
 
-    /**
-     * 
-     * @param string $string
-     * @return string
-     */
-    public static function Translit($string) {
+    public static function Translit(string $string): string
+    {
         $params = array("replace_space" => "-", "replace_other" => "-");
         $result = CUtilEx::translit($string, "ru", $params);
         return $result;
     }
 
-    /**
-     * 
-     */
-    public static function onPageStart() {
+    public static function onPageStart(): void
+    {
         self::Definders();
     }
 
-    /**
-     * 
-     */
-    public static function onEpilog() {
+    public static function onEpilog(): void
+    {
         if (class_exists('\Api\Core\Main\Seo')) {
             \Api\Core\Main\Seo::getInstance()->setMetaPage();
         }
@@ -178,7 +151,8 @@ class Site {
      * @param bool $updateVar
      * @return array
      */
-    public static function resizeImageGet(&$picture, $arSize, $method = BX_RESIZE_IMAGE_PROPORTIONAL, $updateVar = true) {
+    public static function resizeImageGet(&$picture, $arSize, $method = BX_RESIZE_IMAGE_PROPORTIONAL, $updateVar = true)
+    {
 
         $arReturn = array();
 

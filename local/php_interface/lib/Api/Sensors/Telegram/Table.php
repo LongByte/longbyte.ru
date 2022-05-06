@@ -13,19 +13,11 @@ Loc::loadMessages(__FILE__);
 class Table extends ORM\Data\DataManager
 {
 
-    /**
-     *
-     * @return string
-     */
     public static function getTableName(): string
     {
         return 'sensors_telegram';
     }
 
-    /**
-     *
-     * @return array
-     */
     public static function getScalarFields(): array
     {
         $arFields = array();
@@ -37,10 +29,6 @@ class Table extends ORM\Data\DataManager
         return $arFields;
     }
 
-    /**
-     *
-     * @return array
-     */
     public static function getMap()
     {
         return array(

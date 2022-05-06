@@ -3,15 +3,13 @@
 namespace Api\Controller\Sensors;
 
 /**
- * class \Api\Controller\Sensors\Merge
+ * Class \Api\Controller\Sensors\Merge
  */
-class Merge extends Edit {
+class Merge extends Edit
+{
 
-    /**
-     * 
-     * @return mixed
-     */
-    public function post() {
+    public function post()
+    {
         if (!$this->loadSystem()) {
             return $this->exitAction();
         }
@@ -25,12 +23,12 @@ class Merge extends Edit {
 
             /** @var \Api\Sensors\Data\Collection $obValuesFrom */
             $obValuesFrom = \Api\Sensors\Data\Model::getAll(array(
-                    'SENSOR_ID' => $obSensorFrom->getId(),
+                'SENSOR_ID' => $obSensorFrom->getId(),
             ));
 
             /** @var \Api\Sensors\Data\Collection $obValuesTo */
             $obValuesTo = \Api\Sensors\Data\Model::getAll(array(
-                    'SENSOR_ID' => $obSensorTo->getId(),
+                'SENSOR_ID' => $obSensorTo->getId(),
             ));
 
             /** @var \Api\Sensors\Data\Entity $obValueFrom */

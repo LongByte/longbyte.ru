@@ -4,7 +4,7 @@ namespace Api\Sensors\Data;
 
 /**
  * Class \Api\Sensors\Data\Entity
- * 
+ *
  * @method int getId()
  * @method $this setId(int $iId)
  * @method bool hasId()
@@ -30,43 +30,28 @@ namespace Api\Sensors\Data;
  * @method $this setValue(float $fValue)
  * @method bool hasValue()
  */
-class Entity extends \Api\Core\Base\Entity {
+class Entity extends \Api\Core\Base\Entity
+{
 
-    /**
-     *
-     * @var \Api\Sensors\Sensor\Entity 
-     */
-    protected $_obSensor = null;
+    protected ?\Api\Sensors\Sensor\Entity $_obSensor = null;
 
-    /**
-     * 
-     * @return array
-     */
-    public function getFields(): array {
+    public function getFields(): array
+    {
         return array_keys(static::getModel()::getTable()::getScalarFields());
     }
 
-    /**
-     * 
-     * @return string
-     */
-    public static function getCollection(): string {
+    public static function getCollection(): string
+    {
         return Collection::class;
     }
 
-    /**
-     * 
-     * @return string
-     */
-    public static function getModel(): string {
+    public static function getModel(): string
+    {
         return Model::class;
     }
 
-    /**
-     * 
-     * @return array
-     */
-    public function toArray(): array {
+    public function toArray(): array
+    {
         $obSensor = $this->getSensor();
 
         $obNow = new \Bitrix\Main\Type\DateTime();
@@ -97,23 +82,16 @@ class Entity extends \Api\Core\Base\Entity {
         return $arData;
     }
 
-    /**
-     * 
-     * @return \Api\Sensors\Sensor\Entity 
-     */
-    public function getSensor(): \Api\Sensors\Sensor\Entity {
+    public function getSensor(): \Api\Sensors\Sensor\Entity
+    {
         if (is_null($this->_obSensor)) {
             $this->_obSensor = new \Api\Sensors\Sensor\Entity($this->getSensorId());
         }
         return $this->_obSensor;
     }
 
-    /**
-     * 
-     * @param \Api\Sensors\Sensor\Entity $obSensor
-     * @return $this
-     */
-    public function setSensor(\Api\Sensors\Sensor\Entity $obSensor): self {
+    public function setSensor(\Api\Sensors\Sensor\Entity $obSensor): self
+    {
         $this->_obSensor = $obSensor;
         $this->setSensorId($obSensor->getId());
         return $this;

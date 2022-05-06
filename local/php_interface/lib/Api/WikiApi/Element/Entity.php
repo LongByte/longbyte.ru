@@ -4,7 +4,7 @@ namespace Api\WikiApi\Element;
 
 /**
  * Class \Api\WikiApi\Element\Entity
- * 
+ *
  * @method mixed getId()
  * @method $this setId(mixed $mixedId)
  * @method bool hasId()
@@ -33,13 +33,10 @@ namespace Api\WikiApi\Element;
  * @method $this setReturn(mixed $mixedReturn)
  * @method bool hasReturn()
  */
-class Entity extends \Api\Core\Iblock\Element\Entity {
+class Entity extends \Api\Core\Iblock\Element\Entity
+{
 
-    /**
-     *
-     * @var array
-     */
-    protected static $arFields = array(
+    protected static array $arFields = array(
         'ID',
         'NAME',
         'PREVIEW_TEXT',
@@ -47,29 +44,20 @@ class Entity extends \Api\Core\Iblock\Element\Entity {
         'DETAIL_PAGE_URL',
     );
 
-    /**
-     * @var array
-     */
-    protected static $arProps = array(
+    protected static array $arProps = array(
         'TYPE',
         'ACCESS',
         'STATIC',
         'RETURN',
     );
 
-    /**
-     * 
-     * @return string
-     */
-    public static function getModel(): string {
+    public static function getModel(): string
+    {
         return Model::class;
     }
 
-    /**
-     * 
-     * @return array
-     */
-    public function getReturnDisplayArray(): array {
+    public function getReturnDisplayArray(): array
+    {
 
         $arResult = array();
 

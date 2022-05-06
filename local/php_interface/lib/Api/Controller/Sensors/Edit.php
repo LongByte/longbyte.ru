@@ -3,31 +3,23 @@
 namespace Api\Controller\Sensors;
 
 /**
- * class \Api\Controller\Sensors\Edit
+ * Class \Api\Controller\Sensors\Edit
  */
-class Edit extends \Api\Core\Base\Controller {
+class Edit extends \Api\Core\Base\Controller
+{
 
-    /**
-     *
-     * @var array
-     */
-    protected $arResponse = array(
+    private ?string $token = null;
+
+    protected array $arResponse = array(
         'data' => array(),
         'errors' => array(),
         'success' => true,
     );
 
-    /**
-     *
-     * @var \Api\Sensors\System\Entity
-     */
-    protected $obSystem = null;
+    protected ?\Api\Sensors\System\Entity $obSystem = null;
 
-    /**
-     * 
-     * @param string|null $strToken
-     */
-    public function __construct($strToken = null) {
+    public function __construct(string $strToken = null)
+    {
         parent::__construct();
         $this->token = $this->getRequest()->get('token');
         if (!is_null($strToken)) {
@@ -35,11 +27,8 @@ class Edit extends \Api\Core\Base\Controller {
         }
     }
 
-    /**
-     * 
-     * @return mixed
-     */
-    public function get() {
+    public function get()
+    {
         if (!$this->loadSystem()) {
             return $this->exitAction();
         }
@@ -69,11 +58,8 @@ class Edit extends \Api\Core\Base\Controller {
         return $this->exitAction();
     }
 
-    /**
-     * 
-     * @return mixed
-     */
-    public function post() {
+    public function post()
+    {
         if (!$this->loadSystem()) {
             return $this->exitAction();
         }
@@ -83,7 +69,6 @@ class Edit extends \Api\Core\Base\Controller {
         $obSensor = $this->getSystem()->getSensorsCollection()->getByKey($iSensorId);
 
         if (!is_null($obSensor)) {
-
 
             $arFields = array(
                 'active',
@@ -154,7 +139,8 @@ class Edit extends \Api\Core\Base\Controller {
         return $this->get();
     }
 
-    public function delete() {
+    public function delete()
+    {
         if (!$this->loadSystem()) {
             return $this->exitAction();
         }
@@ -199,27 +185,21 @@ class Edit extends \Api\Core\Base\Controller {
         return $this->get();
     }
 
-    /**
-     * 
-     * @return string
-     */
-    protected function exitAction(): string {
+    protected function exitAction(): string
+    {
         header('Content-Type: application/json');
         return json_encode($this->arResponse);
     }
 
-    /**
-     * 
-     * @return bool
-     */
-    protected function loadSystem(): bool {
+    protected function loadSystem(): bool
+    {
         /** @var \Api\Sensors\Sensor\Collection $obSensors */
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
         /** @var \Api\Sensors\Data\Collection $obValues */
         /** @var \Api\Sensors\Data\Entity $obValue */
         $this->obSystem = \Api\Sensors\System\Model::getOne(array(
-                '=TOKEN' => $this->token,
-                'ACTIVE' => true
+            '=TOKEN' => $this->token,
+            'ACTIVE' => true
         ));
 
         if (!$this->obSystem) {
@@ -230,10 +210,10 @@ class Edit extends \Api\Core\Base\Controller {
         }
 
         $obSensors = \Api\Sensors\Sensor\Model::getAll(
-                array('SYSTEM_ID' => $this->obSystem->getId()),
-                0,
-                0,
-                array('order' => array('SORT' => 'ASC'))
+            array('SYSTEM_ID' => $this->obSystem->getId()),
+            0,
+            0,
+            array('order' => array('SORT' => 'ASC'))
         );
 
         $this->obSystem->setSensorsCollection($obSensors);
@@ -241,19 +221,13 @@ class Edit extends \Api\Core\Base\Controller {
         return true;
     }
 
-    /**
-     * 
-     * @return \Api\Sensors\System\Entity|null
-     */
-    protected function getSystem(): ?\Api\Sensors\System\Entity {
+    protected function getSystem(): ?\Api\Sensors\System\Entity
+    {
         return $this->obSystem;
     }
 
-    /**
-     * 
-     * @return array
-     */
-    protected function getLinks(): array {
+    protected function getLinks(): array
+    {
         $arLinks = array(
             array(
                 'href' => \Api\Sensors\Links::getInstance()->getSystemUrl($this->getSystem()->getNameToken()),
@@ -268,10 +242,8 @@ class Edit extends \Api\Core\Base\Controller {
         return $arLinks;
     }
 
-    /**
-     * 
-     */
-    protected function getStatistic() {
+    protected function getStatistic(): void
+    {
 
         $obQuery = new \Bitrix\Main\ORM\Query\Query(\Api\Sensors\Data\Table::getEntity());
         $obQuery

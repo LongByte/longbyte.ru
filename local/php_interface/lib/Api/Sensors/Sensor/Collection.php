@@ -5,17 +5,11 @@ namespace Api\Sensors\Sensor;
 /**
  * Class \Api\Sensors\Sensor\Collection
  */
-class Collection extends \Api\Core\Base\Collection {
+class Collection extends \Api\Core\Base\Collection
+{
 
-    /**
-     * 
-     * @param string $strSensorApp
-     * @param string $strSensorClass
-     * @param string $strSensorName
-     * @return \Api\Sensors\Sensor\Entity|null
-     */
-    public function getByParams(string $strSensorApp, string $strSensorClass, string $strSensorName): ?\Api\Sensors\Sensor\Entity {
-
+    public function getByParams(string $strSensorApp, string $strSensorClass, string $strSensorName): ?Entity
+    {
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
         foreach ($this->getCollection() as $obSensor) {
             if (
@@ -30,13 +24,11 @@ class Collection extends \Api\Core\Base\Collection {
         return null;
     }
 
-    /**
-     * 
-     * @return int
-     */
-    public function getLastSort(): int {
+    public function getLastSort(): int
+    {
         if ($this->count() > 0) {
-            return end($this->getCollection())->getSort();
+            $obCollection = $this->getCollection();
+            return end($obCollection)->getSort();
         }
         return 0;
     }

@@ -3,74 +3,28 @@
 namespace Api\Controller\Sensors;
 
 /**
- * class \Api\Controller\Sensors\Post
+ * Class \Api\Controller\Sensors\Post
  */
 class Post extends \Api\Core\Base\Controller
 {
 
-    /**
-     *
-     * @var int
-     */
-    private $saveEvery = 60;
+    private int $saveEvery = 60;
+    private int $alertEvery = 5 * 60;
+    private ?string $token = null;
 
-    /**
-     *
-     * @var int
-     */
-    private $alertEvery = 5 * 60;
-
-    /**
-     *
-     * @var string
-     */
-    private $token = null;
-
-    /**
-     *
-     * @var array
-     */
-    private $arResponse = array(
+    private array $arResponse = array(
         'data' => array(),
         'errors' => array(),
         'success' => true,
     );
 
-    /**
-     *
-     * @var \Api\Sensors\System\Entity
-     */
-    private $obSystem = null;
+    private ?\Api\Sensors\System\Entity $obSystem = null;
+    private ?\Api\Sensors\Data\Collection $obTodayValues = null;
+    private ?\Bitrix\Main\Type\DateTime $obLastAlert = null;
+    private ?\Api\Core\Base\Collection $obAlerts = null;
+    private ?\Bitrix\Main\Type\DateTime $obLastSave = null;
 
-    /**
-     *
-     * @var \Api\Sensors\Data\Collection
-     */
-    private $obTodayValues = null;
-
-    /**
-     *
-     * @var \Bitrix\Main\Type\DateTime
-     */
-    private $obLastAlert = null;
-
-    /**
-     *
-     * @var \Api\Core\Base\Collection
-     */
-    private $obAlerts = null;
-
-    /**
-     *
-     * @var \Bitrix\Main\Type\DateTime
-     */
-    private $obLastSave = null;
-
-    /**
-     *
-     * @param string|null $strToken
-     */
-    public function __construct($strToken = null)
+    public function __construct(string $strToken = null)
     {
         parent::__construct();
         $this->token = $this->getRequest()->get('token');
@@ -81,10 +35,6 @@ class Post extends \Api\Core\Base\Controller
         $this->obAlerts->setUniqueMode(true);
     }
 
-    /**
-     *
-     * @return mixed
-     */
     public function post()
     {
         $this->resetResponse();
@@ -107,10 +57,6 @@ class Post extends \Api\Core\Base\Controller
         return $this->exitAction();
     }
 
-    /**
-     *
-     * @return mixed
-     */
     public function get()
     {
         $obHttp = new \Bitrix\Main\Web\HttpClient();
@@ -134,10 +80,7 @@ class Post extends \Api\Core\Base\Controller
         return $this->exitAction();
     }
 
-    /**
-     *
-     */
-    public function emergencySave()
+    public function emergencySave(): void
     {
         if (!is_null($this->obLastSave)) {
             $this->obTodayValues->save($this->arResponse['errors']);
@@ -146,10 +89,6 @@ class Post extends \Api\Core\Base\Controller
         }
     }
 
-    /**
-     *
-     * @return string
-     */
     public function getDebug(): string
     {
         return json_encode(array(
@@ -160,10 +99,6 @@ class Post extends \Api\Core\Base\Controller
         ));
     }
 
-    /**
-     *
-     * @return string
-     */
     protected function exitAction(): string
     {
         $this->sendAlerts();
@@ -171,10 +106,6 @@ class Post extends \Api\Core\Base\Controller
         return json_encode($this->arResponse);
     }
 
-    /**
-     *
-     * @return bool
-     */
     private function getSystem(): bool
     {
         /** @var \Api\Sensors\Sensor\Collection $obSensors */
@@ -231,10 +162,7 @@ class Post extends \Api\Core\Base\Controller
         return false;
     }
 
-    /**
-     *
-     */
-    private function loadSystem()
+    private function loadSystem(): void
     {
         $this->obSystem = \Api\Sensors\System\Model::getOne(array(
             '=TOKEN' => $this->token,
@@ -242,10 +170,7 @@ class Post extends \Api\Core\Base\Controller
         ));
     }
 
-    /**
-     *
-     */
-    private function loadSensors()
+    private function loadSensors(): void
     {
         $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
             'SYSTEM_ID' => $this->obSystem->getId(),
@@ -269,11 +194,7 @@ class Post extends \Api\Core\Base\Controller
         }
     }
 
-    /**
-     *
-     * @param array $arData
-     */
-    private function insertSensorsData(array $arData)
+    private function insertSensorsData(array $arData): void
     {
 
         /** @var \Api\Sensors\Sensor\Collection $obSensors */
@@ -327,7 +248,7 @@ class Post extends \Api\Core\Base\Controller
                         }
                     }
                 }
-            } catch (ParseError $exc) {
+            } catch (\ParseError $exc) {
 
             }
 
@@ -412,15 +333,11 @@ class Post extends \Api\Core\Base\Controller
         }
     }
 
-    /**
-     *
-     * @param \Api\Sensors\Data\Entity $obValue
-     */
-    private function checkAlert(\Api\Sensors\Data\Entity $obValue)
+    private function checkAlert(\Api\Sensors\Data\Entity $obValue): void
     {
 
         $obSensor = $obValue->getSensor();
-
+        /** @var \Api\Sensors\Alert\Entity $obAlert */
         $obAlert = $this->getAlertCollection()->getByKey($obSensor->getId());
         if (is_null($obAlert)) {
             $obAlert = $obSensor->getAlert();
@@ -448,15 +365,13 @@ class Post extends \Api\Core\Base\Controller
         }
     }
 
-    /**
-     *
-     */
-    private function sendAlerts()
+    private function sendAlerts(): void
     {
         if (
             strlen($this->obSystem->getEmail()) > 0 &&
             (
-                is_null($this->obLastAlert) ||
+                is_null($this->obLastAlert)
+                ||
                 !is_null($this->obLastAlert) && $this->obLastAlert->getTimestamp() + $this->alertEvery < (new \Bitrix\Main\Type\DateTime())->getTimestamp()
             )
         ) {
@@ -516,19 +431,12 @@ class Post extends \Api\Core\Base\Controller
         }
     }
 
-    /**
-     *
-     */
-    private function resetResponse()
+    private function resetResponse(): void
     {
         $this->arResponse['errors'] = array();
         $this->arResponse['success'] = true;
     }
 
-    /**
-     *
-     * @return \Api\Core\Base\Collection
-     */
     private function getAlertCollection(): \Api\Core\Base\Collection
     {
         return $this->obAlerts;

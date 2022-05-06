@@ -2,14 +2,16 @@
 
 namespace Api;
 
-class Autoloader {
+class Autoloader
+{
 
     const PREFIX = 'Api';
 
     /**
      * Register the autoloader
      */
-    public static function register() {
+    public static function register()
+    {
         spl_autoload_register(array(new self, 'autoload'));
     }
 
@@ -18,7 +20,8 @@ class Autoloader {
      *
      * @param string
      */
-    public static function autoload($class) {
+    public static function autoload($class)
+    {
         $prefixLength = strlen(self::PREFIX);
 
         if (0 === strncmp(self::PREFIX, $class, $prefixLength)) {
