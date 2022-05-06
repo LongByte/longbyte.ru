@@ -6,11 +6,13 @@ variables:
   PROD_PORT: $PROD_PORT
   PROD_USER: $PROD_USER
   PROD_ROOT: $PROD_ROOT
+  GIT_STRATEGY: clone
 
 deploy-production:
   stage: deploy
   resource_group: production
   variables:
+    GIT_STRATEGY: clone
     DEPLOY_USER: $PROD_USER
     DEPLOY_PORT: $PROD_POST
     DEPLOY_HOST: $PROD_HOST
