@@ -1,28 +1,20 @@
 stages:
   - deploy
-
-variables:
-  PROD_HOST: $PROD_HOST
-  PROD_PORT: $PROD_PORT
-  PROD_USER: $PROD_USER
-  PROD_ROOT: $PROD_ROOT
-  GIT_STRATEGY: clone
-
 deploy-production:
-  stage: deploy
-  resource_group: production
   variables:
     GIT_STRATEGY: clone
     DEPLOY_USER: $PROD_USER
     DEPLOY_PORT: $PROD_POST
     DEPLOY_HOST: $PROD_HOST
     DEPLOY_ROOT: $PROD_ROOT
+  stage: deploy
+  resource_group: production
   only:
     - master
   when: manual
   script:
     - |
-      ssh $DEPLOY_USER:$DEPLOY_PORT@$DEPLOY_HOST /bin/bash -e <<EOF
+      ssh -p$DEPLOY_PORT $DEPLOY_USER@$DEPLOY_HOST /bin/bash -e <<EOF
         cd $DEPLOY_ROOT
         git add -A
         git reset --hard
