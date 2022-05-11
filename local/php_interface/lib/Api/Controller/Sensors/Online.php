@@ -5,46 +5,31 @@ namespace Api\Controller\Sensors;
 use Bitrix\Main\Type\DateTime;
 
 /**
- * class \Api\Controller\Sensors\Online
+ * Class \Api\Controller\Sensors\Online
  */
-class Online extends \Api\Core\Base\Controller {
+class Online extends \Api\Core\Base\Controller
+{
 
-    /**
-     *
-     * @var string
-     */
-    private $token = null;
-
-    /**
-     *
-     * @var string
-     */
-    private $name = null;
-
-    /**
-     *
-     * @var array
-     */
-    private $arResponse = array(
+    private ?string $token = null;
+    private ?string $name = null;
+    private array $arResponse = array(
         'data' => array(),
         'errors' => array(),
         'alerts' => array(),
         'success' => true,
     );
 
-    /**
-     *
-     * @var \Api\Sensors\System\Entity
-     */
-    private $obSystem = null;
+    private ?\Api\Sensors\System\Entity $obSystem = null;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->name = $this->getRequest()->get('name');
         $this->token = $this->getRequest()->get('token');
     }
 
-    public function get() {
+    public function get()
+    {
 
         /** @var \Api\Sensors\Sensor\Collection $obSensors */
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
@@ -55,10 +40,10 @@ class Online extends \Api\Core\Base\Controller {
         }
 
         $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
-                'SYSTEM_ID' => $this->getSystem()->getId(),
-                'ACTIVE' => true,
-                ), 0, 0, array(
-                'order' => array('SORT' => 'ASC')
+            'SYSTEM_ID' => $this->getSystem()->getId(),
+            'ACTIVE' => true,
+        ), 0, 0, array(
+            'order' => array('SORT' => 'ASC')
         ));
 
         $this->getSystem()->setSensorsCollection($obSensors);
@@ -114,11 +99,8 @@ class Online extends \Api\Core\Base\Controller {
         return $this->exitAction();
     }
 
-    /**
-     * 
-     * @param array $arData
-     */
-    private function insertSensorsData(array $arData) {
+    private function insertSensorsData(array $arData): void
+    {
 
         /** @var \Api\Sensors\Sensor\Collection $obSensors */
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
@@ -151,8 +133,8 @@ class Online extends \Api\Core\Base\Controller {
                         }
                     }
                 }
-            } catch (ParseError $exc) {
-                
+            } catch (\ParseError $exc) {
+
             }
 
             $value = round($value, (int) $obSensor->getPrecision());
@@ -176,11 +158,8 @@ class Online extends \Api\Core\Base\Controller {
         }
     }
 
-    /**
-     * 
-     * @param \Api\Sensors\Data\Entity $obValue
-     */
-    private function checkAlert(\Api\Sensors\Data\Entity $obValue) {
+    private function checkAlert(\Api\Sensors\Data\Entity $obValue)
+    {
 
         $obSensor = $obValue->getSensor();
 
@@ -201,21 +180,15 @@ class Online extends \Api\Core\Base\Controller {
         }
     }
 
-    /**
-     * 
-     * @return string
-     */
-    protected function exitAction(): string {
+    protected function exitAction(): string
+    {
         $this->arrayValueToNumber($this->arResponse);
         header('Content-Type: application/json');
         return json_encode($this->arResponse);
     }
 
-    /**
-     * 
-     * @param array $array
-     */
-    private function arrayValueToNumber(array &$array) {
+    private function arrayValueToNumber(array &$array): void
+    {
         foreach ($array as $key => &$value) {
             if (is_array($value)) {
                 self::arrayValueToNumber($value);
@@ -226,16 +199,13 @@ class Online extends \Api\Core\Base\Controller {
         }
     }
 
-    /**
-     * 
-     * @return boolean
-     */
-    private function loadSystem(): bool {
+    private function loadSystem(): bool
+    {
 
         $this->obSystem = \Api\Sensors\System\Model::getOne(array(
-                '=NAME' => $this->name,
-                '=TOKEN' => $this->token,
-                'ACTIVE' => true
+            '=NAME' => $this->name,
+            '=TOKEN' => $this->token,
+            'ACTIVE' => true
         ));
 
         if ($this->obSystem) {
@@ -248,11 +218,8 @@ class Online extends \Api\Core\Base\Controller {
         return false;
     }
 
-    /**
-     * 
-     * @return \Api\Sensors\System\Entity|null
-     */
-    private function getSystem(): ?\Api\Sensors\System\Entity {
+    private function getSystem(): ?\Api\Sensors\System\Entity
+    {
         return $this->obSystem;
     }
 

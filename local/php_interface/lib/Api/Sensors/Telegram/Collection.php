@@ -8,18 +8,15 @@ namespace Api\Sensors\Telegram;
 class Collection extends \Api\Core\Base\Collection
 {
 
-    protected $arSystemIds = array();
+    protected array $arSystemIds = array();
 
-    public function addItem(Entity $obEntity)
+    public function addItem(Entity $obEntity): self
     {
         parent::addItem($obEntity);
         $this->arSystemIds[] = $obEntity->getSystemId();
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getSystemIds(): array
     {
         return $this->arSystemIds;

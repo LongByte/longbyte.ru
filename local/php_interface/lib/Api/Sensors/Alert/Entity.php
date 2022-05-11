@@ -19,16 +19,11 @@ namespace Api\Sensors\Alert;
 class Entity extends \Api\Core\Base\Virtual\Entity
 {
 
-    protected static $_primaryField = 'SENSOR_ID';
+    protected static string $_primaryField = 'SENSOR_ID';
+    protected ?\Api\Sensors\Sensor\Entity $obSensor = null;
 
-    /** @var \Api\Sensors\Sensor\Entity|null */
-    protected $obSensor = null;
 
-    /**
-     *
-     * @var array
-     */
-    protected static $arFields = array(
+    protected static array $arFields = array(
         'SENSOR_ID',
         'ALERT',
         'DIRECTION',
@@ -36,79 +31,48 @@ class Entity extends \Api\Core\Base\Virtual\Entity
         'VALUE_MAX'
     );
 
-    /**
-     *
-     * @return string
-     */
     public static function getCollection(): string
     {
-        return Collection::class;
+        return \Api\Core\Base\Collection::class;
     }
 
-    /**
-     *
-     * @return string
-     */
     public static function getModel(): string
     {
         return Model::class;
     }
 
-    /**
-     *
-     * @return bool
-     */
     public function isAlert(): bool
     {
         return $this->getAlert() == true;
     }
 
-    /**
-     * @return $this
-     */
     public function setTooHigh(): self
     {
         $this->setDirection(1);
         return $this;
     }
 
-    /**
-     * @return $this
-     */
     public function setTooLow(): self
     {
         $this->setDirection(-1);
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isTooHigh(): bool
     {
         return $this->getDirection() == 1;
     }
 
-    /**
-     * @return bool
-     */
     public function isTooLow(): bool
     {
         return $this->getDirection() == -1;
     }
 
-    /**
-     * @return \Api\Sensors\Sensor\Entity|null
-     */
     public function getSensor(): ?\Api\Sensors\Sensor\Entity
     {
         return $this->obSensor;
     }
 
-    /**
-     * @param \Api\Sensors\Sensor\Entity $obSensor
-     * @return $this
-     */
     public function setSensor(\Api\Sensors\Sensor\Entity $obSensor): self
     {
         if (is_null($this->obSensor)) {
@@ -117,9 +81,6 @@ class Entity extends \Api\Core\Base\Virtual\Entity
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getEmailMessage(): string
     {
         $strMessage = '';
@@ -136,9 +97,6 @@ class Entity extends \Api\Core\Base\Virtual\Entity
         return $strMessage;
     }
 
-    /**
-     * @return string
-     */
     private function getDirectionSymbol(): string
     {
         $tooLow = '⬇';
@@ -152,9 +110,6 @@ class Entity extends \Api\Core\Base\Virtual\Entity
         return '';
     }
 
-    /**
-     * @return string
-     */
     public function getTelegramMessage(): string
     {
         $strMessage = '';

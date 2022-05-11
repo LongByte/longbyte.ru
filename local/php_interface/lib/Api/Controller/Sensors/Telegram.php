@@ -9,8 +9,7 @@ namespace Api\Controller\Sensors;
 class Telegram extends \Api\Core\Base\Controller
 {
 
-    /** @var string */
-    protected static $strHelp = "Добро пожаловать в систему мониторинга. Доступны следующие команды:
+    protected static string $strHelp = "Добро пожаловать в систему мониторинга. Доступны следующие команды:
 /add token - добавление отслеживания системы
 /del token - прекращение отслеживания системы
 /clear - прекращение отслеживания всех систем
@@ -22,7 +21,7 @@ class Telegram extends \Api\Core\Base\Controller
     public function post()
     {
 
-        $obBot = new \TelegramBot\Api\Client(\Api\Sensors\Telegram\Model::getToken());
+        $obBot = new \TelegramBot\Api\Client($this->getToken());
 
         $obBot->command('start', function ($obMessage) use ($obBot) {
             /** @var \TelegramBot\Api\Types\Message $obMessage */
@@ -204,12 +203,9 @@ class Telegram extends \Api\Core\Base\Controller
         return $obHttpClient->post($sqlUrl);
     }
 
-    /**
-     * @return string
-     */
     private function getToken(): string
     {
-        return self::$token;
+        return \Api\Sensors\Telegram\Model::getToken();
     }
 
 }

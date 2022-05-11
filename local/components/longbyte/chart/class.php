@@ -6,46 +6,23 @@ use Bitrix\Main\Application;
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
     die();
 
-class LongbyteChartComponent extends CBitrixComponent {
+class LongbyteChartComponent extends CBitrixComponent
+{
 
-    /**
-     *
-     * @var \Api\Chart\Tests\Section\Collection
-     */
-    private $obTestTypes = null;
+    private ?\Api\Chart\Tests\Section\Collection $obTestTypes = null;
+    private ?\Api\Chart\Tests\Element\Collection $obTests = null;
+    private ?\Api\Chart\Systems\Element\Collection $obSystems = null;
+    private ?\Api\Chart\Firm\Collection $obFirms = null;
 
-    /**
-     *
-     * @var \Api\Chart\Tests\Element\Collection
-     */
-    private $obTests = null;
-
-    /**
-     *
-     * @var \Api\Chart\Systems\Element\Collection
-     */
-    private $obSystems = null;
-
-    /**
-     *
-     * @var \Api\Chart\Firm\Collection
-     */
-    private $obFirms = null;
-
-    /**
-     * Check Required Modules
-     * @throws Exception
-     */
-    protected function checkModules() {
+    protected function checkModules(): void
+    {
         if (!Loader::includeModule('iblock')) {
-            throw new SystemException('Модуль инфоблоков не установлен');
+            throw new \Bitrix\Main\SystemException('Модуль инфоблоков не установлен');
         }
     }
 
-    /**
-     * Start Component
-     */
-    public function executeComponent() {
+    public function executeComponent()
+    {
 
         $this->checkModules();
 
@@ -56,13 +33,12 @@ class LongbyteChartComponent extends CBitrixComponent {
             ->setIblockTag(IBLOCK_CHART_FIRM)
             ->setTime(24 * 60 * 60)
             ->setId('chart')
-            ->get(function() {
+            ->get(function () {
 
-            $this->_getData();
+                $this->_getData();
 
-            return $this->getTestTypes();
-        })
-        ;
+                return $this->getTestTypes();
+            });
 
         $this->_prepareData();
         $this->_prepareJsData();
@@ -70,10 +46,8 @@ class LongbyteChartComponent extends CBitrixComponent {
         $this->IncludeComponentTemplate();
     }
 
-    /**
-     * 
-     */
-    private function _getData() {
+    private function _getData(): void
+    {
         $this->getTestTypes();
         $this->getTests();
         $this->getFirms();
@@ -81,32 +55,27 @@ class LongbyteChartComponent extends CBitrixComponent {
         $this->getResults();
     }
 
-    /**
-     * 
-     * @return \Api\Chart\Tests\Section\Collection
-     */
-    private function getTestTypes(): \Api\Chart\Tests\Section\Collection {
+    private function getTestTypes(): \Api\Chart\Tests\Section\Collection
+    {
 
         if (is_null($this->obTestTypes)) {
 
             /** @var \Api\Chart\Tests\Section\Collection $obTestTypes */
-            $this->obTestTypes = \Api\Chart\Tests\Section\Model::getAll(array('=ACTIVE' => 'Y'), array(
-                    'order' => array('SORT' => 'ASC'),
+            $obTestTypes = \Api\Chart\Tests\Section\Model::getAll(array('=ACTIVE' => 'Y'), array(
+                'order' => array('SORT' => 'ASC'),
             ));
+            $this->obTestTypes = $obTestTypes;
         }
         return $this->obTestTypes;
     }
 
-    /**
-     * 
-     * @return \Api\Chart\Tests\Element\Collection
-     */
-    private function getTests(): \Api\Chart\Tests\Element\Collection {
-
+    private function getTests(): \Api\Chart\Tests\Element\Collection
+    {
         if (is_null($this->obTests)) {
 
             /** @var \Api\Chart\Tests\Element\Collection $obTests */
-            $this->obTests = \Api\Chart\Tests\Element\Model::getAll(array('=ACTIVE' => 'Y'));
+            $obTests = \Api\Chart\Tests\Element\Model::getAll(array('=ACTIVE' => 'Y'));
+            $this->obTests = $obTests;
 
             /** @var \Api\Chart\Tests\Element\Entity $obTest */
             foreach ($this->obTests as $obTest) {
@@ -120,28 +89,23 @@ class LongbyteChartComponent extends CBitrixComponent {
         return $this->obTests;
     }
 
-    /**
-     * 
-     * @return \Api\Chart\Firm\Collection
-     */
-    private function getFirms(): \Api\Chart\Firm\Collection {
-
+    private function getFirms(): \Api\Chart\Firm\Collection
+    {
         if (is_null($this->obFirms)) {
             /** @var \Api\Chart\Firm\Collection $obFirms */
-            $this->obFirms = \Api\Chart\Firm\Model::getAll(array('=ACTIVE' => 'Y'));
+            $obFirms = \Api\Chart\Firm\Model::getAll(array('=ACTIVE' => 'Y'));
+            $this->obFirms = $obFirms;
         }
         return $this->obFirms;
     }
 
-    /**
-     * 
-     * @return \Api\Chart\Systems\Element\Collection
-     */
-    private function getSystems(): \Api\Chart\Systems\Element\Collection {
+    private function getSystems(): \Api\Chart\Systems\Element\Collection
+    {
 
         if (is_null($this->obSystems)) {
             /** @var \Api\Chart\Systems\Element\Collection $obSystems */
-            $this->obSystems = \Api\Chart\Systems\Element\Model::getAll(array('=ACTIVE' => 'Y'));
+            $obSystems = \Api\Chart\Systems\Element\Model::getAll(array('=ACTIVE' => 'Y'));
+            $this->obSystems = $obSystems;
 
             /** @var \Api\Chart\Systems\Element\Entity $obSystem */
             foreach ($this->getSystems() as $obSystem) {
@@ -165,10 +129,8 @@ class LongbyteChartComponent extends CBitrixComponent {
         return $this->obSystems;
     }
 
-    /**
-     * 
-     */
-    private function getResults() {
+    private function getResults(): void
+    {
 
         $obResults = \Api\Chart\Result\Element\Model::getAll(array('=ACTIVE' => 'Y'));
 
@@ -186,10 +148,8 @@ class LongbyteChartComponent extends CBitrixComponent {
         }
     }
 
-    /**
-     * 
-     */
-    private function _prepareJsData() {
+    private function _prepareJsData(): void
+    {
 
         /** @var \Api\Chart\Tests\Section\Entity $obTestType */
         foreach ($this->getTestTypes() as $obTestType) {
@@ -226,10 +186,8 @@ class LongbyteChartComponent extends CBitrixComponent {
         }
     }
 
-    /**
-     * 
-     */
-    private function _prepareData() {
+    private function _prepareData(): void
+    {
         $this->arResult['obData'] = $this->getTestTypes();
     }
 

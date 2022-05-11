@@ -5,19 +5,17 @@ namespace Api\Controller\Sensors;
 use Bitrix\Main\Type\DateTime;
 
 /**
- * class \Api\Controller\Sensors\CollapseDay
+ * Class \Api\Controller\Sensors\CollapseDay
  */
-class CollapseDay extends \Api\Core\Base\Controller {
+class CollapseDay extends \Api\Core\Base\Controller
+{
 
-    /**
-     *
-     * @var array
-     */
-    private $arResponse = array(
+    private array $arResponse = array(
         'success' => true,
     );
 
-    public function get() {
+    public function get()
+    {
 
         /** @var \Api\Sensors\System\Collection $obSystems */
         /** @var \Api\Sensors\System\Entity $obSystem */
@@ -26,7 +24,7 @@ class CollapseDay extends \Api\Core\Base\Controller {
         /** @var \Api\Sensors\Data\Collection $obValues */
         /** @var \Api\Sensors\Data\Entity $obValue */
         $obSystems = \Api\Sensors\System\Model::getAll(array(
-                'ACTIVE' => true
+            'ACTIVE' => true
         ));
 
         $obYesterday = new DateTime();
@@ -39,16 +37,16 @@ class CollapseDay extends \Api\Core\Base\Controller {
         foreach ($obSystems as $obSystem) {
 
             $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
-                    'SYSTEM_ID' => $obSystem->getId(),
-                    'ACTIVE' => true,
-                    'LOG_MODE' => \Api\Sensors\Sensor\Table::MODE_EACH_LAST_DAY
+                'SYSTEM_ID' => $obSystem->getId(),
+                'ACTIVE' => true,
+                'LOG_MODE' => \Api\Sensors\Sensor\Table::MODE_EACH_LAST_DAY
             ));
             foreach ($obSensors as $obSensor) {
 
                 $obValues = \Api\Sensors\Data\Model::getAll(array(
-                        'SENSOR_ID' => $obSensor->getId(),
-                        '>=DATE' => $obYesterday,
-                        '<DATE' => $obToday,
+                    'SENSOR_ID' => $obSensor->getId(),
+                    '>=DATE' => $obYesterday,
+                    '<DATE' => $obToday,
                 ));
 
                 $fMinValue = null;

@@ -4,7 +4,7 @@ namespace Api\WikiApi\Section;
 
 /**
  * Class \Api\WikiApi\Section\Entity
- * 
+ *
  * @method mixed getId()
  * @method $this setId(mixed $mixedId)
  * @method bool hasId()
@@ -30,13 +30,10 @@ namespace Api\WikiApi\Section;
  * @method $this setUfExtends(mixed $mixedUfExtends)
  * @method bool hasUfExtends()
  */
-class Entity extends \Api\Core\Iblock\Section\Entity {
+class Entity extends \Api\Core\Iblock\Section\Entity
+{
 
-    /**
-     *
-     * @var array
-     */
-    protected static $arFields = array(
+    protected static array $arFields = array(
         'ID',
         'ACTIVE',
         'NAME',
@@ -47,19 +44,13 @@ class Entity extends \Api\Core\Iblock\Section\Entity {
         'UF_EXTENDS',
     );
 
-    /**
-     * 
-     * @return string
-     */
-    public static function getModel(): string {
+    public static function getModel(): string
+    {
         return Model::class;
     }
 
-    /**
-     * 
-     * @return string
-     */
-    public function getClassLink(): string {
+    public function getClassLink(): string
+    {
 
         /** @var \Api\Core\Base\Collection $obSections */
         $obSections = \Api\WikiApi\Section\Model::getAll();

@@ -7,7 +7,7 @@
     },
     "require": {
         "php": ">=7.4",
-        "longbyte/api": "dev-master",
+        "longbyte/api": "v2.0.*",
         "telegram-bot/api": "3.0.*"
     },
     "minimum-stability": "dev",

@@ -5,15 +5,11 @@ namespace Api\Chart\Iblock\Element;
 /**
  * Class \Api\Chart\Iblock\Element\Model
  */
-abstract class Model extends \Api\Core\Iblock\Element\Model {
+abstract class Model extends \Api\Core\Iblock\Element\Model
+{
 
-    /**
-     * 
-     * @param array $arElement
-     * @param array|null $arProperties
-     * @return \Api\Core\Iblock\Element\Entity
-     */
-    protected static function _getEntityFromElementArray(array $arElement, array $arProperties = null): \Api\Core\Iblock\Element\Entity {
+    protected static function _getEntityFromElementArray(array $arElement, array $arProperties = null): \Api\Core\Iblock\Element\Entity
+    {
 
         if (is_null($arProperties)) {
             $arProperties = $arElement['PROPERTIES'];

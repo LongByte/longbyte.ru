@@ -10,21 +10,16 @@ Loc::loadMessages(__FILE__);
 /**
  * Class \Api\Sensors\Data\Table
  */
-class Table extends ORM\Data\DataManager {
+class Table extends ORM\Data\DataManager
+{
 
-    /**
-     *
-     * @return string
-     */
-    public static function getTableName(): string {
+    public static function getTableName(): string
+    {
         return 'sensors_data';
     }
 
-    /**
-     * 
-     * @return array
-     */
-    public static function getScalarFields(): array {
+    public static function getScalarFields(): array
+    {
         $arFields = array();
         foreach (self::getMap() as $strId => $obField) {
             if ($obField instanceof ORM\Fields\ScalarField) {
@@ -34,11 +29,8 @@ class Table extends ORM\Data\DataManager {
         return $arFields;
     }
 
-    /**
-     *
-     * @return array
-     */
-    public static function getMap() {
+    public static function getMap(): array
+    {
         return array(
             'ID' => (new ORM\Fields\IntegerField('ID'))->configureTitle('ID')->configurePrimary()->configureAutocomplete(),
             'SENSOR_ID' => (new ORM\Fields\IntegerField('UF_SENSOR_ID'))->configureTitle('Сенсор')->configureRequired(),

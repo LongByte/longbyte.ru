@@ -9,7 +9,7 @@ Loc::loadMessages(__FILE__);
 
 /**
  * Class ElementPropertyTable
- * 
+ *
  * Fields:
  * <ul>
  * <li> ID int mandatory
@@ -26,14 +26,16 @@ Loc::loadMessages(__FILE__);
  *
  * @package Bitrix\Iblock
  * */
-class ElementPropertyTable extends Main\Entity\DataManager {
+class ElementPropertyTable extends Main\ORM\Data\DataManager
+{
 
     /**
      * Returns DB table name for entity.
      *
      * @return string
      */
-    public static function getTableName() {
+    public static function getTableName()
+    {
         return 'b_iblock_element_property';
     }
 
@@ -42,7 +44,8 @@ class ElementPropertyTable extends Main\Entity\DataManager {
      *
      * @return array
      */
-    public static function getMap() {
+    public static function getMap()
+    {
         return array(
             'ID' => array(
                 'data_type' => 'integer',
@@ -99,7 +102,8 @@ class ElementPropertyTable extends Main\Entity\DataManager {
      *
      * @return array
      */
-    public static function validateDescription() {
+    public static function validateDescription()
+    {
         return array(
             new Main\Entity\Validator\Length(null, 255),
         );

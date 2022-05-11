@@ -3,15 +3,13 @@
 namespace Api\Controller\Sensors;
 
 /**
- * class \Api\Controller\Sensors\Device
+ * Class \Api\Controller\Sensors\Device
  */
-class Device extends Edit {
+class Device extends Edit
+{
 
-    /**
-     * 
-     * @return mixed
-     */
-    public function delete() {
+    public function delete()
+    {
         if (!$this->loadSystem()) {
             return $this->exitAction();
         }

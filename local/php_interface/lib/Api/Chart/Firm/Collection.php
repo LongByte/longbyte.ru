@@ -5,14 +5,11 @@ namespace Api\Chart\Firm;
 /**
  * Class \Api\Chart\Firm\Collection
  */
-class Collection extends \Api\Core\Base\Collection {
+class Collection extends \Api\Core\Base\Collection
+{
 
-    /**
-     * 
-     * @param type $strKey
-     * @return Entity
-     */
-    public function getByKey($strKey): ?Entity {
+    public function getByKey($strKey): ?Entity
+    {
         return parent::getByKey($strKey);
     }
 
