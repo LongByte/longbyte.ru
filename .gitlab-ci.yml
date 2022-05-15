@@ -22,5 +22,5 @@ deploy-production:
         composer update --no-interaction --ignore-platform-reqs
         php ~/www/bitrix/tools/migrate apply -f
         ~/sensors_server_stop.sh
-        ~/sensors_server_start.sh
+        ~/sensors_server_start.sh &
       EOF
