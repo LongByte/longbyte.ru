@@ -7,7 +7,7 @@ if (!$arResult['root']) {
     <a class="item" href="../">
         <div class="img table">
             <div class="cell-middle">
-                <img src="<?=$templateFolder ?>/../../../images/dir.gif" alt="На уровень выше">
+                <img src="<?= $templateFolder ?>/../../../images/dir.gif" alt="На уровень выше">
             </div>
         </div>
         <div class="name">..</div>
@@ -17,7 +17,7 @@ if (!$arResult['root']) {
 }
 foreach ($arResult['elements'] as $key => $arItem) {
     ?>
-    <a class="item" href="<?= $arItem['file_src'] ?>" <? if ($arItem['is_image']): ?>rel="prettyPhoto[gal]" title="<a href='<?= $arItem['file_src'] ?>'>Прямая ссылка</a>"<? endif; ?>>
+    <a class="item" href="<?= $arItem['file_webp_src'] ?>" <? if ($arItem['is_image']): ?>rel="prettyPhoto[gal]" title="<a href='<?= $arItem['file_src'] ?>'>Прямая ссылка</a>"<? endif; ?>>
         <div class="img table">
             <div class="cell-middle">
                 <img src="<?= $arItem['preview_picture'] ?>" alt="<?= $arItem['name'] ?>">
