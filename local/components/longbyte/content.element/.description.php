@@ -14,7 +14,7 @@ $arComponentDescription = array(
         "CHILD" => array(
             "ID" => "catalog",
             "NAME" => GetMessage("T_IBLOCK_DESC_CATALOG"),
-            "SORT" => 30
+            "SORT" => 30,
         ),
     ),
 );

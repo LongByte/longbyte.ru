@@ -20,12 +20,14 @@ use Leafo\ScssPhp\Formatter\OutputBlock;
  *
  * @author Leaf Corcoran <leafot@gmail.com>
  */
-class Expanded extends Formatter {
+class Expanded extends Formatter
+{
 
     /**
      * {@inheritdoc}
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->indentLevel = 0;
         $this->indentChar = '  ';
         $this->break = "\n";
@@ -39,14 +41,16 @@ class Expanded extends Formatter {
     /**
      * {@inheritdoc}
      */
-    protected function indentStr() {
+    protected function indentStr()
+    {
         return str_repeat($this->indentChar, $this->indentLevel);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function blockLines(OutputBlock $block) {
+    protected function blockLines(OutputBlock $block)
+    {
         $inner = $this->indentStr();
 
         $glue = $this->break . $inner;

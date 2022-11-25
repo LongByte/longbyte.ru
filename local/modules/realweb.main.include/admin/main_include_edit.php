@@ -3,6 +3,7 @@
 /** @global CDatabase $DB */
 
 /** @global CUser $USER */
+
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Entity;
@@ -57,7 +58,7 @@ $tabNameCode = ($is_update_form ? "EDIT" : "NEW");
 // form
 $aTabs = array(
     array("DIV" => "edit1", "TAB" => Loc::getMessage('REALWEB.MAIN.INCLUDE.TAB_MAIN_' . $tabNameCode),
-        "ICON" => "ad_contract_edit", "TITLE" => Loc::getMessage('REALWEB.MAIN.INCLUDE.TAB_MAIN_' . $tabNameCode))
+        "ICON" => "ad_contract_edit", "TITLE" => Loc::getMessage('REALWEB.MAIN.INCLUDE.TAB_MAIN_' . $tabNameCode)),
 );
 
 $tabControl = new CAdminForm("realweb_main_include_edit", $aTabs);
@@ -76,7 +77,7 @@ if ((strlen($save) > 0 || strlen($apply) > 0) && $REQUEST_METHOD == "POST" && ch
      * @var Entity\ScalarField|Entity\DatetimeField|Entity\EnumField|Entity\BooleanField|Entity\FloatField|Entity\TextField $field
      */
     foreach ($fields as $codeField => $field) {
-        if($codeField == "CATEGORY_ENTITY"){
+        if ($codeField == "CATEGORY_ENTITY") {
             continue;
         }
         if (!empty($_FILES[$codeField])) {
@@ -113,7 +114,7 @@ $aMenu = array(
         "TITLE" => Loc::getMessage('REALWEB.MAIN.INCLUDE.RETURN_TO_LIST_BUTTON'),
         "LINK" => "main_include_list.php?lang=" . LANGUAGE_ID,
         "ICON" => "btn_list",
-    )
+    ),
 );
 
 $context = new CAdminContextMenu($aMenu);
@@ -143,8 +144,8 @@ unset($fields["ID"]);
 reset($fields);
 ?>
 <?= bitrix_sessid_post() ?>
-<input type="hidden" name="ID" value="<?= htmlspecialcharsbx(!empty($row) ? $row['ID'] : '') ?>">
-<input type="hidden" name="lang" value="<?= LANGUAGE_ID ?>">
+    <input type="hidden" name="ID" value="<?= htmlspecialcharsbx(!empty($row) ? $row['ID'] : '') ?>">
+    <input type="hidden" name="lang" value="<?= LANGUAGE_ID ?>">
 
 <? $tabControl->EndEpilogContent(); ?>
 
@@ -181,28 +182,28 @@ reset($fields);
             <td colspan="2" align="center">
                 <?php
                 CFileMan::AddHTMLEditorFrame(
-                        $codeField, $str_FIELD, $codeField . "_TYPE", $str_FIELD_TYPE, array(
+                    $codeField, $str_FIELD, $codeField . "_TYPE", $str_FIELD_TYPE, array(
                     'height' => 450,
-                    'width' => '100%'
-                        ), "N", 0, "", "", SITE_ID, true, false, array()
+                    'width' => '100%',
+                ), "N", 0, "", "", SITE_ID, true, false, array()
                 );
                 ?>
             </td>
         </tr>
         <?php
         $tabControl->EndCustomField($codeField, '<input type="hidden" name="' . $codeField . '" value="' . $str_FIELD . '">' .
-                '<input type="hidden" name="' . $codeField . '_TYPE" value="' . $str_FIELD_TYPE . '">'
+            '<input type="hidden" name="' . $codeField . '_TYPE" value="' . $str_FIELD_TYPE . '">'
         );
         ?>
-    <?php elseif ($codeField == "CATEGORY"): ?> 
+    <?php elseif ($codeField == "CATEGORY"): ?>
         <?php
         ?>
-        <?php $tabControl->AddDropDownField($codeField, $field->getTitle(), $field->isRequired() === true, array_combine( \Realweb\RealwebMainIncludeCategoryTable::getValues(), \Realweb\RealwebMainIncludeCategoryTable::getNames()), !empty($row[$codeField]) ? $row[$codeField] : ''); ?>
-    <?php elseif ($field instanceof \Bitrix\Main\Entity\EnumField !== false): ?> 
+        <?php $tabControl->AddDropDownField($codeField, $field->getTitle(), $field->isRequired() === true, array_combine(\Realweb\RealwebMainIncludeCategoryTable::getValues(), \Realweb\RealwebMainIncludeCategoryTable::getNames()), !empty($row[$codeField]) ? $row[$codeField] : ''); ?>
+    <?php elseif ($field instanceof \Bitrix\Main\Entity\EnumField !== false): ?>
         <?php
         ?>
         <?php $tabControl->AddDropDownField($codeField, $field->getTitle(), $field->isRequired() === true, array_combine($field->getValues(), $field->getValues()), !empty($row[$codeField]) ? $row[$codeField] : ''); ?>
-    <?php elseif ($codeField == "CATEGORY_ENTITY"): ?> 
+    <?php elseif ($codeField == "CATEGORY_ENTITY"): ?>
 
 
     <?php else: ?>
@@ -217,13 +218,13 @@ if ($isEditMode)
 
 $tabControl->Buttons(array(
     "disabled" => $disable,
-    "back_url" => "main_include_list.php?lang=" . LANGUAGE_ID
+    "back_url" => "main_include_list.php?lang=" . LANGUAGE_ID,
 ));
 
 
 $tabControl->Show();
 ?>
-</form>
+    </form>
 
 
 <?

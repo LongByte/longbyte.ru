@@ -78,10 +78,8 @@ var OpenFilter = (type) => {
 var UrlGenerate = () => {
     let GetUnique = (inputArray) => {
         var outputArray = [];
-        for (let i = 0; i < inputArray.length; i++)
-        {
-            if (($.inArray(inputArray[i], outputArray)) == -1)
-            {
+        for (let i = 0; i < inputArray.length; i++) {
+            if (($.inArray(inputArray[i], outputArray)) == -1) {
                 outputArray.push(inputArray[i]);
             }
         }

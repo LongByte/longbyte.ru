@@ -3,7 +3,7 @@
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
     die();
 
-$APPLICATION->IncludeComponent("longbyte:iblock.element.add.form.ajax", "form-order", Array(
+$APPLICATION->IncludeComponent("longbyte:iblock.element.add.form.ajax", "form-order", array(
     "COMPONENT_TEMPLATE" => "auto-validate-example",
     "STATUS_NEW" => "N", // Деактивировать элемент
     "EVENT_NAME" => "FORM_ORDER", // Почтовое событие
@@ -41,6 +41,6 @@ $APPLICATION->IncludeComponent("longbyte:iblock.element.add.form.ajax", "form-or
     "PREVIEW_TEXT_USE_HTML_EDITOR" => "N", // Использовать визуальный редактор для редактирования текста анонса
     "DETAIL_TEXT_USE_HTML_EDITOR" => "N", // Использовать визуальный редактор для редактирования подробного текста
     "SEF_MODE" => "N", // Включить поддержку ЧПУ
-    ), false
+), false
 );
 ?>

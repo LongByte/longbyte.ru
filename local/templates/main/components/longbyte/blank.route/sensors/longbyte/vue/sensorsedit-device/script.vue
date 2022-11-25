@@ -20,68 +20,64 @@
                         :system-token="systemToken"
                         @refreshdata="refreshdata"
                         @setpreloader="setpreloader"
-                        ></sensorsedit-item>
+                    ></sensorsedit-item>
                 </template>
             </template>
         </div>
     </div>
 </template>
 <script>
-    Vue.component('sensorsedit-device', {
-        props: {
-            sensors: [Array, Object],
-            device: [Array, Object],
-            sensor: [Array, Object],
-            showActive: [Boolean],
-            systemToken: [String]
-        },
-        template: `#sensors-edit-device-template`,
-        data() {
-            return {
-                collapse: true
-            };
-        },
-        components: {
+Vue.component('sensorsedit-device', {
+    props: {
+        sensors: [Array, Object],
+        device: [Array, Object],
+        sensor: [Array, Object],
+        showActive: [Boolean],
+        systemToken: [String]
+    },
+    template: `#sensors-edit-device-template`,
+    data() {
+        return {
+            collapse: true
+        };
+    },
+    components: {},
+    mounted() {
 
+    },
+    computed: {},
+    methods: {
+        refreshdata(response) {
+            this.$emit('refreshdata', response);
         },
-        mounted() {
-
+        setpreloader(visible) {
+            this.$emit('setpreloader', visible);
         },
-        computed: {
-
+        deleteData() {
+            if (window.confirm('Вы собираетесь удалить все данные неактивных датчиков этого устройства. Вы уверены?')) {
+                this.setpreloader(true);
+                axios
+                    .delete('/api/sensors/device/?token=' + this.systemToken + '&id=' + encodeURIComponent(this.device.name) + '&mode=data')
+                    .then(response => {
+                        this.$emit('refreshdata', response);
+                    });
+            }
         },
-        methods: {
-            refreshdata(response) {
-                this.$emit('refreshdata', response);
-            },
-            setpreloader(visible) {
-                this.$emit('setpreloader', visible);
-            },
-            deleteData() {
-                if (window.confirm('Вы собираетесь удалить все данные неактивных датчиков этого устройства. Вы уверены?')) {
-                    this.setpreloader(true);
-                    axios
-                        .delete('/api/sensors/device/?token=' + this.systemToken + '&id=' + encodeURIComponent(this.device.name) + '&mode=data')
-                        .then(response => {
-                            this.$emit('refreshdata', response);
-                        });
-                }
-            },
-            deleteSensors() {
-                if (window.confirm('Вы собираетесь удалить все неактивные датчики устройства и все их данные. Вы уверены? Если данные датчика поступают с клиента то он будет вновь создан.')) {
-                    this.setpreloader(true);
-                    axios
-                        .delete('/api/sensors/device/?token=' + this.systemToken + '&id=' + encodeURIComponent(this.device.name) + '&mode=sensor')
-                        .then(response => {
-                            this.$emit('refreshdata', response);
-                        });
-                }
-            },
+        deleteSensors() {
+            if (window.confirm('Вы собираетесь удалить все неактивные датчики устройства и все их данные. Вы уверены? Если данные датчика поступают с клиента то он будет вновь создан.')) {
+                this.setpreloader(true);
+                axios
+                    .delete('/api/sensors/device/?token=' + this.systemToken + '&id=' + encodeURIComponent(this.device.name) + '&mode=sensor')
+                    .then(response => {
+                        this.$emit('refreshdata', response);
+                    });
+            }
+        },
 
-            toggleCollapse() {
-                this.collapse = !this.collapse;
-            },
+        toggleCollapse() {
+            this.collapse = !this.collapse;
+        },
 
-        }
-    })
+    }
+})
 </script>

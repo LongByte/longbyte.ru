@@ -5,7 +5,7 @@ $APPLICATION->SetTitle("");
 ?><?
 
 $APPLICATION->IncludeComponent(
-        "bitrix:catalog", "content", array(
+    "bitrix:catalog", "content", array(
     "ACTION_VARIABLE" => "action",
     "ADD_ELEMENT_CHAIN" => "Y",
     "ADD_PICT_PROP" => "-",
@@ -78,13 +78,11 @@ $APPLICATION->IncludeComponent(
     "PAGER_TITLE" => "Товары",
     "PAGE_ELEMENT_COUNT" => "99999",
     "PARTIAL_PRODUCT_PROPERTIES" => "N",
-    "PRICE_CODE" => array(
-    ),
+    "PRICE_CODE" => array(),
     "PRICE_VAT_INCLUDE" => "N",
     "PRICE_VAT_SHOW_VALUE" => "N",
     "PRODUCT_ID_VARIABLE" => "id",
-    "PRODUCT_PROPERTIES" => array(
-    ),
+    "PRODUCT_PROPERTIES" => array(),
     "PRODUCT_PROPS_VARIABLE" => "",
     "PRODUCT_QUANTITY_VARIABLE" => "",
     "SECTIONS_SHOW_PARENT_NAME" => "Y",
@@ -167,8 +165,8 @@ $APPLICATION->IncludeComponent(
         "element" => "#ELEMENT_CODE#/",
         "compare" => "#SECTION_CODE_PATH#/#ELEMENT_CODE#/#SMART_FILTER_PATH#/",
         "smart_filter" => "",
-    )
-        ), false, array('HIDE_ICONS' => 'Y')
+    ),
+), false, array('HIDE_ICONS' => 'Y')
 );
 ?>
 <?php require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php"); ?>

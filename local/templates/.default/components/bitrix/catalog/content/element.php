@@ -126,7 +126,7 @@ if (!CSite::InDir('/upload/')) {
         "GIFTS_MESS_BTN_BUY" => $arParams['GIFTS_MESS_BTN_BUY'],
         "GIFTS_MAIN_PRODUCT_DETAIL_PAGE_ELEMENT_COUNT" => $arParams['GIFTS_MAIN_PRODUCT_DETAIL_PAGE_ELEMENT_COUNT'],
         "GIFTS_MAIN_PRODUCT_DETAIL_BLOCK_TITLE" => $arParams['GIFTS_MAIN_PRODUCT_DETAIL_BLOCK_TITLE'],
-        ), $component
+    ), $component
     );
 
 

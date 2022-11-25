@@ -12,7 +12,7 @@ class Entity extends \Api\Core\Iblock\Section\Entity
         'ID',
         'NAME',
         'CODE',
-        'SECTION_CODE_PATH'
+        'SECTION_CODE_PATH',
     );
 
     public static function getModel(): string

@@ -138,7 +138,7 @@ class Post extends \Api\Core\Base\Controller
                     '>=DATE' => $obDate,
                     '<DATE' => $obDateTo,
                 ), 0, 0, array(
-                    'order' => array('DATE' => 'DESC')
+                    'order' => array('DATE' => 'DESC'),
                 ));
 
                 $this->obTodayValues = new \Api\Sensors\Data\Collection();
@@ -166,7 +166,7 @@ class Post extends \Api\Core\Base\Controller
     {
         $this->obSystem = \Api\Sensors\System\Model::getOne(array(
             '=TOKEN' => $this->token,
-            'ACTIVE' => true
+            'ACTIVE' => true,
         ));
     }
 
@@ -405,8 +405,8 @@ class Post extends \Api\Core\Base\Controller
                     'C_FIELDS' => array(
                         'EMAIL_TO' => $this->obSystem->getEmail(),
                         'SUBJECT' => 'Оповещение системы контроля сенсоров на системе ' . $this->obSystem->getName(),
-                        'MESSAGE' => $message
-                    )
+                        'MESSAGE' => $message,
+                    ),
                 ));
 
                 /** @var \Api\Sensors\Telegram\Collection $obTelegrams */

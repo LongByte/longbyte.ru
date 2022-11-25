@@ -5,9 +5,11 @@ namespace Realweb\PageType;
 use Bitrix\Main\Loader;
 use Bitrix\Iblock\IblockTable;
 
-class Handlers {
+class Handlers
+{
 
-    function OnPageStart() {
+    function OnPageStart()
+    {
 
         $iblockType = 'content';
         $iblockCode = 'realweb_content';
@@ -17,7 +19,7 @@ class Handlers {
         if (!defined($constant) && Loader::includeModule('iblock')) {
 
             $arIblock = IblockTable::getRow(array(
-                    'filter' => array('IBLOCK_TYPE_ID' => $iblockType, '=CODE' => $iblockCode),
+                'filter' => array('IBLOCK_TYPE_ID' => $iblockType, '=CODE' => $iblockCode),
             ));
 
             if ($arIblock) {

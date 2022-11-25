@@ -2,36 +2,47 @@
 
 namespace Longbyte;
 
-class Page {
+use Bitrix\Main\Application;
 
-    public function onEndBufferContent(&$strContent) {
-        self::modificateImages($strContent);
-        self::modificateFrames($strContent);
+/**
+ * Class \Longbyte\Page
+ */
+class Page
+{
+    public function onEndBufferContent(&$strContent)
+    {
+        if (!defined('ADMIN_SECTION') && !Application::getInstance()->getContext()->getRequest()->get('AJAX_CALL') && !\CSite::InDir('/api/')) {
+            self::modificateImages($strContent);
+            self::modificateFrames($strContent);
 //        self::preloadCss($strContent);
 //        self::deleteKernelJs($strContent);
 //        self::deleteKernelCss($strContent);
-        self::replaceScripts($strContent);
+            self::replaceScripts($strContent);
+        }
     }
 
-    public function modificateImages(&$strContent) {
+    public function modificateImages(&$strContent)
+    {
         $re = '/<img[^>]+>/m';
         preg_match_all($re, $strContent, $arMatches, PREG_SET_ORDER, 0);
         $strContent = str_replace('<img', '<img loading="lazy"', $strContent);
     }
 
-    public static function replaceScripts(&$content) {
+    public static function replaceScripts(&$content)
+    {
         $content = str_replace('type="text/javascript"', '', $content);
         $content = str_replace("type='text/javascript'", '', $content);
     }
 
-    function deleteKernelJs(&$content) {
+    function deleteKernelJs(&$content)
+    {
         global $USER, $APPLICATION;
         if ((is_object($USER) && $USER->IsAuthorized()) || strpos($APPLICATION->GetCurDir(), "/bitrix/") !== false)
             return;
         if ($APPLICATION->GetProperty("save_kernel") == "Y")
             return;
 
-        $arPatternsToRemove = Array(
+        $arPatternsToRemove = array(
             '/<script.+?src=".+?kernel_main\/kernel_main\.js\?\d+"><\/script\>/',
             '/<script.+?src=".+?kernel_currency\/kernel_currency\.js\?\d+"><\/script\>/',
             '/<script.+?src=".+?kernel_socialservices\/kernel_socialservices\.js\?\d+"><\/script\>/',
@@ -45,7 +56,8 @@ class Page {
         $content = preg_replace("/\n{2,}/", "\n\n", $content);
     }
 
-    function deleteKernelCss(&$content) {
+    function deleteKernelCss(&$content)
+    {
 
         global $USER, $APPLICATION;
         if ((is_object($USER) && $USER->IsAuthorized()) || strpos($APPLICATION->GetCurDir(), "/bitrix/") !== false)
@@ -53,7 +65,7 @@ class Page {
         if ($APPLICATION->GetProperty("save_kernel") == "Y")
             return;
 
-        $arPatternsToRemove = Array(
+        $arPatternsToRemove = array(
             '/<link.+?href=".+?kernel_main\/kernel_main\.css\?\d+"[^>]+>/',
             '/<link.+?href=".+?kernel_socialservices\/kernel_socialservices\.css\?\d+"[^>]+>/',
             '/<link.+?href=".+?bitrix\/js\/main\/core\/css\/core[^"]+"[^>]+>/',
@@ -66,7 +78,8 @@ class Page {
         $content = preg_replace("/\n{2,}/", "\n\n", $content);
     }
 
-    public static function modificateFrames(&$strContent) {
+    public static function modificateFrames(&$strContent)
+    {
         $re = '/<iframe.+src="[^"]+youtube[^"]+"[^>]+>/m';
         preg_match_all($re, $strContent, $arMatches, PREG_SET_ORDER, 0);
         foreach ($arMatches as $arMatch) {

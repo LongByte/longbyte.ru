@@ -15,7 +15,7 @@
                                checked
                                @change="toggleShowActive()"
                                id="toggleShowActive"
-                               />
+                        />
                         <label for="toggleShowActive">Покаывать только включенные датчики</label>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                         <input type="checkbox"
                                @change="toggleGroupDevice()"
                                id="toggleGroupDevice"
-                               />
+                        />
                         <label for="toggleGroupDevice">Группировать по устройству</label>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                             :system-token="system.token"
                             @refreshdata="refreshdata"
                             @setpreloader="setpreloader"
-                            ></sensorsedit-device>
+                        ></sensorsedit-device>
                     </template>
                 </template>
                 <template v-else>
@@ -51,7 +51,7 @@
                             :system-token="system.token"
                             @refreshdata="refreshdata"
                             @setpreloader="setpreloader"
-                            ></sensorsedit-item>
+                        ></sensorsedit-item>
                     </template>
                 </template>
             </div>
@@ -80,52 +80,50 @@
     </div>
 </template>
 <script>
-    var sensorseditApp = new Vue({
-        el: '#sensorseditApp',
-        data() {
-            return {
-                system: {},
-                sensors: [],
-                devices: [],
-                links: [],
-                showActive: true,
-                groupDevice: false,
-                preloader: false,
-            };
+var sensorseditApp = new Vue({
+    el: '#sensorseditApp',
+    data() {
+        return {
+            system: {},
+            sensors: [],
+            devices: [],
+            links: [],
+            showActive: true,
+            groupDevice: false,
+            preloader: false,
+        };
+    },
+    template: `#sensors-edit-template`,
+    components: {},
+    mounted() {
+        this.loadData();
+    },
+    methods: {
+        refreshdata(response) {
+            this.system = response.data.data.system;
+            this.sensors = response.data.data.sensors;
+            this.devices = response.data.data.devices;
+            this.links = response.data.data.links;
+            this.setpreloader(false);
         },
-        template: `#sensors-edit-template`,
-        components: {
-
+        loadData() {
+            this.setpreloader(true);
+            let url = '/api/sensors/edit/?token=' + window.vueData.system_token;
+            axios
+                .get(url)
+                .then(response => {
+                    this.refreshdata(response);
+                });
         },
-        mounted() {
-            this.loadData();
+        toggleShowActive() {
+            this.showActive = !this.showActive;
         },
-        methods: {
-            refreshdata(response) {
-                this.system = response.data.data.system;
-                this.sensors = response.data.data.sensors;
-                this.devices = response.data.data.devices;
-                this.links = response.data.data.links;
-                this.setpreloader(false);
-            },
-            loadData() {
-                this.setpreloader(true);
-                let url = '/api/sensors/edit/?token=' + window.vueData.system_token;
-                axios
-                    .get(url)
-                    .then(response => {
-                        this.refreshdata(response);
-                    });
-            },
-            toggleShowActive() {
-                this.showActive = !this.showActive;
-            },
-            toggleGroupDevice() {
-                this.groupDevice = !this.groupDevice;
-            },
-            setpreloader(visible) {
-                this.preloader = !!visible;
-            },
-        }
-    })
+        toggleGroupDevice() {
+            this.groupDevice = !this.groupDevice;
+        },
+        setpreloader(visible) {
+            this.preloader = !!visible;
+        },
+    }
+})
 </script>

@@ -1,2 +1,7 @@
-div.component-panel a.include-edit {background-image:url(images/edit.gif);}
-div.component-panel a.include-add {background-image:url(images/add.gif);}
+div.component-panel a.include-edit {
+    background-image: url(images/edit.gif);
+}
+
+div.component-panel a.include-add {
+    background-image: url(images/add.gif);
+}

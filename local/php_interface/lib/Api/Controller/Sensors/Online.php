@@ -43,7 +43,7 @@ class Online extends \Api\Core\Base\Controller
             'SYSTEM_ID' => $this->getSystem()->getId(),
             'ACTIVE' => true,
         ), 0, 0, array(
-            'order' => array('SORT' => 'ASC')
+            'order' => array('SORT' => 'ASC'),
         ));
 
         $this->getSystem()->setSensorsCollection($obSensors);
@@ -205,7 +205,7 @@ class Online extends \Api\Core\Base\Controller
         $this->obSystem = \Api\Sensors\System\Model::getOne(array(
             '=NAME' => $this->name,
             '=TOKEN' => $this->token,
-            'ACTIVE' => true
+            'ACTIVE' => true,
         ));
 
         if ($this->obSystem) {

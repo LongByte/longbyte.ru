@@ -189,7 +189,7 @@ class Entity extends \Api\Core\Base\Entity
     public function getSystem(): \Api\Sensors\System\Entity
     {
         if (is_null($this->_obSystem)) {
-            $this->_obSystem = new \Api\Sensors\System\Entity($this->getSensorId());
+            $this->_obSystem = new \Api\Sensors\System\Entity($this->getSystemId());
         }
         return $this->_obSystem;
     }

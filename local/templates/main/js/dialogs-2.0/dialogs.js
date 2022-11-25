@@ -28,7 +28,10 @@ var ILexDialogs = {
             .on('touchstart', ILexDialogs.onTouchStart)
             .on('touchmove', ILexDialogs.onTouchMove)
             .on('mousewheel', function (event, delta) {
-                ILexDialogs.scrollDialog(dialog, {x: 0, y: delta});
+                ILexDialogs.scrollDialog(dialog, {
+                    x: 0,
+                    y: delta
+                });
                 return false;
             });
     },
@@ -36,7 +39,10 @@ var ILexDialogs = {
         if (ILexDialogs.DialogStack.length > 0) {
             let delta = ILexDialogs.oldYD - $(window).scrollTop();
             if (delta != 0) {
-                ILexDialogs.scrollDialog(ILexDialogs.DialogStack[ILexDialogs.DialogStack.length - 1], {x: 0, y: delta}, 1);
+                ILexDialogs.scrollDialog(ILexDialogs.DialogStack[ILexDialogs.DialogStack.length - 1], {
+                    x: 0,
+                    y: delta
+                }, 1);
             }
         }
         ILexDialogs.oldYD = $(window).scrollTop();
@@ -169,7 +175,9 @@ var ILexDialogs = {
                     .off('touchstart touchmove mousewheel');
             }
         } else if (options.position == 'absolute') {
-            let target, targetX, targetY;
+            let target,
+                targetX,
+                targetY;
 
             target = $(options.pos.target);
             if (!(target.length > 0))   //при некоторых селекторах нету атрибута length

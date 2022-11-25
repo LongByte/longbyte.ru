@@ -1,10 +1,12 @@
 <?php
 
-class CRealwebMenuSectionsComponent extends CBitrixComponent {
+class CRealwebMenuSectionsComponent extends CBitrixComponent
+{
 
-    public function GetChilds(&$arSection, $arResult) {
+    public function GetChilds(&$arSection, $arResult)
+    {
         $arSection['CHILDS'] = array();
-         if($arSection['IS_ELEMENT']){
+        if ($arSection['IS_ELEMENT']) {
             return;
         }
         $arSection['ELEMENT_LINKS'] = array();
@@ -21,7 +23,7 @@ class CRealwebMenuSectionsComponent extends CBitrixComponent {
             $arSection['CHILDS'] = array_merge($arSection['CHILDS'], $arResult['ELEMENTS'][$arSection['ID']]);
         }
         //отсортируем
-        usort($arSection['CHILDS'], function($a, $b) {
+        usort($arSection['CHILDS'], function ($a, $b) {
             if (intval($a['SORT']) == intval($b['SORT'])) {
                 return 0;
             }
@@ -29,7 +31,8 @@ class CRealwebMenuSectionsComponent extends CBitrixComponent {
         });
     }
 
-    public function ProcessMenu($arItem, &$aMenuLinksNew, &$menuIndex) {
+    public function ProcessMenu($arItem, &$aMenuLinksNew, &$menuIndex)
+    {
         $aMenuLinksNew[$menuIndex++] = array(
             htmlspecialcharsbx($arItem["~NAME"]),
             $arItem["URL"],
@@ -53,7 +56,7 @@ class CRealwebMenuSectionsComponent extends CBitrixComponent {
         );
 
         if (isset($arItem['CHILDS']) && count($arItem['CHILDS']) > 0) {
-            foreach($arItem['CHILDS'] as $arItemChild){
+            foreach ($arItem['CHILDS'] as $arItemChild) {
                 $this->ProcessMenu($arItemChild, $aMenuLinksNew, $menuIndex);
             }
         }

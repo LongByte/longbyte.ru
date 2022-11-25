@@ -5,7 +5,8 @@ namespace LongByte;
 use Bitrix\Main\EventManager;
 use Bitrix\Main\Context;
 
-class Babel {
+class Babel
+{
 
     const BABEL_DISABLE = 0;
     const BABEL_CLIENT = 1;
@@ -15,7 +16,8 @@ class Babel {
     public static $rootDir = '~/web/'; //not document root
     public static $babelMode = self::BABEL_DISABLE;
 
-    public static function includeBabel($mode) {
+    public static function includeBabel($mode)
+    {
         self::$babelMode = $mode;
         switch (self::$babelMode) {
             case self::BABEL_CLIENT:
@@ -29,7 +31,8 @@ class Babel {
         }
     }
 
-    public static function onEpilog_Client() {
+    public static function onEpilog_Client()
+    {
         if (\Site::isIE()) {
             Asset::getInstance()->addString('<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>');
         } else {
@@ -37,14 +40,16 @@ class Babel {
         }
     }
 
-    public static function OnEndBufferContent_Client(&$content) {
+    public static function OnEndBufferContent_Client(&$content)
+    {
         if (\Site::isIE()) {
             $content = preg_replace('/(<script\s+type="text\/)javascript("\s+src="\/bitrix\/cache\/js\/' . SITE_ID . '\/' . SITE_TEMPLATE_ID . '\/template_[^"]+\.js\?\d+"><\/script>)/i', '$1babel$2', $content);
             $content = preg_replace('/(<script\s+type="text\/)javascript("\s+src="\/bitrix\/cache\/js\/' . SITE_ID . '\/' . SITE_TEMPLATE_ID . '\/page_[^"]+\.js\?\d+"><\/script>)/i', '$1babel$2', $content);
         }
     }
 
-    public static function OnEndBufferContent_ServerClient(&$content) {
+    public static function OnEndBufferContent_ServerClient(&$content)
+    {
 
         $obServer = Context::getCurrent()->getServer();
         $arReplaces = array();
@@ -79,7 +84,8 @@ class Babel {
         }
     }
 
-    private static function emergencyEnableClientBabel(&$content) {
+    private static function emergencyEnableClientBabel(&$content)
+    {
         if (\Site::isIE()) {
             $content = str_replace('</body>', '<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script></body>', $content);
         } else {

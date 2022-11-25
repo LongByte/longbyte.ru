@@ -2,17 +2,19 @@
 
 namespace LongByte;
 
-class Wakeup {
+class Wakeup
+{
 
-    public static function doHits() {
+    public static function doHits()
+    {
 
         $arVisitedLinks = array();
-        
+
         $obHttpClient = new \Bitrix\Main\Web\HttpClient();
 
         $rsSites = \Bitrix\Main\SiteTable::getList(array(
-                'filter' => array('ACTIVE' => 'Y'),
-                'select' => array('SERVER_NAME')
+            'filter' => array('ACTIVE' => 'Y'),
+            'select' => array('SERVER_NAME'),
         ));
         while ($arSite = $rsSites->fetch()) {
 
@@ -35,9 +37,9 @@ class Wakeup {
                 }
             }
         }
-        
+
         return '\LongByte\Wakeup::doHits();';
-        
+
     }
 
 }

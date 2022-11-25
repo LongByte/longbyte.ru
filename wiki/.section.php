@@ -1,3 +1,3 @@
 <?
-$sSectionName="Wiki";
+$sSectionName = "Wiki";
 ?>

@@ -65,7 +65,7 @@ class Get extends \Api\Core\Base\Controller
             'SYSTEM_ID' => $this->getSystem()->getId(),
             'ACTIVE' => true,
         ), 0, 0, array(
-            'order' => array('SORT' => 'ASC')
+            'order' => array('SORT' => 'ASC'),
         ));
 
         $arValuesFilter = array(
@@ -76,7 +76,7 @@ class Get extends \Api\Core\Base\Controller
         );
 
         $obValues = \Api\Sensors\Data\Model::getAll($arValuesFilter, 0, 0, array(
-            'order' => array('DATE' => 'ASC')
+            'order' => array('DATE' => 'ASC'),
         ));
 
         foreach ($obValues as $obValue) {
@@ -140,7 +140,7 @@ class Get extends \Api\Core\Base\Controller
         $this->obSystem = \Api\Sensors\System\Model::getOne(array(
             '=NAME' => $this->name,
             '=TOKEN' => $this->token,
-            'ACTIVE' => true
+            'ACTIVE' => true,
         ));
 
         if ($this->obSystem) {
@@ -163,11 +163,11 @@ class Get extends \Api\Core\Base\Controller
         $arLinks = array(
             array(
                 'href' => \Api\Sensors\Links::getInstance()->getEditUrl($this->getSystem()->getNameToken()),
-                'title' => 'Настроить датчики'
+                'title' => 'Настроить датчики',
             ),
             array(
                 'href' => \Api\Sensors\Links::getInstance()->getStatUrl($this->getSystem()->getNameToken()),
-                'title' => 'Статистика за все время'
+                'title' => 'Статистика за все время',
             ),
         );
 

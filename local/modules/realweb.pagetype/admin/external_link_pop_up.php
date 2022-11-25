@@ -10,7 +10,7 @@ $JSON_INPUT = preg_replace("/[^a-z0-9_\\[\\]:]/i", "", $_REQUEST["JSON_INPUT"]);
 $APPLICATION->ShowAjaxHead();
 CUtil::JSPostUnescape();
 $obJSPopup = new CJSPopup('', array(
-    'TITLE' => "Внешняя ссылка"
+        'TITLE' => "Внешняя ссылка",
     )
 );
 $strWarning = "";

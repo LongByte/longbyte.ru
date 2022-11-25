@@ -9,7 +9,8 @@ use Bitrix\Main\Localization\Loc;
 $localPath = getLocalPath("");
 $bxRoot = strlen($localPath) > 0 ? rtrim($localPath, "/\\") : BX_ROOT;
 
-Class realweb_iblock_iprop extends CModule {
+class realweb_iblock_iprop extends CModule
+{
     // Обязательные свойства.
 
     /**
@@ -58,7 +59,8 @@ Class realweb_iblock_iprop extends CModule {
     /**
      * Конструктор класса. Задаёт начальные значения свойствам.
      */
-    function __construct() {
+    function __construct()
+    {
         $this->PARTNER_NAME = 'Realweb';
         $this->PARTNER_URI = 'http://www.realweb.ru';
         $this->errors = array();
@@ -82,7 +84,8 @@ Class realweb_iblock_iprop extends CModule {
         }
     }
 
-    function DoInstall() {
+    function DoInstall()
+    {
         $this->InstallFiles();
         $this->InstallDB();
         if (!ModuleManager::isModuleInstalled($this->MODULE_ID)) {
@@ -93,7 +96,8 @@ Class realweb_iblock_iprop extends CModule {
         }
     }
 
-    function DoUninstall() {
+    function DoUninstall()
+    {
         if (ModuleManager::isModuleInstalled($this->MODULE_ID)) {
             ModuleManager::unRegisterModule($this->MODULE_ID);
         }
@@ -103,26 +107,30 @@ Class realweb_iblock_iprop extends CModule {
         return true;
     }
 
-    function InstallFiles() {
+    function InstallFiles()
+    {
         CopyDirFiles(Application::getDocumentRoot() . $this->bxRoot . "/modules/" . $this->MODULE_ID . "/install/admin/", Application::getDocumentRoot() . "/bitrix/admin/", true, true);
         CopyDirFiles(Application::getDocumentRoot() . $this->bxRoot . "/modules/" . $this->MODULE_ID . "/install/components/", Application::getDocumentRoot() . $this->bxRoot . "/components/", true, true);
 
         return true;
     }
 
-    function UnInstallFiles() {
+    function UnInstallFiles()
+    {
         DeleteDirFiles(Application::getDocumentRoot() . $this->bxRoot . "/modules/" . $this->MODULE_ID . "/install/admin/", Application::getDocumentRoot() . "/bitrix/admin/");
         DeleteDirFiles(Application::getDocumentRoot() . $this->bxRoot . "/modules/" . $this->MODULE_ID . "/install/components/", Application::getDocumentRoot() . $this->bxRoot . "/components/");
         return true;
     }
 
-    function InstallDB() {
+    function InstallDB()
+    {
 
         EventManager::getInstance()->registerEventHandler('main', 'OnAdminTabControlBegin', $this->MODULE_ID, '\Realweb\IblockIprop\IPropertyIblock', 'OnAdminTabControlBegin');
         EventManager::getInstance()->registerEventHandler('main', 'OnPageStart', $this->MODULE_ID, '\Realweb\IblockIprop\IPropertyIblock', 'OnPageStart');
     }
 
-    function UnInstallDB() {
+    function UnInstallDB()
+    {
         EventManager::getInstance()->unregisterEventHandler('main', 'OnAdminTabControlBegin', $this->MODULE_ID, '\Realweb\IblockIprop\IPropertyIblock', 'OnAdminTabControlBegin');
         EventManager::getInstance()->unregisterEventHandler('main', 'OnPageStart', $this->MODULE_ID, '\Realweb\IblockIprop\IPropertyIblock', 'OnPageStart');
     }

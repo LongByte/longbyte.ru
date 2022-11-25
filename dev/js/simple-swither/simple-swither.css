@@ -1,9 +1,0 @@
-.swither-items > *:first-child
-{
-    display: block;
-}
-
-.swither-items > *
-{
-    display: none;
-}

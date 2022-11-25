@@ -1,7 +1,5 @@
 <?
 
-$aMenuLinks = Array(
-
-);
+$aMenuLinks = array();
 ?>
 

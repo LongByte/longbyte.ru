@@ -40,7 +40,7 @@ if (strlen($arParams["SECTION_FILTERNAME"]) <= 0 || !preg_match("/^[A-Za-z_][A-Z
         $arrSectionFilter = array();
 }
 
-if(!isset($arParams['ROOT_ELEMENTS'])){
+if (!isset($arParams['ROOT_ELEMENTS'])) {
     $arParams["ROOT_ELEMENTS"] = "Y";
 }
 
@@ -62,10 +62,10 @@ if ($this->StartResultCache(false, array($arrElementFilter, $arrSectionFilter)))
             "ACTIVE" => "Y",
             "IBLOCK_ID" => $arParams["IBLOCK_ID"],
         );
-        if($arParams["ROOT_ELEMENTS"] == "Y"){
+        if ($arParams["ROOT_ELEMENTS"] == "Y") {
             $arFilterRootElements['SECTION_ID'] = false;
         }
-        
+
         $rsElements = CIBlockElement::GetList(array('SORT' => 'ASC'), array_merge($arFilterRootElements, $arrElementFilter), false, false, $arSelectRootElements);
         if (($arParams["IS_SEF"] === "Y") && (strlen($arParams["DETAIL_PAGE_URL"]) > 0)) {
             $rsElements->SetUrlTemplates($arParams["SEF_BASE_URL"] . $arParams["DETAIL_PAGE_URL"]);
@@ -105,7 +105,7 @@ if ($this->StartResultCache(false, array($arrElementFilter, $arrSectionFilter)))
                 $arResult["SECTIONS"][] = array(
                     "ID" => $arElement["ID"],
                     "CODE" => $arElement["CODE"],
-                    "PICTURE"=>$arElement["PREVIEW_PICTURE"],
+                    "PICTURE" => $arElement["PREVIEW_PICTURE"],
                     "DEPTH_LEVEL" => 1,
                     "~NAME" => $arElement["~NAME"],
                     "~DETAIL_PAGE_URL" => $arElement["~DETAIL_PAGE_URL"],
@@ -133,14 +133,14 @@ if ($this->StartResultCache(false, array($arrElementFilter, $arrSectionFilter)))
         );
 
         $rsSections = CIBlockSection::GetList($arOrder, array_merge($arFilter, $arrSectionFilter), false, array(
-                    "ID",
-                    "DEPTH_LEVEL",
-                    "NAME",
-                    "SECTION_PAGE_URL",
-                    "SORT",
-                    "UF_*",
-                    "IBLOCK_SECTION_ID",
-                    "PICTURE"
+            "ID",
+            "DEPTH_LEVEL",
+            "NAME",
+            "SECTION_PAGE_URL",
+            "SORT",
+            "UF_*",
+            "IBLOCK_SECTION_ID",
+            "PICTURE",
         ));
         if ($arParams["IS_SEF"] !== "Y")
             $rsSections->SetUrlTemplates("", $arParams["SECTION_URL"]);
@@ -235,7 +235,7 @@ if ($this->StartResultCache(false, array($arrElementFilter, $arrSectionFilter)))
                             $arResult["ELEMENTS"][$arElement["IBLOCK_SECTION_ID"]][$arElement["ID"]] = array(
                                 "ID" => $arElement["ID"],
                                 "CODE" => $arElement["CODE"],
-                                "PICTURE"=>$arElement["PREVIEW_PICTURE"],
+                                "PICTURE" => $arElement["PREVIEW_PICTURE"],
                                 "DEPTH_LEVEL" => intval($arSection["DEPTH_LEVEL"]) + 1,
                                 "~NAME" => $arElement["~NAME"],
                                 "~DETAIL_PAGE_URL" => $arElement["~DETAIL_PAGE_URL"],
@@ -270,17 +270,17 @@ if ($arParams["IS_SEF"] === "Y") {
         $engine->setResolveCallback(array("CIBlockFindTools", "resolveComponentEngine"));
     }
     $componentPage = $engine->guessComponentPath(
-            $arParams["SEF_BASE_URL"], array(
+        $arParams["SEF_BASE_URL"], array(
         "section" => $arParams["SECTION_PAGE_URL"],
         "detail" => $arParams["DETAIL_PAGE_URL"],
-            ), $arVariables
+    ), $arVariables
     );
     if ($componentPage === "detail") {
         CComponentEngine::InitComponentVariables(
-                $componentPage, array("SECTION_ID", "ELEMENT_ID"), array(
+            $componentPage, array("SECTION_ID", "ELEMENT_ID"), array(
             "section" => array("SECTION_ID" => "SECTION_ID"),
             "detail" => array("SECTION_ID" => "SECTION_ID", "ELEMENT_ID" => "ELEMENT_ID"),
-                ), $arVariables
+        ), $arVariables
         );
         $arParams["ID"] = intval($arVariables["ELEMENT_ID"]);
     }
@@ -310,7 +310,7 @@ foreach ($arResult['SECTIONS'] as &$arSection) {
     }
 }
 //отсортируем
-usort($arResult['MENU_TREE'], function($a, $b) {
+usort($arResult['MENU_TREE'], function ($a, $b) {
     if (intval($a['SORT']) == intval($b['SORT'])) {
         return 0;
     }

@@ -18,20 +18,20 @@ if (!$USER->isAdmin()) {
 
     $arSystems = array();
     $rsSystems = Bitrix\Iblock\ElementTable::getList(array(
-            'select' => array(
-                'ID',
-                'NAME',
-                'IBLOCK_SECTION_ID',
-                'XML_ID',
-            ),
-            'filter' => array(
-                'IBLOCK_ID' => IBLOCK_CHART_SYSTEMS,
-                'ACTIVE' => 'Y',
-            ),
-            'order' => array(
-                'SORT' => 'ASC',
-                'NAME' => 'ASC',
-            ),
+        'select' => array(
+            'ID',
+            'NAME',
+            'IBLOCK_SECTION_ID',
+            'XML_ID',
+        ),
+        'filter' => array(
+            'IBLOCK_ID' => IBLOCK_CHART_SYSTEMS,
+            'ACTIVE' => 'Y',
+        ),
+        'order' => array(
+            'SORT' => 'ASC',
+            'NAME' => 'ASC',
+        ),
     ));
 
     while ($arSystem = $rsSystems->fetch()) {
@@ -39,17 +39,17 @@ if (!$USER->isAdmin()) {
     }
 
     $rsGroups = \Bitrix\Iblock\SectionTable::getList(array(
-            'select' => array(
-                'ID',
-                'NAME',
-            ),
-            'filter' => array(
-                'IBLOCK_ID' => IBLOCK_CHART_SYSTEMS,
-                'ACTIVE' => 'Y',
-            ),
-            'order' => array(
-                'SORT' => 'ASC',
-            ),
+        'select' => array(
+            'ID',
+            'NAME',
+        ),
+        'filter' => array(
+            'IBLOCK_ID' => IBLOCK_CHART_SYSTEMS,
+            'ACTIVE' => 'Y',
+        ),
+        'order' => array(
+            'SORT' => 'ASC',
+        ),
     ));
 
 

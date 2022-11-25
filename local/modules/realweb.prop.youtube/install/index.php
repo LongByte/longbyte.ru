@@ -10,7 +10,8 @@ $bxRoot = strlen($localPath) > 0 ? rtrim($localPath, "/\\") : BX_ROOT;
 
 require_once(Application::getDocumentRoot() . $bxRoot . '/modules/realweb.prop.youtube/prolog.php'); // пролог модуля
 
-Class realweb_prop_youtube extends CModule {
+class realweb_prop_youtube extends CModule
+{
     // Обязательные свойства.
 
     /**
@@ -59,7 +60,8 @@ Class realweb_prop_youtube extends CModule {
     /**
      * Конструктор класса. Задаёт начальные значения свойствам.
      */
-    function __construct() {
+    function __construct()
+    {
         $this->PARTNER_NAME = 'Realweb';
         $this->PARTNER_URI = 'http://www.realweb.ru';
         $this->errors = array();
@@ -83,7 +85,8 @@ Class realweb_prop_youtube extends CModule {
         }
     }
 
-    function DoInstall() {
+    function DoInstall()
+    {
         $this->InstallFiles();
         if (!ModuleManager::isModuleInstalled($this->MODULE_ID)) {
             ModuleManager::registerModule($this->MODULE_ID);
@@ -94,7 +97,8 @@ Class realweb_prop_youtube extends CModule {
         return true;
     }
 
-    function DoUninstall() {
+    function DoUninstall()
+    {
         $this->UnInstallDB();
         if (ModuleManager::isModuleInstalled($this->MODULE_ID)) {
             ModuleManager::unRegisterModule($this->MODULE_ID);
@@ -104,24 +108,28 @@ Class realweb_prop_youtube extends CModule {
         return true;
     }
 
-    function InstallFiles() {
+    function InstallFiles()
+    {
         CopyDirFiles(Application::getDocumentRoot() . $this->bxRoot . "/modules/" . $this->MODULE_ID . "/install/admin/", Application::getDocumentRoot() . "/bitrix/admin/", true, true);
         CopyDirFiles(Application::getDocumentRoot() . $this->bxRoot . "/modules/" . $this->MODULE_ID . "/install/components/", Application::getDocumentRoot() . $this->bxRoot . "/components/", true, true);
 
         return true;
     }
 
-    function UnInstallFiles() {
+    function UnInstallFiles()
+    {
         DeleteDirFiles(Application::getDocumentRoot() . $this->bxRoot . "/modules/" . $this->MODULE_ID . "/install/admin/", Application::getDocumentRoot() . "/bitrix/admin/");
         DeleteDirFiles(Application::getDocumentRoot() . $this->bxRoot . "/modules/" . $this->MODULE_ID . "/install/components/", Application::getDocumentRoot() . $this->bxRoot . "/components/");
         return true;
     }
 
-    function InstallDB() {
+    function InstallDB()
+    {
         EventManager::getInstance()->registerEventHandler('iblock', 'OnIBlockPropertyBuildList', $this->MODULE_ID, '\Realweb\PropYoutube\YoutubeVideo', 'GetUserTypeDescription');
     }
 
-    function UnInstallDB() {
+    function UnInstallDB()
+    {
         EventManager::getInstance()->unregisterEventHandler('iblock', 'OnIBlockPropertyBuildList', $this->MODULE_ID, '\Realweb\PropYoutube\YoutubeVideo', 'GetUserTypeDescription');
     }
 

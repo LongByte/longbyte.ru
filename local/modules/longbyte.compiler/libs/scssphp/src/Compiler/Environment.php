@@ -17,7 +17,8 @@ namespace Leafo\ScssPhp\Compiler;
  *
  * @author Anthon Pang <anthon.pang@gmail.com>
  */
-class Environment {
+class Environment
+{
 
     /**
      * @var \Leafo\ScssPhp\Block

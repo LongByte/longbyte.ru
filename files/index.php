@@ -5,13 +5,13 @@ $APPLICATION->SetTitle("Файлопомойка");
 ?><?
 
 $APPLICATION->IncludeComponent(
-    "longbyte:blank.route", "files", Array(
-    "SEF_FOLDER" => "/files/",
-    "SEF_MODE" => "Y",
-    "SEF_URL_TEMPLATES" => Array(
-        "default" => "",
-        "section" => "#SECTION_CODE#/",
-    ),
+    "longbyte:blank.route", "files", array(
+        "SEF_FOLDER" => "/files/",
+        "SEF_MODE" => "Y",
+        "SEF_URL_TEMPLATES" => array(
+            "default" => "",
+            "section" => "#SECTION_CODE#/",
+        ),
     )
 );
 ?><? require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php"); ?>

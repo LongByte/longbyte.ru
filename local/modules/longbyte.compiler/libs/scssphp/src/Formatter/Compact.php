@@ -19,12 +19,14 @@ use Leafo\ScssPhp\Formatter;
  *
  * @author Leaf Corcoran <leafot@gmail.com>
  */
-class Compact extends Formatter {
+class Compact extends Formatter
+{
 
     /**
      * {@inheritdoc}
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->indentLevel = 0;
         $this->indentChar = '';
         $this->break = '';
@@ -38,7 +40,8 @@ class Compact extends Formatter {
     /**
      * {@inheritdoc}
      */
-    public function indentStr() {
+    public function indentStr()
+    {
         return ' ';
     }
 

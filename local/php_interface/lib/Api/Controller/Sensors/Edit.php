@@ -199,7 +199,7 @@ class Edit extends \Api\Core\Base\Controller
         /** @var \Api\Sensors\Data\Entity $obValue */
         $this->obSystem = \Api\Sensors\System\Model::getOne(array(
             '=TOKEN' => $this->token,
-            'ACTIVE' => true
+            'ACTIVE' => true,
         ));
 
         if (!$this->obSystem) {
@@ -231,11 +231,11 @@ class Edit extends \Api\Core\Base\Controller
         $arLinks = array(
             array(
                 'href' => \Api\Sensors\Links::getInstance()->getSystemUrl($this->getSystem()->getNameToken()),
-                'title' => 'Текущая статистика'
+                'title' => 'Текущая статистика',
             ),
             array(
                 'href' => \Api\Sensors\Links::getInstance()->getStatUrl($this->getSystem()->getNameToken()),
-                'title' => 'Статистика за все время'
+                'title' => 'Статистика за все время',
             ),
         );
 

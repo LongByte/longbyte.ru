@@ -6,9 +6,9 @@
     </div>
 </template>
 <script>
-    var portfolioApp = new Vue({
-        el: '#portfolioApp',
-        data: () => window.vueData.portfolio,
-        template: `#portfolio-list`
-    })
+var portfolioApp = new Vue({
+    el: '#portfolioApp',
+    data: () => window.vueData.portfolio,
+    template: `#portfolio-list`
+})
 </script>

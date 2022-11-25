@@ -1,1 +1,1 @@
-<?require($_SERVER["DOCUMENT_ROOT"]."/local/modules/realweb.main.include/admin/main_include_list_admin.php");?>
+<? require($_SERVER["DOCUMENT_ROOT"] . "/local/modules/realweb.main.include/admin/main_include_list_admin.php"); ?>

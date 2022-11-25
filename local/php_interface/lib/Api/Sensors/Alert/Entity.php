@@ -28,7 +28,7 @@ class Entity extends \Api\Core\Base\Virtual\Entity
         'ALERT',
         'DIRECTION',
         'VALUE_MIN',
-        'VALUE_MAX'
+        'VALUE_MAX',
     );
 
     public static function getCollection(): string

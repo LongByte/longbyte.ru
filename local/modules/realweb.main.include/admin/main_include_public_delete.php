@@ -45,7 +45,6 @@ if (CAutoSave::Allowed())
     $AUTOSAVE = new CAutoSave();
 
 
-
 if ($new == 'Y') {
     $bEdit = false;
 } else {
@@ -90,7 +89,6 @@ if (strlen($strWarning) <= 0) {
         }
 
 
-
         if (strlen($strWarning) <= 0) {
             if (CAutoSave::Allowed())
                 $AUTOSAVE->Reset();
@@ -99,33 +97,31 @@ if (strlen($strWarning) <= 0) {
         if (strlen($strWarning) <= 0) {
             ?>
             <script>
-            <? if ($_REQUEST['subdialog'] != 'Y'): ?>
-                    top.BX.reload('<?= CUtil::JSEscape($_REQUEST["back_url"]) ?>', true);
-            <? else: ?>
-                    if (null != top.structReload)
-                        top.structReload('<?= urlencode($_REQUEST["path"]) ?>');
-            <? endif; ?>
+                <? if ($_REQUEST['subdialog'] != 'Y'): ?>
+                top.BX.reload('<?= CUtil::JSEscape($_REQUEST["back_url"]) ?>', true);
+                <? else: ?>
+                if (null != top.structReload)
+                    top.structReload('<?= urlencode($_REQUEST["path"]) ?>');
+                <? endif; ?>
                 top.<?= $obJSPopup->jsPopup ?>.Close();
             </script>
             <?
-        }
-        else {
+        } else {
             ?>
             <script>
                 top.CloseWaitWindow();
                 top.<?= $obJSPopup->jsPopup ?>.ShowError('<?= CUtil::JSEscape($strWarning) ?>');
                 var pMainObj = top.GLOBAL_pMainObj['<?= CUtil::JSEscape($editor_name) ?>'];
                 pMainObj.Show(true);
-            <? if ($bSessIDRefresh): ?>
-                    top.BXSetSessionID('<?= CUtil::JSEscape(bitrix_sessid()) ?>');
-            <? endif; ?>
+                <? if ($bSessIDRefresh): ?>
+                top.BXSetSessionID('<?= CUtil::JSEscape(bitrix_sessid()) ?>');
+                <? endif; ?>
             </script>
             <?
         }
         die();
     }
-}
-else {
+} else {
     ?>
     <script>
         top.CloseWaitWindow();
@@ -154,99 +150,100 @@ $obJSPopup->ShowTitlebar(GetMessage('PUBLIC_DELETE_TITLE' . ($bFromComponent ? '
 
 
 $obJSPopup->StartContent(
-        array(
-            'style' => "0px; height: 50px; overflow: hidden;",
-            'class' => ""
-        )
+    array(
+        'style' => "0px; height: 50px; overflow: hidden;",
+        'class' => "",
+    )
 );
 ?>
-</form>
-<iframe src="javascript:void(0)" name="file_edit_form_target" height="0" width="0" style="display: none;"></iframe>
-<form action="/bitrix/admin/main_include_public_delete.php" name="editor_form" method="post" enctype="multipart/form-data" target="file_edit_form_target" style="margin: 0px; padding: 0px; ">
-    <?
-    if (CAutoSave::Allowed()) {
-        echo CJSCore::Init(array('autosave'), true);
-        $AUTOSAVE->Init();
-        ?><script type="text/javascript">BX.WindowManager.Get().setAutosave();</script><?
-    }
-    ?>
-    <?= bitrix_sessid_post() ?>
-    <input type="submit" name="submitbtn" style="display: none;" />
-    <input type="hidden" name="mode" id="mode" value="public" />
-    <input type="hidden" name="save" id="save" value="Y" />
-    <input type="hidden" name="site" id="site" value="<?= htmlspecialcharsbx($site) ?>" />
-    <input type="hidden" name="template" id="template" value="<? echo htmlspecialcharsbx($template) ?>" />
-    <input type="hidden" name="templateID" id="templateID" value="<? echo htmlspecialcharsbx($_REQUEST['templateID']) ?>" />
-    <input type="hidden" name="subdialog" value="<? echo htmlspecialcharsbx($_REQUEST['subdialog']) ?>" />
-    <? if (is_set($_REQUEST, 'back_url')): ?>
-        <input type="hidden" name="back_url" value="<?= htmlspecialcharsbx($_REQUEST['back_url']) ?>" />
-    <? endif; ?>
-    <? if (is_set($_REQUEST, 'edit_new_file_undo')): ?>
-        <input type="hidden" name="edit_new_file_undo" value="<?= htmlspecialcharsbx($_REQUEST['edit_new_file_undo']) ?>" />
-    <? endif; ?>
-    <? if (!$bEdit): ?>
-        <input type="hidden" name="new" id="new" value="Y" />
-        <input type="hidden" name="CODE" id="CODE" value="<? echo htmlspecialcharsbx($CODE) ?>" />
-    <? else: ?>
-        <input type="hidden" name="CODE" id="CODE" value="<? echo htmlspecialcharsbx($CODE) ?>" />
-    <? endif; ?>
-
-    <script>
-<?= $obJSPopup->jsPopup ?>.PARTS.CONTENT.getElementsByTagName('FORM')[0].style.display = 'none'; // hack
-
-        function BXFormSubmit()
-        {
-            ShowWaitWindow();
-            var obForm = document.forms.editor_form;
-            obForm.elements.submitbtn.click();
+    </form>
+    <iframe src="javascript:void(0)" name="file_edit_form_target" height="0" width="0" style="display: none;"></iframe>
+    <form action="/bitrix/admin/main_include_public_delete.php" name="editor_form" method="post" enctype="multipart/form-data" target="file_edit_form_target" style="margin: 0px; padding: 0px; ">
+        <?
+        if (CAutoSave::Allowed()) {
+            echo CJSCore::Init(array('autosave'), true);
+            $AUTOSAVE->Init();
+            ?>
+            <script type="text/javascript">BX.WindowManager.Get().setAutosave();</script><?
         }
+        ?>
+        <?= bitrix_sessid_post() ?>
+        <input type="submit" name="submitbtn" style="display: none;" />
+        <input type="hidden" name="mode" id="mode" value="public" />
+        <input type="hidden" name="save" id="save" value="Y" />
+        <input type="hidden" name="site" id="site" value="<?= htmlspecialcharsbx($site) ?>" />
+        <input type="hidden" name="template" id="template" value="<? echo htmlspecialcharsbx($template) ?>" />
+        <input type="hidden" name="templateID" id="templateID" value="<? echo htmlspecialcharsbx($_REQUEST['templateID']) ?>" />
+        <input type="hidden" name="subdialog" value="<? echo htmlspecialcharsbx($_REQUEST['subdialog']) ?>" />
+        <? if (is_set($_REQUEST, 'back_url')): ?>
+            <input type="hidden" name="back_url" value="<?= htmlspecialcharsbx($_REQUEST['back_url']) ?>" />
+        <? endif; ?>
+        <? if (is_set($_REQUEST, 'edit_new_file_undo')): ?>
+            <input type="hidden" name="edit_new_file_undo" value="<?= htmlspecialcharsbx($_REQUEST['edit_new_file_undo']) ?>" />
+        <? endif; ?>
+        <? if (!$bEdit): ?>
+            <input type="hidden" name="new" id="new" value="Y" />
+            <input type="hidden" name="CODE" id="CODE" value="<? echo htmlspecialcharsbx($CODE) ?>" />
+        <? else: ?>
+            <input type="hidden" name="CODE" id="CODE" value="<? echo htmlspecialcharsbx($CODE) ?>" />
+        <? endif; ?>
 
-        function BXSetSessionID(new_sessid)
-        {
-            document.forms.editor_form.sessid.value = new_sessid;
-        }
-    </script>
-    <p>Вы уверены?</p>
-    <style>
-        .adm-workarea .adm-btn-save.adm-btn-delete{
-            background-color: #dc2727!important;
-            -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.25), inset 0 1px 0 #dc2727;
-            box-shadow: 0 1px 1px rgba(0,0,0,.25), inset 0 1px 0 #dc2727;
-            border: solid 1px;
-            border-color: #dc2727 #dc2727 #a50606;
-            background-image: -webkit-linear-gradient(bottom,#de5a5a,#b92020)!important;
-        }
-        .adm-workarea .adm-btn-save.adm-btn-delete:hover{
-            background-color: #b73737!important;
-            -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.25), inset 0 1px 0 #b73737;
-            box-shadow: 0 1px 1px rgba(0,0,0,.25), inset 0 1px 0 #b73737;
-            border: solid 1px;
-            border-color: #b73737 #b73737 #a50606;
-            background-image: -webkit-linear-gradient(bottom,#c50c0c,#b92020)!important;
-        }
-        .adm-workarea input.adm-btn-save.adm-btn-delete:active {
-            background-color: #b73737!important;
-            -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.25), inset 0 1px 0 #b73737;
-            box-shadow: 0 1px 1px rgba(0,0,0,.25), inset 0 1px 0 #b73737;
-            border: solid 1px;
-            border-color: #b73737 #b73737 #a50606;
-            background-image: -webkit-linear-gradient(bottom,#c50c0c,#b92020)!important;
-            background: #b92020!important;
-            border-color: transparent #b92020 #b92020!important;
-        }
+        <script>
+            <?= $obJSPopup->jsPopup ?>.PARTS.CONTENT.getElementsByTagName('FORM')[0].style.display = 'none'; // hack
 
-    </style>
-    <?php
-    $obJSPopup->StartButtons();
-    ?>
-    <input type="button" class="adm-btn-save adm-btn-delete" id="btn_popup_save" name="btn_popup_save" value="Удалить" onclick="BXFormSubmit();" title="Удалить" />
-    <?
-    $obJSPopup->ShowStandardButtons(array('cancel'));
-    $obJSPopup->EndButtons();
+            function BXFormSubmit() {
+                ShowWaitWindow();
+                var obForm = document.forms.editor_form;
+                obForm.elements.submitbtn.click();
+            }
 
-    if (CAutoSave::Allowed()) {
-        $AUTOSAVE->checkRestore();
-    }
+            function BXSetSessionID(new_sessid) {
+                document.forms.editor_form.sessid.value = new_sessid;
+            }
+        </script>
+        <p>Вы уверены?</p>
+        <style>
+            .adm-workarea .adm-btn-save.adm-btn-delete {
+                background-color: #dc2727 !important;
+                -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .25), inset 0 1px 0 #dc2727;
+                box-shadow: 0 1px 1px rgba(0, 0, 0, .25), inset 0 1px 0 #dc2727;
+                border: solid 1px;
+                border-color: #dc2727 #dc2727 #a50606;
+                background-image: -webkit-linear-gradient(bottom, #de5a5a, #b92020) !important;
+            }
 
-    require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/epilog_admin_js.php");
-    ?>
+            .adm-workarea .adm-btn-save.adm-btn-delete:hover {
+                background-color: #b73737 !important;
+                -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .25), inset 0 1px 0 #b73737;
+                box-shadow: 0 1px 1px rgba(0, 0, 0, .25), inset 0 1px 0 #b73737;
+                border: solid 1px;
+                border-color: #b73737 #b73737 #a50606;
+                background-image: -webkit-linear-gradient(bottom, #c50c0c, #b92020) !important;
+            }
+
+            .adm-workarea input.adm-btn-save.adm-btn-delete:active {
+                background-color: #b73737 !important;
+                -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .25), inset 0 1px 0 #b73737;
+                box-shadow: 0 1px 1px rgba(0, 0, 0, .25), inset 0 1px 0 #b73737;
+                border: solid 1px;
+                border-color: #b73737 #b73737 #a50606;
+                background-image: -webkit-linear-gradient(bottom, #c50c0c, #b92020) !important;
+                background: #b92020 !important;
+                border-color: transparent #b92020 #b92020 !important;
+            }
+
+        </style>
+        <?php
+        $obJSPopup->StartButtons();
+        ?>
+        <input type="button" class="adm-btn-save adm-btn-delete" id="btn_popup_save" name="btn_popup_save" value="Удалить" onclick="BXFormSubmit();" title="Удалить" />
+<?
+$obJSPopup->ShowStandardButtons(array('cancel'));
+$obJSPopup->EndButtons();
+
+if (CAutoSave::Allowed()) {
+    $AUTOSAVE->checkRestore();
+}
+
+require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/epilog_admin_js.php");
+?>

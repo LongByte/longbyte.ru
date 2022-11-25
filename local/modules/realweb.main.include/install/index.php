@@ -9,7 +9,8 @@ $bxRoot = strlen($localPath) > 0 ? rtrim($localPath, "/\\") : BX_ROOT;
 
 require_once($_SERVER['DOCUMENT_ROOT'] . $bxRoot . '/modules/realweb.main.include/prolog.php'); // пролог модуля
 
-Class realweb_main_include extends CModule {
+class realweb_main_include extends CModule
+{
 
     // Обязательные свойства.
     /**
@@ -58,7 +59,8 @@ Class realweb_main_include extends CModule {
     /**
      * Конструктор класса. Задаёт начальные значения свойствам.
      */
-    function realweb_main_include() {
+    function realweb_main_include()
+    {
         $this->PARTNER_NAME = 'Realweb';
         $this->PARTNER_URI = 'http://www.realweb.ru';
         $this->errors = array();
@@ -82,7 +84,8 @@ Class realweb_main_include extends CModule {
         }
     }
 
-    function DoInstall() {
+    function DoInstall()
+    {
         $connection = Application::getInstance()->getConnection();
 
 
@@ -93,7 +96,7 @@ Class realweb_main_include extends CModule {
             $included = CModule::IncludeModule($this->MODULE_ID);
         }
         if ($included) {
-            
+
             $categoryTableName = RealwebMainIncludeCategoryTable::getTableName();
             if (!$connection->isTableExists($categoryTableName)) {
                 $connection->createTable($categoryTableName, RealwebMainIncludeCategoryTable::getMap(), array("ID"), array("ID"));
@@ -106,7 +109,8 @@ Class realweb_main_include extends CModule {
         }
     }
 
-    function InstallFiles() {
+    function InstallFiles()
+    {
         if (is_dir($p = $_SERVER['DOCUMENT_ROOT'] . $this->bxRoot . '/modules/' . $this->MODULE_ID . '/admin')) {
             if ($dir = opendir($p)) {
                 while (false !== $item = readdir($dir)) {
@@ -124,19 +128,20 @@ Class realweb_main_include extends CModule {
         return true;
     }
 
-    function DoUninstall() {
+    function DoUninstall()
+    {
         global $DB, $APPLICATION;
 
         if (CModule::IncludeModule($this->MODULE_ID)) {
 
             $connection = Application::getInstance()->getConnection();
-            
+
             $categoryTableName = RealwebMainIncludeCategoryTable::getTableName();
             if ($connection->isTableExists($categoryTableName)) {
                 $connection->dropTable($categoryTableName);
             }
-            
-            
+
+
             $tableName = RealwebMainIncludeTable::getTableName();
             if ($connection->isTableExists($tableName)) {
                 $connection->dropTable($tableName);
@@ -148,7 +153,8 @@ Class realweb_main_include extends CModule {
         $this->UnInstallFiles();
     }
 
-    function UnInstallFiles() {
+    function UnInstallFiles()
+    {
         if (is_dir($p = $_SERVER['DOCUMENT_ROOT'] . $this->bxRoot . '/modules/' . $this->MODULE_ID . '/admin')) {
             if ($dir = opendir($p)) {
                 while (false !== $item = readdir($dir)) {

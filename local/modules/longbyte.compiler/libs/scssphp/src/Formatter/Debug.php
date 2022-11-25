@@ -20,12 +20,14 @@ use Leafo\ScssPhp\Formatter\OutputBlock;
  *
  * @author Anthon Pang <anthon.pang@gmail.com>
  */
-class Debug extends Formatter {
+class Debug extends Formatter
+{
 
     /**
      * {@inheritdoc}
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->indentLevel = 0;
         $this->indentChar = '';
         $this->break = "\n";
@@ -39,14 +41,16 @@ class Debug extends Formatter {
     /**
      * {@inheritdoc}
      */
-    protected function indentStr() {
+    protected function indentStr()
+    {
         return str_repeat('  ', $this->indentLevel);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function blockLines(OutputBlock $block) {
+    protected function blockLines(OutputBlock $block)
+    {
         $indent = $this->indentStr();
 
         if (empty($block->lines)) {
@@ -63,7 +67,8 @@ class Debug extends Formatter {
     /**
      * {@inheritdoc}
      */
-    protected function blockSelectors(OutputBlock $block) {
+    protected function blockSelectors(OutputBlock $block)
+    {
         $indent = $this->indentStr();
 
         if (empty($block->selectors)) {
@@ -80,7 +85,8 @@ class Debug extends Formatter {
     /**
      * {@inheritdoc}
      */
-    protected function blockChildren(OutputBlock $block) {
+    protected function blockChildren(OutputBlock $block)
+    {
         $indent = $this->indentStr();
 
         if (empty($block->children)) {
@@ -101,11 +107,12 @@ class Debug extends Formatter {
     /**
      * {@inheritdoc}
      */
-    protected function block(OutputBlock $block) {
+    protected function block(OutputBlock $block)
+    {
         $indent = $this->indentStr();
 
         echo "{$indent}block->type: {$block->type}\n" .
-        "{$indent}block->depth: {$block->depth}\n";
+            "{$indent}block->depth: {$block->depth}\n";
 
         $this->blockSelectors($block);
         $this->blockLines($block);

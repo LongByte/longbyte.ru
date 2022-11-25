@@ -7,40 +7,46 @@ use Bitrix\Main\Mail\Internal\EventMessageSiteTable;
 /**
  * Class definition update migrations scenario actions
  * */
-class ws_m_1583349643_tablitsy_dlya_sensorov extends \WS\ReduceMigrations\Scenario\ScriptScenario {
+class ws_m_1583349643_tablitsy_dlya_sensorov extends \WS\ReduceMigrations\Scenario\ScriptScenario
+{
 
     /**
      * Name of scenario
      * */
-    static public function name() {
+    static public function name()
+    {
         return "Таблицы для сенсоров";
     }
 
     /**
      * Priority of scenario
      * */
-    static public function priority() {
+    static public function priority()
+    {
         return self::PRIORITY_HIGH;
     }
 
     /**
      * @return string hash
      */
-    static public function hash() {
+    static public function hash()
+    {
         return "35de6cacb2a37dc2e389f05ab68fb37644d943f0";
     }
 
     /**
      * @return int approximately time in seconds
      */
-    static public function approximatelyTime() {
+    static public function approximatelyTime()
+    {
         return 0;
     }
 
     /**
      * Write action by apply scenario. Use method `setData` for save need rollback data
      * */
-    public function commit() {
+    public function commit()
+    {
         if (\Bitrix\Main\Loader::includeModule('iblock') && \Bitrix\Main\Loader::includeModule('highloadblock')) {
 
             $obHlBuilder = new \Migration\Builder\HLBuilder();
@@ -49,7 +55,7 @@ class ws_m_1583349643_tablitsy_dlya_sensorov extends \WS\ReduceMigrations\Scenar
                 self::hlSystem($arExistHlIblock['ID']);
             } else {
                 $block = $obHlBuilder->addHLBlock('SensorsSystem', 'sensors_system', function ($block) {
-                    
+
                 });
 
                 if ($arExistHlIblock = $obHlBuilder->GetIblock('SensorsSystem')) {
@@ -61,7 +67,7 @@ class ws_m_1583349643_tablitsy_dlya_sensorov extends \WS\ReduceMigrations\Scenar
                 self::hlSensors($arExistHlIblock['ID']);
             } else {
                 $block = $obHlBuilder->addHLBlock('SensorsSensors', 'sensors_sensors', function ($block) {
-                    
+
                 });
 
                 if ($arExistHlIblock = $obHlBuilder->GetIblock('SensorsSensors')) {
@@ -73,7 +79,7 @@ class ws_m_1583349643_tablitsy_dlya_sensorov extends \WS\ReduceMigrations\Scenar
                 self::hlData($arExistHlIblock['ID']);
             } else {
                 $block = $obHlBuilder->addHLBlock('SensorsData', 'sensors_data', function ($block) {
-                    
+
                 });
 
                 if ($arExistHlIblock = $obHlBuilder->GetIblock('SensorsData')) {
@@ -84,41 +90,41 @@ class ws_m_1583349643_tablitsy_dlya_sensorov extends \WS\ReduceMigrations\Scenar
 
         $eventName = 'SENSORS_ALERT';
         $arHasEvent = EventTypeTable::getList(array(
-                'filter' => array('EVENT_NAME' => $eventName),
-                'select' => array('ID'),
-                'limit' => 1,
-            ))->fetch();
+            'filter' => array('EVENT_NAME' => $eventName),
+            'select' => array('ID'),
+            'limit' => 1,
+        ))->fetch();
 
         if (!$arHasEvent) {
             $rsResult = EventTypeTable::add(array(
-                    'LID' => 'ru',
-                    'EVENT_NAME' => $eventName,
-                    'NAME' => 'Оповещение системы контроля сенсоров',
-                    'DESCRIPTION' => '',
-                    'SORT' => 100,
+                'LID' => 'ru',
+                'EVENT_NAME' => $eventName,
+                'NAME' => 'Оповещение системы контроля сенсоров',
+                'DESCRIPTION' => '',
+                'SORT' => 100,
             ));
             $arHasEvent = $rsResult->isSuccess();
         }
 
         if ($arHasEvent) {
             $arExistMessage = EventMessageTable::getList(array(
-                    'filter' => array(
-                        'EVENT_NAME' => $eventName
-                    ),
-                ))->fetch();
+                'filter' => array(
+                    'EVENT_NAME' => $eventName,
+                ),
+            ))->fetch();
 
             if (!$arExistMessage) {
 
                 $rsResult = EventMessageTable::add(array(
-                        'EVENT_NAME' => $eventName,
-                        'LID' => 's1',
-                        'ACTIVE' => 'Y',
-                        'EMAIL_FROM' => '#DEFAULT_EMAIL_FROM#',
-                        'EMAIL_TO' => '#EMAIL_TO#',
-                        'SUBJECT' => '#SUBJECT#',
-                        'MESSAGE' => "#MESSAGE#",
-                        'BODY_TYPE' => 'html',
-                        'LANGUAGE_ID' => 'ru',
+                    'EVENT_NAME' => $eventName,
+                    'LID' => 's1',
+                    'ACTIVE' => 'Y',
+                    'EMAIL_FROM' => '#DEFAULT_EMAIL_FROM#',
+                    'EMAIL_TO' => '#EMAIL_TO#',
+                    'SUBJECT' => '#SUBJECT#',
+                    'MESSAGE' => "#MESSAGE#",
+                    'BODY_TYPE' => 'html',
+                    'LANGUAGE_ID' => 'ru',
                 ));
 
                 if ($rsResult->isSuccess()) {
@@ -126,7 +132,7 @@ class ws_m_1583349643_tablitsy_dlya_sensorov extends \WS\ReduceMigrations\Scenar
 
                     EventMessageSiteTable::add(array(
                         'EVENT_MESSAGE_ID' => $messageId,
-                        'SITE_ID' => 's1'
+                        'SITE_ID' => 's1',
                     ));
                 }
             }
@@ -136,11 +142,13 @@ class ws_m_1583349643_tablitsy_dlya_sensorov extends \WS\ReduceMigrations\Scenar
     /**
      * Write action by rollback scenario. Use method `getData` for getting commit saved data
      * */
-    public function rollback() {
+    public function rollback()
+    {
         // my code
     }
 
-    private static function hlSystem($iHlBlockId) {
+    private static function hlSystem($iHlBlockId)
+    {
 
         $obActiveProp = new \Migration\Builder\UserField('UF_ACTIVE', 'HLBLOCK_' . $iHlBlockId);
         $obActiveProp->type(\Migration\Builder\UserField::TYPE_BOOLEAN);
@@ -151,7 +159,7 @@ class ws_m_1583349643_tablitsy_dlya_sensorov extends \WS\ReduceMigrations\Scenar
         $obNameProp->type(\Migration\Builder\UserField::TYPE_STRING);
         $obNameProp->settings(array(
             'SIZE' => 60,
-            'ROWS' => 1
+            'ROWS' => 1,
         ));
         $obNameProp->label(array('ru' => 'Название', 'en' => 'Название'));
         $obNameProp->required(true);
@@ -161,7 +169,7 @@ class ws_m_1583349643_tablitsy_dlya_sensorov extends \WS\ReduceMigrations\Scenar
         $obTokenProp->type(\Migration\Builder\UserField::TYPE_STRING);
         $obTokenProp->settings(array(
             'SIZE' => 30,
-            'ROWS' => 1
+            'ROWS' => 1,
         ));
         $obTokenProp->label(array('ru' => 'Токен', 'en' => 'Токен'));
         $obTokenProp->required(true);
@@ -171,7 +179,7 @@ class ws_m_1583349643_tablitsy_dlya_sensorov extends \WS\ReduceMigrations\Scenar
         $obEmailProp->type(\Migration\Builder\UserField::TYPE_STRING);
         $obEmailProp->settings(array(
             'SIZE' => 30,
-            'ROWS' => 1
+            'ROWS' => 1,
         ));
         $obEmailProp->label(array('ru' => 'E-mail для уведомлений', 'en' => 'E-mail для уведомлений'));
         $obEmailProp->save();
@@ -183,7 +191,8 @@ class ws_m_1583349643_tablitsy_dlya_sensorov extends \WS\ReduceMigrations\Scenar
         $obModeIdProp->save();
     }
 
-    private static function hlSensors($iHlBlockId) {
+    private static function hlSensors($iHlBlockId)
+    {
 
         $obActiveProp = new \Migration\Builder\UserField('UF_ACTIVE', 'HLBLOCK_' . $iHlBlockId);
         $obActiveProp->type(\Migration\Builder\UserField::TYPE_BOOLEAN);
@@ -228,7 +237,8 @@ class ws_m_1583349643_tablitsy_dlya_sensorov extends \WS\ReduceMigrations\Scenar
         $obSensorValueMaxProp->save();
     }
 
-    private static function hlData($iHlBlockId) {
+    private static function hlData($iHlBlockId)
+    {
 
         $obSensorIdProp = new \Migration\Builder\UserField('UF_SENSOR_ID', 'HLBLOCK_' . $iHlBlockId);
         $obSensorIdProp->type(\Migration\Builder\UserField::TYPE_INTEGER);

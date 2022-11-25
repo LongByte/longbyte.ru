@@ -9,7 +9,8 @@ use Bitrix\Main\IO;
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
     die();
 
-class LongbyteSpriteCompilerComponent extends CBitrixComponent {
+class LongbyteSpriteCompilerComponent extends CBitrixComponent
+{
 
     private $arSVGFiles = array();
 
@@ -17,7 +18,8 @@ class LongbyteSpriteCompilerComponent extends CBitrixComponent {
      * Check Required Modules
      * @throws Exception
      */
-    protected function checkModules() {
+    protected function checkModules()
+    {
         if (!Loader::includeModule('longbyte.compiler')) {
             throw new SystemException(Loc::getMessage('CVP_LONGBYTE_COMPILER_MODULE_NOT_INSTALLED'));
         }
@@ -26,7 +28,8 @@ class LongbyteSpriteCompilerComponent extends CBitrixComponent {
     /**
      * Load language file
      */
-    public function onIncludeComponentLang() {
+    public function onIncludeComponentLang()
+    {
         $this->includeComponentLang(basename(__FILE__));
         Loc::loadMessages(__FILE__);
     }
@@ -36,7 +39,8 @@ class LongbyteSpriteCompilerComponent extends CBitrixComponent {
      * @param array $params
      * @return array
      */
-    public function onPrepareComponentParams($params) {
+    public function onPrepareComponentParams($params)
+    {
         $params['FILES'] = is_array($params['FILES']) ? $params['FILES'] : array();
 
         $params['REMOVE_OLD_SPRITE_FILES'] = ($params['REMOVE_OLD_SPRITE_FILES'] == 'Y');
@@ -59,7 +63,8 @@ class LongbyteSpriteCompilerComponent extends CBitrixComponent {
      * Check the directory needed for component
      * @throws SystemException
      */
-    protected function checkDirs() {
+    protected function checkDirs()
+    {
         if (!is_readable(Application::getDocumentRoot() . $this->arParams['PATH_TO_FILES'])) {
             throw new SystemException(Loc::getMessage('SPRITE_ERROR_DIR_NOT_AVAILABLE', array('#DIR#' => $this->arParams['PATH_TO_FILES'])));
         }
@@ -80,7 +85,8 @@ class LongbyteSpriteCompilerComponent extends CBitrixComponent {
      * Сбор файлов рекурсивно
      * @param string $strPath
      */
-    private function getFilesFromPath($strPath) {
+    private function getFilesFromPath($strPath)
+    {
 
         $obDir = new IO\Directory($strPath);
         $arFiles = $obDir->getChildren();
@@ -98,7 +104,8 @@ class LongbyteSpriteCompilerComponent extends CBitrixComponent {
     /**
      * Start Component
      */
-    public function executeComponent() {
+    public function executeComponent()
+    {
 
         try {
 

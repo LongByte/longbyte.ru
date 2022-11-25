@@ -78,39 +78,39 @@
 
 </template>
 <script>
-    var chartApp = new Vue({
-        el: '#chartApp',
-        data: () => window.vueData.system,
-        template: `#system`,
-        methods: {
-            getName(test, resultKey) {
-                let name = 'unknow';
-                if (!!test)
-                    name = 'result[' + test.id + '][' + resultKey + ']';
-                return name;
-            },
-            getValue(test, resultKey) {
-                let html = '';
-                if (!!test.result && !!test.result[resultKey])
-                    html = test.result[resultKey];
-                return html;
-            },
-            getPlaceholder(test, resultKey) {
-                let html = '';
-                if (!!test && !!test['placeholder_' + resultKey])
-                    html = test['placeholder_' + resultKey];
-                return html;
-            },
-            isVisiable(test, resultKey) {
-                return (!!test && !!test['placeholder_' + resultKey]);
-            },
-            save(event) {
-                event.preventDefault();
-                let form = new FormData(document.forms.system);
-                axios
-                    .post('', form)
-                    .then(response => (this.data = response));
-            }
+var chartApp = new Vue({
+    el: '#chartApp',
+    data: () => window.vueData.system,
+    template: `#system`,
+    methods: {
+        getName(test, resultKey) {
+            let name = 'unknow';
+            if (!!test)
+                name = 'result[' + test.id + '][' + resultKey + ']';
+            return name;
+        },
+        getValue(test, resultKey) {
+            let html = '';
+            if (!!test.result && !!test.result[resultKey])
+                html = test.result[resultKey];
+            return html;
+        },
+        getPlaceholder(test, resultKey) {
+            let html = '';
+            if (!!test && !!test['placeholder_' + resultKey])
+                html = test['placeholder_' + resultKey];
+            return html;
+        },
+        isVisiable(test, resultKey) {
+            return (!!test && !!test['placeholder_' + resultKey]);
+        },
+        save(event) {
+            event.preventDefault();
+            let form = new FormData(document.forms.system);
+            axios
+                .post('', form)
+                .then(response => (this.data = response));
         }
-    })
+    }
+})
 </script>

@@ -17,7 +17,8 @@ namespace Leafo\ScssPhp;
  *
  * @author Anthon Pang <anthon.pang@gmail.com>
  */
-abstract class Node {
+abstract class Node
+{
 
     /**
      * @var string

@@ -1,1 +1,1 @@
- inner vue file 
+inner vue file

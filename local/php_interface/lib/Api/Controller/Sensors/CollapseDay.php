@@ -24,7 +24,7 @@ class CollapseDay extends \Api\Core\Base\Controller
         /** @var \Api\Sensors\Data\Collection $obValues */
         /** @var \Api\Sensors\Data\Entity $obValue */
         $obSystems = \Api\Sensors\System\Model::getAll(array(
-            'ACTIVE' => true
+            'ACTIVE' => true,
         ));
 
         $obYesterday = new DateTime();
@@ -39,7 +39,7 @@ class CollapseDay extends \Api\Core\Base\Controller
             $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
                 'SYSTEM_ID' => $obSystem->getId(),
                 'ACTIVE' => true,
-                'LOG_MODE' => \Api\Sensors\Sensor\Table::MODE_EACH_LAST_DAY
+                'LOG_MODE' => \Api\Sensors\Sensor\Table::MODE_EACH_LAST_DAY,
             ));
             foreach ($obSensors as $obSensor) {
 

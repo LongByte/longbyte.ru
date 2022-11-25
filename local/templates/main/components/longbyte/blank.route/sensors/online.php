@@ -11,9 +11,9 @@ if ($USER->IsAdmin()) {
     $APPLICATION->IncludeComponent(
         "longbyte:blank",
         "online",
-        Array(
+        array(
             'SYSTEM_NAME' => $arResult['VARIABLES']['SYSTEM_NAME'],
-            'SYSTEM_TOKEN' => $arResult['VARIABLES']['SYSTEM_TOKEN']
+            'SYSTEM_TOKEN' => $arResult['VARIABLES']['SYSTEM_TOKEN'],
         ),
         $component
     );

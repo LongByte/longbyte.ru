@@ -20,7 +20,8 @@ use Leafo\ScssPhp\Formatter\OutputBlock;
  *
  * @author Leaf Corcoran <leafot@gmail.com>
  */
-class Nested extends Formatter {
+class Nested extends Formatter
+{
 
     /**
      * @var integer
@@ -30,7 +31,8 @@ class Nested extends Formatter {
     /**
      * {@inheritdoc}
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->indentLevel = 0;
         $this->indentChar = '  ';
         $this->break = "\n";
@@ -44,7 +46,8 @@ class Nested extends Formatter {
     /**
      * {@inheritdoc}
      */
-    protected function indentStr() {
+    protected function indentStr()
+    {
         $n = $this->depth - 1;
 
         return str_repeat($this->indentChar, max($this->indentLevel + $n, 0));
@@ -53,7 +56,8 @@ class Nested extends Formatter {
     /**
      * {@inheritdoc}
      */
-    protected function blockLines(OutputBlock $block) {
+    protected function blockLines(OutputBlock $block)
+    {
         $inner = $this->indentStr();
 
         $glue = $this->break . $inner;
@@ -74,18 +78,20 @@ class Nested extends Formatter {
     /**
      * {@inheritdoc}
      */
-    protected function blockSelectors(OutputBlock $block) {
+    protected function blockSelectors(OutputBlock $block)
+    {
         $inner = $this->indentStr();
 
         echo $inner
-        . implode($this->tagSeparator, $block->selectors)
-        . $this->open . $this->break;
+            . implode($this->tagSeparator, $block->selectors)
+            . $this->open . $this->break;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function blockChildren(OutputBlock $block) {
+    protected function blockChildren(OutputBlock $block)
+    {
         foreach ($block->children as $i => $child) {
             $this->block($child);
 
@@ -106,7 +112,8 @@ class Nested extends Formatter {
     /**
      * {@inheritdoc}
      */
-    protected function block(OutputBlock $block) {
+    protected function block(OutputBlock $block)
+    {
         if ($block->type === 'root') {
             $this->adjustAllChildren($block);
         }
@@ -147,7 +154,8 @@ class Nested extends Formatter {
      *
      * @param \Leafo\ScssPhp\Formatter\OutputBlock $block
      */
-    private function adjustAllChildren(OutputBlock $block) {
+    private function adjustAllChildren(OutputBlock $block)
+    {
         // flatten empty nested blocks
         $children = [];
 

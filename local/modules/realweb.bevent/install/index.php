@@ -9,7 +9,8 @@ $bxRoot = strlen($localPath) > 0 ? rtrim($localPath, "/\\") : BX_ROOT;
 
 require_once(Application::getDocumentRoot() . $bxRoot . '/modules/realweb.bevent/prolog.php'); // пролог модуля
 
-Class realweb_bevent extends CModule {
+class realweb_bevent extends CModule
+{
     // Обязательные свойства.
 
     /**
@@ -58,7 +59,8 @@ Class realweb_bevent extends CModule {
     /**
      * Конструктор класса. Задаёт начальные значения свойствам.
      */
-    function __construct() {
+    function __construct()
+    {
         $this->PARTNER_NAME = 'Realweb';
         $this->PARTNER_URI = 'http://www.realweb.ru';
         $this->errors = array();
@@ -82,7 +84,8 @@ Class realweb_bevent extends CModule {
         }
     }
 
-    function DoInstall() {
+    function DoInstall()
+    {
         $this->InstallFiles();
         if (!ModuleManager::isModuleInstalled($this->MODULE_ID)) {
             ModuleManager::registerModule($this->MODULE_ID);
@@ -91,7 +94,8 @@ Class realweb_bevent extends CModule {
         return true;
     }
 
-    function DoUninstall() {
+    function DoUninstall()
+    {
         if (ModuleManager::isModuleInstalled($this->MODULE_ID)) {
             ModuleManager::unRegisterModule($this->MODULE_ID);
         }
@@ -100,13 +104,15 @@ Class realweb_bevent extends CModule {
         return true;
     }
 
-    function InstallFiles() {
+    function InstallFiles()
+    {
         CopyDirFiles(Application::getDocumentRoot() . $this->bxRoot . "/modules/" . $this->MODULE_ID . "/install/admin/", Application::getDocumentRoot() . "/bitrix/admin/", true, true);
         CopyDirFiles(Application::getDocumentRoot() . $this->bxRoot . "/modules/" . $this->MODULE_ID . "/install/components/", Application::getDocumentRoot() . $this->bxRoot . "/components/", true, true);
         return true;
     }
 
-    function UnInstallFiles() {
+    function UnInstallFiles()
+    {
         DeleteDirFiles(Application::getDocumentRoot() . $this->bxRoot . "/modules/" . $this->MODULE_ID . "/install/admin/", Application::getDocumentRoot() . "/bitrix/admin/");
         DeleteDirFiles(Application::getDocumentRoot() . $this->bxRoot . "/modules/" . $this->MODULE_ID . "/install/components/", Application::getDocumentRoot() . $this->bxRoot . "/components/");
         return true;

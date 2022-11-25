@@ -7,13 +7,15 @@ use Bitrix\Main\Application;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Iblock\InheritedProperty;
 
-class IPropertyIblock {
+class IPropertyIblock
+{
 
     /**
-     * 
+     *
      * @param \CAdminTabControl $tabControl
      */
-    public static function OnAdminTabControlBegin(&$tabControl) {
+    public static function OnAdminTabControlBegin(&$tabControl)
+    {
 
         $obRequest = Context::getCurrent()->getRequest();
 
@@ -46,7 +48,7 @@ class IPropertyIblock {
                 'ICON' => 'iblock',
                 'TAB' => Loc::getMessage('REALWEB.IBLOCK.IPROP.TAB_NAME'),
                 'TITLE' => Loc::getMessage('REALWEB.IBLOCK.IPROP.TAB_TITLE'),
-                'CONTENT' => $content
+                'CONTENT' => $content,
             );
 
             if ($iSeoTabIndex !== null) {
@@ -59,9 +61,10 @@ class IPropertyIblock {
 
     /**
      * @global \CCacheManager $CACHE_MANAGER
-     * 
+     *
      */
-    public static function OnPageStart() {
+    public static function OnPageStart()
+    {
 
         $obRequest = Context::getCurrent()->getRequest();
         $strUri = $obRequest->getRequestUri();
@@ -81,7 +84,7 @@ class IPropertyIblock {
                 $obIblock = new \CIBlock();
                 $obIblock->Update($iIblockId, $arFields);
                 global $CACHE_MANAGER;
-                $CACHE_MANAGER->ClearByTag("iblock_id_meta_".$iIblockId);
+                $CACHE_MANAGER->ClearByTag("iblock_id_meta_" . $iIblockId);
             }
         }
     }

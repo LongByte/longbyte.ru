@@ -3,40 +3,46 @@
 /**
  * Class definition update migrations scenario actions
  * */
-class ws_m_1591451819_sensors_smena_struktury_bd extends \WS\ReduceMigrations\Scenario\ScriptScenario {
+class ws_m_1591451819_sensors_smena_struktury_bd extends \WS\ReduceMigrations\Scenario\ScriptScenario
+{
 
     /**
      * Name of scenario
      * */
-    static public function name() {
+    static public function name()
+    {
         return "Sensors. Смена структуры БД.";
     }
 
     /**
      * Priority of scenario
      * */
-    static public function priority() {
+    static public function priority()
+    {
         return self::PRIORITY_HIGH;
     }
 
     /**
      * @return string hash
      */
-    static public function hash() {
+    static public function hash()
+    {
         return "df75b43fb41447aa852b0d7bbfd8bdcabba35105";
     }
 
     /**
      * @return int approximately time in seconds
      */
-    static public function approximatelyTime() {
+    static public function approximatelyTime()
+    {
         return 0;
     }
 
     /**
      * Write action by apply scenario. Use method `setData` for save need rollback data
      * */
-    public function commit() {
+    public function commit()
+    {
 
         if (\Bitrix\Main\Loader::includeModule('iblock') && \Bitrix\Main\Loader::includeModule('highloadblock')) {
 
@@ -64,11 +70,13 @@ class ws_m_1591451819_sensors_smena_struktury_bd extends \WS\ReduceMigrations\Sc
     /**
      * Write action by rollback scenario. Use method `getData` for getting commit saved data
      * */
-    public function rollback() {
+    public function rollback()
+    {
         // my code
     }
 
-    private static function hlSystem($iHlBlockId) {
+    private static function hlSystem($iHlBlockId)
+    {
         $obProp = new \Migration\Builder\UserField('UF_MODE', 'HLBLOCK_' . $iHlBlockId);
         if ($obProp->getId() > 0) {
             $obProp->delete();
@@ -85,7 +93,8 @@ class ws_m_1591451819_sensors_smena_struktury_bd extends \WS\ReduceMigrations\Sc
         $obProp->save();
     }
 
-    private static function hlSensors($iHlBlockId) {
+    private static function hlSensors($iHlBlockId)
+    {
         $obProp = new \Migration\Builder\UserField('UF_OFF_ALERT', 'HLBLOCK_' . $iHlBlockId);
         if ($obProp->getId() > 0) {
             $obProp->delete();
@@ -128,7 +137,8 @@ class ws_m_1591451819_sensors_smena_struktury_bd extends \WS\ReduceMigrations\Sc
         $obProp->save();
     }
 
-    private static function hlData($iHlBlockId) {
+    private static function hlData($iHlBlockId)
+    {
 
         $obProp = new \Migration\Builder\UserField('UF_VALUE', 'HLBLOCK_' . $iHlBlockId);
         if ($obProp->getId() <= 0) {

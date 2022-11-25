@@ -19,7 +19,8 @@ use Leafo\ScssPhp\Formatter\OutputBlock;
  *
  * @author Leaf Corcoran <leafot@gmail.com>
  */
-abstract class Formatter {
+abstract class Formatter
+{
 
     /**
      * @var integer
@@ -73,32 +74,35 @@ abstract class Formatter {
      *
      * @return string
      */
-    protected function indentStr() {
+    protected function indentStr()
+    {
         return '';
     }
 
     /**
      * Return property assignment
      *
-     * @api
-     *
      * @param string $name
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return string
+     * @api
+     *
      */
-    public function property($name, $value) {
+    public function property($name, $value)
+    {
         return rtrim($name) . $this->assignSeparator . $value . ';';
     }
 
     /**
      * Strip semi-colon appended by property(); it's a separator, not a terminator
      *
+     * @param array $lines
      * @api
      *
-     * @param array $lines
      */
-    public function stripSemicolon(&$lines) {
+    public function stripSemicolon(&$lines)
+    {
         if ($this->keepSemicolons) {
             return;
         }
@@ -114,7 +118,8 @@ abstract class Formatter {
      *
      * @param \Leafo\ScssPhp\Formatter\OutputBlock $block
      */
-    protected function blockLines(OutputBlock $block) {
+    protected function blockLines(OutputBlock $block)
+    {
         $inner = $this->indentStr();
 
         $glue = $this->break . $inner;
@@ -131,12 +136,13 @@ abstract class Formatter {
      *
      * @param \Leafo\ScssPhp\Formatter\OutputBlock $block
      */
-    protected function blockSelectors(OutputBlock $block) {
+    protected function blockSelectors(OutputBlock $block)
+    {
         $inner = $this->indentStr();
 
         echo $inner
-        . implode($this->tagSeparator, $block->selectors)
-        . $this->open . $this->break;
+            . implode($this->tagSeparator, $block->selectors)
+            . $this->open . $this->break;
     }
 
     /**
@@ -144,7 +150,8 @@ abstract class Formatter {
      *
      * @param \Leafo\ScssPhp\Formatter\OutputBlock $block
      */
-    protected function blockChildren(OutputBlock $block) {
+    protected function blockChildren(OutputBlock $block)
+    {
         foreach ($block->children as $child) {
             $this->block($child);
         }
@@ -155,7 +162,8 @@ abstract class Formatter {
      *
      * @param \Leafo\ScssPhp\Formatter\OutputBlock $block
      */
-    protected function block(OutputBlock $block) {
+    protected function block(OutputBlock $block)
+    {
         if (empty($block->lines) && empty($block->children)) {
             return;
         }
@@ -190,13 +198,14 @@ abstract class Formatter {
     /**
      * Entry point to formatting a block
      *
-     * @api
-     *
      * @param \Leafo\ScssPhp\Formatter\OutputBlock $block An abstract syntax tree
      *
      * @return string
+     * @api
+     *
      */
-    public function format(OutputBlock $block) {
+    public function format(OutputBlock $block)
+    {
         ob_start();
 
         $this->block($block);

@@ -6,40 +6,46 @@ use WS\ReduceMigrations\Builder\Entity\Iblock;
 /**
  * Class definition update migrations scenario actions
  * */
-class ws_m_1553031160_kontent extends \WS\ReduceMigrations\Scenario\ScriptScenario {
+class ws_m_1553031160_kontent extends \WS\ReduceMigrations\Scenario\ScriptScenario
+{
 
     /**
      * Name of scenario
      * */
-    static public function name() {
+    static public function name()
+    {
         return "Контент";
     }
 
     /**
      * Priority of scenario
      * */
-    static public function priority() {
+    static public function priority()
+    {
         return self::PRIORITY_HIGH;
     }
 
     /**
      * @return string hash
      */
-    static public function hash() {
+    static public function hash()
+    {
         return "0cb6f6a0288b6db25006b285485945b8b6ff49cc";
     }
 
     /**
      * @return int approximately time in seconds
      */
-    static public function approximatelyTime() {
+    static public function approximatelyTime()
+    {
         return 0;
     }
 
     /**
      * Write action by apply scenario. Use method `setData` for save need rollback data
      * */
-    public function commit() {
+    public function commit()
+    {
 
         $obBuilder = new IblockBuilder();
 
@@ -57,11 +63,13 @@ class ws_m_1553031160_kontent extends \WS\ReduceMigrations\Scenario\ScriptScenar
     /**
      * Write action by rollback scenario. Use method `getData` for getting commit saved data
      * */
-    public function rollback() {
+    public function rollback()
+    {
         // my code
     }
 
-    private function iblockContent($rsIblock) {
+    private function iblockContent($rsIblock)
+    {
 
         Bitrix\Main\Loader::includeModule('iblock');
 
@@ -95,7 +103,7 @@ class ws_m_1553031160_kontent extends \WS\ReduceMigrations\Scenario\ScriptScenar
                         'TRANS_OTHER' => '-',
                         'TRANS_EAT' => 'Y',
                         'USE_GOOGLE' => 'N',
-                    )
+                    ),
                 ),
                 'SECTION_CODE' => array(
                     'IS_REQUIRED' => 'Y',
@@ -108,9 +116,10 @@ class ws_m_1553031160_kontent extends \WS\ReduceMigrations\Scenario\ScriptScenar
                         'TRANS_OTHER' => '-',
                         'TRANS_EAT' => 'Y',
                         'USE_GOOGLE' => 'N',
-                    )
-                )
-        ));
+                    ),
+                ),
+            ))
+        ;
 
         $IBLOCK_ID = $rsIblock->getId();
         $builder = new IblockBuilder();
@@ -122,7 +131,8 @@ class ws_m_1553031160_kontent extends \WS\ReduceMigrations\Scenario\ScriptScenar
                 ->code('SITE')
                 ->typeDropdown()
                 ->multiple(true)
-                ->sort(100);
+                ->sort(100)
+            ;
             foreach ($arSites as $arSite) {
                 $property->addEnum($arSite['NAME'])->xmlId($arSite['LID']);
             }
@@ -132,7 +142,8 @@ class ws_m_1553031160_kontent extends \WS\ReduceMigrations\Scenario\ScriptScenar
                 ->code('SITE')
                 ->typeDropdown()
                 ->multiple(true)
-                ->sort(100);
+                ->sort(100)
+            ;
         }
 
         if (!isset($arProps['MENU'])) {
@@ -141,7 +152,8 @@ class ws_m_1553031160_kontent extends \WS\ReduceMigrations\Scenario\ScriptScenar
                 ->code('MENU')
                 ->typeDropdown()
                 ->multiple(true)
-                ->sort(200);
+                ->sort(200)
+            ;
             $property->addEnum('Верхнее')->xmlId('header');
             $property->addEnum('Нижнее')->xmlId('footer');
         } else {
@@ -150,7 +162,8 @@ class ws_m_1553031160_kontent extends \WS\ReduceMigrations\Scenario\ScriptScenar
                 ->code('MENU')
                 ->typeDropdown()
                 ->multiple(true)
-                ->sort(200);
+                ->sort(200)
+            ;
         }
 
         if (!isset($arProps['PAGE_TYPE'])) {
@@ -160,7 +173,8 @@ class ws_m_1553031160_kontent extends \WS\ReduceMigrations\Scenario\ScriptScenar
                 ->type("S", "S:PageType")
                 ->multiple(true)
                 ->multipleCnt(2)
-                ->sort(300);
+                ->sort(300)
+            ;
         } else {
             $rsIblock
                 ->updateProperty('Тип страницы')
@@ -168,7 +182,8 @@ class ws_m_1553031160_kontent extends \WS\ReduceMigrations\Scenario\ScriptScenar
                 ->type("S", "S:PageType")
                 ->multiple(true)
                 ->multipleCnt(2)
-                ->sort(300);
+                ->sort(300)
+            ;
         }
 
         if (!isset($arProps['PAGE_PROPS'])) {
@@ -178,7 +193,8 @@ class ws_m_1553031160_kontent extends \WS\ReduceMigrations\Scenario\ScriptScenar
                 ->typeString()
                 ->withDescription(true)
                 ->multiple(true)
-                ->sort(400);
+                ->sort(400)
+            ;
         } else {
             $rsIblock
                 ->updateProperty('Свойства страницы')
@@ -186,7 +202,8 @@ class ws_m_1553031160_kontent extends \WS\ReduceMigrations\Scenario\ScriptScenar
                 ->typeString()
                 ->withDescription(true)
                 ->multiple(true)
-                ->sort(400);
+                ->sort(400)
+            ;
         }
     }
 

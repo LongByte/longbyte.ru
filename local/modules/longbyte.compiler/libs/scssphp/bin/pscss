@@ -40,7 +40,8 @@ $encoding = false;
  *
  * @return string|null
  */
-function parseArgument(&$i, $options) {
+function parseArgument(&$i, $options)
+{
     global $argc;
     global $argv;
 

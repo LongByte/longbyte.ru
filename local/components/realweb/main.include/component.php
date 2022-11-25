@@ -2,6 +2,7 @@
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
     die();
+
 use Realweb\RealwebMainIncludeTable;
 
 /* * ********************************************************************************************************* */
@@ -50,10 +51,10 @@ if ($APPLICATION->GetShowIncludeAreas()) {
                                     "PARAMS" => array(
                                         'width' => 770,
                                         'height' => 570,
-                                        'resize' => true
-                                    )
+                                        'resize' => true,
+                                    ),
                                 )
-                        ),
+                            ),
                         "DEFAULT" => $APPLICATION->GetPublicShowMode() != 'configure',
                         "ICON" => "bx-context-toolbar-edit-icon",
                         "TITLE" => GetMessage("main_comp_include_edit"),
@@ -75,10 +76,10 @@ if ($APPLICATION->GetShowIncludeAreas()) {
                                     'resize' => true,
                                     "dialog_type" => 'EDITOR',
                                     "min_width" => 700,
-                                    "min_height" => 400
-                                )
+                                    "min_height" => 400,
+                                ),
                             )
-                    ),
+                        ),
                     "DEFAULT" => $APPLICATION->GetPublicShowMode() != 'configure',
                     "ICON" => "bx-context-toolbar-create-icon",
                     "TITLE" => GetMessage("main_comp_include_add1"),

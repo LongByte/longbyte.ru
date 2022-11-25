@@ -2,7 +2,8 @@
 
 namespace Realweb\PageType;
 
-class PageType {
+class PageType
+{
 
     public static $globals = array(
         '$_SERVER', '$_ENV', '$GLOBALS',
@@ -10,33 +11,36 @@ class PageType {
         '$_COOKIE', '$_FILES', '$_SESSION',
     );
 
-    function GetUserTypeDescription() {
+    function GetUserTypeDescription()
+    {
         return array(
             "PROPERTY_TYPE" => "S",
             "USER_TYPE" => "PageType",
             "DESCRIPTION" => "Тип страницы",
-            "PrepareSettings" => Array("Realweb\PageType\PageType", "PrepareSettings"),
-            "GetSettingsHTML" => Array("Realweb\PageType\PageType", "GetSettingsHTML"),
-            "GetPropertyFieldHtml" => Array("Realweb\PageType\PageType", "GetPropertyFieldHtml"),
-            "GetAdminListViewHTML" => Array("Realweb\PageType\PageType", "GetAdminListViewHTML"),
-            "ConvertToDB" => Array("Realweb\PageType\PageType", "ConvertToDB"),
-            "ConvertFromDB" => Array("Realweb\PageType\PageType", "ConvertFromDB"),
+            "PrepareSettings" => array("Realweb\PageType\PageType", "PrepareSettings"),
+            "GetSettingsHTML" => array("Realweb\PageType\PageType", "GetSettingsHTML"),
+            "GetPropertyFieldHtml" => array("Realweb\PageType\PageType", "GetPropertyFieldHtml"),
+            "GetAdminListViewHTML" => array("Realweb\PageType\PageType", "GetAdminListViewHTML"),
+            "ConvertToDB" => array("Realweb\PageType\PageType", "ConvertToDB"),
+            "ConvertFromDB" => array("Realweb\PageType\PageType", "ConvertFromDB"),
         );
     }
 
-    function PrepareSettings($arFields) {
+    function PrepareSettings($arFields)
+    {
 
         return array(
             "NOT_SHOW_COMPONENTS" => $arFields['USER_TYPE_SETTINGS']['NOT_SHOW_COMPONENTS'],
-            "TEMPLATE_ID" => $arFields["USER_TYPE_SETTINGS"]["TEMPLATE_ID"]
+            "TEMPLATE_ID" => $arFields["USER_TYPE_SETTINGS"]["TEMPLATE_ID"],
         );
     }
 
-    function GetSettingsHTML($arProperty, $strHTMLControlName, &$arPropertyFields) {
+    function GetSettingsHTML($arProperty, $strHTMLControlName, &$arPropertyFields)
+    {
         //все шаблоны сайта
         $html = '';
         $sites_templates = array();
-        $rsSites = \CSite::GetList($by = "sort", $order = "desc", Array());
+        $rsSites = \CSite::GetList($by = "sort", $order = "desc", array());
         while ($arSite = $rsSites->Fetch()) {
             $rsSiteTemplates = \CSite::GetTemplateList($arSite['LID']);
             while ($arSiteTemplate = $rsSiteTemplates->Fetch()) {
@@ -60,7 +64,7 @@ class PageType {
             </td>
         </tr>';
 
-        $components = \CHTMLEditor::GetComponents(Array());
+        $components = \CHTMLEditor::GetComponents(array());
         usort($components['items'], function ($a, $b) {
             return strcmp($a["name"], $b["name"]);
         });
@@ -99,7 +103,8 @@ class PageType {
     //strHTMLControlName - array("VALUE","DESCRIPTION")
     //return:
     //safe html
-    function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName) {
+    function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName)
+    {
         if ($strHTMLControlName['MODE'] == 'FORM_FILL') {
             if (!is_array($arProperty["USER_TYPE_SETTINGS"]["NOT_SHOW_COMPONENTS"])) {
                 $arProperty["USER_TYPE_SETTINGS"]["NOT_SHOW_COMPONENTS"] = array();
@@ -111,17 +116,17 @@ class PageType {
                 'NONE' => array(
                     'TYPE' => 'option',
                     'LABEL' => 'Не использовать',
-                    'VALUE' => 'NONE'
+                    'VALUE' => 'NONE',
                 ),
                 'PAGE' => array(
                     'TYPE' => 'option',
                     'LABEL' => 'Текстовая страница',
-                    'VALUE' => 'PAGE'
+                    'VALUE' => 'PAGE',
                 ),
                 'EXTERNAL_LINK' => array(
                     'TYPE' => 'option',
                     'LABEL' => 'Внешняя ссылка',
-                    'VALUE' => 'EXTERNAL_LINK'
+                    'VALUE' => 'EXTERNAL_LINK',
                 ),
                 'COMPONENTS' => array(
                     'TYPE' => 'optgroup',
@@ -149,7 +154,7 @@ class PageType {
                     }
                 } elseif ($value['VALUE']['TYPE'] == 'EXTERNAL_LINK') {
                     $JSON_DATA = array(
-                        'LINK' => $value['VALUE']['LINK']
+                        'LINK' => $value['VALUE']['LINK'],
                     );
                 }
             } else {
@@ -184,7 +189,7 @@ class PageType {
                 <tbody>
                     <tr>
                         <td>
-                            <div size="<?php echo $size; ?>" name="" id="<?php echo $SELECT_ID; ?>" style="max-height: 100px; overflow: scroll" >
+                            <div size="<?php echo $size; ?>" name="" id="<?php echo $SELECT_ID; ?>" style="max-height: 100px; overflow: scroll">
                                 <?php foreach ($arValues as $arValue): ?>
                                     <?php if ($arValue['TYPE'] == 'option'): ?>
                                         <?php
@@ -193,7 +198,9 @@ class PageType {
                                             $selected = ' checked="checked"';
                                         }
                                         ?>
-                                        <div> <input type="radio"   name="__component<?php echo $SELECT_ID; ?>" value="<?php echo $arValue['VALUE']; ?>"<?php echo $selected; ?>><?php echo $arValue['LABEL']; ?></div>
+                                        <div>
+                                            <input type="radio" name="__component<?php echo $SELECT_ID; ?>" value="<?php echo $arValue['VALUE']; ?>"<?php echo $selected; ?>><?php echo $arValue['LABEL']; ?>
+                                        </div>
                                     <?php elseif ($arValue['TYPE'] == 'optgroup'): ?>
                                         <div label="<?php echo $arValue['LABEL']; ?>" style="margin-left: 20px;">
                                             <?php echo $arValue['LABEL']; ?>
@@ -204,16 +211,18 @@ class PageType {
                                                     $selected = '  checked="checked"';
                                                 }
                                                 ?>
-                                                <div> <input type="radio" name="__component<?php echo $SELECT_ID; ?>" value="<?php echo $arValueValue['VALUE']; ?>"<?php echo $selected; ?>><?php echo $arValueValue['LABEL']; ?></div>
+                                                <div>
+                                                    <input type="radio" name="__component<?php echo $SELECT_ID; ?>" value="<?php echo $arValueValue['VALUE']; ?>"<?php echo $selected; ?>><?php echo $arValueValue['LABEL']; ?>
+                                                </div>
                                             <?php endforeach; ?>
                                         </div>
                                     <?php endif; ?>
 
                                 <?php endforeach; ?>
                             </div>
-                            <input name="<?php echo $strHTMLControlName['VALUE']; ?>" value='<?php echo serialize($value['VALUE']); ?>' id="<?php echo $strHTMLControlName['VALUE']; ?>" type="hidden"/>
-                            <input name="<?php echo $JSON_DATA_NAME; ?>" id="<?php echo $JSON_DATA_NAME; ?>" value='<?php echo $JSON_DATA; ?>' type="hidden"/>
-                            <input name="<?php echo $strHTMLControlName['DESCRIPTION']; ?>" value='<?php echo $TYPE; ?>' id="<?php echo $strHTMLControlName['DESCRIPTION']; ?>" type="hidden"/>
+                            <input name="<?php echo $strHTMLControlName['VALUE']; ?>" value='<?php echo serialize($value['VALUE']); ?>' id="<?php echo $strHTMLControlName['VALUE']; ?>" type="hidden" />
+                            <input name="<?php echo $JSON_DATA_NAME; ?>" id="<?php echo $JSON_DATA_NAME; ?>" value='<?php echo $JSON_DATA; ?>' type="hidden" />
+                            <input name="<?php echo $strHTMLControlName['DESCRIPTION']; ?>" value='<?php echo $TYPE; ?>' id="<?php echo $strHTMLControlName['DESCRIPTION']; ?>" type="hidden" />
                             <hr>
                         </td>
                         <td style="text-align: left; padding-left: 20px;vertical-align: top;">
@@ -223,7 +232,8 @@ class PageType {
                                         <b><?php echo $value['VALUE']['LINK']; ?></b>
                                     <?php endif; ?>
                                 <?php elseif ($value['VALUE']['TYPE'] == 'COMPONENT'): ?>
-                                    <b>Компонент</b>: <?php echo $value['VALUE']['COMPONENT_NAME']; ?><br> 
+                                    <b>Компонент</b>: <?php echo $value['VALUE']['COMPONENT_NAME']; ?>
+                                    <br>
                                     <b>Шаблон</b>: <?php echo $value['VALUE']['TEMPLATE']; ?>
                                     <?php if (isset($arTemplatesDesc[$value['VALUE']['TEMPLATE']])): ?>
                                         <br>
@@ -248,7 +258,8 @@ class PageType {
         }
     }
 
-    public static function GetScript($strHTMLControlName, $SELECT_ID, $JSON_DATA_NAME, $JSON_COMPONENTS, $arProperty, $TEMPLATE) {
+    public static function GetScript($strHTMLControlName, $SELECT_ID, $JSON_DATA_NAME, $JSON_COMPONENTS, $arProperty, $TEMPLATE)
+    {
         ob_start();
         ?>
         <script>
@@ -267,8 +278,12 @@ class PageType {
                             '&PROPERTY_INPUT=<?php echo $strHTMLControlName['VALUE']; ?>' +
                             '&JSON_INPUT=<?php echo $JSON_DATA_NAME; ?>' +
                             ''
-                            ;
-                        pop_up = (new BX.CDialog({'content_url': content_url, 'width': '1430', 'height': '851'}));
+                        ;
+                        pop_up = (new BX.CDialog({
+                            'content_url': content_url,
+                            'width': '1430',
+                            'height': '851'
+                        }));
                         pop_up.Show();
                     } else if (value == 'EXTERNAL_LINK') {
                         content_url = '/bitrix/admin/external_link_pop_up.php?' +
@@ -276,8 +291,12 @@ class PageType {
                             '&PROPERTY_INPUT=<?php echo $strHTMLControlName['VALUE']; ?>' +
                             '&JSON_INPUT=<?php echo $JSON_DATA_NAME; ?>' +
                             ''
-                            ;
-                        pop_up = (new BX.CDialog({'content_url': content_url, 'width': '600', 'height': '100'}));
+                        ;
+                        pop_up = (new BX.CDialog({
+                            'content_url': content_url,
+                            'width': '600',
+                            'height': '100'
+                        }));
                         pop_up.Show();
                     } else if (value == 'NONE') {
 
@@ -301,22 +320,24 @@ class PageType {
         return $script;
     }
 
-    public static function GetComponents($filter = array()) {
+    public static function GetComponents($filter = array())
+    {
         $components = array();
-        $_components = \CHTMLEditor::GetComponents(Array());
+        $_components = \CHTMLEditor::GetComponents(array());
         foreach ($_components['items'] as $component) {
             if (in_array($component['name'], $filter)) {
                 continue;
             }
             $components[] = array(
                 'VALUE' => $component['name'],
-                'LABEL' => $component['title'] . ' [' . $component['name'] . ']'
+                'LABEL' => $component['title'] . ' [' . $component['name'] . ']',
             );
         }
         return $components;
     }
 
-    public static function GetJsonComponents($COMPONENTS) {
+    public static function GetJsonComponents($COMPONENTS)
+    {
         $return = array();
         foreach ($COMPONENTS as $COMPONENT) {
             $return[$COMPONENT['VALUE']] = $COMPONENT['VALUE'];
@@ -324,7 +345,8 @@ class PageType {
         return $return;
     }
 
-    function GetAdminListViewHTML($arProperty, $value, $strHTMLControlName) {
+    function GetAdminListViewHTML($arProperty, $value, $strHTMLControlName)
+    {
         if ($value['VALUE']['TYPE'] == 'PAGE') {
             return '<div style="border: 1px dashed #B2BFC4;padding: 5px;">Текстовая страница</div>';
         } elseif ($value['VALUE']['TYPE'] == 'COMPONENT') {
@@ -335,7 +357,8 @@ class PageType {
         return '<div style="border: 1px dashed #B2BFC4;padding: 5px;">Текстовая страница</div>';
     }
 
-    function ConvertToDB($arProperty, $value) {
+    function ConvertToDB($arProperty, $value)
+    {
         if ($value['DESCRIPTION'] == 'NONE') {
             $value['VALUE'] = "";
         } elseif ($value['DESCRIPTION'] == 'PAGE') {
@@ -364,7 +387,8 @@ class PageType {
         return $value;
     }
 
-    function ConvertFromDB($arProperty, $value) {
+    function ConvertFromDB($arProperty, $value)
+    {
         if (strlen($value['VALUE']) > 0) {
             try {
                 $VALUE = unserialize($value['VALUE']);
@@ -393,7 +417,8 @@ class PageType {
         return $value;
     }
 
-    public static function ProcessParams($arParams) {
+    public static function ProcessParams($arParams)
+    {
         foreach ($arParams as &$arParam) {
             if (is_array($arParam)) {
                 $arParam = self::ProcessParams($arParam);
@@ -417,7 +442,8 @@ class PageType {
         return $arParams;
     }
 
-    public static function GetArrKeyValue($arParam, $arParamStr) {
+    public static function GetArrKeyValue($arParam, $arParamStr)
+    {
         if (!is_array($arParam)) {
             return $arParam;
         }
@@ -425,28 +451,29 @@ class PageType {
         preg_match_all($re, $arParamStr, $matches);
         if (count($matches) > 0) {
             $arr_params = explode('][', $matches[0][0]);
-            array_walk($arr_params, function(&$item, $key) {
+            array_walk($arr_params, function (&$item, $key) {
                 $item = str_replace(array("[", "]", "'", '"'), "", $item);
             });
             foreach ($arr_params as $arr_param) {
                 if (isset($arParam[$arr_param])) {
                     $arParam = $arParam[$arr_param];
                 } else {
-                    return NULL;
+                    return null;
                 }
             }
         }
         return $arParam;
     }
 
-    public static function GetSuperGlobal($arParam) {
+    public static function GetSuperGlobal($arParam)
+    {
         $arParam = '$' . $arParam;
         switch ($arParam) {
             case '$_SERVER':
-                return NULL;
+                return null;
                 break;
             case '$_ENV':
-                return NULL;
+                return null;
                 break;
             case '$GLOBALS':
                 return $GLOBALS;
@@ -464,19 +491,20 @@ class PageType {
                 return $_COOKIE;
                 break;
             case '$_FILES':
-                return NULL;
+                return null;
                 break;
             case '$_SESSION':
                 return $_SESSION;
                 break;
 
             default:
-                return NULL;
+                return null;
                 break;
         }
     }
 
-    public static function isElement($SEF_FOLDER, $IBLOCK_ID, &$arVariables) {
+    public static function isElement($SEF_FOLDER, $IBLOCK_ID, &$arVariables)
+    {
         global $APPLICATION, $CACHE_MANAGER;
         $cur_page = $APPLICATION->GetCurPage();
 
@@ -553,7 +581,8 @@ class PageType {
         }
     }
 
-    public static function GetExternalLink($arElement, $arParams) {
+    public static function GetExternalLink($arElement, $arParams)
+    {
         if (isset($arParams['EXTERNAL_LINK_PROPERTY']) && strlen($arParams['EXTERNAL_LINK_PROPERTY']) > 0) {
             if (isset($arElement['PROPERTY_' . $arParams['EXTERNAL_LINK_PROPERTY'] . '_VALUE'])) {
                 if (!isset($arElement['PROPERTY_' . $arParams['EXTERNAL_LINK_PROPERTY'] . '_VALUE']['TYPE'])) {
@@ -575,4 +604,5 @@ class PageType {
     }
 
 }
+
 ?>

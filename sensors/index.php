@@ -7,7 +7,7 @@ $APPLICATION->SetTitle("Сенсоры");
 $APPLICATION->IncludeComponent(
     "longbyte:blank.route",
     "sensors",
-    Array(
+    array(
         'SEF_MODE' => 'Y',
         "SEF_FOLDER" => "/sensors/",
         'SEF_URL_TEMPLATES' => array(
@@ -17,7 +17,7 @@ $APPLICATION->IncludeComponent(
             "online" => "#SYSTEM_NAME#-#SYSTEM_TOKEN#/online/",
             "edit" => "#SYSTEM_NAME#-#SYSTEM_TOKEN#/edit/",
             "stat" => "#SYSTEM_NAME#-#SYSTEM_TOKEN#/stat/",
-        )
+        ),
     )
 );
 ?><? require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php"); ?>

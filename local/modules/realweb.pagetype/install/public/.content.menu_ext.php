@@ -35,7 +35,7 @@ $aMenuLinksExt = $APPLICATION->IncludeComponent(
     "SECTION_FILTERNAME" => "arFilterContentMenuHeaderSection",
     "EXTERNAL_LINK" => array('PageType', 'GetExternalLink'),
     "EXTERNAL_LINK_PROPERTY" => 'PAGE_TYPE',
-    ), false
+), false
 );
 
 $aMenuLinks = array_merge($aMenuLinks, $aMenuLinksExt);

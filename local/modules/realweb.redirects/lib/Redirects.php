@@ -7,15 +7,17 @@ use Bitrix\Main\Context;
 use Bitrix\Main\Web\Uri;
 use Bitrix\Highloadblock\HighloadBlockTable;
 
-class Redirects {
+class Redirects
+{
 
     protected static $arHlBlock;
 
     /**
-     * 
+     *
      * @param \Bitrix\Main\ORM\Event $obEvent
      */
-    public static function onBeforeSave($obEvent) {
+    public static function onBeforeSave($obEvent)
+    {
         $arFields = $obEvent->getParameter('fields');
 
         if (!$arFields['UF_REGEXP']) {
@@ -32,13 +34,15 @@ class Redirects {
         }
     }
 
-    public static function onPageStart() {
+    public static function onPageStart()
+    {
         if (Loader::includeModule('iblock') && Loader::includeModule('highloadblock')) {
             self::checkRedirects();
         }
     }
 
-    private static function checkRedirects() {
+    private static function checkRedirects()
+    {
 
         if (!self::$arHlBlock) {
             self::$arHlBlock = HighloadBlockTable::getRow(array(
@@ -57,14 +61,14 @@ class Redirects {
             $obDataClass = $obEntity->getDataClass();
 
             $arRedirect = $obDataClass::getRow(array(
-                    'filter' => array(
-                        'UF_ACTIVE' => 1,
-                        'UF_FROM' => $obUri->getPath(),
-                        'UF_REGEXP' => 0,
-                    ),
-                    'order' => array(
-                        'UF_SORT' => 'ASC'
-                    ),
+                'filter' => array(
+                    'UF_ACTIVE' => 1,
+                    'UF_FROM' => $obUri->getPath(),
+                    'UF_REGEXP' => 0,
+                ),
+                'order' => array(
+                    'UF_SORT' => 'ASC',
+                ),
             ));
 
             if ($arRedirect) {
@@ -75,13 +79,13 @@ class Redirects {
 
             if (!$arRedirect) {
                 $rsRedirects = $obDataClass::getList(array(
-                        'filter' => array(
-                            'UF_ACTIVE' => 1,
-                            'UF_REGEXP' => 1,
-                        ),
-                        'order' => array(
-                            'UF_SORT' => 'ASC'
-                        ),
+                    'filter' => array(
+                        'UF_ACTIVE' => 1,
+                        'UF_REGEXP' => 1,
+                    ),
+                    'order' => array(
+                        'UF_SORT' => 'ASC',
+                    ),
                 ));
 
                 while ($arRedirect = $rsRedirects->fetch()) {

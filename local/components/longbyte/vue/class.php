@@ -6,14 +6,16 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 use Bitrix\Main\Application;
 use Bitrix\Main\IO;
 
-class LongbyteVueComponent extends CBitrixComponent {
+class LongbyteVueComponent extends CBitrixComponent
+{
 
     /**
      * Prepare Component Params
      * @param array $arParams
      * @return array
      */
-    public function onPrepareComponentParams($arParams) {
+    public function onPrepareComponentParams($arParams)
+    {
         $arParams['INCLUDE_COMPONENTS'] = is_array($arParams['INCLUDE_COMPONENTS']) ? $arParams['INCLUDE_COMPONENTS'] : array();
         $arParams['STYLE_TO_COMPILER'] = $arParams['STYLE_TO_COMPILER'] == 'Y' ? 'Y' : 'N';
 
@@ -24,14 +26,15 @@ class LongbyteVueComponent extends CBitrixComponent {
      * Start Component
      * @global \CMain $APPLICATION
      */
-    public function executeComponent() {
+    public function executeComponent()
+    {
         global $APPLICATION;
 
         if (count($this->arParams['INCLUDE_COMPONENTS']) > 0) {
             foreach ($this->arParams['INCLUDE_COMPONENTS'] as $strComponent) {
-                $APPLICATION->IncludeComponent("longbyte:vue", $strComponent, Array(
-                    'STYLE_TO_COMPILER' => $this->arParams['STYLE_TO_COMPILER']
-                    ), $this->__parent ?: $this
+                $APPLICATION->IncludeComponent("longbyte:vue", $strComponent, array(
+                    'STYLE_TO_COMPILER' => $this->arParams['STYLE_TO_COMPILER'],
+                ), $this->__parent ?: $this
                 );
             }
         }
@@ -48,7 +51,7 @@ class LongbyteVueComponent extends CBitrixComponent {
 
         $arStyleExt = array(
             'sass',
-            'less'
+            'less',
         );
 
         if ($this->arParams['STYLE_TO_COMPILER'] == 'Y') {
@@ -57,9 +60,9 @@ class LongbyteVueComponent extends CBitrixComponent {
                 if ($obFile->isExists()) {
                     $APPLICATION->IncludeComponent(
                         "longbyte:longbyte.csscompiler.template", "less", array(
-                        'TEMPLATE_PATH' => $this->__template->__folder . '/'
-                        ), false, array(
-                        "HIDE_ICONS" => "Y"
+                        'TEMPLATE_PATH' => $this->__template->__folder . '/',
+                    ), false, array(
+                            "HIDE_ICONS" => "Y",
                         )
                     );
                     break;

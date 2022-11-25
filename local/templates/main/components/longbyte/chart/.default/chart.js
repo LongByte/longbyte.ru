@@ -128,6 +128,7 @@ function unmark(i) {
 function d2h(d) {
     return d.toString(16);
 }
+
 function h2d(h) {
     return parseInt(h, 16);
 }
@@ -373,8 +374,7 @@ function chartdraw(i, width, o) {
                     str = str + makeCell(styleBorder + style, colw[k], 'center', bgColor, fontColor, '', '', '', '&nbsp;');
                     toRight = 1;
                     var lastNum = k;
-                } else
-                if (toRight) {
+                } else if (toRight) {
                     //Если все совсем хорошо, выводим оба в одной ячейке
                     if (colw[k] > 2 * o.minWidth) {
                         str = str + makeCell(styleBorder + cellStyle('left', borderColor), Math.round(colw[k]) / 2, 'left', bgColor, fontColor, i, j, ind[lastNum] - serviceCount, data[i][j][ind[lastNum]]);
@@ -558,24 +558,31 @@ function colPlus(col, plus) {
 function colR(col) {
     return h2d(col.substring(0, 2));
 }
+
 function colG(col) {
     return h2d(col.substring(2, 4));
 }
+
 function colB(col) {
     return h2d(col.substring(4, 6));
 }
+
 function comp0(a, b) {
     return (b[serviceCount] - a[serviceCount])
 }
+
 function comp1(a, b) {
     return (b[serviceCount + 1] - a[serviceCount + 1])
 }
+
 function comp2(a, b) {
     return (b[serviceCount + 2] - a[serviceCount + 2])
 }
+
 function comp3(a, b) {
     return (b[serviceCount + 3] - a[serviceCount + 3])
 }
+
 function comp4(a, b) {
     return (b[serviceCount + 4] - a[serviceCount + 4])
 }

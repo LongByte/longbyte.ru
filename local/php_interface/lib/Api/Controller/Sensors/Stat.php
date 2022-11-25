@@ -40,14 +40,14 @@ class Stat extends \Api\Core\Base\Controller
             'SYSTEM_ID' => $this->getSystem()->getId(),
             'ACTIVE' => true,
         ), 0, 0, array(
-            'order' => array('SORT' => 'ASC')
+            'order' => array('SORT' => 'ASC'),
         ));
 
         $arValuesFilter = array(
             'SENSOR.ACTIVE' => true,
             'SENSOR.SYSTEM_ID' => $this->getSystem()->getId(),
             '<DATE' => (new \Bitrix\Main\Type\Date()),
-            '>VALUES_COUNT' => 0
+            '>VALUES_COUNT' => 0,
         );
 
         $strSince = $this->getRequest()->get('since');
@@ -58,7 +58,7 @@ class Stat extends \Api\Core\Base\Controller
         }
 
         $obValues = \Api\Sensors\Data\Model::getAll($arValuesFilter, 0, 0, array(
-            'order' => array('DATE' => 'ASC')
+            'order' => array('DATE' => 'ASC'),
         ));
 
         foreach ($obValues as $obValue) {
@@ -124,7 +124,7 @@ class Stat extends \Api\Core\Base\Controller
 
         $this->obSystem = \Api\Sensors\System\Model::getOne(array(
             '=TOKEN' => $this->token,
-            'ACTIVE' => true
+            'ACTIVE' => true,
         ));
 
         if ($this->obSystem) {
@@ -147,23 +147,23 @@ class Stat extends \Api\Core\Base\Controller
         $arLinks = array(
             array(
                 'href' => \Api\Sensors\Links::getInstance()->getSystemUrl($this->getSystem()->getNameToken()),
-                'title' => 'Текущая статистика'
+                'title' => 'Текущая статистика',
             ),
             array(
                 'href' => \Api\Sensors\Links::getInstance()->getEditUrl($this->getSystem()->getNameToken()),
-                'title' => 'Настроить датчики'
+                'title' => 'Настроить датчики',
             ),
             array(
                 'href' => \Api\Sensors\Links::getInstance()->getStatUrl($this->getSystem()->getNameToken()),
-                'title' => 'Статистика за все время'
+                'title' => 'Статистика за все время',
             ),
             array(
                 'href' => \Api\Sensors\Links::getInstance()->getStatSinceUrl($this->getSystem()->getNameToken(), '-1month'),
-                'title' => 'за месяц'
+                'title' => 'за месяц',
             ),
             array(
                 'href' => \Api\Sensors\Links::getInstance()->getStatSinceUrl($this->getSystem()->getNameToken(), '-6months'),
-                'title' => 'за пол года'
+                'title' => 'за пол года',
             ),
         );
 

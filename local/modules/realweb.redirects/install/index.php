@@ -11,7 +11,8 @@ $bxRoot = strlen($localPath) > 0 ? rtrim($localPath, "/\\") : BX_ROOT;
 
 require_once(Application::getDocumentRoot() . $bxRoot . '/modules/realweb.redirects/prolog.php'); // пролог модуля
 
-Class realweb_redirects extends CModule {
+class realweb_redirects extends CModule
+{
     // Обязательные свойства.
 
     /**
@@ -60,7 +61,8 @@ Class realweb_redirects extends CModule {
     /**
      * Конструктор класса. Задаёт начальные значения свойствам.
      */
-    function __construct() {
+    function __construct()
+    {
         $this->PARTNER_NAME = 'Realweb';
         $this->PARTNER_URI = 'http://www.realweb.ru';
         $this->errors = array();
@@ -84,7 +86,8 @@ Class realweb_redirects extends CModule {
         }
     }
 
-    function DoInstall() {
+    function DoInstall()
+    {
         $this->InstallFiles();
         $this->InstallDB();
         if (!ModuleManager::isModuleInstalled($this->MODULE_ID)) {
@@ -95,7 +98,8 @@ Class realweb_redirects extends CModule {
         }
     }
 
-    function DoUninstall() {
+    function DoUninstall()
+    {
         if (ModuleManager::isModuleInstalled($this->MODULE_ID)) {
             ModuleManager::unRegisterModule($this->MODULE_ID);
         }
@@ -105,28 +109,33 @@ Class realweb_redirects extends CModule {
         return true;
     }
 
-    function InstallFiles() {
+    function InstallFiles()
+    {
         return true;
     }
 
-    function UnInstallFiles() {
+    function UnInstallFiles()
+    {
         return true;
     }
 
-    function InstallDB() {
+    function InstallDB()
+    {
         self::createHLBlock();
         EventManager::getInstance()->registerEventHandler('main', 'OnPageStart', $this->MODULE_ID, '\Realweb\Redirects\Redirects', 'onPageStart');
         EventManager::getInstance()->registerEventHandler('', 'RedirectsOnBeforeAdd', $this->MODULE_ID, '\Realweb\Redirects\Redirects', 'onBeforeSave');
         EventManager::getInstance()->registerEventHandler('', 'RedirectsOnBeforeUpdate', $this->MODULE_ID, '\Realweb\Redirects\Redirects', 'onBeforeSave');
     }
 
-    function UnInstallDB() {
+    function UnInstallDB()
+    {
         EventManager::getInstance()->unregisterEventHandler('main', 'OnPageStart', $this->MODULE_ID, '\Realweb\Redirects\Redirects', 'onPageStart');
         EventManager::getInstance()->unregisterEventHandler('', 'RedirectsOnBeforeAdd', $this->MODULE_ID, '\Realweb\Redirects\Redirects', 'onBeforeSave');
         EventManager::getInstance()->unregisterEventHandler('', 'RedirectsOnBeforeUpdate', $this->MODULE_ID, '\Realweb\Redirects\Redirects', 'onBeforeSave');
     }
 
-    function createHLBlock() {
+    function createHLBlock()
+    {
         if (Loader::includeModule('iblock') && Loader::includeModule('highloadblock')) {
 
             $arHighBlockTypeProduct = array(
@@ -135,65 +144,66 @@ Class realweb_redirects extends CModule {
                 array(
                     'FIELDS' => array(
                         'UF_ACTIVE' => array('N', 'boolean', array(
-                                'SETTINGS' => array(
-                                    'DEFAULT_VALUE' => true,
-                                ),
-                                'EDIT_FORM_LABEL' => array(
-                                    'ru' => 'Активность',
-                                ),
-                                'LIST_COLUMN_LABEL' => array(
-                                    'ru' => 'Активность',
-                                ),
-                            )),
+                            'SETTINGS' => array(
+                                'DEFAULT_VALUE' => true,
+                            ),
+                            'EDIT_FORM_LABEL' => array(
+                                'ru' => 'Активность',
+                            ),
+                            'LIST_COLUMN_LABEL' => array(
+                                'ru' => 'Активность',
+                            ),
+                        )),
                         'UF_FROM' => array('Y', 'string', array(
-                                'EDIT_FORM_LABEL' => array(
-                                    'ru' => 'Исходный адрес',
-                                ),
-                                'LIST_COLUMN_LABEL' => array(
-                                    'ru' => 'Исходный адрес',
-                                ),
-                                'SHOW_FILTER' => 'S',
-                            )),
+                            'EDIT_FORM_LABEL' => array(
+                                'ru' => 'Исходный адрес',
+                            ),
+                            'LIST_COLUMN_LABEL' => array(
+                                'ru' => 'Исходный адрес',
+                            ),
+                            'SHOW_FILTER' => 'S',
+                        )),
                         'UF_TO' => array('Y', 'string', array(
-                                'EDIT_FORM_LABEL' => array(
-                                    'ru' => 'Целевой адрес',
-                                ),
-                                'LIST_COLUMN_LABEL' => array(
-                                    'ru' => 'Целевой адрес',
-                                ),
-                                'SHOW_FILTER' => 'S',
-                            )),
+                            'EDIT_FORM_LABEL' => array(
+                                'ru' => 'Целевой адрес',
+                            ),
+                            'LIST_COLUMN_LABEL' => array(
+                                'ru' => 'Целевой адрес',
+                            ),
+                            'SHOW_FILTER' => 'S',
+                        )),
                         'UF_SORT' => array('Y', 'integer', array(
-                                'SETTINGS' => array(
-                                    'DEFAULT_VALUE' => 500,
-                                ),
-                                'EDIT_FORM_LABEL' => array(
-                                    'ru' => 'Сортировка',
-                                ),
-                                'LIST_COLUMN_LABEL' => array(
-                                    'ru' => 'Сортировка',
-                                ),
-                            )),
+                            'SETTINGS' => array(
+                                'DEFAULT_VALUE' => 500,
+                            ),
+                            'EDIT_FORM_LABEL' => array(
+                                'ru' => 'Сортировка',
+                            ),
+                            'LIST_COLUMN_LABEL' => array(
+                                'ru' => 'Сортировка',
+                            ),
+                        )),
                         'UF_REGEXP' => array('N', 'boolean', array(
-                                'SETTINGS' => array(
-                                    'DEFAULT_VALUE' => false,
-                                ),
-                                'EDIT_FORM_LABEL' => array(
-                                    'ru' => 'Регулярное выражение',
-                                ),
-                                'LIST_COLUMN_LABEL' => array(
-                                    'ru' => 'Регулярное выражение',
-                                ),
-                            )),
+                            'SETTINGS' => array(
+                                'DEFAULT_VALUE' => false,
+                            ),
+                            'EDIT_FORM_LABEL' => array(
+                                'ru' => 'Регулярное выражение',
+                            ),
+                            'LIST_COLUMN_LABEL' => array(
+                                'ru' => 'Регулярное выражение',
+                            ),
+                        )),
                     ),
-                )
+                ),
             );
 
             self::createHighLoadBlock($arHighBlockTypeProduct[0], $arHighBlockTypeProduct[1], $arHighBlockTypeProduct[2]);
         }
     }
 
-    function createHighLoadBlock($tableName, $highBlockName, array $hlData) {
+    function createHighLoadBlock($tableName, $highBlockName, array $hlData)
+    {
         global $APPLICATION;
 
         $info = array();
@@ -201,7 +211,7 @@ Class realweb_redirects extends CModule {
         foreach (array('highloadblock') as $moduleId) {
             if (!\Bitrix\Main\Loader::includeModule($moduleId)) {
                 throw new \Bitrix\Main\SystemException(Loc::getMessage('ERROR_INCLUDE_HIGHLOADBLOCK_MODULE', array(
-                        '#MODULE#' => $moduleId
+                    '#MODULE#' => $moduleId,
                 )));
             }
         }
@@ -214,7 +224,7 @@ Class realweb_redirects extends CModule {
                 'filter' => array(
                     'TABLE_NAME' => $tableName,
                 ))
-            )->fetch();
+        )->fetch();
 
         if (!$hlblock) {
 
@@ -237,13 +247,13 @@ Class realweb_redirects extends CModule {
                 $highBlockID = $result->getId();
 
                 $info[] = Loc::getMessage('HIGHLOADBLOCK_ADDED_INFO', array(
-                        '#NAME#' => $highBlockName,
-                        '#ID#' => $highBlockID,
+                    '#NAME#' => $highBlockName,
+                    '#ID#' => $highBlockID,
                 ));
             } else {
                 throw new \Bitrix\Main\SystemException(Loc::getMessage('HIGHLOADBLOCK_ADDED_INFO_ERROR', array(
-                        '#NAME#' => $highBlockName,
-                        '#ERROR#' => $result->getErrorMessages(),
+                    '#NAME#' => $highBlockName,
+                    '#ERROR#' => $result->getErrorMessages(),
                 )));
             }
         } else {
@@ -274,37 +284,37 @@ Class realweb_redirects extends CModule {
             }
 
             $resProperty = CUserTypeEntity::GetList(
-                    array(), array('ENTITY_ID' => $aUserField['ENTITY_ID'], 'FIELD_NAME' => $aUserField['FIELD_NAME'])
+                array(), array('ENTITY_ID' => $aUserField['ENTITY_ID'], 'FIELD_NAME' => $aUserField['FIELD_NAME'])
             );
 
             if ($aUserHasField = $resProperty->Fetch()) {
                 $idUserTypeProp = $aUserHasField['ID'];
                 if ($oUserTypeEntity->Update($idUserTypeProp, $aUserField)) {
                     $info[] = Loc::getMessage('USER_TYPE_UPDATE', array(
-                            '#FIELD_NAME#' => $aUserHasField['FIELD_NAME'],
-                            '#ENTITY_ID#' => $aUserHasField['ENTITY_ID'],
+                        '#FIELD_NAME#' => $aUserHasField['FIELD_NAME'],
+                        '#ENTITY_ID#' => $aUserHasField['ENTITY_ID'],
                     ));
                 } else {
                     if (($ex = $APPLICATION->GetException())) {
                         throw new \Bitrix\Main\SystemException(Loc::getMessage('USER_TYPE_UPDATE_ERROR', array(
-                                '#FIELD_NAME#' => $aUserHasField['FIELD_NAME'],
-                                '#ENTITY_ID#' => $aUserHasField['ENTITY_ID'],
-                                '#ERROR#' => $ex->GetString(),
+                            '#FIELD_NAME#' => $aUserHasField['FIELD_NAME'],
+                            '#ENTITY_ID#' => $aUserHasField['ENTITY_ID'],
+                            '#ERROR#' => $ex->GetString(),
                         )));
                     }
                 }
             } else {
                 if ($idUserTypeProp = $oUserTypeEntity->Add($aUserField)) {
                     $info[] = Loc::getMessage('USER_TYPE_ADDED', array(
-                            '#FIELD_NAME#' => $aUserField['FIELD_NAME'],
-                            '#ENTITY_ID#' => $aUserField['ENTITY_ID'],
+                        '#FIELD_NAME#' => $aUserField['FIELD_NAME'],
+                        '#ENTITY_ID#' => $aUserField['ENTITY_ID'],
                     ));
                 } else {
                     if (($ex = $APPLICATION->GetException())) {
                         throw new \Bitrix\Main\SystemException(Loc::getMessage('USER_TYPE_ADDED_ERROR', array(
-                                '#FIELD_NAME#' => $aUserField['FIELD_NAME'],
-                                '#ENTITY_ID#' => $aUserField['ENTITY_ID'],
-                                '#ERROR#' => $ex->GetString(),
+                            '#FIELD_NAME#' => $aUserField['FIELD_NAME'],
+                            '#ENTITY_ID#' => $aUserField['ENTITY_ID'],
+                            '#ERROR#' => $ex->GetString(),
                         )));
                     }
                 }
@@ -314,7 +324,7 @@ Class realweb_redirects extends CModule {
         }
 
         $hlEntity = \Bitrix\Highloadblock\HighloadBlockTable::compileEntity(
-                \Bitrix\Highloadblock\HighloadBlockTable::getRowById($highBlockID)
+            \Bitrix\Highloadblock\HighloadBlockTable::getRowById($highBlockID)
         );
 
         if (isset($hlData['ALTER']) && is_array($hlData['ALTER'])) {
@@ -322,15 +332,15 @@ Class realweb_redirects extends CModule {
             foreach ($hlData['ALTER'] as $alterData) {
 
                 if ($connection->query(
-                        str_replace(
-                            '#TABLE_NAME#', $sqlHelper->quote($hlEntity->getDBTableName()), $alterData
-                        )
+                    str_replace(
+                        '#TABLE_NAME#', $sqlHelper->quote($hlEntity->getDBTableName()), $alterData
                     )
+                )
                 ) {
                     $info[] = Loc::getMessage('HIGHLOADBLOCK_ALTER_SUCCESS_INFO', array(
-                            '#ROW#' => str_replace(
-                                '#TABLE_NAME#', $sqlHelper->quote($hlEntity->getDBTableName()), $alterData
-                            )
+                        '#ROW#' => str_replace(
+                            '#TABLE_NAME#', $sqlHelper->quote($hlEntity->getDBTableName()), $alterData
+                        ),
                     ));
                 }
             }
@@ -346,14 +356,14 @@ Class realweb_redirects extends CModule {
 
                 if ($iResult) {
                     $info[] = Loc::getMessage('HIGHLOADBLOCK_ADDED_INDEX_INFO', array(
-                            '#INDEX_NAME#' => str_replace('#TABLE_NAME#', $hlEntity->getDBTableName(), $indexData[1]),
-                            '#TABLE_NAME#' => $hlEntity->getDBTableName(),
+                        '#INDEX_NAME#' => str_replace('#TABLE_NAME#', $hlEntity->getDBTableName(), $indexData[1]),
+                        '#TABLE_NAME#' => $hlEntity->getDBTableName(),
                     ));
                 } else {
                     throw new \Bitrix\Main\SystemException(Loc::getMessage('HIGHLOADBLOCK_ADDED_INDEX_ERROR', array(
-                            '#INDEX_NAME#' => str_replace('#TABLE_NAME#', $hlEntity->getDBTableName(), $indexData[1]),
-                            '#TABLE_NAME#' => $hlEntity->getDBTableName(),
-                            '#ERROR#' => '',
+                        '#INDEX_NAME#' => str_replace('#TABLE_NAME#', $hlEntity->getDBTableName(), $indexData[1]),
+                        '#TABLE_NAME#' => $hlEntity->getDBTableName(),
+                        '#ERROR#' => '',
                     )));
                 }
             }

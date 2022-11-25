@@ -2,94 +2,86 @@
     padding: 10px;
 }
 
-.active {background-color: #FFF8C0}
-.below {background-color: #E0FFD0}
-.above {background-color: #FFD8C0}
+.active {
+    background-color: #FFF8C0
+}
 
-.oc
-{
+.below {
+    background-color: #E0FFD0
+}
+
+.above {
+    background-color: #FFD8C0
+}
+
+.oc {
     color: red;
     font-weight: bold;
 }
 
-.comment
-{
+.comment {
     color: #aaa;
 
-    &:before
-        {
+    &:before {
         content: ' (';
     }
 
-    &:after
-        {
+    &:after {
         content: ')';
     }
 }
 
-body.hideOc .oc
-{
+body.hideOc .oc {
     display: none;
 }
 
-body.hideComment .comment
-{
+body.hideComment .comment {
     display: none;
 }
 
-.intel
-{
+.intel {
     color: #0000cc;
 }
 
-.amd
-{
+.amd {
     color: #cc0000;
 }
 
-.nvidia
-{
+.nvidia {
     color: #00cc00;
 }
 
-.mode
-{
+.mode {
     font-size: 20px;
     text-align: center;
 
-    a
-    {
+    a {
         text-decoration: underline;
     }
 }
 
-.help
-{
+.help {
     text-align: center;
 
-    table
-    {
+    table {
         border-collapse: collapse;
 
-        td
-        {
+        td {
             padding: 2px;
             border: 1px solid #ccc;
         }
 
-        tr:first-child td:first-child
-            {
+        tr:first-child td:first-child {
             text-align: center;
         }
 
-        tr td:first-child
-            {
+        tr td:first-child {
             text-align: right;
         }
     }
 }
 
-.lb-spoiler.spoiler-type  {
+.lb-spoiler.spoiler-type {
     > .spoiler-title {
         width: 100%;
         max-width: 800px;
@@ -103,16 +95,14 @@ body.hideComment .comment
 .lb-spoiler.spoiler-desc {
     max-width: 800px;
 
-    > .spoiler-title
-    {
+    > .spoiler-title {
         color: #8888FF;
         border-bottom: 1px dashed #8888FF;
     }
 }
 
 .lb-spoiler.spoiler-filter {
-    > .spoiler-title
-    {
+    > .spoiler-title {
         border-bottom: 1px dashed black;
     }
 }
@@ -131,22 +121,17 @@ body.hideComment .comment
     }
 }
 
-font > table
-{
-    > tbody 
-    {
-        > tr
-        {
-            > td
-            {
+font > table {
+    > tbody {
+        > tr {
+            > td {
                 width: auto !important;
             }
         }
     }
 }
 
-nobr
-{
+nobr {
     white-space: normal;
 }
 
@@ -157,29 +142,24 @@ nobr
         display: block;
     }
 
-    font > table
-    {
+    font > table {
         display: block;
 
-        > tbody 
-        {
+        > tbody {
             display: block;
 
-            > tr
-            {
+            > tr {
                 display: block;
                 margin: 4px 0;
                 background: #fcfcfc;
 
-                > td
-                {
+                > td {
                     display: block;
                     width: auto !important;
                     padding: 0 !important;
                     border: 0 !important;
 
-                    tr td:first-child
-                        {
+                    tr td:first-child {
                         border-left: 1px solid black;
                     }
                 }

@@ -14,7 +14,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 ?>
-<h1 style="text-align: center;">Портфолио</h1>  
+<h1 style="text-align: center;">Портфолио</h1>
 <script>
     window.vueData.portfolio = <?= CUtil::PhpToJSObject($arResult['VUE'], false, false, true) ?>;
 </script>

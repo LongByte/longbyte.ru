@@ -8,7 +8,7 @@ namespace Api\WikiApi\Element;
 class Model extends \Api\Core\Iblock\Element\Model
 {
 
-    protected static int $_iblockId =  IBLOCK_MAIN_WIKI_API;
+    protected static int $_iblockId = IBLOCK_MAIN_WIKI_API;
 
     public static function getEntity(): string
     {

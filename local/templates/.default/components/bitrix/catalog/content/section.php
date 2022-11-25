@@ -122,7 +122,7 @@ $this->setFrameMode(true);
             'BACKGROUND_IMAGE' => (isset($arParams['SECTION_BACKGROUND_IMAGE']) ? $arParams['SECTION_BACKGROUND_IMAGE'] : ''),
             'DISABLE_INIT_JS_IN_COMPONENT' => (isset($arParams['DISABLE_INIT_JS_IN_COMPONENT']) ? $arParams['DISABLE_INIT_JS_IN_COMPONENT'] : ''),
             'SECTION_USER_FIELDS' => array('UF_*'),
-            ), $component
+        ), $component
         );
         ?>
     <? endif; ?>

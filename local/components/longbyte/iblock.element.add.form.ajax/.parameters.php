@@ -19,7 +19,7 @@ if ($arCurrentValues["IBLOCK_ID"] > 0) {
 $arIBlockType = CIBlockParameters::GetIBlockTypes();
 
 $arIBlock = array();
-$rsIBlock = CIBlock::GetList(Array("sort" => "asc"), Array("TYPE" => $arCurrentValues["IBLOCK_TYPE"], "ACTIVE" => "Y"));
+$rsIBlock = CIBlock::GetList(array("sort" => "asc"), array("TYPE" => $arCurrentValues["IBLOCK_TYPE"], "ACTIVE" => "Y"));
 while ($arr = $rsIBlock->Fetch()) {
     $arIBlock[$arr["ID"]] = "[" . $arr["ID"] . "] " . $arr["NAME"];
 }
@@ -41,7 +41,7 @@ $arProperty_F = array(
 );
 $arVirtualProperties = $arProperty_LNSF;
 
-$rsProp = CIBlockProperty::GetList(Array("sort" => "asc", "name" => "asc"), Array("ACTIVE" => "Y", "IBLOCK_ID" => $arCurrentValues["IBLOCK_ID"]));
+$rsProp = CIBlockProperty::GetList(array("sort" => "asc", "name" => "asc"), array("ACTIVE" => "Y", "IBLOCK_ID" => $arCurrentValues["IBLOCK_ID"]));
 while ($arr = $rsProp->Fetch()) {
     $arProperty[$arr["ID"]] = "[" . $arr["CODE"] . "] " . $arr["NAME"];
     if (in_array($arr["PROPERTY_TYPE"], array("L", "N", "S", "F"))) {
@@ -53,13 +53,13 @@ while ($arr = $rsProp->Fetch()) {
 }
 
 $arGroups = array();
-$rsGroups = CGroup::GetList($by = "c_sort", $order = "asc", Array("ACTIVE" => "Y"));
+$rsGroups = CGroup::GetList($by = "c_sort", $order = "asc", array("ACTIVE" => "Y"));
 while ($arGroup = $rsGroups->Fetch()) {
     $arGroups[$arGroup["ID"]] = $arGroup["NAME"];
 }
 
 if ($bWorkflowIncluded) {
-    $rsWFStatus = CWorkflowStatus::GetList($by = "c_sort", $order = "asc", Array("ACTIVE" => "Y"), $is_filtered);
+    $rsWFStatus = CWorkflowStatus::GetList($by = "c_sort", $order = "asc", array("ACTIVE" => "Y"), $is_filtered);
     $arWFStatus = array();
     while ($arWFS = $rsWFStatus->Fetch()) {
         $arWFStatus[$arWFS["ID"]] = $arWFS["TITLE"];
@@ -75,7 +75,7 @@ $arComponentParameters = array(
     "GROUPS" => array(
         "PARAMS" => array(
             "NAME" => GetMessage("IBLOCK_PARAMS"),
-            "SORT" => "200"
+            "SORT" => "200",
         ),
         "ACCESS" => array(
             "NAME" => GetMessage("IBLOCK_ACCESS"),
@@ -91,7 +91,7 @@ $arComponentParameters = array(
         ),
     ),
     "PARAMETERS" => array(
-        "SEF_MODE" => Array(),
+        "SEF_MODE" => array(),
         "IBLOCK_TYPE" => array(
             "PARENT" => "DATA_SOURCE",
             "NAME" => GetMessage("IBLOCK_TYPE"),

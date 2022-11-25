@@ -30,7 +30,7 @@ unset($arItem);
 
 
 $arResult['VUE'] = array(
-    'items' => array()
+    'items' => array(),
 );
 foreach ($arResult['ITEMS'] as $arItem) {
 
@@ -38,7 +38,7 @@ foreach ($arResult['ITEMS'] as $arItem) {
     foreach (explode(',', $arItem['TAGS']) as &$tag) {
         $arTags[] = array(
             'TAG' => $tag,
-            'ID' => $arItem['ID'] . '_' . md5($tag)
+            'ID' => $arItem['ID'] . '_' . md5($tag),
         );
     }
     unset($tag);

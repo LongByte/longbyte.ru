@@ -4,8 +4,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
     die();
 
 
-$arDefaultUrlTemplates404 = array(
-);
+$arDefaultUrlTemplates404 = array();
 
 $arDefaultVariableAliases404 = array();
 
@@ -39,7 +38,7 @@ if ($arParams["SEF_MODE"] == "Y") {
     $arVariableAliases = CComponentEngine::makeComponentVariableAliases($arDefaultVariableAliases404, $arParams["VARIABLE_ALIASES"]);
 
     $componentPage = $engine->guessComponentPath(
-            $arParams["SEF_FOLDER"], $arUrlTemplates, $arVariables
+        $arParams["SEF_FOLDER"], $arUrlTemplates, $arVariables
     );
 
     $b404 = false;
@@ -58,11 +57,11 @@ if ($arParams["SEF_MODE"] == "Y") {
         if ($folder404 != $APPLICATION->GetCurPage(true)) {
             \Bitrix\Main\Loader::includeModule('iblock');
             \Bitrix\Iblock\Component\Tools::process404(
-                    ""
-                    , ($arParams["SET_STATUS_404"] === "Y")
-                    , ($arParams["SET_STATUS_404"] === "Y")
-                    , ($arParams["SHOW_404"] === "Y")
-                    , $arParams["FILE_404"]
+                ""
+                , ($arParams["SET_STATUS_404"] === "Y")
+                , ($arParams["SET_STATUS_404"] === "Y")
+                , ($arParams["SHOW_404"] === "Y")
+                , $arParams["FILE_404"]
             );
         }
     }
@@ -80,7 +79,6 @@ if ($arParams["SEF_MODE"] == "Y") {
 
     $arVariableAliases = CComponentEngine::makeComponentVariableAliases($arDefaultVariableAliases, $arParams["VARIABLE_ALIASES"]);
     CComponentEngine::initComponentVariables(false, $arComponentVariables, $arVariableAliases, $arVariables);
-
 
 
     $componentPage = "default";

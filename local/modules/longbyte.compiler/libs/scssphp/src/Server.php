@@ -21,7 +21,8 @@ use Leafo\ScssPhp\Version;
  *
  * @author Leaf Corcoran <leafot@gmail.com>
  */
-class Server {
+class Server
+{
 
     /**
      * @var boolean
@@ -46,12 +47,13 @@ class Server {
     /**
      * Join path components
      *
-     * @param string $left  Path component, left of the directory separator
+     * @param string $left Path component, left of the directory separator
      * @param string $right Path component, right of the directory separator
      *
      * @return string
      */
-    protected function join($left, $right) {
+    protected function join($left, $right)
+    {
         return rtrim($left, '/\\') . DIRECTORY_SEPARATOR . ltrim($right, '/\\');
     }
 
@@ -60,7 +62,8 @@ class Server {
      *
      * @return string|null
      */
-    protected function inputName() {
+    protected function inputName()
+    {
         switch (true) {
             case isset($_GET['p']):
                 return $_GET['p'];
@@ -76,7 +79,8 @@ class Server {
      *
      * @return string
      */
-    protected function findInput() {
+    protected function findInput()
+    {
         if (($input = $this->inputName()) && strpos($input, '..') === false && substr($input, -5) === '.scss'
         ) {
             $name = $this->join($this->dir, $input);
@@ -94,7 +98,8 @@ class Server {
      *
      * @return string
      */
-    protected function cacheName($fname) {
+    protected function cacheName($fname)
+    {
         return $this->join($this->cacheDir, md5($fname) . '.css');
     }
 
@@ -103,19 +108,21 @@ class Server {
      *
      * @return string
      */
-    protected function metadataName($out) {
+    protected function metadataName($out)
+    {
         return $out . '.meta';
     }
 
     /**
      * Determine whether .scss file needs to be re-compiled.
      *
-     * @param string $out  Output path
+     * @param string $out Output path
      * @param string $etag ETag
      *
      * @return boolean True if compile required.
      */
-    protected function needsCompile($out, &$etag) {
+    protected function needsCompile($out, &$etag)
+    {
         if (!is_file($out)) {
             return true;
         }
@@ -154,7 +161,8 @@ class Server {
      *
      * @return string|null
      */
-    protected function getIfModifiedSinceHeader() {
+    protected function getIfModifiedSinceHeader()
+    {
         $modifiedSince = null;
 
         if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
@@ -173,7 +181,8 @@ class Server {
      *
      * @return string|null
      */
-    protected function getIfNoneMatchHeader() {
+    protected function getIfNoneMatchHeader()
+    {
         $noneMatch = null;
 
         if (isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
@@ -186,12 +195,13 @@ class Server {
     /**
      * Compile .scss file
      *
-     * @param string $in  Input path (.scss)
+     * @param string $in Input path (.scss)
      * @param string $out Output path (.css)
      *
      * @return array
      */
-    protected function compile($in, $out) {
+    protected function compile($in, $out)
+    {
         $start = microtime(true);
         $css = $this->scss->compile(file_get_contents($in), $in);
         $elapsed = round((microtime(true) - $start), 4);
@@ -204,9 +214,9 @@ class Server {
         file_put_contents($out, $css);
         file_put_contents(
             $this->metadataName($out), serialize([
-            'etag' => $etag,
-            'imports' => $this->scss->getParsedFiles(),
-            'vars' => crc32(serialize($this->scss->getVariables())),
+                'etag' => $etag,
+                'imports' => $this->scss->getParsedFiles(),
+                'vars' => crc32(serialize($this->scss->getVariables())),
             ])
         );
 
@@ -220,7 +230,8 @@ class Server {
      *
      * @return string
      */
-    protected function createErrorCSS(\Exception $error) {
+    protected function createErrorCSS(\Exception $error)
+    {
         $message = str_replace(
             ["'", "\n"], ["\\'", "\\A"], $error->getfile() . ":\n\n" . $error->getMessage()
         );
@@ -243,21 +254,23 @@ class Server {
      *
      * @param boolean $show
      */
-    public function showErrorsAsCSS($show = true) {
+    public function showErrorsAsCSS($show = true)
+    {
         $this->showErrorsAsCSS = $show;
     }
 
     /**
      * Compile .scss file
      *
-     * @param string $in  Input file (.scss)
+     * @param string $in Input file (.scss)
      * @param string $out Output file (.css) optional
      *
      * @return string|bool
      *
      * @throws \Leafo\ScssPhp\Exception\ServerException
      */
-    public function compileFile($in, $out = null) {
+    public function compileFile($in, $out = null)
+    {
         if (!is_readable($in)) {
             throw new ServerException('load error: failed to find ' . $in);
         }
@@ -278,12 +291,13 @@ class Server {
     /**
      * Check if file need compiling
      *
-     * @param string $in  Input file (.scss)
+     * @param string $in Input file (.scss)
      * @param string $out Output file (.css)
      *
      * @return bool
      */
-    public function checkedCompile($in, $out) {
+    public function checkedCompile($in, $out)
+    {
         if (!is_file($out) || filemtime($in) > filemtime($out)) {
             $this->compileFile($in, $out);
 
@@ -298,7 +312,8 @@ class Server {
      *
      * @param string $salt Prefix a string to the filename for creating the cache name hash
      */
-    public function serve($salt = '') {
+    public function serve($salt = '')
+    {
         $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
 
         if ($input = $this->findInput()) {
@@ -369,15 +384,16 @@ class Server {
     /**
      * Based on explicit input/output files does a full change check on cache before compiling.
      *
-     * @param string  $in
-     * @param string  $out
+     * @param string $in
+     * @param string $out
      * @param boolean $force
      *
      * @return string Compiled CSS results
      *
      * @throws \Leafo\ScssPhp\Exception\ServerException
      */
-    public function checkedCachedCompile($in, $out, $force = false) {
+    public function checkedCachedCompile($in, $out, $force = false)
+    {
         if (!is_file($in) || !is_readable($in)) {
             throw new ServerException('Invalid or unreadable input file specified.');
         }
@@ -398,11 +414,12 @@ class Server {
     /**
      * Constructor
      *
-     * @param string                       $dir      Root directory to .scss files
-     * @param string                       $cacheDir Cache directory
-     * @param \Leafo\ScssPhp\Compiler|null $scss     SCSS compiler instance
+     * @param string $dir Root directory to .scss files
+     * @param string $cacheDir Cache directory
+     * @param \Leafo\ScssPhp\Compiler|null $scss SCSS compiler instance
      */
-    public function __construct($dir, $cacheDir = null, $scss = null) {
+    public function __construct($dir, $cacheDir = null, $scss = null)
+    {
         $this->dir = $dir;
 
         if (!isset($cacheDir)) {
@@ -433,7 +450,8 @@ class Server {
      *
      * @param string $path Root path
      */
-    public static function serveFrom($path) {
+    public static function serveFrom($path)
+    {
         $server = new self($path);
         $server->serve();
     }

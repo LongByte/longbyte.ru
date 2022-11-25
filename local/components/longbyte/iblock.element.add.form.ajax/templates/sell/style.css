@@ -1,12 +1,10 @@
 .iblock-element-add-form.sell,
-.iblock-element-add-form.sell .data-table
-{
+.iblock-element-add-form.sell .data-table {
     width: 320px;
 }
 
 .iblock-element-add-form.sell input[type="text"],
-.iblock-element-add-form.sell textarea
-{
+.iblock-element-add-form.sell textarea {
     width: 100%;
     padding: 6px 20px;
     border: 1px solid rgb(172, 172, 172);
@@ -14,22 +12,19 @@
     font-size: 14px;
 }
 
-.iblock-element-add-form.sell thead
-{
+.iblock-element-add-form.sell thead {
     font-size: 30px;
     font-weight: bold;
     text-align: center;
 }
 
-.iblock-element-add-form.sell tbody td
-{
+.iblock-element-add-form.sell tbody td {
     padding-bottom: 15px;
     font-size: 18px;
     line-height: 25px;
 }
 
-.iblock-element-add-form.sell input[type="submit"]
-{
+.iblock-element-add-form.sell input[type="submit"] {
     display: block;
     width: 85%;
     margin: 0 auto;
@@ -42,12 +37,10 @@
     cursor: pointer;
 }
 
-.iblock-element-add-form.sell input[type="submit"]:hover
-{
+.iblock-element-add-form.sell input[type="submit"]:hover {
     background: #95EAAD;
 }
 
-.iblock-element-add-form.sell #select2-chosen-2
-{
+.iblock-element-add-form.sell #select2-chosen-2 {
     font-size: 14px;
 }

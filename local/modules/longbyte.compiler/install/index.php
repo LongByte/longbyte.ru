@@ -4,7 +4,8 @@ use Bitrix\Main\Localization\Loc;
 
 Loc::loadMessages(__FILE__);
 
-class longbyte_compiler extends CModule {
+class longbyte_compiler extends CModule
+{
 
     var $MODULE_ID = 'longbyte.compiler';
     var $MODULE_VERSION;
@@ -14,7 +15,8 @@ class longbyte_compiler extends CModule {
     var $MODULE_CSS;
     var $strError = '';
 
-    function longbyte_compiler() {
+    function longbyte_compiler()
+    {
         $arModuleVersion = array();
         $path = str_replace("\\", "/", __FILE__);
         $path = substr($path, 0, strlen($path) - strlen("/index.php"));
@@ -28,11 +30,13 @@ class longbyte_compiler extends CModule {
         $this->PARTNER_URI = GetMessage("LONGBYTE_COMPILER_PARTNER_URI");
     }
 
-    function GetModuleTasks() {
+    function GetModuleTasks()
+    {
         return array();
     }
 
-    function InstallDB($arParams = array()) {
+    function InstallDB($arParams = array())
+    {
         global $DB, $DBType, $APPLICATION;
 
         $this->InstallTasks();
@@ -42,7 +46,8 @@ class longbyte_compiler extends CModule {
         return true;
     }
 
-    function UnInstallDB($arParams = array()) {
+    function UnInstallDB($arParams = array())
+    {
         global $DB, $DBType, $APPLICATION;
         $this->errors = false;
 
@@ -55,25 +60,30 @@ class longbyte_compiler extends CModule {
         return true;
     }
 
-    function InstallEvents() {
+    function InstallEvents()
+    {
         return true;
     }
 
-    function UnInstallEvents() {
+    function UnInstallEvents()
+    {
         return true;
     }
 
-    function InstallFiles($arParams = array()) {
+    function InstallFiles($arParams = array())
+    {
         CopyDirFiles($_SERVER["DOCUMENT_ROOT"] . "/local/modules/" . $this->MODULE_ID . "/install/components/", $_SERVER["DOCUMENT_ROOT"] . "/local/components", true, true);
         return true;
     }
 
-    function UnInstallFiles() {
+    function UnInstallFiles()
+    {
         DeleteDirFiles($_SERVER["DOCUMENT_ROOT"] . "/local/modules/" . $this->MODULE_ID . "/install/components/", $_SERVER["DOCUMENT_ROOT"] . "/local/components");
         return true;
     }
 
-    function DoInstall() {
+    function DoInstall()
+    {
         global $USER, $APPLICATION;
 
         if ($USER->IsAdmin()) {
@@ -85,7 +95,8 @@ class longbyte_compiler extends CModule {
         }
     }
 
-    function DoUninstall() {
+    function DoUninstall()
+    {
         global $DB, $USER, $DOCUMENT_ROOT, $APPLICATION, $step;
 
         if ($USER->IsAdmin()) {

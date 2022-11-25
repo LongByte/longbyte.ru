@@ -17,7 +17,8 @@ namespace Leafo\ScssPhp;
  *
  * @author Leaf Corcoran <leafot@gmail.com>
  */
-class Version {
+class Version
+{
 
     const VERSION = 'v0.6.2';
 

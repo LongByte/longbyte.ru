@@ -5,7 +5,8 @@ loadRecursive($lib);
 $lib = __DIR__ . '/libs/autoprefixer';
 loadRecursive($lib);
 
-function loadRecursive($lib) {
+function loadRecursive($lib)
+{
     spl_autoload_register(function ($class) use ($lib) {
         $class = ltrim($class, '\\');
         $pieces = explode('\\', $class);

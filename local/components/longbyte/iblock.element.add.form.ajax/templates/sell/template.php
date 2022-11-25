@@ -22,7 +22,8 @@ endif
 ?>
 <form name="iblock_add" action="<?= $APPLICATION->GetCurPage() ?>" method="post" enctype="multipart/form-data" class="iblock-element-add-form sell">
     <?= bitrix_sessid_post() ?>
-    <? if ($arParams["MAX_FILE_SIZE"] > 0): ?><input type="hidden" name="MAX_FILE_SIZE" value="<?= $arParams["MAX_FILE_SIZE"] ?>" /><? endif ?>
+    <? if ($arParams["MAX_FILE_SIZE"] > 0): ?>
+        <input type="hidden" name="MAX_FILE_SIZE" value="<?= $arParams["MAX_FILE_SIZE"] ?>" /><? endif ?>
     <table class="data-table">
         <thead>
             <tr>
@@ -55,14 +56,13 @@ endif
                                     $arResult["PROPERTY_LIST_FULL"][$propertyID]["PROPERTY_TYPE"] = "S";
                                 elseif (
                                     (
-                                    $arResult["PROPERTY_LIST_FULL"][$propertyID]["PROPERTY_TYPE"] == "S" ||
-                                    $arResult["PROPERTY_LIST_FULL"][$propertyID]["PROPERTY_TYPE"] == "N"
+                                        $arResult["PROPERTY_LIST_FULL"][$propertyID]["PROPERTY_TYPE"] == "S" ||
+                                        $arResult["PROPERTY_LIST_FULL"][$propertyID]["PROPERTY_TYPE"] == "N"
                                     ) &&
                                     $arResult["PROPERTY_LIST_FULL"][$propertyID]["ROW_COUNT"] > "1"
                                 )
                                     $arResult["PROPERTY_LIST_FULL"][$propertyID]["PROPERTY_TYPE"] = "T";
-                            }
-                            elseif (($propertyID == "TAGS") && CModule::IncludeModule('search'))
+                            } elseif (($propertyID == "TAGS") && CModule::IncludeModule('search'))
                                 $arResult["PROPERTY_LIST_FULL"][$propertyID]["PROPERTY_TYPE"] = "TAGS";
 
                             if ($arResult["PROPERTY_LIST_FULL"][$propertyID]["MULTIPLE"] == "Y") {
@@ -110,7 +110,8 @@ endif
                                                 ),
                                             ));
                                         }
-                                        ?><br /><?
+                                        ?>
+                                        <br /><?
                                     }
                                     break;
                                 case "TAGS":
@@ -119,7 +120,7 @@ endif
                                         "VALUE" => $arResult["ELEMENT"][$propertyID],
                                         "NAME" => "PROPERTY[" . $propertyID . "][0]",
                                         "TEXT" => 'size="' . $arResult["PROPERTY_LIST_FULL"][$propertyID]["COL_COUNT"] . '"',
-                                        ), null, array("HIDE_ICONS" => "Y")
+                                    ), null, array("HIDE_ICONS" => "Y")
                                     );
                                     break;
                                 case "HTML":
@@ -147,7 +148,8 @@ endif
                                 case "E":
                                 case "G":
                                     ?>
-                                    <input type="hidden" name="PROPERTY[<?= $propertyID ?>][0]" value="<?= $value ?>" /><br />
+                                    <input type="hidden" name="PROPERTY[<?= $propertyID ?>][0]" value="<?= $value ?>" />
+                                    <br />
                                     <?
                                     break;
                                 case "T":
@@ -180,15 +182,18 @@ endif
                                             $arResult["PROPERTY_LIST_FULL"][$propertyID]["HINT"] = "Иван Иванов";
                                         }
                                         ?>
-                                        <input type="text" name="PROPERTY[<?= $propertyID ?>][<?= $i ?>]" size="25" value="<?= $value ?>" placeholder="<?= $arResult["PROPERTY_LIST_FULL"][$propertyID]["HINT"] ?>"/><br /><? if ($arResult["PROPERTY_LIST_FULL"][$propertyID]["USER_TYPE"] == "DateTime"): ?><?
+                                        <input type="text" name="PROPERTY[<?= $propertyID ?>][<?= $i ?>]" size="25" value="<?= $value ?>" placeholder="<?= $arResult["PROPERTY_LIST_FULL"][$propertyID]["HINT"] ?>" />
+                                        <br /><? if ($arResult["PROPERTY_LIST_FULL"][$propertyID]["USER_TYPE"] == "DateTime"): ?><?
                                             $APPLICATION->IncludeComponent(
                                                 'bitrix:main.calendar', '', array(
                                                 'FORM_NAME' => 'iblock_add',
                                                 'INPUT_NAME' => "PROPERTY[" . $propertyID . "][" . $i . "]",
                                                 'INPUT_VALUE' => $value,
-                                                ), null, array('HIDE_ICONS' => 'Y')
+                                            ), null, array('HIDE_ICONS' => 'Y')
                                             );
-                                            ?><br /><small><?= GetMessage("IBLOCK_FORM_DATE_FORMAT") ?><?= FORMAT_DATETIME ?></small><?
+                                            ?>
+                                            <br />
+                                            <small><?= GetMessage("IBLOCK_FORM_DATE_FORMAT") ?><?= FORMAT_DATETIME ?></small><?
                                         endif
                                         ?><?
                                     }
@@ -199,21 +204,29 @@ endif
                                         $value = intval($propertyID) > 0 ? $arResult["ELEMENT_PROPERTIES"][$propertyID][$i]["VALUE"] : $arResult["ELEMENT"][$propertyID];
                                         ?>
                                         <input type="hidden" name="PROPERTY[<?= $propertyID ?>][<?= $arResult["ELEMENT_PROPERTIES"][$propertyID][$i]["VALUE_ID"] ? $arResult["ELEMENT_PROPERTIES"][$propertyID][$i]["VALUE_ID"] : $i ?>]" value="<?= $value ?>" />
-                                        <input type="file" size="<?= $arResult["PROPERTY_LIST_FULL"][$propertyID]["COL_COUNT"] ?>"  name="PROPERTY_FILE_<?= $propertyID ?>_<?= $arResult["ELEMENT_PROPERTIES"][$propertyID][$i]["VALUE_ID"] ? $arResult["ELEMENT_PROPERTIES"][$propertyID][$i]["VALUE_ID"] : $i ?>" /><br />
+                                        <input type="file" size="<?= $arResult["PROPERTY_LIST_FULL"][$propertyID]["COL_COUNT"] ?>" name="PROPERTY_FILE_<?= $propertyID ?>_<?= $arResult["ELEMENT_PROPERTIES"][$propertyID][$i]["VALUE_ID"] ? $arResult["ELEMENT_PROPERTIES"][$propertyID][$i]["VALUE_ID"] : $i ?>" />
+                                        <br />
                                         <?
                                         if (!empty($value) && is_array($arResult["ELEMENT_FILES"][$value])) {
                                             ?>
-                                            <input type="checkbox" name="DELETE_FILE[<?= $propertyID ?>][<?= $arResult["ELEMENT_PROPERTIES"][$propertyID][$i]["VALUE_ID"] ? $arResult["ELEMENT_PROPERTIES"][$propertyID][$i]["VALUE_ID"] : $i ?>]" id="file_delete_<?= $propertyID ?>_<?= $i ?>" value="Y" /><label for="file_delete_<?= $propertyID ?>_<?= $i ?>"><?= GetMessage("IBLOCK_FORM_FILE_DELETE") ?></label><br />
+                                            <input type="checkbox" name="DELETE_FILE[<?= $propertyID ?>][<?= $arResult["ELEMENT_PROPERTIES"][$propertyID][$i]["VALUE_ID"] ? $arResult["ELEMENT_PROPERTIES"][$propertyID][$i]["VALUE_ID"] : $i ?>]" id="file_delete_<?= $propertyID ?>_<?= $i ?>" value="Y" />
+                                            <label for="file_delete_<?= $propertyID ?>_<?= $i ?>"><?= GetMessage("IBLOCK_FORM_FILE_DELETE") ?></label>
+                                            <br />
                                             <?
                                             if ($arResult["ELEMENT_FILES"][$value]["IS_IMAGE"]) {
                                                 ?>
-                                                <img src="<?= $arResult["ELEMENT_FILES"][$value]["SRC"] ?>" height="<?= $arResult["ELEMENT_FILES"][$value]["HEIGHT"] ?>" width="<?= $arResult["ELEMENT_FILES"][$value]["WIDTH"] ?>" border="0" /><br />
+                                                <img src="<?= $arResult["ELEMENT_FILES"][$value]["SRC"] ?>" height="<?= $arResult["ELEMENT_FILES"][$value]["HEIGHT"] ?>" width="<?= $arResult["ELEMENT_FILES"][$value]["WIDTH"] ?>" border="0" />
+                                                <br />
                                                 <?
                                             } else {
                                                 ?>
-                                                <?= GetMessage("IBLOCK_FORM_FILE_NAME") ?>: <?= $arResult["ELEMENT_FILES"][$value]["ORIGINAL_NAME"] ?><br />
-                                                <?= GetMessage("IBLOCK_FORM_FILE_SIZE") ?>: <?= $arResult["ELEMENT_FILES"][$value]["FILE_SIZE"] ?> b<br />
-                                                [<a href="<?= $arResult["ELEMENT_FILES"][$value]["SRC"] ?>"><?= GetMessage("IBLOCK_FORM_FILE_DOWNLOAD") ?></a>]<br />
+                                                <?= GetMessage("IBLOCK_FORM_FILE_NAME") ?>: <?= $arResult["ELEMENT_FILES"][$value]["ORIGINAL_NAME"] ?>
+                                                <br />
+                                                <?= GetMessage("IBLOCK_FORM_FILE_SIZE") ?>: <?= $arResult["ELEMENT_FILES"][$value]["FILE_SIZE"] ?> b
+                                                <br />
+                                                [
+                                                <a href="<?= $arResult["ELEMENT_FILES"][$value]["SRC"] ?>"><?= GetMessage("IBLOCK_FORM_FILE_DOWNLOAD") ?></a>]
+                                                <br />
                                                 <?
                                             }
                                         }
@@ -246,7 +259,9 @@ endif
                                                         $checked = true;
                                                 }
                                                 ?>
-                                                <input type="<?= $type ?>" name="PROPERTY[<?= $propertyID ?>]<?= $type == "checkbox" ? "[" . $key . "]" : "" ?>" value="<?= $key ?>" id="property_<?= $key ?>"<?= $checked ? " checked=\"checked\"" : "" ?> /><label for="property_<?= $key ?>"><?= $arEnum["VALUE"] ?></label><br />
+                                                <input type="<?= $type ?>" name="PROPERTY[<?= $propertyID ?>]<?= $type == "checkbox" ? "[" . $key . "]" : "" ?>" value="<?= $key ?>" id="property_<?= $key ?>"<?= $checked ? " checked=\"checked\"" : "" ?> />
+                                                <label for="property_<?= $key ?>"><?= $arEnum["VALUE"] ?></label>
+                                                <br />
                                                 <?
                                             }
                                             break;
@@ -300,8 +315,12 @@ endif
                         </td>
                     </tr>
                     <tr>
-                        <td><?= GetMessage("IBLOCK_FORM_CAPTCHA_PROMPT") ?><span class="starrequired">*</span>:</td>
-                        <td><input type="text" name="captcha_word" maxlength="50" value=""></td>
+                        <td><?= GetMessage("IBLOCK_FORM_CAPTCHA_PROMPT") ?>
+                            <span class="starrequired">*</span>:
+                        </td>
+                        <td>
+                            <input type="text" name="captcha_word" maxlength="50" value="">
+                        </td>
                     </tr>
                 <? endif ?>
             </tbody>
@@ -313,12 +332,12 @@ endif
                     <? if (strlen($arParams["LIST_URL"]) > 0): ?>
                         <input type="submit" name="iblock_apply" value="<?= GetMessage("IBLOCK_FORM_APPLY") ?>" />
                         <input
-                            type="button"
-                            name="iblock_cancel"
-                            value="<? echo GetMessage('IBLOCK_FORM_CANCEL'); ?>"
-                            onclick="location.href = '<? echo CUtil::JSEscape($arParams["LIST_URL"]) ?>';"
-                            >
-                        <? endif ?>
+                                type="button"
+                                name="iblock_cancel"
+                                value="<? echo GetMessage('IBLOCK_FORM_CANCEL'); ?>"
+                                onclick="location.href = '<? echo CUtil::JSEscape($arParams["LIST_URL"]) ?>';"
+                        >
+                    <? endif ?>
                 </td>
             </tr>
         </tfoot>

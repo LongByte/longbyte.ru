@@ -6,9 +6,9 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
 $APPLICATION->IncludeComponent(
     "longbyte:blank",
     "system",
-    Array(
+    array(
         'SYSTEM_NAME' => $arResult['VARIABLES']['SYSTEM_NAME'],
-        'SYSTEM_TOKEN' => $arResult['VARIABLES']['SYSTEM_TOKEN']
+        'SYSTEM_TOKEN' => $arResult['VARIABLES']['SYSTEM_TOKEN'],
     ),
     $component
 );

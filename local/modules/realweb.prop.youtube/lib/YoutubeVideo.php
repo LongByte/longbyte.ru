@@ -2,10 +2,12 @@
 
 namespace Realweb\PropYoutube;
 
-class YoutubeVideo {
+class YoutubeVideo
+{
 
     // инициализация пользовательского свойства для главного модуля
-    function GetMainUserTypeDescription() {
+    function GetMainUserTypeDescription()
+    {
         return array(
             "USER_TYPE_ID" => "YoutubeVideo",
             "CLASS_NAME" => "\Realweb\PropYoutube\YoutubeVideo",
@@ -14,7 +16,8 @@ class YoutubeVideo {
         );
     }
 
-    function GetDBColumnType($arUserField) {
+    function GetDBColumnType($arUserField)
+    {
         global $DB;
         switch (strtolower($DB->type)) {
             case "mysql":
@@ -26,17 +29,19 @@ class YoutubeVideo {
         }
     }
 
-    function GetUserTypeDescription() {
+    function GetUserTypeDescription()
+    {
         return array(
             "PROPERTY_TYPE" => "S",
             "USER_TYPE" => "YoutubeVideo",
             "DESCRIPTION" => "Видео Youtube",
-            "GetPropertyFieldHtml" => Array("\Realweb\PropYoutube\YoutubeVideo", "GetPropertyFieldHtml"),
+            "GetPropertyFieldHtml" => array("\Realweb\PropYoutube\YoutubeVideo", "GetPropertyFieldHtml"),
         );
     }
 
     // редактирование свойства в форме (главный модуль)
-    function GetEditFormHTML($arUserField, $arHtmlControl) {
+    function GetEditFormHTML($arUserField, $arHtmlControl)
+    {
         $chars = array(
             "abcdefghijklnmopqrstuvwxyz",
             "ABCDEFGHIJKLNMOPQRSTUVWXYZ",
@@ -51,7 +56,8 @@ class YoutubeVideo {
         return $html;
     }
 
-    function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName) {
+    function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName)
+    {
         $COL_COUNT = intval($arProperty['COL_COUNT'] > 0 ? $arProperty['COL_COUNT'] : '30');
         $chars = array(
             "abcdefghijklnmopqrstuvwxyz",
@@ -70,7 +76,8 @@ class YoutubeVideo {
         return $html;
     }
 
-    static function ReturnScript($id) {
+    static function ReturnScript($id)
+    {
         ob_start();
         ?>
         <script>
@@ -82,10 +89,10 @@ class YoutubeVideo {
                             e = window.event;
                         }
                         iframe = BX.findChild(BX('youtube_frame_<?php echo $id; ?>'), {
-                            "tag": "iframe",
-                        },
+                                "tag": "iframe",
+                            },
                             false
-                            );
+                        );
                         BX.adjust(iframe, {style: {display: "none"}});
 
                         last = this.value.lastIndexOf('v=');

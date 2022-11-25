@@ -83,7 +83,8 @@ if ($arParams["ID"] == 0) {
 
 if (!function_exists('iconv_recursive')) {
 
-    function iconv_recursive($from, $to, $sbj) {
+    function iconv_recursive($from, $to, $sbj)
+    {
         if (is_array($sbj) || is_object($sbj)) {
             foreach ($sbj as &$val) {
                 $val = iconv_recursive($from, $to, $val);
@@ -105,16 +106,16 @@ $arResult["ERRORS"] = array();
 if ($bAllowAccess) {
     // get iblock sections list
     $rsIBlockSectionList = CIBlockSection::GetList(
-            array("left_margin" => "asc"), array(
-            "ACTIVE" => "Y",
-            "IBLOCK_ID" => $arParams["IBLOCK_ID"],
-            ), false, array("ID", "NAME", "DEPTH_LEVEL")
+        array("left_margin" => "asc"), array(
+        "ACTIVE" => "Y",
+        "IBLOCK_ID" => $arParams["IBLOCK_ID"],
+    ), false, array("ID", "NAME", "DEPTH_LEVEL")
     );
     $arResult["SECTION_LIST"] = array();
     while ($arSection = $rsIBlockSectionList->GetNext()) {
         $arSection["NAME"] = str_repeat(" . ", $arSection["DEPTH_LEVEL"]) . $arSection["NAME"];
         $arResult["SECTION_LIST"][$arSection["ID"]] = array(
-            "VALUE" => $arSection["NAME"]
+            "VALUE" => $arSection["NAME"],
         );
     }
 
@@ -195,11 +196,11 @@ if ($bAllowAccess) {
         if ($arProperty["PROPERTY_TYPE"] == "E") {
             $arProperty["VALUES"] = array();
             $rsValues = CIBlockElement::GetList(
-                    array(), //
-                    array('IBLOCK_ID' => $arProperty['LINK_IBLOCK_ID']), //
-                    false, //
-                    false, //
-                    array('ID', 'IBLOCK_ID', 'NAME')
+                array(), //
+                array('IBLOCK_ID' => $arProperty['LINK_IBLOCK_ID']), //
+                false, //
+                false, //
+                array('ID', 'IBLOCK_ID', 'NAME')
             );
 
             while ($arValue = $rsValues->GetNext()) {
@@ -220,8 +221,7 @@ if ($bAllowAccess) {
                 $arProperty["GetPublicEditHTML"] = $arUserType["GetPublicEditHTML"];
             else
                 $arProperty["GetPublicEditHTML"] = false;
-        }
-        else {
+        } else {
             $arProperty["GetPublicEditHTML"] = false;
         }
 
@@ -241,11 +241,9 @@ if ($bAllowAccess) {
             $arFilter["PROPERTY_" . $arParams["ELEMENT_ASSOC_PROPERTY"]] = $USER->GetID();
         else
             $arFilter["ID"] = -1;
-    }
-    elseif ($USER->GetID()) {
+    } elseif ($USER->GetID()) {
         $arFilter["CREATED_BY"] = $USER->GetID();
-    }
-    // additional bugcheck. situation can be found when property ELEMENT_ASSOC_PROPERTY does not exists and user is not registered
+    } // additional bugcheck. situation can be found when property ELEMENT_ASSOC_PROPERTY does not exists and user is not registered
     else {
         $arFilter["ID"] = -1;
     }
@@ -328,16 +326,14 @@ if ($bAllowAccess) {
                                 }
                             }
                         }
-                    }
-                    // for single properties
+                    } // for single properties
                     else {
                         if ($arResult["PROPERTY_LIST_FULL"][$propertyID]["PROPERTY_TYPE"] != "L")
                             $arUpdatePropertyValues[$propertyID] = $arPropertyValue[0];
                         else
                             $arUpdatePropertyValues[$propertyID] = $arPropertyValue;
                     }
-                }
-                // for file properties
+                } // for file properties
                 else {
                     $arUpdatePropertyValues[$propertyID] = array();
                     foreach ($arPropertyValue as $key => $value) {
@@ -352,8 +348,7 @@ if ($bAllowAccess) {
                     if (empty($arUpdatePropertyValues[$propertyID]))
                         unset($arUpdatePropertyValues[$propertyID]);
                 }
-            }
-            else {
+            } else {
                 // for "virtual" properties
                 if ($propertyID == "IBLOCK_SECTION") {
                     if (!is_array($arProperties[$propertyID]))
@@ -363,10 +358,10 @@ if ($bAllowAccess) {
                     if ($arParams["LEVEL_LAST"] == "Y" && is_array($arUpdateValues[$propertyID])) {
                         foreach ($arUpdateValues[$propertyID] as $section_id) {
                             $rsChildren = CIBlockSection::GetList(
-                                    array("SORT" => "ASC"), array(
-                                    "IBLOCK_ID" => $arParams["IBLOCK_ID"],
-                                    "SECTION_ID" => $section_id,
-                                    ), false, array("ID")
+                                array("SORT" => "ASC"), array(
+                                "IBLOCK_ID" => $arParams["IBLOCK_ID"],
+                                "SECTION_ID" => $section_id,
+                            ), false, array("ID")
                             );
                             if ($rsChildren->SelectedRowsCount() > 0) {
                                 $arResult["ERRORS"][] = GetMessage("IBLOCK_ADD_LEVEL_LAST_ERROR");
@@ -385,15 +380,13 @@ if ($bAllowAccess) {
                         $arUpdateValues[$propertyID] = $arFile;
                         if ($arParams["MAX_FILE_SIZE"] > 0 && $arFile["size"] > $arParams["MAX_FILE_SIZE"])
                             $arResult["ERRORS"][] = GetMessage("IBLOCK_ERROR_FILE_TOO_LARGE");
-                    }
-                    elseif ($arResult["PROPERTY_LIST_FULL"][$propertyID]["PROPERTY_TYPE"] == "HTML") {
+                    } elseif ($arResult["PROPERTY_LIST_FULL"][$propertyID]["PROPERTY_TYPE"] == "HTML") {
                         if ($propertyID == "DETAIL_TEXT")
                             $arUpdateValues["DETAIL_TEXT_TYPE"] = "html";
                         if ($propertyID == "PREVIEW_TEXT")
                             $arUpdateValues["PREVIEW_TEXT_TYPE"] = "html";
                         $arUpdateValues[$propertyID] = $arProperties[$propertyID][0];
-                    }
-                    else {
+                    } else {
                         if ($propertyID == "DETAIL_TEXT")
                             $arUpdateValues["DETAIL_TEXT_TYPE"] = "text";
                         if ($propertyID == "PREVIEW_TEXT")
@@ -433,18 +426,16 @@ if ($bAllowAccess) {
                             }
                         }
                     }
-                }
-                //Element field
+                } //Element field
                 elseif (intval($propertyID) <= 0) {
                     if ($propertyValue['size'] <= 0) {
                         if (intval($arElement[$propertyID]) <= 0 || $propertyValue['del'] == 'Y')
                             $bError = true;
                     }
-                }
-                //Element property
+                } //Element property
                 else {
                     $dbProperty = CIBlockElement::GetProperty(
-                            $arElement["IBLOCK_ID"], $arParams["ID"], "sort", "asc", array("ID" => $propertyID)
+                        $arElement["IBLOCK_ID"], $arParams["ID"], "sort", "asc", array("ID" => $propertyID)
                     );
 
                     $bCount = 0;
@@ -474,8 +465,7 @@ if ($bAllowAccess) {
                         else
                             $len += call_user_func_array($arUserType["GetLength"], array($arResult["PROPERTY_LIST_FULL"][$propertyID], array("VALUE" => $value)));
                     }
-                }
-                elseif (is_array($propertyValue) && array_key_exists("VALUE", $propertyValue)) {
+                } elseif (is_array($propertyValue) && array_key_exists("VALUE", $propertyValue)) {
                     $len += call_user_func_array($arUserType["GetLength"], array($arResult["PROPERTY_LIST_FULL"][$propertyID], $propertyValue));
                 } else {
                     $len += call_user_func_array($arUserType["GetLength"], array($arResult["PROPERTY_LIST_FULL"][$propertyID], array("VALUE" => $propertyValue)));
@@ -483,8 +473,7 @@ if ($bAllowAccess) {
 
                 if ($len <= 0)
                     $bError = true;
-            }
-            //multiple property
+            } //multiple property
             elseif ($arResult["PROPERTY_LIST_FULL"][$propertyID]["MULTIPLE"] == "Y" || $arResult["PROPERTY_LIST_FULL"][$propertyID]["PROPERTY_TYPE"] == "L") {
                 if (is_array($propertyValue)) {
                     $bError = true;
@@ -497,13 +486,11 @@ if ($bAllowAccess) {
                 } elseif (strlen($propertyValue) <= 0) {
                     $bError = true;
                 }
-            }
-            //single
+            } //single
             elseif (is_array($propertyValue) && array_key_exists("VALUE", $propertyValue)) {
                 if (strlen($propertyValue["VALUE"]) <= 0)
                     $bError = true;
-            }
-            elseif (!is_array($propertyValue)) {
+            } elseif (!is_array($propertyValue)) {
                 if (strlen($propertyValue) <= 0)
                     $bError = true;
             }
@@ -526,7 +513,7 @@ if ($bAllowAccess) {
             $DOCUMENT_TYPE = "iblock_" . $arIBlock["ID"];
 
             $arDocumentStates = CBPDocument::GetDocumentStates(
-                    array("iblock", "CIBlockDocument", $DOCUMENT_TYPE), ($arParams["ID"] > 0) ? array("iblock", "CIBlockDocument", $arParams["ID"]) : null, "Y"
+                array("iblock", "CIBlockDocument", $DOCUMENT_TYPE), ($arParams["ID"] > 0) ? array("iblock", "CIBlockDocument", $arParams["ID"]) : null, "Y"
             );
 
             $arCurrentUserGroups = $USER->GetUserGroupArray();
@@ -536,11 +523,11 @@ if ($bAllowAccess) {
 
             if ($arParams["ID"]) {
                 $canWrite = CBPDocument::CanUserOperateDocument(
-                        CBPCanUserOperateOperation::WriteDocument, $USER->GetID(), array("iblock", "CIBlockDocument", $arParams["ID"]), array(/* "IBlockPermission" => $arResult["IBLOCK_PERM"], */ "AllUserGroups" => $arCurrentUserGroups, "DocumentStates" => $arDocumentStates)
+                    CBPCanUserOperateOperation::WriteDocument, $USER->GetID(), array("iblock", "CIBlockDocument", $arParams["ID"]), array(/* "IBlockPermission" => $arResult["IBLOCK_PERM"], */ "AllUserGroups" => $arCurrentUserGroups, "DocumentStates" => $arDocumentStates)
                 );
             } else {
                 $canWrite = CBPDocument::CanUserOperateDocumentType(
-                        CBPCanUserOperateOperation::WriteDocument, $USER->GetID(), array("iblock", "CIBlockDocument", $DOCUMENT_TYPE), array(/* "IBlockPermission" => $arResult["IBLOCK_PERM"], */ "AllUserGroups" => $arCurrentUserGroups, "DocumentStates" => $arDocumentStates)
+                    CBPCanUserOperateOperation::WriteDocument, $USER->GetID(), array("iblock", "CIBlockDocument", $DOCUMENT_TYPE), array(/* "IBlockPermission" => $arResult["IBLOCK_PERM"], */ "AllUserGroups" => $arCurrentUserGroups, "DocumentStates" => $arDocumentStates)
                 );
             }
 
@@ -554,7 +541,7 @@ if ($bAllowAccess) {
                         $arErrorsTmp = array();
 
                         $arBizProcParametersValues[$arDocumentState["TEMPLATE_ID"]] = CBPDocument::StartWorkflowParametersValidate(
-                                $arDocumentState["TEMPLATE_ID"], $arDocumentState["TEMPLATE_PARAMETERS"], array("iblock", "CIBlockDocument", $DOCUMENT_TYPE), $arErrorsTmp
+                            $arDocumentState["TEMPLATE_ID"], $arDocumentState["TEMPLATE_PARAMETERS"], array("iblock", "CIBlockDocument", $DOCUMENT_TYPE), $arErrorsTmp
                         );
 
                         foreach ($arErrorsTmp as $e)
@@ -584,8 +571,7 @@ if ($bAllowAccess) {
                         $arUpdateValues["BP_PUBLISHED"] = "N";
                 }
                 $arUpdateValues["ACTIVE"] = "Y";
-            }
-            else {
+            } else {
                 if ($arParams["STATUS_NEW"] == "ANY") {
                     $arUpdateValues["ACTIVE"] = "N";
                 } elseif ($arParams["STATUS_NEW"] == "N") {
@@ -605,7 +591,7 @@ if ($bAllowAccess) {
                 foreach ($arUpdateValues["PROPERTY_VALUES"] as $prop_id => $v) {
                     $bFieldProps[$prop_id] = true;
                 }
-                $dbPropV = CIBlockElement::GetProperty($arParams["IBLOCK_ID"], $arParams["ID"], "sort", "asc", Array("ACTIVE" => "Y"));
+                $dbPropV = CIBlockElement::GetProperty($arParams["IBLOCK_ID"], $arParams["ID"], "sort", "asc", array("ACTIVE" => "Y"));
                 while ($arPropV = $dbPropV->Fetch()) {
                     if (!array_key_exists($arPropV["ID"], $bFieldProps) && $arPropV["PROPERTY_TYPE"] != "F") {
                         if ($arPropV["MULTIPLE"] == "Y") {
@@ -615,8 +601,7 @@ if ($bAllowAccess) {
                                 "VALUE" => $arPropV["VALUE"],
                                 "DESCRIPTION" => $arPropV["DESCRIPTION"],
                             );
-                        }
-                        else {
+                        } else {
                             $arUpdateValues["PROPERTY_VALUES"][$arPropV["ID"]] = array(
                                 "VALUE" => $arPropV["VALUE"],
                                 "DESCRIPTION" => $arPropV["DESCRIPTION"],
@@ -628,8 +613,7 @@ if ($bAllowAccess) {
                 if (!$res = $oElement->Update($arParams["ID"], $arUpdateValues, $bWorkflowIncluded, true, $arParams["RESIZE_IMAGES"])) {
                     $arResult["ERRORS"][] = $oElement->LAST_ERROR;
                 }
-            }
-            // add new element
+            } // add new element
             else {
                 $arUpdateValues["IBLOCK_ID"] = $arParams["IBLOCK_ID"];
 
@@ -668,11 +652,11 @@ if ($bAllowAccess) {
                                 case 'E':
                                     $arValues = array();
                                     $rsValues = CIBlockElement::GetList(
-                                            array(), //
-                                            array('IBLOCK_ID' => $arProps[$id]['LINK_IBLOCK_ID'], 'ID' => $value), //
-                                            false, //
-                                            false, //
-                                            array("ID", "IBLOCK_ID", "NAME")
+                                        array(), //
+                                        array('IBLOCK_ID' => $arProps[$id]['LINK_IBLOCK_ID'], 'ID' => $value), //
+                                        false, //
+                                        false, //
+                                        array("ID", "IBLOCK_ID", "NAME")
                                     );
                                     while ($arValue = $rsValues->GetNext()) {
                                         $arValues[] = $arValue['NAME'];
@@ -681,10 +665,10 @@ if ($bAllowAccess) {
                                 case 'G':
                                     $arValues = array();
                                     $rsValues = CIBlockSection::GetList(
-                                            array(), //
-                                            array('IBLOCK_ID' => $arProps[$id]['LINK_IBLOCK_ID'], 'ID' => $value), //
-                                            false, //
-                                            array("ID", "IBLOCK_ID", "NAME")
+                                        array(), //
+                                        array('IBLOCK_ID' => $arProps[$id]['LINK_IBLOCK_ID'], 'ID' => $value), //
+                                        false, //
+                                        array("ID", "IBLOCK_ID", "NAME")
                                     );
                                     while ($arValue = $rsValues->GetNext()) {
                                         $arValues[] = $arValue['NAME'];
@@ -693,9 +677,9 @@ if ($bAllowAccess) {
                                 case 'L':
                                     $arValues = array();
                                     $rsValues = CIBlockProperty::GetPropertyEnum(
-                                            $id, //
-                                            array(), //
-                                            array()
+                                        $id, //
+                                        array(), //
+                                        array()
                                     );
                                     while ($arValue = $rsValues->GetNext()) {
                                         if (in_array($arValue['ID'], $value))
@@ -713,7 +697,7 @@ if ($bAllowAccess) {
 
                             $arSelect = array(
                                 'ID',
-                                'IBLOCK_ID'
+                                'IBLOCK_ID',
                             );
 
                             foreach ($arParams['PROPERTY_FILES_ATTACH'] as $field) {
@@ -725,12 +709,12 @@ if ($bAllowAccess) {
                             }
 
                             $arThisItem = CIBlockElement::GetList(
-                                    array()
-                                    , array('IBLOCK_ID' => $arParams['IBLOCK_ID'], 'ID' => $arParams["ID"])
-                                    , false
-                                    , false
-                                    , $arSelect
-                                )->Fetch();
+                                array()
+                                , array('IBLOCK_ID' => $arParams['IBLOCK_ID'], 'ID' => $arParams["ID"])
+                                , false
+                                , false
+                                , $arSelect
+                            )->Fetch();
 
                             if ($arThisItem) {
                                 foreach ($arParams['PROPERTY_FILES_ATTACH'] as $field) {
@@ -761,8 +745,8 @@ if ($bAllowAccess) {
 
                         if (!empty($arUpdateValues["PROPERTY_VALUES"][4617]))
                             $arObject = CIBlockElement::GetList(
-                                    array(), array("ID" => $arUpdateValues["PROPERTY_VALUES"][4617]), false, false, array("ID", "NAME")
-                                )->GetNext();
+                                array(), array("ID" => $arUpdateValues["PROPERTY_VALUES"][4617]), false, false, array("ID", "NAME")
+                            )->GetNext();
                         if ($arObject)
                             $text .= "\nВелосипед: " . $arObject["NAME"];
 
@@ -788,7 +772,7 @@ if ($bAllowAccess) {
                     $arErrorsTmp = array();
 
                     $arBizProcWorkflowId[$arDocumentState["TEMPLATE_ID"]] = CBPDocument::StartWorkflow(
-                            $arDocumentState["TEMPLATE_ID"], array("iblock", "CIBlockDocument", $arParams["ID"]), $arBizProcParametersValues[$arDocumentState["TEMPLATE_ID"]], $arErrorsTmp
+                        $arDocumentState["TEMPLATE_ID"], array("iblock", "CIBlockDocument", $arParams["ID"]), $arBizProcParametersValues[$arDocumentState["TEMPLATE_ID"]], $arErrorsTmp
                     );
 
                     foreach ($arErrorsTmp as $e)
@@ -980,8 +964,7 @@ if ($bAllowAccess) {
                                     "~VALUE" => $vv,
                                     "VALUE" => $vv,
                                 );
-                        }
-                        else {
+                        } else {
                             $arResult["ELEMENT_PROPERTIES"][$key][] = array(
                                 "~VALUE" => $vv,
                                 "VALUE" => htmlspecialcharsbx($vv),

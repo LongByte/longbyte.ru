@@ -26,7 +26,7 @@ unset($arProp);
 if (!empty($arResult["ERRORS"])):
     ?>
     <? ShowError(implode("<br />", $arResult["ERRORS"])) ?>
-    <?
+<?
 endif;
 if (strlen($arResult["MESSAGE"]) > 0):
     ?>
@@ -36,11 +36,20 @@ if (strlen($arResult["MESSAGE"]) > 0):
 
 <form method="post" action="<?= POST_FORM_ACTION_URI ?>" enctype="multipart/form-data" class="iblock-element-add-form-ajax <?= $this->__name ?>">
     <?= bitrix_sessid_post() ?>
-    <? if ($arParams["MAX_FILE_SIZE"] > 0): ?><input type="hidden" name="MAX_FILE_SIZE" value="<?= $arParams["MAX_FILE_SIZE"] ?>" /><? endif ?>
+    <? if ($arParams["MAX_FILE_SIZE"] > 0): ?>
+        <input type="hidden" name="MAX_FILE_SIZE" value="<?= $arParams["MAX_FILE_SIZE"] ?>" /><? endif ?>
     <!--fields-->
-    <label>ФИО<i>*</i>:</label><input name="PROPERTY[NAME][0]" type="text">
+    <label>ФИО
+        <i>*</i>
+        :
+    </label>
+    <input name="PROPERTY[NAME][0]" type="text">
     <!--prop-->
-    <label>E-mail<i>*</i>:</label><input name="PROPERTY[<?= $arResult['CODES']['EMAIL'] ?>][0]" type="text">
+    <label>E-mail
+        <i>*</i>
+        :
+    </label>
+    <input name="PROPERTY[<?= $arResult['CODES']['EMAIL'] ?>][0]" type="text">
     <!--enum-->
     <div data-code="INSTALL">
         <?
@@ -49,15 +58,18 @@ if (strlen($arResult["MESSAGE"]) > 0):
             ?>
             <input name="PROPERTY[<?= $propID ?>][<?= $arEnum['ID'] ?>]" data-sort="<?= $arEnum['SORT'] ?>" value="<?= $arEnum['ID'] ?>" id="property_<?= $arEnum['ID'] ?>" type="checkbox">
             <label for="property_<?= $arEnum['ID'] ?>"><?= $arEnum['VALUE'] ?></label>
-            <?
+        <?
         endforeach;
         unset($arEnum);
         ?>
-    </div>                                                    
+    </div>
 
     <!--captcha-->
     <input type="hidden" name="captcha_sid" value="<?= $arResult["CAPTCHA_CODE"] ?>" />
-    <label>Защитный код<i>*</i>:</label>
+    <label>Защитный код
+        <i>*</i>
+        :
+    </label>
     <img src="/bitrix/tools/captcha.php?captcha_sid=<?= $arResult["CAPTCHA_CODE"] ?>" width="180" height="40" alt="CAPTCHA" style="float:left;" align="absmiddle" />
     <input name="captcha_word" style="width:48px;" type="text">
     <!--submit-->
@@ -69,7 +81,7 @@ ob_start();
 foreach ($arResult["PROPERTY_REQUIRED"] as &$field):
     ?>
     "[name=PROPERTY\\[<?= $field ?>\\]\\[0\\]]": /.+/,
-    <?
+<?
 endforeach;
 unset($field);
 $fields = ob_get_contents();
@@ -81,7 +93,7 @@ ob_end_clean();
         $("form.iblock-element-add-form-ajax.<?= $this->__name ?>").submit(function () {
 
             var good = LongByteValidate(this, {
-<?= $fields ?>
+                <?= $fields ?>
             });
             if (good) {
 

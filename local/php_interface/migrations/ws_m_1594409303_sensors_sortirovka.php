@@ -3,40 +3,46 @@
 /**
  * Class definition update migrations scenario actions
  * */
-class ws_m_1594409303_sensors_sortirovka extends \WS\ReduceMigrations\Scenario\ScriptScenario {
+class ws_m_1594409303_sensors_sortirovka extends \WS\ReduceMigrations\Scenario\ScriptScenario
+{
 
     /**
      * Name of scenario
      * */
-    static public function name() {
+    static public function name()
+    {
         return "Sensors. Сортировка.";
     }
 
     /**
      * Priority of scenario
      * */
-    static public function priority() {
+    static public function priority()
+    {
         return self::PRIORITY_HIGH;
     }
 
     /**
      * @return string hash
      */
-    static public function hash() {
+    static public function hash()
+    {
         return "cd1c7396e828c56e7d61ac44dc2f6fd33923001f";
     }
 
     /**
      * @return int approximately time in seconds
      */
-    static public function approximatelyTime() {
+    static public function approximatelyTime()
+    {
         return 0;
     }
 
     /**
      * Write action by apply scenario. Use method `setData` for save need rollback data
      * */
-    public function commit() {
+    public function commit()
+    {
         if (\Bitrix\Main\Loader::includeModule('iblock') && \Bitrix\Main\Loader::includeModule('highloadblock')) {
 
             $obHlBuilder = new \Migration\Builder\HLBuilder();
@@ -59,7 +65,7 @@ class ws_m_1594409303_sensors_sortirovka extends \WS\ReduceMigrations\Scenario\S
             $iSort = 0;
 
             $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
-                    'SYSTEM_ID' => $obSystem->getId()
+                'SYSTEM_ID' => $obSystem->getId(),
             ));
             foreach ($obSensors as $obSensor) {
                 $iSort += 10;
@@ -80,11 +86,13 @@ class ws_m_1594409303_sensors_sortirovka extends \WS\ReduceMigrations\Scenario\S
     /**
      * Write action by rollback scenario. Use method `getData` for getting commit saved data
      * */
-    public function rollback() {
+    public function rollback()
+    {
         // my code
     }
 
-    private static function hlSensors($iHlBlockId) {
+    private static function hlSensors($iHlBlockId)
+    {
         $obProp = new \Migration\Builder\UserField('UF_SORT', 'HLBLOCK_' . $iHlBlockId);
         $obProp->type(\Migration\Builder\UserField::TYPE_INTEGER);
         $obProp->label(array('ru' => 'Сортировка', 'en' => 'Сортировка'));

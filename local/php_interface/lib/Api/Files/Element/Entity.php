@@ -60,7 +60,8 @@ class Entity extends \Api\Core\Iblock\Element\Entity
         $arData = parent::toArray();
         $arData['is_image'] = $this->_isImage();
         $arData['file_size'] = $this->_getFileSize();
-        $arData['file_src'] = $this->_getFile()->convertToWebp()->getSrc();
+        $arData['file_src'] = $this->_getFile()->getSrc();
+        $arData['file_webp_src'] = $this->_getFile()->convertToWebp()->getSrc();
         $arData['preview_picture'] = $this->getPreviewPictureFile()->setResize(228, 190)->convertToWebp()->getSrc();
         return $arData;
     }

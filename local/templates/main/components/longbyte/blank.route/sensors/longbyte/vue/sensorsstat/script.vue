@@ -13,37 +13,35 @@
     </div>
 </template>
 <script>
-    var sensorsApp = new Vue({
-        el: '#sensorsApp',
-        data() {
-            return {
-                store: {
-                    system: {},
-                    sensors: [],
-                    links: [],
-                },
-            };
-        },
-        template: `#sensors-template`,
-        components: {
-
-        },
-        mounted() {
-            this.loadData();
-        },
-        methods: {
-            loadData() {
-                let url = '/api/sensors/stat/?token=' + window.vueData.system_token;
-                if (window.vueData.since) {
-                    url += '&since=' + window.vueData.since;
-                }
-                axios
-                    .get(url)
-                    .then(function (response) {
-                        this.store = response.data.data;
-                    }.bind(this))
-                    ;
+var sensorsApp = new Vue({
+    el: '#sensorsApp',
+    data() {
+        return {
+            store: {
+                system: {},
+                sensors: [],
+                links: [],
             },
-        }
-    })
+        };
+    },
+    template: `#sensors-template`,
+    components: {},
+    mounted() {
+        this.loadData();
+    },
+    methods: {
+        loadData() {
+            let url = '/api/sensors/stat/?token=' + window.vueData.system_token;
+            if (window.vueData.since) {
+                url += '&since=' + window.vueData.since;
+            }
+            axios
+                .get(url)
+                .then(function (response) {
+                    this.store = response.data.data;
+                }.bind(this))
+            ;
+        },
+    }
+})
 </script>

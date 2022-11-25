@@ -10,7 +10,8 @@ use Bitrix\Main\IO;
 if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
     die();
 
-class LongbyteCSSCompilerComponent extends CBitrixComponent {
+class LongbyteCSSCompilerComponent extends CBitrixComponent
+{
 
     private $arOCssFiles = array();
 
@@ -18,7 +19,8 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
      * Check Required Modules
      * @throws Exception
      */
-    protected function checkModules() {
+    protected function checkModules()
+    {
         if (!Main\Loader::includeModule('longbyte.compiler')) {
             throw new SystemException(Loc::getMessage('CVP_LONGBYTE_COMPILER_MODULE_NOT_INSTALLED'));
         }
@@ -27,7 +29,8 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
     /**
      * Load language file
      */
-    public function onIncludeComponentLang() {
+    public function onIncludeComponentLang()
+    {
         $this->includeComponentLang(basename(__FILE__));
         Loc::loadMessages(__FILE__);
     }
@@ -37,7 +40,8 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
      * @param array $params
      * @return array
      */
-    public function onPrepareComponentParams($params) {
+    public function onPrepareComponentParams($params)
+    {
         $params['USE_SET_ADDITIONAL_CSS'] = ($params['USE_SETADDITIONALCSS'] == 'Y');
 
         $params['ADD_CSS_TO_THE_END'] = isset($params['ADD_CSS_TO_THE_END']) && ($params['ADD_CSS_TO_THE_END'] == 'Y');
@@ -74,7 +78,8 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
     /**
      * @throws SystemException
      */
-    protected function checkCompilerClass() {
+    protected function checkCompilerClass()
+    {
         if (!class_exists($this->arParams['CLASS_COMPILER'])) {
             throw new SystemException(sprintf('Class "%s" doesn\'t exist.', $this->arParams['CLASS_COMPILER']));
         }
@@ -84,7 +89,8 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
      * @return \Longbyte\Csscompiler\Compiler
      * @throws SystemException
      */
-    protected function getCompiler() {
+    protected function getCompiler()
+    {
         if (!class_exists($this->arParams['CLASS_COMPILER'])) {
             throw new SystemException(sprintf('Class "%s" doesn\'t exist.', $this->arParams['CLASS_COMPILER']));
         }
@@ -102,7 +108,8 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
      * Check the directory needed for component
      * @throws SystemException
      */
-    protected function checkDirs() {
+    protected function checkDirs()
+    {
         if (!is_readable(Application::getDocumentRoot() . $this->arParams['PATH_TO_FILES'])) {
             throw new SystemException(Loc::getMessage('OCSS_ERROR_DIR_NOT_AVAILABLE', array('#DIR#' => $this->arParams['PATH_TO_FILES'])));
         }
@@ -124,7 +131,8 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
      * @param string $strPath
      * @param string $strSearchFileName
      */
-    private function getFilesFromPath($strPath, $strSearchFileName) {
+    private function getFilesFromPath($strPath, $strSearchFileName)
+    {
 
         $obDir = new IO\Directory($strPath);
         $arFiles = $obDir->getChildren();
@@ -151,7 +159,8 @@ class LongbyteCSSCompilerComponent extends CBitrixComponent {
      * Start Component
      * @global \CMain $APPLICATION
      */
-    public function executeComponent() {
+    public function executeComponent()
+    {
 
         global $APPLICATION;
 

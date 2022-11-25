@@ -3,6 +3,7 @@ if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true)
     die();
 
 use Bitrix\Main\Localization\Loc;
+
 ?>
 <tr class="heading">
     <td colspan="2"><?= Loc::getMessage('REALWEB.IBLOCK.IPROP.TEMPLATE_NAME') ?></td>

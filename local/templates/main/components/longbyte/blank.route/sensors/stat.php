@@ -8,7 +8,7 @@ $obRequest = Bitrix\Main\Context::getCurrent()->getRequest();
 $APPLICATION->IncludeComponent(
     "longbyte:blank",
     "stat",
-    Array(
+    array(
         'SYSTEM_NAME' => $arResult['VARIABLES']['SYSTEM_NAME'],
         'SYSTEM_TOKEN' => $arResult['VARIABLES']['SYSTEM_TOKEN'],
         'SINCE' => $obRequest->get('since'),

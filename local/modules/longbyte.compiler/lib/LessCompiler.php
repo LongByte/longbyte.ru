@@ -4,7 +4,8 @@ namespace Longbyte\Csscompiler;
 
 require __DIR__ . '/../libs/lessphp/lessc.inc.php';
 
-class LessCompiler extends Compiler {
+class LessCompiler extends Compiler
+{
 
     /**
      * @var \lessc $compiler
@@ -14,7 +15,8 @@ class LessCompiler extends Compiler {
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->compiler = new \lessc();
         $this->compiler->setFormatter('compressed');
     }
@@ -24,12 +26,14 @@ class LessCompiler extends Compiler {
      * @param string $file path to file
      * @return string CSS
      */
-    public function toCss($file) {
+    public function toCss($file)
+    {
         $this->compiler->setImportDir(dirname($file));
         return $this->compiler->compileFile($file);
     }
 
-    public static function getExtension() {
+    public static function getExtension()
+    {
         return 'less';
     }
 

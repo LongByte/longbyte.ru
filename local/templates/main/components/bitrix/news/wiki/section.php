@@ -29,13 +29,13 @@ $APPLICATION->IncludeComponent(
     "VIEW_MODE" => $arParams["SECTIONS_VIEW_MODE"],
     "SHOW_PARENT_NAME" => 'N',
     "HIDE_SECTION_NAME" => (isset($arParams["SECTIONS_HIDE_SECTION_NAME"]) ? $arParams["SECTIONS_HIDE_SECTION_NAME"] : "N"),
-    "ADD_SECTIONS_CHAIN" => 'N'
-    ), $component
+    "ADD_SECTIONS_CHAIN" => 'N',
+), $component
 );
 if ($arResult['VARIABLES']['SECTION_ID'] > 0) {
 
     $APPLICATION->IncludeComponent(
-        "bitrix:news.list", "", Array(
+        "bitrix:news.list", "", array(
         'PARENT_SECTION' => $arResult['VARIABLES']['SECTION_ID'],
         "IBLOCK_TYPE" => $arParams["IBLOCK_TYPE"],
         "IBLOCK_ID" => $arParams["IBLOCK_ID"],
@@ -83,8 +83,8 @@ if ($arResult['VARIABLES']['SECTION_ID'] > 0) {
         "FILTER_NAME" => $arParams["FILTER_NAME"],
         "HIDE_LINK_WHEN_NO_DETAIL" => $arParams["HIDE_LINK_WHEN_NO_DETAIL"],
         "CHECK_DATES" => $arParams["CHECK_DATES"],
-        'INCLUDE_SUBSECTIONS' => 'N'
-        ), $component
+        'INCLUDE_SUBSECTIONS' => 'N',
+    ), $component
     );
 }
 ?>

@@ -16,7 +16,8 @@ $bxRoot = strlen($localPath) > 0 ? rtrim($localPath, "/\\") : BX_ROOT;
 
 require_once(Application::getDocumentRoot() . $bxRoot . '/modules/realweb.pagetype/prolog.php'); // пролог модуля
 
-Class realweb_pagetype extends CModule {
+class realweb_pagetype extends CModule
+{
 // Обязательные свойства.
 
     /**
@@ -65,7 +66,8 @@ Class realweb_pagetype extends CModule {
     /**
      * Конструктор класса. Задаёт начальные значения свойствам.
      */
-    function __construct() {
+    function __construct()
+    {
         $this->PARTNER_NAME = 'Realweb';
         $this->PARTNER_URI = 'http://www.realweb.ru';
         $this->errors = array();
@@ -87,7 +89,8 @@ Class realweb_pagetype extends CModule {
         }
     }
 
-    function DoInstall() {
+    function DoInstall()
+    {
         if (!ModuleManager::isModuleInstalled($this->MODULE_ID)) {
             ModuleManager::registerModule($this->MODULE_ID);
             Loader::includeModule($this->MODULE_ID);
@@ -101,7 +104,8 @@ Class realweb_pagetype extends CModule {
         return true;
     }
 
-    function DoUninstall() {
+    function DoUninstall()
+    {
         if (ModuleManager::isModuleInstalled($this->MODULE_ID)) {
             $this->UnInstallDB();
             $this->UnInstallFiles();
@@ -110,7 +114,8 @@ Class realweb_pagetype extends CModule {
         return true;
     }
 
-    function InstallFiles() {
+    function InstallFiles()
+    {
         CopyDirFiles(Application::getDocumentRoot() . $this->bxRoot . '/modules/' . $this->MODULE_ID . '/install/admin/', Application::getDocumentRoot() . '/bitrix/admin/', true, true);
         CopyDirFiles(Application::getDocumentRoot() . $this->bxRoot . '/modules/' . $this->MODULE_ID . '/install/components/', Application::getDocumentRoot() . $this->bxRoot . '/components/', true, true);
         CopyDirFiles(Application::getDocumentRoot() . $this->bxRoot . '/modules/' . $this->MODULE_ID . '/install/templates/', Application::getDocumentRoot() . $this->bxRoot . '/templates/', false, true);
@@ -119,22 +124,26 @@ Class realweb_pagetype extends CModule {
         return true;
     }
 
-    function UnInstallFiles() {
+    function UnInstallFiles()
+    {
         DeleteDirFiles(Application::getDocumentRoot() . $this->bxRoot . '/modules/' . $this->MODULE_ID . '/install/admin/', Application::getDocumentRoot() . '/bitrix/admin/');
         return true;
     }
 
-    function InstallDB() {
+    function InstallDB()
+    {
         EventManager::getInstance()->registerEventHandler('iblock', 'OnIBlockPropertyBuildList', $this->MODULE_ID, '\Realweb\PageType\PageType', 'GetUserTypeDescription');
         EventManager::getInstance()->registerEventHandler('main', 'OnPageStart', $this->MODULE_ID, '\Realweb\PageType\Handlers', 'OnPageStart');
     }
 
-    function UnInstallDB() {
+    function UnInstallDB()
+    {
         EventManager::getInstance()->unRegisterEventHandler('iblock', 'OnIBlockPropertyBuildList', $this->MODULE_ID, '\Realweb\PageType\PageType', 'GetUserTypeDescription');
         EventManager::getInstance()->unRegisterEventHandler('main', 'OnPageStart', $this->MODULE_ID, '\Realweb\PageType\Handlers', 'OnPageStart');
     }
 
-    function InstallIblock() {
+    function InstallIblock()
+    {
 
         if (!Loader::includeModule('iblock'))
             return false;
@@ -165,23 +174,23 @@ Class realweb_pagetype extends CModule {
         }
 
         $arIblockType = TypeTable::getRow(array(
-                'filter' => array('ID' => $iblockTypeTarget),
+            'filter' => array('ID' => $iblockTypeTarget),
         ));
         if ($arIblockType) {
             $iblockType = $arIblockType['ID'];
         } else {
             if ($obIblockType->Add(array(
-                    'ID' => $iblockTypeTarget,
-                    'SECTIONS' => 'Y',
-                    'SORT' => 100,
-                    'LANG' => Array(
-                        'ru' => Array(
-                            'NAME' => 'Контент',
-                            'SECTION_NAME' => 'Разделы',
-                            'ELEMENT_NAME' => 'Страницы'
-                        )
-                    )
-                ))) {
+                'ID' => $iblockTypeTarget,
+                'SECTIONS' => 'Y',
+                'SORT' => 100,
+                'LANG' => array(
+                    'ru' => array(
+                        'NAME' => 'Контент',
+                        'SECTION_NAME' => 'Разделы',
+                        'ELEMENT_NAME' => 'Страницы',
+                    ),
+                ),
+            ))) {
                 $iblockType = $iblockTypeTarget;
                 TypeTable::getEntity()->cleanCache();
             }
@@ -192,7 +201,7 @@ Class realweb_pagetype extends CModule {
             return false;
 
         $arIblock = IblockTable::getRow(array(
-                'filter' => array('IBLOCK_TYPE_ID' => $iblockType, '=CODE' => $iblockCodeTarget),
+            'filter' => array('IBLOCK_TYPE_ID' => $iblockType, '=CODE' => $iblockCodeTarget),
         ));
 
         if ($arIblock) {
@@ -200,7 +209,7 @@ Class realweb_pagetype extends CModule {
         } else {
             $arSites = array();
             $rsSites = SiteTable::getList(array(
-                    'filter' => array('ACTIVE' => 'Y'),
+                'filter' => array('ACTIVE' => 'Y'),
             ));
 
             while ($arSite = $rsSites->fetch()) {
@@ -218,7 +227,7 @@ Class realweb_pagetype extends CModule {
                 'SITE_ID' => $arSites,
                 'SORT' => 1000,
                 'VERSION' => 2,
-                'GROUP_ID' => Array('1' => 'X', '2' => 'D')
+                'GROUP_ID' => array('1' => 'X', '2' => 'D'),
             ));
         }
 
@@ -227,7 +236,7 @@ Class realweb_pagetype extends CModule {
 
         $arProperties = array();
         $rsProperties = PropertyTable::getList(array(
-                'filter' => array('IBLOCK_ID' => $iblockId),
+            'filter' => array('IBLOCK_ID' => $iblockId),
         ));
 
         while ($arProperty = $rsProperties->fetch()) {
@@ -285,9 +294,9 @@ Class realweb_pagetype extends CModule {
         }
 
         $arUserField = $obUserField->GetList(array(), array(
-                'ENTITY_ID' => 'IBLOCK_' . $iblockId . '_SECTION',
-                'FIELD_NAME' => 'UF_MENU',
-            ))->fetch();
+            'ENTITY_ID' => 'IBLOCK_' . $iblockId . '_SECTION',
+            'FIELD_NAME' => 'UF_MENU',
+        ))->fetch();
 
         if (!$arUserField) {
             $arFields = array(
@@ -324,7 +333,7 @@ Class realweb_pagetype extends CModule {
                     'XML_ID' => $arMenu['NAME'],
                     'VALUE' => $arMenu['NAME'],
                     'DEF' => 'N',
-                    'SORT' => $arMenu['SORT']
+                    'SORT' => $arMenu['SORT'],
                 );
             }
 
@@ -334,7 +343,8 @@ Class realweb_pagetype extends CModule {
         return true;
     }
 
-    function AppendUrlrewrite() {
+    function AppendUrlrewrite()
+    {
 
         $strUrlRewritePath = Application::getDocumentRoot() . '/urlrewrite.php';
         include($strUrlRewritePath);

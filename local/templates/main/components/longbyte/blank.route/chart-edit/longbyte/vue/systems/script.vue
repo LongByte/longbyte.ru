@@ -15,9 +15,9 @@
     </div>
 </template>
 <script>
-    var chartApp = new Vue({
-        el: '#chartApp',
-        data: () => window.vueData.systems,
-        template: `#systems`
-    })
+var chartApp = new Vue({
+    el: '#chartApp',
+    data: () => window.vueData.systems,
+    template: `#systems`
+})
 </script>

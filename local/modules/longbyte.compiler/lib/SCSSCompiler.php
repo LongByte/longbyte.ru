@@ -4,7 +4,8 @@ namespace Longbyte\Csscompiler;
 
 require __DIR__ . '/../libs/scssphp/scss.inc.php';
 
-class SCSSCompiler extends Compiler {
+class SCSSCompiler extends Compiler
+{
 
     /**
      * @var \Leafo\ScssPhp\Compiler $compiler
@@ -14,7 +15,8 @@ class SCSSCompiler extends Compiler {
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->compiler = new \Leafo\ScssPhp\Compiler();
 
         $devEnvironment = (isset($_SERVER['ENV']) && in_array(strtolower($_SERVER['ENV']), array('dev', 'demo')));
@@ -33,13 +35,15 @@ class SCSSCompiler extends Compiler {
      * @param string $file path to file
      * @return string CSS
      */
-    public function toCss($file) {
+    public function toCss($file)
+    {
         $this->compiler->addImportPath(dirname($file));
 
         return ($css = @ file_get_contents($file)) !== false ? $this->compiler->compile($css) : '';
     }
 
-    public static function getExtension() {
+    public static function getExtension()
+    {
         return 'scss';
     }
 

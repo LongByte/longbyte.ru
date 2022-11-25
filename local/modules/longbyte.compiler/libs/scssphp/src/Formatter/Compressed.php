@@ -20,12 +20,14 @@ use Leafo\ScssPhp\Formatter\OutputBlock;
  *
  * @author Leaf Corcoran <leafot@gmail.com>
  */
-class Compressed extends Formatter {
+class Compressed extends Formatter
+{
 
     /**
      * {@inheritdoc}
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->indentLevel = 0;
         $this->indentChar = '  ';
         $this->break = '';
@@ -39,7 +41,8 @@ class Compressed extends Formatter {
     /**
      * {@inheritdoc}
      */
-    public function blockLines(OutputBlock $block) {
+    public function blockLines(OutputBlock $block)
+    {
         $inner = $this->indentStr();
 
         $glue = $this->break . $inner;

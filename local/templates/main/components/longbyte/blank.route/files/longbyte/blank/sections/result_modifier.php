@@ -7,22 +7,23 @@ $arCache = \Api\Core\Main\Cache::getInstance()
     ->setIblockTag(\Api\Files\Element\Model::getIblockId())
     ->setId('FilesSections')
     ->setTime(30 * 24 * 60 * 60)
-    ->get(function() use ($arParams) {
+    ->get(function () use ($arParams) {
 
-    $arCache = array();
+        $arCache = array();
 
-    $obIblock = new \Api\Core\Iblock\Iblock\Entity(\Api\Files\Element\Model::getIblockId());
-    $obIblock->getMeta();
+        $obIblock = new \Api\Core\Iblock\Iblock\Entity(\Api\Files\Element\Model::getIblockId());
+        $obIblock->getMeta();
 
-    $obSections = \Api\Files\Section\Model::getAll(array(
-            'ACTIVE' => 'Y'
-    ));
+        $obSections = \Api\Files\Section\Model::getAll(array(
+            'ACTIVE' => 'Y',
+        ));
 
-    $arCache['obIblock'] = $obIblock;
-    $arCache['obSections'] = $obSections;
+        $arCache['obIblock'] = $obIblock;
+        $arCache['obSections'] = $obSections;
 
-    return $arCache;
-});
+        return $arCache;
+    })
+;
 
 $arCache['obIblock']->setMeta();
 

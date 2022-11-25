@@ -119,7 +119,7 @@ $rsData = new CAdminResult($rsData, $sTableID);
 $rsData->NavStart();
 $lAdmin->NavText($rsData->GetNavPrint(''));
 while ($arRes = $rsData->NavNext(true, 'f_')) {
-    $row = & $lAdmin->AddRow($f_ID, $arRes);
+    $row = &$lAdmin->AddRow($f_ID, $arRes);
 
     $strLanguageId = $arRes['LANGUAGE_ID'] ?: 'ru';
 
@@ -154,7 +154,7 @@ $lAdmin->AddFooter(
 );
 
 $lAdmin->CheckListMode();
-require_once ($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_admin_after.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_admin_after.php');
 //фильтр
 foreach ($arTableMap as $fieldCode => $arField) {
     if ($arField instanceof Bitrix\Main\ORM\Fields\ScalarField) {
@@ -165,64 +165,64 @@ foreach ($arTableMap as $fieldCode => $arField) {
 $oFilter = new CAdminFilter($sTableID . '_filter', $arAdminFilter);
 ?>
 
-<form name="find_form" id="find_form"  method="get" action="<?= $APPLICATION->GetCurPage(); ?>">
-    <?
-    $oFilter->Begin();
-    foreach ($arTableMap as $fieldCode => $arField) {
-        if ($arField instanceof Bitrix\Main\ORM\Fields\ScalarField) {
-            $fieldCode = $arField->getColumnName();
-        }
-        ?>
-        <tr>
-            <td><?= Loc::getMessage('REALWEB.BEVENT.DATA_' . $fieldCode) . ":" ?></td>
-            <td>
-
-                <?
-                switch ($fieldCode) {
-                    case 'EVENT_NAME':
-                        ?>
-                        <select name="<?= 'find_' . $fieldCode ?>" >
-                            <option value="">-</option>
-                            <? foreach ($arEventTypes as $strEventName => $arLanguages): ?>
-                                <? $strEventNameLang = array_key_exists('ru', $arLanguages) ? 'ru' : reset(array_keys($arLanguages)); ?>
-                                <option <? if ($strEventName == $arRequest['find_' . $fieldCode]): ?>selected<? endif; ?> value="<?= $strEventName ?>"><?= $arLanguages[$strEventNameLang]['NAME'] ?> [<?= $strEventName ?>]</option>
-                            <? endforeach; ?>
-                        </select>
-                        <?
-                        break;
-                    case 'SUCCESS_EXEC':
-                        ?>
-                        <select name="<?= 'find_' . $fieldCode ?>" >
-                            <option value="">-</option>
-                            <? foreach ($arStatusExec as $value): ?>
-                                <option <? if ($value == $arRequest['find_' . $fieldCode]): ?>selected<? endif; ?> value="<?= $value ?>"><?= Loc::getMessage('REALWEB.BEVENT.DATA_SUCCESS_EXEC.' . $value) . ' [' . $value . ']' ?></option>
-                            <? endforeach; ?>
-                        </select>
-                        <?
-                        break;
-                    case 'DUPLICATE':
-                        ?>
-                        <select name="<?= 'find_' . $fieldCode ?>" >
-                            <option value="">-</option>
-                            <option <? if ('Y' == $arRequest['find_' . $fieldCode]): ?>selected<? endif; ?> value="Y"><?= Loc::getMessage('REALWEB.BEVENT.YES') . ' [Y]' ?></option>
-                            <option <? if ('N' == $arRequest['find_' . $fieldCode]): ?>selected<? endif; ?> value="N"><?= Loc::getMessage('REALWEB.BEVENT.NO') . ' [N]' ?></option>
-                        </select>
-                        <?
-                        break;
-                    default:
-                        ?>
-                        <input type="text" name="<?= 'find_' . $fieldCode ?>" size="47" value="<?= htmlspecialchars($arRequest['find_' . $fieldCode]) ?>">
-                    <?
-                }
-                ?>
-            </td>
-        </tr>
+    <form name="find_form" id="find_form" method="get" action="<?= $APPLICATION->GetCurPage(); ?>">
         <?
-    }
-    $oFilter->Buttons(array("table_id" => $sTableID, "url" => $APPLICATION->GetCurPage(), "form" => "find_form"));
-    $oFilter->End();
-    ?>
-</form>
+        $oFilter->Begin();
+        foreach ($arTableMap as $fieldCode => $arField) {
+            if ($arField instanceof Bitrix\Main\ORM\Fields\ScalarField) {
+                $fieldCode = $arField->getColumnName();
+            }
+            ?>
+            <tr>
+                <td><?= Loc::getMessage('REALWEB.BEVENT.DATA_' . $fieldCode) . ":" ?></td>
+                <td>
+
+                    <?
+                    switch ($fieldCode) {
+                        case 'EVENT_NAME':
+                            ?>
+                            <select name="<?= 'find_' . $fieldCode ?>">
+                                <option value="">-</option>
+                                <? foreach ($arEventTypes as $strEventName => $arLanguages): ?>
+                                    <? $strEventNameLang = array_key_exists('ru', $arLanguages) ? 'ru' : reset(array_keys($arLanguages)); ?>
+                                    <option <? if ($strEventName == $arRequest['find_' . $fieldCode]): ?>selected<? endif; ?> value="<?= $strEventName ?>"><?= $arLanguages[$strEventNameLang]['NAME'] ?> [<?= $strEventName ?>]</option>
+                                <? endforeach; ?>
+                            </select>
+                            <?
+                            break;
+                        case 'SUCCESS_EXEC':
+                            ?>
+                            <select name="<?= 'find_' . $fieldCode ?>">
+                                <option value="">-</option>
+                                <? foreach ($arStatusExec as $value): ?>
+                                    <option <? if ($value == $arRequest['find_' . $fieldCode]): ?>selected<? endif; ?> value="<?= $value ?>"><?= Loc::getMessage('REALWEB.BEVENT.DATA_SUCCESS_EXEC.' . $value) . ' [' . $value . ']' ?></option>
+                                <? endforeach; ?>
+                            </select>
+                            <?
+                            break;
+                        case 'DUPLICATE':
+                            ?>
+                            <select name="<?= 'find_' . $fieldCode ?>">
+                                <option value="">-</option>
+                                <option <? if ('Y' == $arRequest['find_' . $fieldCode]): ?>selected<? endif; ?> value="Y"><?= Loc::getMessage('REALWEB.BEVENT.YES') . ' [Y]' ?></option>
+                                <option <? if ('N' == $arRequest['find_' . $fieldCode]): ?>selected<? endif; ?> value="N"><?= Loc::getMessage('REALWEB.BEVENT.NO') . ' [N]' ?></option>
+                            </select>
+                            <?
+                            break;
+                        default:
+                            ?>
+                            <input type="text" name="<?= 'find_' . $fieldCode ?>" size="47" value="<?= htmlspecialchars($arRequest['find_' . $fieldCode]) ?>">
+                        <?
+                    }
+                    ?>
+                </td>
+            </tr>
+            <?
+        }
+        $oFilter->Buttons(array("table_id" => $sTableID, "url" => $APPLICATION->GetCurPage(), "form" => "find_form"));
+        $oFilter->End();
+        ?>
+    </form>
 
 <? $lAdmin->DisplayList(); ?>
 

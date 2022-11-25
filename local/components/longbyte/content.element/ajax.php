@@ -35,8 +35,7 @@ if (isset($_POST['AJAX']) && $_POST['AJAX'] == 'Y') {
                 $productID, CSaleBasket::GetBasketUserID(), $siteID, $parentID, $recommendationId
             );
             echo CUtil::PhpToJSObject(array("STATUS" => "SUCCESS"));
-        }
-        else {
+        } else {
             echo CUtil::PhpToJSObject(array("STATUS" => "ERROR", "TEXT" => "UNDEFINED PRODUCT"));
         }
     }

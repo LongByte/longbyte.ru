@@ -16,7 +16,7 @@ $this->setFrameMode(true);
 ?>
 <?
 $ElementID = $APPLICATION->IncludeComponent(
-    "bitrix:news.detail", "", Array(
+    "bitrix:news.detail", "", array(
     "DISPLAY_DATE" => $arParams["DISPLAY_DATE"],
     "DISPLAY_NAME" => $arParams["DISPLAY_NAME"],
     "DISPLAY_PICTURE" => $arParams["DISPLAY_PICTURE"],
@@ -66,7 +66,7 @@ $ElementID = $APPLICATION->IncludeComponent(
     "SHARE_SHORTEN_URL_KEY" => $arParams["SHARE_SHORTEN_URL_KEY"],
     "ADD_ELEMENT_CHAIN" => (isset($arParams["ADD_ELEMENT_CHAIN"]) ? $arParams["ADD_ELEMENT_CHAIN"] : ''),
     'STRICT_SECTION_CHECK' => (isset($arParams['STRICT_SECTION_CHECK']) ? $arParams['STRICT_SECTION_CHECK'] : ''),
-    ), $component
+), $component
 );
 ?>
 <a class="link" href="<?= $arResult["FOLDER"] . $arResult["URL_TEMPLATES"]["news"] ?>"><?= GetMessage("T_NEWS_DETAIL_BACK") ?></a>

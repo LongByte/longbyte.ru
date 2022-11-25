@@ -4,6 +4,6 @@ $APPLICATION->SetTitle("Сравнительные тесты производи
 ?>
 <?
 $APPLICATION->IncludeComponent(
-    "longbyte:chart", "", Array()
+    "longbyte:chart", "", array()
 );
 ?><? require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php"); ?>

@@ -27,7 +27,8 @@ use Leafo\ScssPhp\Type;
  *
  * @author Anthon Pang <anthon.pang@gmail.com>
  */
-class Number extends Node implements \ArrayAccess {
+class Number extends Node implements \ArrayAccess
+{
 
     /**
      * @var integer
@@ -86,7 +87,8 @@ class Number extends Node implements \ArrayAccess {
      * @param mixed $dimension
      * @param mixed $initialUnit
      */
-    public function __construct($dimension, $initialUnit) {
+    public function __construct($dimension, $initialUnit)
+    {
         $this->type = Type::T_NUMBER;
         $this->dimension = $dimension;
         $this->units = is_array($initialUnit) ? $initialUnit : ($initialUnit ? [$initialUnit => 1] : []);
@@ -99,7 +101,8 @@ class Number extends Node implements \ArrayAccess {
      *
      * @return \Leafo\ScssPhp\Node\Number
      */
-    public function coerce($units) {
+    public function coerce($units)
+    {
         if ($this->unitless()) {
             return new Number($this->dimension, $units);
         }
@@ -121,7 +124,8 @@ class Number extends Node implements \ArrayAccess {
      *
      * @return \Leafo\ScssPhp\Node\Number
      */
-    public function normalize() {
+    public function normalize()
+    {
         $dimension = $this->dimension;
         $units = [];
 
@@ -133,7 +137,8 @@ class Number extends Node implements \ArrayAccess {
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($offset) {
+    public function offsetExists($offset)
+    {
         if ($offset === -3) {
             return $this->sourceColumn !== null;
         }
@@ -153,7 +158,8 @@ class Number extends Node implements \ArrayAccess {
     /**
      * {@inheritdoc}
      */
-    public function offsetGet($offset) {
+    public function offsetGet($offset)
+    {
         switch ($offset) {
             case -3:
                 return $this->sourceColumn;
@@ -178,7 +184,8 @@ class Number extends Node implements \ArrayAccess {
     /**
      * {@inheritdoc}
      */
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value)
+    {
         if ($offset === 1) {
             $this->dimension = $value;
         } elseif ($offset === 2) {
@@ -195,7 +202,8 @@ class Number extends Node implements \ArrayAccess {
     /**
      * {@inheritdoc}
      */
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset)
+    {
         if ($offset === 1) {
             $this->dimension = null;
         } elseif ($offset === 2) {
@@ -214,7 +222,8 @@ class Number extends Node implements \ArrayAccess {
      *
      * @return boolean
      */
-    public function unitless() {
+    public function unitless()
+    {
         return !array_sum($this->units);
     }
 
@@ -223,7 +232,8 @@ class Number extends Node implements \ArrayAccess {
      *
      * @return string
      */
-    public function unitStr() {
+    public function unitStr()
+    {
         $numerators = [];
         $denominators = [];
 
@@ -249,7 +259,8 @@ class Number extends Node implements \ArrayAccess {
      *
      * @return string
      */
-    public function output(Compiler $compiler = null) {
+    public function output(Compiler $compiler = null)
+    {
         $dimension = round($this->dimension, self::$precision);
 
         $units = array_filter($this->units, function ($unitSize) {
@@ -275,7 +286,7 @@ class Number extends Node implements \ArrayAccess {
         }
 
         reset($units);
-        list($unit, ) = each($units);
+        list($unit,) = each($units);
 
         return (string) $dimension . $unit;
     }
@@ -283,7 +294,8 @@ class Number extends Node implements \ArrayAccess {
     /**
      * {@inheritdoc}
      */
-    public function __toString() {
+    public function __toString()
+    {
         return $this->output();
     }
 
@@ -291,10 +303,11 @@ class Number extends Node implements \ArrayAccess {
      * Normalize units
      *
      * @param integer|float $dimension
-     * @param array         $units
-     * @param string        $baseUnit
+     * @param array $units
+     * @param string $baseUnit
      */
-    private function normalizeUnits(&$dimension, &$units, $baseUnit = 'in') {
+    private function normalizeUnits(&$dimension, &$units, $baseUnit = 'in')
+    {
         $dimension = $this->dimension;
         $units = [];
 

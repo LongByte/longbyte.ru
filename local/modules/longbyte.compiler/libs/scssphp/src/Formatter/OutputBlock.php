@@ -17,7 +17,8 @@ namespace Leafo\ScssPhp\Formatter;
  *
  * @author Anthon Pang <anthon.pang@gmail.com>
  */
-class OutputBlock {
+class OutputBlock
+{
 
     /**
      * @var string

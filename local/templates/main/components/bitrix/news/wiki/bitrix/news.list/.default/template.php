@@ -16,6 +16,9 @@ $this->setFrameMode(true);
 ?>
 <? foreach ($arResult["ITEMS"] as $arItem): ?>
     <p class="news-item">
-        <a href="<?= $arItem["DETAIL_PAGE_URL"] ?>"><b><?= $arItem["NAME"] ?></b></a><br />
+        <a href="<?= $arItem["DETAIL_PAGE_URL"] ?>">
+            <b><?= $arItem["NAME"] ?></b>
+        </a>
+        <br />
     </p>
 <? endforeach; ?>

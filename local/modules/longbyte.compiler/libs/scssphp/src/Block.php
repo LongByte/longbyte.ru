@@ -17,7 +17,8 @@ namespace Leafo\ScssPhp;
  *
  * @author Anthon Pang <anthon.pang@gmail.com>
  */
-class Block {
+class Block
+{
 
     /**
      * @var string

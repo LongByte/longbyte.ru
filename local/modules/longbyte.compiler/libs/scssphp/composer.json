@@ -2,7 +2,13 @@
     "name": "leafo/scssphp",
     "type": "library",
     "description": "scssphp is a compiler for SCSS written in PHP.",
-    "keywords": ["css", "stylesheet", "scss", "sass", "less"],
+    "keywords": [
+        "css",
+        "stylesheet",
+        "scss",
+        "sass",
+        "less"
+    ],
     "homepage": "http://leafo.github.io/scssphp/",
     "license": [
         "MIT"
@@ -32,7 +38,9 @@
         "phpunit/phpunit": "~3.7",
         "kherge/box": "~2.5"
     },
-    "bin": ["bin/pscss"],
+    "bin": [
+        "bin/pscss"
+    ],
     "archive": {
         "exclude": [
             "/Makefile",

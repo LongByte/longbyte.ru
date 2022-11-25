@@ -4,6 +4,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
     die();
 
 /** @var \CBitrixComponent $this */
+
 use Bitrix\Main\Application;
 use Bitrix\Main\Loader;
 use Bitrix\Main\IO;
@@ -28,9 +29,9 @@ if (Loader::includeModule('longbyte.compiler')) {
 
         $APPLICATION->IncludeComponent(
             "longbyte:longbyte.csscompiler.template", "less", array(
-            'TEMPLATE_PATH' => $strTemplateFolder
-            ), false, array(
-            "HIDE_ICONS" => "Y"
+            'TEMPLATE_PATH' => $strTemplateFolder,
+        ), false, array(
+                "HIDE_ICONS" => "Y",
             )
         );
     }

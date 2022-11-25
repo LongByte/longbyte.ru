@@ -18,7 +18,8 @@ $JSON_INPUT = preg_replace("/[^a-z0-9_\\[\\]:]/i", "", $_REQUEST["JSON_INPUT"]);
 
 $APPLICATION->ShowAjaxHead();
 
-function PageParams($bUrlEncode = true) {
+function PageParams($bUrlEncode = true)
+{
     $amp = $bUrlEncode ? '&amp;' : '&';
     return
         'component_name=' . urlencode(CUtil::addslashes($_GET["component_name"])) .
@@ -51,7 +52,7 @@ IncludeModuleLangFile($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/public/c
 CUtil::JSPostUnescape();
 
 $obJSPopup = new CJSPopup('', array(
-    'TITLE' => GetMessage("comp_prop_title")
+        'TITLE' => GetMessage("comp_prop_title"),
     )
 );
 
@@ -80,7 +81,7 @@ if ($strWarning == "") {
     $curTemplate = (isset($_POST["COMPONENT_TEMPLATE"])) ? $_POST["COMPONENT_TEMPLATE"] : $componentTemplate;
 
     $data = CComponentParamsManager::GetComponentProperties(
-            $componentName, $curTemplate, $templateId, $arValues
+        $componentName, $curTemplate, $templateId, $arValues
     );
     $data['description'] = CComponentUtil::GetComponentDescr($componentName);
     foreach ($data['templates'] as $templates_key => $_template) {
@@ -162,13 +163,10 @@ if ($strWarning !== "") {
     $obJSPopup->ShowValidationError($strWarning);
     ?>
     <script>
-        (function ()
-        {
-            if (BX && BX.WindowManager)
-            {
+        (function () {
+            if (BX && BX.WindowManager) {
                 var oPopup = BX.WindowManager.Get();
-                if (oPopup && oPopup.PARTS && oPopup.PARTS.CONTENT_DATA)
-                {
+                if (oPopup && oPopup.PARTS && oPopup.PARTS.CONTENT_DATA) {
                     oPopup.PARTS.CONTENT_DATA.style.display = 'none';
                 }
             }
@@ -182,25 +180,21 @@ $obJSPopup->StartContent();
 
 <? if ($strWarning === ""): ?>
     <script>
-        (function ()
-        {
-            function CompDialogManager(params)
-            {
+        (function () {
+            function CompDialogManager(params) {
                 this.Init(params);
             }
 
             CompDialogManager.prototype =
                 {
-                    Init: function (params)
-                    {
+                    Init: function (params) {
                         this.pDiv = BX('bx-comp-params-wrap');
                         var oPopup = BX.WindowManager.Get();
                         oPopup.PARTS.CONTENT_DATA.className = 'bxcompprop-adm-dialog-content';
 
                         BX.addClass(oPopup.PARTS.CONTENT, 'bxcompprop-adm-dialog');
 
-                        BX.addCustomEvent(oPopup, 'onWindowResize', function ()
-                        {
+                        BX.addCustomEvent(oPopup, 'onWindowResize', function () {
                             BX.onCustomEvent(oBXComponentParamsManager, 'OnComponentParamsResize', [
                                 parseInt(oPopup.PARTS.CONTENT_DATA.style.width),
                                 parseInt(oPopup.PARTS.CONTENT_DATA.style.height)
@@ -217,8 +211,7 @@ $obJSPopup->StartContent();
                             siteTemplate: params.siteTemplate
                         };
 
-                        BX.addCustomEvent(oBXComponentParamsManager, 'onComponentParamsBuilt', function ()
-                        {
+                        BX.addCustomEvent(oBXComponentParamsManager, 'onComponentParamsBuilt', function () {
                             BX.onCustomEvent(oBXComponentParamsManager, 'OnComponentParamsResize', [
                                 parseInt(oPopup.PARTS.CONTENT_DATA.style.width),
                                 parseInt(oPopup.PARTS.CONTENT_DATA.style.height)
@@ -230,22 +223,22 @@ $obJSPopup->StartContent();
                 };
 
             window.publicComponentDialogManager = new CompDialogManager(<?=
-    CUtil::PhpToJSObject(array(
-        'name' => $componentName,
-        'template' => $curTemplate,
-        'siteTemplate' => $templateId,
-        'currentValues' => $arValues,
-        'data' => $data
-    ))
-    ?>);
+                CUtil::PhpToJSObject(array(
+                    'name' => $componentName,
+                    'template' => $curTemplate,
+                    'siteTemplate' => $templateId,
+                    'currentValues' => $arValues,
+                    'data' => $data,
+                ))
+                ?>);
         })();
     </script>
     <div id="bx-comp-params-wrap" class="bxcompprop-wrap-public"></div>
     <? CComponentParamsManager::DisplayFileDialogsScripts(); ?>
 <? endif; /* ($strWarning === "") */ ?>
 <? $obJSPopup->StartButtons(); ?>
-<input type="button" value="<?= GetMessage("comp_prop_save") ?>" onclick="<?= $obJSPopup->jsPopup ?>.PostParameters('<?= PageParams() . '&amp;action=save&amp;FORM_NAME=' . $FN . '&amp;JSON_INPUT=' . $JSON_INPUT . '&amp;PROPERTY_INPUT=' . $FC ?>');" title="<?= GetMessage("comp_prop_save_title") ?>" name="save" class="adm-btn-save" />
-<input type="button" value="<?= GetMessage("comp_prop_cancel") ?>" onclick="<?= $obJSPopup->jsPopup ?>.CloseDialog()" title="<?= GetMessage("comp_prop_cancel_title") ?>" />
+    <input type="button" value="<?= GetMessage("comp_prop_save") ?>" onclick="<?= $obJSPopup->jsPopup ?>.PostParameters('<?= PageParams() . '&amp;action=save&amp;FORM_NAME=' . $FN . '&amp;JSON_INPUT=' . $JSON_INPUT . '&amp;PROPERTY_INPUT=' . $FC ?>');" title="<?= GetMessage("comp_prop_save_title") ?>" name="save" class="adm-btn-save" />
+    <input type="button" value="<?= GetMessage("comp_prop_cancel") ?>" onclick="<?= $obJSPopup->jsPopup ?>.CloseDialog()" title="<?= GetMessage("comp_prop_cancel_title") ?>" />
 <? $obJSPopup->EndButtons(); ?>
 
 <? require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/epilog_admin_js.php"); ?>

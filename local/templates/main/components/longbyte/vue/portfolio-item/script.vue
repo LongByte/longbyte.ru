@@ -18,8 +18,8 @@
     </div>
 </template>
 <script>
-    Vue.component('portfolio-item', {
-        props: ['result'],
-        template: `#portfolio-item`
-    });
+Vue.component('portfolio-item', {
+    props: ['result'],
+    template: `#portfolio-item`
+});
 </script>

@@ -8,6 +8,7 @@
     background-color: black;
     opacity: 0.3;
 }
+
 .ilex-dialog {
     display: none;
     position: fixed;
@@ -24,6 +25,7 @@
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
+
 .ilex-dialog .dialog-close {
     position: absolute;
     top: 15px;
@@ -33,15 +35,18 @@
     cursor: pointer;
     background: transparent url('images/close.svg') no-repeat left top;
 }
+
 .ilex-dialog .dialog-title {
     margin-bottom: 10px;
     color: black;
     font-size: 16px;
     font-weight: bold;
 }
+
 .ilex-dialog textarea {
     resize: none;
 }
+
 #error-dialog.ilex-dialog,
 #message-dialog.ilex-dialog {
     z-index: 501;

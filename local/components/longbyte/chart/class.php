@@ -38,7 +38,8 @@ class LongbyteChartComponent extends CBitrixComponent
                 $this->_getData();
 
                 return $this->getTestTypes();
-            });
+            })
+        ;
 
         $this->_prepareData();
         $this->_prepareJsData();
@@ -171,7 +172,7 @@ class LongbyteChartComponent extends CBitrixComponent
                         $arRes[] = $obResult->getResult3();
 
                     $arDataItem = array(
-                        $obResult->getFullName()
+                        $obResult->getFullName(),
                     );
                     foreach (explode(',', $obResult->getColor()) as $colorPart) {
                         $arDataItem[] = (int) trim($colorPart);

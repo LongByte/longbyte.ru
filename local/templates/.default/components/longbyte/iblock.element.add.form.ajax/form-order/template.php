@@ -26,7 +26,7 @@ unset($arProp);
 if (!empty($arResult["ERRORS"])):
     ?>
     <? ShowError(implode("<br />", $arResult["ERRORS"])) ?>
-    <?
+<?
 endif;
 if (strlen($arResult["MESSAGE"]) > 0):
     ?>
@@ -42,9 +42,12 @@ if (strlen($arResult["MESSAGE"]) > 0):
             </p>
 
             <?= bitrix_sessid_post() ?>
-            <? if ($arParams["MAX_FILE_SIZE"] > 0): ?><input type="hidden" name="MAX_FILE_SIZE" value="<?= $arParams["MAX_FILE_SIZE"] ?>" /><? endif ?>
+            <? if ($arParams["MAX_FILE_SIZE"] > 0): ?>
+                <input type="hidden" name="MAX_FILE_SIZE" value="<?= $arParams["MAX_FILE_SIZE"] ?>" /><? endif ?>
             <p>
-                <label>Ваше имя <i>*</i></label>
+                <label>Ваше имя
+                    <i>*</i>
+                </label>
                 <input name="PROPERTY[NAME][0]" type="text">
             </p>
             <p>
@@ -52,7 +55,9 @@ if (strlen($arResult["MESSAGE"]) > 0):
                 <input name="PROPERTY[<?= $arResult['CODES']['COMPANY_NAME'] ?>][0]" type="text">
             </p>
             <p>
-                <label>Телефон <i>*</i></label>
+                <label>Телефон
+                    <i>*</i>
+                </label>
                 <input name="PROPERTY[<?= $arResult['CODES']['PHONE'] ?>][0]" type="tel">
             </p>
             <p>
@@ -74,12 +79,12 @@ if (strlen($arResult["MESSAGE"]) > 0):
                     foreach ($arResult["PROPERTY_LIST_FULL"][$propID]['ENUM'] as &$arEnum):
                         ?>
                         <option <?= strpos($APPLICATION->GetCurPage(), $arEnum['XML_ID']) !== false ? 'selected' : '' ?> value="<?= $arEnum['ID'] ?>"><?= $arEnum['VALUE'] ?></option>
-                        <?
+                    <?
                     endforeach;
                     unset($arEnum);
                     ?>
                 </select>
-            </p>        
+            </p>
             <?
             if (in_array('DETAIL_TEXT', $arParams["PROPERTY_CODES"])) {
                 ?>
@@ -94,11 +99,11 @@ if (strlen($arResult["MESSAGE"]) > 0):
                     <div class="ilex-dialog" id="dialog-calc">
                         <?
                         $APPLICATION->IncludeComponent(
-                            "bitrix:main.include", "", Array(
-                            "AREA_FILE_RECURSIVE" => "Y",
-                            "AREA_FILE_SHOW" => "file",
-                            "EDIT_TEMPLATE" => "",
-                            "PATH" => "/include/calculate.php"
+                            "bitrix:main.include", "", array(
+                                "AREA_FILE_RECURSIVE" => "Y",
+                                "AREA_FILE_SHOW" => "file",
+                                "EDIT_TEMPLATE" => "",
+                                "PATH" => "/include/calculate.php",
                             )
                         );
                         ?>
@@ -115,7 +120,9 @@ if (strlen($arResult["MESSAGE"]) > 0):
                 <input type="hidden" name="captcha_sid" value="<?= $arResult["CAPTCHA_CODE"] ?>" />
                 <span class="captcha-line">
                     <span>
-                        <label>Защитный код <i>*</i></label>
+                        <label>Защитный код
+                            <i>*</i>
+                        </label>
                     </span>
                     <span>
                         <img class="captcha-img" src="/bitrix/tools/captcha.php?captcha_sid=<?= $arResult["CAPTCHA_CODE"] ?>" align="absmiddle" />
@@ -126,8 +133,10 @@ if (strlen($arResult["MESSAGE"]) > 0):
                 </span>
             </p>
             <p class="popd">
-                Нажимая кнопку «Отправить», я даю свое согласие на обработку моих персональных данных, в соответствии с Федеральным законом от 27.07.2006 года №152-ФЗ 
-                «О персональных данных», на условиях и для целей, определенных в <a href="/popd/" target="_blank" rel="nofollow">Согласии на обработку персональных данных</a>.
+                Нажимая кнопку «Отправить», я даю свое согласие на обработку моих персональных данных, в соответствии с Федеральным законом от 27.07.2006 года №152-ФЗ
+                «О персональных данных», на условиях и для целей, определенных в
+                <a href="/popd/" target="_blank" rel="nofollow">Согласии на обработку персональных данных</a>
+                .
             </p>
             <p>
                 <button value="Отправить" type="submit" name="iblock_submit">Отправить</button>
@@ -141,7 +150,7 @@ ob_start();
 foreach ($arResult["PROPERTY_REQUIRED"] as &$field):
     ?>
     "[name=PROPERTY\\[<?= $field ?>\\]\\[0\\]]": /.+/,
-    <?
+<?
 endforeach;
 unset($field);
 $fields = ob_get_contents();
@@ -156,7 +165,7 @@ if ($arParams['USE_CAPTCHA'] == 'Y') {
         $("form.iblock-element-add-form-ajax.<?= $this->__name ?>").submit(function () {
 
             var good = LongByteValidate(this, {
-<?= $fields ?>
+                <?= $fields ?>
             });
             if (good) {
 

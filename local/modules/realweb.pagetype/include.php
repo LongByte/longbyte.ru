@@ -9,6 +9,6 @@ $strPath2Lang = substr($strPath2Lang, 0, strlen($strPath2Lang) - strlen('/includ
 if (ModuleManager::isModuleInstalled('realweb.pagetype')) {
     Loader::registerAutoLoadClasses('realweb.pagetype', array(
         '\Realweb\PageType\PageType' => 'lib/PageType.php',
-		'\Realweb\PageType\Handlers' => 'lib/Handlers.php',
+        '\Realweb\PageType\Handlers' => 'lib/Handlers.php',
     ));
 }

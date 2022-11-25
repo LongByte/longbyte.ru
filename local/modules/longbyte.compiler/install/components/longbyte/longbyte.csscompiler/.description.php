@@ -15,7 +15,7 @@ $arComponentDescription = array(
     ),
     'AREA_BUTTONS' => array(
         array(
-            'TITLE' => Loc::getMessage('OP_CS_DESC_AREA_BUTTONS_TITLE')
+            'TITLE' => Loc::getMessage('OP_CS_DESC_AREA_BUTTONS_TITLE'),
         ),
     ),
     'CACHE_PATH' => 'Y',

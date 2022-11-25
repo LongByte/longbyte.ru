@@ -3,6 +3,7 @@
 /** @global CDatabase $DB */
 
 /** @global CUser $USER */
+
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Loader;
 use Realweb\RealwebMainIncludeTable;
@@ -76,7 +77,7 @@ if ($arID = $lAdmin->GroupAction()) {
     // если выбрано "Для всех элементов"
     if ($obRequest->get('action_target') == 'selected') {
         $rsData = RealwebMainIncludeTable::getList(array(
-                'filter' => $arFilter,
+            'filter' => $arFilter,
         ));
         while ($arRes = $rsData->fetch())
             $arID[] = $arRes['ID'];
@@ -130,7 +131,7 @@ $arHeader = array(
         'content' => Loc::getMessage('REALWEB.MAIN.INCLUDE.DESCRIPTION'),
         'title' => Loc::getMessage('REALWEB.MAIN.INCLUDE.DESCRIPTION'),
         'default' => false,
-    )
+    ),
 );
 
 $lAdmin->AddHeaders($arHeader);
@@ -151,30 +152,30 @@ if (strlen($arFilter['CATEGORY']) <= 0) {
     $arFilter['CATEGORY'] = '';
 }
 $rsData = RealwebMainIncludeTable::getList(array(
-        'filter' => $arFilter
-    ));
+    'filter' => $arFilter,
+));
 
 $rsData = new CAdminResult($rsData, $sTableID);
 
 $rsData->NavStart();
 $lAdmin->NavText($rsData->GetNavPrint(Loc::getMessage('REALWEB.MAIN.INCLUDE.nav')));
 while ($arRes = $rsData->NavNext(true, 'f_')) {
-    $row = & $lAdmin->AddRow($f_ID, $arRes);
+    $row = &$lAdmin->AddRow($f_ID, $arRes);
     $row->AddViewField("ID", '<a href="main_include_edit.php?ID=' . $f_ID . '&amp;lang=' . LANG . '" title="' . Loc::getMessage("area_act_edit") . '">' . $f_ID . '</a>');
     $row->AddInputField('CODE', array('size' => 20));
 
-    $arActions = Array(
+    $arActions = array(
         array(
             'ICON' => 'edit',
             'DEFAULT' => true,
             'TEXT' => Loc::getMessage('REALWEB.MAIN.INCLUDE.CONTEXT_EDIT'),
-            'ACTION' => $lAdmin->ActionRedirect('main_include_edit.php?ID=' . $f_ID)
+            'ACTION' => $lAdmin->ActionRedirect('main_include_edit.php?ID=' . $f_ID),
         ),
         array(
             'ICON' => 'delete',
             'TEXT' => GetMessage('REALWEB.MAIN.INCLUDE.CONTEXT_DELETE'),
-            'ACTION' => "if(confirm('" . Loc::getMessage('REALWEB.MAIN.INCLUDE.CONTEXT_DELETE') . "?')) " . $lAdmin->ActionDoGroup($f_ID, "delete")
-        )
+            'ACTION' => "if(confirm('" . Loc::getMessage('REALWEB.MAIN.INCLUDE.CONTEXT_DELETE') . "?')) " . $lAdmin->ActionDoGroup($f_ID, "delete"),
+        ),
     );
 
     $row->AddActions($arActions);
@@ -186,7 +187,7 @@ $lAdmin->AddFooter(
         array('counter' => true, 'title' => GetMessage('MAIN_ADMIN_LIST_CHECKED'), 'value' => '0'),
     )
 );
-$lAdmin->AddGroupActionTable(Array(
+$lAdmin->AddGroupActionTable(array(
     'delete' => GetMessage('MAIN_ADMIN_LIST_DELETE'),
 ));
 
@@ -200,84 +201,86 @@ $aContext = array(
 );
 $lAdmin->AddAdminContextMenu($aContext);
 $lAdmin->CheckListMode();
-require_once ($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_admin_after.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_admin_after.php');
 $oFilter = new CAdminFilter(
     $sTableID . '_filter', array(
-    'find' => Loc::getMessage('REALWEB.MAIN.INCLUDE.FIND'),
-    'id' => Loc::getMessage('REALWEB.MAIN.INCLUDE.ID'),
-    'code' => Loc::getMessage('REALWEB.MAIN.INCLUDE.CODE'),
-    'category' => Loc::getMessage('REALWEB.MAIN.INCLUDE.CATEGORY'),
+        'find' => Loc::getMessage('REALWEB.MAIN.INCLUDE.FIND'),
+        'id' => Loc::getMessage('REALWEB.MAIN.INCLUDE.ID'),
+        'code' => Loc::getMessage('REALWEB.MAIN.INCLUDE.CODE'),
+        'category' => Loc::getMessage('REALWEB.MAIN.INCLUDE.CATEGORY'),
     )
 );
 ?>
 
-<form name='find_form' id='find_form'  method='get' action='<? echo $APPLICATION->GetCurPage(); ?>'>
-    <?
-    $oFilter->Begin();
-    ?>
-    <tr>
-        <td><b><?= Loc::getMessage('REALWEB.MAIN.INCLUDE.FIND') ?>:</b></td>
-        <td>
-            <input type='text' size='25' name='find' value='<? echo htmlspecialcharsbx($find) ?>' title='<?= Loc::getMessage('REALWEB.MAIN.INCLUDE.FIND_TITLE') ?>'>
-            <?
-            $arr = array(
-                'reference' => array(
-                    Loc::getMessage('REALWEB.MAIN.INCLUDE.ID'),
-                    Loc::getMessage('REALWEB.MAIN.INCLUDE.CODE'),
-                    Loc::getMessage('REALWEB.MAIN.INCLUDE.CATEGORY'),
-                ),
-                'reference_id' => array(
-                    'id',
-                    'code',
-                    'category',
-                )
-            );
-            echo SelectBoxFromArray('find_type', $arr, $find_type, '', '');
-            ?>
-        </td>
-    </tr>
-    <tr>
-        <td><?= Loc::getMessage('REALWEB.MAIN.INCLUDE.ID') ?>:</td>
-        <td>
-            <input type='text' name='find_id' size='47' value='<? echo htmlspecialcharsbx($find_id) ?>'>
-            &nbsp;<?= ShowFilterLogicHelp() ?>
-        </td>
-    </tr>
-    <tr>
-        <td><?= Loc::getMessage('REALWEB.MAIN.INCLUDE.CODE') ?>:</td>
-        <td>
-            <input type='text' name='find_code' size='47' value='<? echo htmlspecialcharsbx($find_code) ?>'>
-            &nbsp;<?= ShowFilterLogicHelp() ?>
-        </td>
-    </tr>
-    <tr>
-        <td><?= Loc::getMessage('REALWEB.MAIN.INCLUDE.CATEGORY') ?>:</td>
-        <td>
-            <?php
-            $arFields = RealwebMainIncludeTable::getMap();
-            $obCategory = $arFields['CATEGORY'];
-            $arCategoryValues = array(
-                'reference' => array(),
-                'reference_id' => array(),
-            );
-            foreach (\Realweb\RealwebMainIncludeCategoryTable::getAll() as $strValue) {
-                $arCategoryValues['reference'][] = $strValue;
-                $arCategoryValues['reference_id'][] = $strValue;
-                if (strlen($strValue) == 0) {
-                    $arCategoryValues['reference'][] = 'Без категории';
-                    $arCategoryValues['reference_id'][] = '0';
+    <form name='find_form' id='find_form' method='get' action='<? echo $APPLICATION->GetCurPage(); ?>'>
+        <?
+        $oFilter->Begin();
+        ?>
+        <tr>
+            <td>
+                <b><?= Loc::getMessage('REALWEB.MAIN.INCLUDE.FIND') ?>:</b>
+            </td>
+            <td>
+                <input type='text' size='25' name='find' value='<? echo htmlspecialcharsbx($find) ?>' title='<?= Loc::getMessage('REALWEB.MAIN.INCLUDE.FIND_TITLE') ?>'>
+                <?
+                $arr = array(
+                    'reference' => array(
+                        Loc::getMessage('REALWEB.MAIN.INCLUDE.ID'),
+                        Loc::getMessage('REALWEB.MAIN.INCLUDE.CODE'),
+                        Loc::getMessage('REALWEB.MAIN.INCLUDE.CATEGORY'),
+                    ),
+                    'reference_id' => array(
+                        'id',
+                        'code',
+                        'category',
+                    ),
+                );
+                echo SelectBoxFromArray('find_type', $arr, $find_type, '', '');
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <td><?= Loc::getMessage('REALWEB.MAIN.INCLUDE.ID') ?>:</td>
+            <td>
+                <input type='text' name='find_id' size='47' value='<? echo htmlspecialcharsbx($find_id) ?>'>
+                &nbsp;<?= ShowFilterLogicHelp() ?>
+            </td>
+        </tr>
+        <tr>
+            <td><?= Loc::getMessage('REALWEB.MAIN.INCLUDE.CODE') ?>:</td>
+            <td>
+                <input type='text' name='find_code' size='47' value='<? echo htmlspecialcharsbx($find_code) ?>'>
+                &nbsp;<?= ShowFilterLogicHelp() ?>
+            </td>
+        </tr>
+        <tr>
+            <td><?= Loc::getMessage('REALWEB.MAIN.INCLUDE.CATEGORY') ?>:</td>
+            <td>
+                <?php
+                $arFields = RealwebMainIncludeTable::getMap();
+                $obCategory = $arFields['CATEGORY'];
+                $arCategoryValues = array(
+                    'reference' => array(),
+                    'reference_id' => array(),
+                );
+                foreach (\Realweb\RealwebMainIncludeCategoryTable::getAll() as $strValue) {
+                    $arCategoryValues['reference'][] = $strValue;
+                    $arCategoryValues['reference_id'][] = $strValue;
+                    if (strlen($strValue) == 0) {
+                        $arCategoryValues['reference'][] = 'Без категории';
+                        $arCategoryValues['reference_id'][] = '0';
+                    }
                 }
-            }
-            ?>
-            <?= SelectBoxFromArray('find_category', $arCategoryValues, $find_category, '', ''); ?>
-            &nbsp;<?= ShowFilterLogicHelp() ?>
-        </td>
-    </tr>
-    <?
-    $oFilter->Buttons(array('table_id' => $sTableID, 'url' => $APPLICATION->GetCurPage(), 'form' => 'find_form'));
-    $oFilter->End();
-    ?>
-</form>
+                ?>
+                <?= SelectBoxFromArray('find_category', $arCategoryValues, $find_category, '', ''); ?>
+                &nbsp;<?= ShowFilterLogicHelp() ?>
+            </td>
+        </tr>
+        <?
+        $oFilter->Buttons(array('table_id' => $sTableID, 'url' => $APPLICATION->GetCurPage(), 'form' => 'find_form'));
+        $oFilter->End();
+        ?>
+    </form>
 
 <? $lAdmin->DisplayList(); ?>
 

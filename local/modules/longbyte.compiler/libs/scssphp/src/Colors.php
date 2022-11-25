@@ -17,7 +17,8 @@ namespace Leafo\ScssPhp;
  *
  * @author Leaf Corcoran <leafot@gmail.com>
  */
-class Colors {
+class Colors
+{
 
     /**
      * CSS Colors

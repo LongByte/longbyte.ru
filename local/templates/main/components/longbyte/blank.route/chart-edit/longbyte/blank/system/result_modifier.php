@@ -18,13 +18,13 @@ $obRequest = \Bitrix\Main\Context::getCurrent()->getRequest();
 $arResult['SYSTEM'] = array();
 
 $arSystem = ElementTable::getRow(array(
-        'select' => array('ID', 'IBLOCK_ID', 'NAME'),
-        'filter' => array(
-            'IBLOCK_ID' => IBLOCK_CHART_SYSTEMS,
-            '=ACTIVE' => 'Y',
-            '=XML_ID' => $arParams['SYSTEM_XML_ID']
-        ),
-    ));
+    'select' => array('ID', 'IBLOCK_ID', 'NAME'),
+    'filter' => array(
+        'IBLOCK_ID' => IBLOCK_CHART_SYSTEMS,
+        '=ACTIVE' => 'Y',
+        '=XML_ID' => $arParams['SYSTEM_XML_ID'],
+    ),
+));
 
 if (!$arSystem) {
     \Bitrix\Iblock\Component\Tools::process404('Ничего нет', true, true, true, '');
@@ -47,8 +47,8 @@ if (!$arSystem) {
 
         $arTests = array();
         $rsTest = Element::getList(array(
-                'filter' => array('IBLOCK_ID' => IBLOCK_CHART_TESTS),
-                'select' => array('ID', 'NAME'),
+            'filter' => array('IBLOCK_ID' => IBLOCK_CHART_TESTS),
+            'select' => array('ID', 'NAME'),
         ));
 
         while ($arTest = $rsTest->fetch()) {
@@ -57,8 +57,8 @@ if (!$arSystem) {
 
         $arResultsSections = array();
         $rsResultsSections = SectionTable::getList(array(
-                'select' => array('ID', 'NAME'),
-                'filter' => array('IBLOCK_ID' => IBLOCK_CHART_RESULT),
+            'select' => array('ID', 'NAME'),
+            'filter' => array('IBLOCK_ID' => IBLOCK_CHART_RESULT),
         ));
 
         while ($arResultsSection = $rsResultsSections->fetch()) {
@@ -67,11 +67,11 @@ if (!$arSystem) {
 
         $arResults = array();
         $rsResults = Element::getList(array(
-                'filter' => array('IBLOCK_ID' => IBLOCK_CHART_RESULT, '=ACTIVE' => 'Y', 'PROPERTY.SYSTEM_ID.ID' => $arSystem['ID']),
-                'select' => array(
-                    'ID',
-                    'TEST_ID' => 'PROPERTY.TEST_ID.ID',
-                ),
+            'filter' => array('IBLOCK_ID' => IBLOCK_CHART_RESULT, '=ACTIVE' => 'Y', 'PROPERTY.SYSTEM_ID.ID' => $arSystem['ID']),
+            'select' => array(
+                'ID',
+                'TEST_ID' => 'PROPERTY.TEST_ID.ID',
+            ),
         ));
 
         while ($arOneResult = $rsResults->fetch()) {
@@ -86,7 +86,7 @@ if (!$arSystem) {
                 \CIBlockElement::SetPropertyValuesEx($arResults[$iTestId]['ID'], IBLOCK_CHART_RESULT, array(
                     'RESULT' => $arTestResult['result'],
                     'RESULT2' => $arTestResult['result2'],
-                    'RESULT3' => $arTestResult['result3']
+                    'RESULT3' => $arTestResult['result3'],
                 ));
             } else {
                 $arResultFields = array(
@@ -101,7 +101,7 @@ if (!$arSystem) {
                         'RESULT3' => $arTestResult['result3'],
                         'TEST_ID' => $iTestId,
                         'SYSTEM_ID' => $arSystem['ID'],
-                    )
+                    ),
                 );
                 $obElement->Add($arResultFields);
             }
@@ -110,25 +110,25 @@ if (!$arSystem) {
     unset($arTests);
 
     $obSystem = \CIBlockElement::GetList(
-            array(),
-            array(
-                'IBLOCK_ID' => IBLOCK_CHART_SYSTEMS,
-                'ACTIVE' => 'Y',
-                '=XML_ID' => $arParams['SYSTEM_XML_ID']
-            ),
-            false,
-            array('nTopCount' => 1),
-            array('ID', 'NAME', 'CODE', 'IBLOCK_ID', 'SORT', 'IBLOCK_SECTION_ID')
-        )->GetNextElement();
+        array(),
+        array(
+            'IBLOCK_ID' => IBLOCK_CHART_SYSTEMS,
+            'ACTIVE' => 'Y',
+            '=XML_ID' => $arParams['SYSTEM_XML_ID'],
+        ),
+        false,
+        array('nTopCount' => 1),
+        array('ID', 'NAME', 'CODE', 'IBLOCK_ID', 'SORT', 'IBLOCK_SECTION_ID')
+    )->GetNextElement();
 
     $arSystem = $obSystem->GetFields();
     $arSystem['PROPERTIES'] = $obSystem->GetProperties(false, false);
 
     $arSections = array();
     $rsSections = SectionTable::getList(array(
-            'filter' => array('IBLOCK_ID' => IBLOCK_CHART_SYSTEMS, '=ACTIVE' => 'Y'),
-            'select' => array('ID', 'NAME'),
-            'order' => array('SORT' => 'ASC', 'ID' => 'ASC')
+        'filter' => array('IBLOCK_ID' => IBLOCK_CHART_SYSTEMS, '=ACTIVE' => 'Y'),
+        'select' => array('ID', 'NAME'),
+        'order' => array('SORT' => 'ASC', 'ID' => 'ASC'),
     ));
 
     while ($arSection = $rsSections->fetch()) {
@@ -170,19 +170,19 @@ if (!$arSystem) {
 
     $arEnums = array();
     $rsEnums = PropertyEnumerationTable::getList(array(
-            'select' => array(
-                'ID',
-                'PROPERTY_ID',
-                'VALUE',
-                'XML_ID',
-            ),
-            'filter' => array(
-                'PROPERTY.IBLOCK_ID' => IBLOCK_CHART_SYSTEMS
-            ),
-            'order' => array(
-                'SORT' => 'ASC',
-                'VALUE' => 'ASC',
-            ),
+        'select' => array(
+            'ID',
+            'PROPERTY_ID',
+            'VALUE',
+            'XML_ID',
+        ),
+        'filter' => array(
+            'PROPERTY.IBLOCK_ID' => IBLOCK_CHART_SYSTEMS,
+        ),
+        'order' => array(
+            'SORT' => 'ASC',
+            'VALUE' => 'ASC',
+        ),
     ));
 
     while ($arEnum = $rsEnums->fetch()) {
@@ -203,9 +203,9 @@ if (!$arSystem) {
         if ($arProp['PROPERTY_TYPE'] == PropertyTable::TYPE_ELEMENT) {
             if (!isset($arElementLink_Cache[$arProp['IBLOCK_LINK_ID']])) {
                 $rsElements = ElementTable::getList(array(
-                        'filter' => array('IBLOCK_ID' => $arProp['LINK_IBLOCK_ID'], '=ACTIVE' => 'Y'),
-                        'select' => array('ID', 'NAME'),
-                        'order' => array('SORT' => 'ASC', 'ID' => 'ASC')
+                    'filter' => array('IBLOCK_ID' => $arProp['LINK_IBLOCK_ID'], '=ACTIVE' => 'Y'),
+                    'select' => array('ID', 'NAME'),
+                    'order' => array('SORT' => 'ASC', 'ID' => 'ASC'),
                 ));
 
                 while ($arElement = $rsElements->fetch()) {
@@ -221,9 +221,9 @@ if (!$arSystem) {
         if ($arProp['PROPERTY_TYPE'] == PropertyTable::TYPE_SECTION) {
             if (!isset($arSectionLink_Cache[$arProp['IBLOCK_LINK_ID']])) {
                 $rsSections = SectionTable::getList(array(
-                        'filter' => array('IBLOCK_ID' => $arProp['LINK_IBLOCK_ID'], '=ACTIVE' => 'Y'),
-                        'select' => array('ID', 'NAME'),
-                        'order' => array('SORT' => 'ASC', 'ID' => 'ASC')
+                    'filter' => array('IBLOCK_ID' => $arProp['LINK_IBLOCK_ID'], '=ACTIVE' => 'Y'),
+                    'select' => array('ID', 'NAME'),
+                    'order' => array('SORT' => 'ASC', 'ID' => 'ASC'),
                 ));
 
                 while ($arSection = $rsSections->fetch()) {
@@ -239,7 +239,7 @@ if (!$arSystem) {
         if ($arProp['PROPERTY_TYPE'] == PropertyTable::TYPE_LIST) {
             $arValues = $arEnums[$arProp['ID']];
         }
-        
+
         if ($arProp['MULTIPLE'] == 'Y' && !$arProp['VALUE']) {
             $arProp['VALUE'] = array();
         }
@@ -264,8 +264,8 @@ if (!$arSystem) {
 
     $arSystemProps = array();
     $rsProps = PropertyTable::getList(array(
-            'filter' => array('IBLOCK_ID' => IBLOCK_CHART_SYSTEMS, 'ACTIVE' => 'Y'),
-            'select' => array('ID', 'CODE', 'PROPERTY_TYPE', 'MULTIPLE')
+        'filter' => array('IBLOCK_ID' => IBLOCK_CHART_SYSTEMS, 'ACTIVE' => 'Y'),
+        'select' => array('ID', 'CODE', 'PROPERTY_TYPE', 'MULTIPLE'),
     ));
 
     while ($arProp = $rsProps->fetch()) {
@@ -281,8 +281,8 @@ if (!$arSystem) {
     }
 
     $rsSytems = Element::getList(array(
-            'filter' => array('IBLOCK_ID' => IBLOCK_CHART_SYSTEMS, 'ACTIVE' => 'Y', 'ID' => $arSystem['ID']),
-            'select' => $arSelect,
+        'filter' => array('IBLOCK_ID' => IBLOCK_CHART_SYSTEMS, 'ACTIVE' => 'Y', 'ID' => $arSystem['ID']),
+        'select' => $arSelect,
     ));
 
     while ($arOneSystem = $rsSytems->fetch()) {
@@ -310,9 +310,9 @@ if (!$arSystem) {
 
     $arResult['TEST_TYPES'] = array();
     $rsTestTypes = SectionTable::getList(array(
-            'order' => array('SORT' => 'ASC'),
-            'filter' => array('IBLOCK_ID' => IBLOCK_CHART_TESTS, '=ACTIVE' => 'Y'),
-            'select' => array('ID', 'NAME', 'TYPE' => 'CODE', 'DESCRIPTION')
+        'order' => array('SORT' => 'ASC'),
+        'filter' => array('IBLOCK_ID' => IBLOCK_CHART_TESTS, '=ACTIVE' => 'Y'),
+        'select' => array('ID', 'NAME', 'TYPE' => 'CODE', 'DESCRIPTION'),
     ));
 
     while ($arTestType = $rsTestTypes->fetch()) {
@@ -320,20 +320,20 @@ if (!$arSystem) {
     }
 
     $rsTest = Element::getList(array(
-            'order' => array('SORT' => 'ASC'),
-            'filter' => array('IBLOCK_ID' => IBLOCK_CHART_TESTS, '=ACTIVE' => 'Y'),
-            'select' => array(
-                'ID',
-                'NAME',
-                'DESCRIPTION' => 'PREVIEW_TEXT',
-                'TEST_TYPE' => 'IBLOCK_SECTION_ID',
-                'UNITS' =>
+        'order' => array('SORT' => 'ASC'),
+        'filter' => array('IBLOCK_ID' => IBLOCK_CHART_TESTS, '=ACTIVE' => 'Y'),
+        'select' => array(
+            'ID',
+            'NAME',
+            'DESCRIPTION' => 'PREVIEW_TEXT',
+            'TEST_TYPE' => 'IBLOCK_SECTION_ID',
+            'UNITS' =>
                 'PROPERTY.UNITS',
-                'PLACEHOLDER_RESULT' => 'PROPERTY.PLACEHOLDER_RESULT',
-                'PLACEHOLDER_RESULT2' => 'PROPERTY.PLACEHOLDER_RESULT2',
-                'PLACEHOLDER_RESULT3' => 'PROPERTY.PLACEHOLDER_RESULT3',
-                'PLACEHOLDER_INFO' => 'DETAIL_TEXT',
-            ),
+            'PLACEHOLDER_RESULT' => 'PROPERTY.PLACEHOLDER_RESULT',
+            'PLACEHOLDER_RESULT2' => 'PROPERTY.PLACEHOLDER_RESULT2',
+            'PLACEHOLDER_RESULT3' => 'PROPERTY.PLACEHOLDER_RESULT3',
+            'PLACEHOLDER_INFO' => 'DETAIL_TEXT',
+        ),
     ));
 
     while ($arTest = $rsTest->fetch()) {
@@ -341,18 +341,18 @@ if (!$arSystem) {
     }
 
     $rsResults = Element::getList(array(
-            'filter' => array('IBLOCK_ID' => IBLOCK_CHART_RESULT, 'ACTIVE' => 'Y', 'PROPERTY.SYSTEM_ID.ID' => $arSystem['ID']),
-            'select' => array(
-                'ID',
-                'NAME',
-                'INFO' => 'PREVIEW_TEXT',
-                'TEST_ID' => 'PROPERTY.TEST_ID.ID',
-                'TEST_TYPE' => 'PROPERTY.TEST_ID.IBLOCK_SECTION_ID',
-                'RESULT' => 'PROPERTY.RESULT',
-                'RESULT2' => 'PROPERTY.RESULT2',
-                'RESULT3' => 'PROPERTY.RESULT3',
-                'SYSTEM_ID' => 'PROPERTY.SYSTEM_ID.ID',
-            ),
+        'filter' => array('IBLOCK_ID' => IBLOCK_CHART_RESULT, 'ACTIVE' => 'Y', 'PROPERTY.SYSTEM_ID.ID' => $arSystem['ID']),
+        'select' => array(
+            'ID',
+            'NAME',
+            'INFO' => 'PREVIEW_TEXT',
+            'TEST_ID' => 'PROPERTY.TEST_ID.ID',
+            'TEST_TYPE' => 'PROPERTY.TEST_ID.IBLOCK_SECTION_ID',
+            'RESULT' => 'PROPERTY.RESULT',
+            'RESULT2' => 'PROPERTY.RESULT2',
+            'RESULT3' => 'PROPERTY.RESULT3',
+            'SYSTEM_ID' => 'PROPERTY.SYSTEM_ID.ID',
+        ),
     ));
 
 
@@ -367,6 +367,6 @@ if (!$arSystem) {
     }
 
     $arResult['VUE'] = $arResult;
-    
+
     $arResult['FORMAT'] = $obRequest->isPost() ? 'json' : 'html';
 }

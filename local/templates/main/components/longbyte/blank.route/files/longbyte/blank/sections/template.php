@@ -7,7 +7,7 @@ foreach ($arResult['sections'] as $arSection) {
     <a class="item" href="<?= $arSection['section_page_url'] ?>">
         <div class="img table">
             <div class="cell-middle">
-                <img src="<?=$templateFolder ?>/../../../images/dir.gif" alt="<?= $arSection['name'] ?>">
+                <img src="<?= $templateFolder ?>/../../../images/dir.gif" alt="<?= $arSection['name'] ?>">
             </div>
         </div>
         <div class="name"><?= $arSection['name'] ?></div>

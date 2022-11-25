@@ -2,16 +2,18 @@
 
 namespace Migration\Builder;
 
-class UserField extends \WS\ReduceMigrations\Builder\Entity\UserField {
+class UserField extends \WS\ReduceMigrations\Builder\Entity\UserField
+{
 
-    public function __construct($code, $entity) {
+    public function __construct($code, $entity)
+    {
         $this->code(strtoupper($code));
         $this->enumVariants = array();
         $this->entity = $entity;
 
         $rsData = \CUserTypeEntity::GetList(array($by => $order), array(
-                    "ENTITY_ID" => $entity,
-                    'FIELD_NAME' => $code
+            "ENTITY_ID" => $entity,
+            'FIELD_NAME' => $code,
         ));
 
         if ($arRes = $rsData->Fetch()) {
@@ -19,11 +21,13 @@ class UserField extends \WS\ReduceMigrations\Builder\Entity\UserField {
         }
     }
 
-    public function save() {
+    public function save()
+    {
         $this->commit();
     }
 
-    public function delete() {
+    public function delete()
+    {
         $gw = new \CUserTypeEntity();
         $res = true;
         if ($this->getId() > 0) {
@@ -31,7 +35,8 @@ class UserField extends \WS\ReduceMigrations\Builder\Entity\UserField {
         }
     }
 
-    private function commit() {
+    private function commit()
+    {
         try {
             global $APPLICATION;
 
@@ -44,7 +49,7 @@ class UserField extends \WS\ReduceMigrations\Builder\Entity\UserField {
             } else {
 
                 $res = $gw->Add(array_merge($this->getData(), array(
-                    'ENTITY_ID' => $this->entity
+                    'ENTITY_ID' => $this->entity,
                 )));
 
                 if ($res) {
@@ -62,7 +67,8 @@ class UserField extends \WS\ReduceMigrations\Builder\Entity\UserField {
         }
     }
 
-    private function commitEnum() {
+    private function commitEnum()
+    {
         global $APPLICATION;
         $obEnum = new \CUserFieldEnum;
         $values = array();
@@ -81,11 +87,13 @@ class UserField extends \WS\ReduceMigrations\Builder\Entity\UserField {
         }
     }
 
-    public function GetEntity() {
+    public function GetEntity()
+    {
         return $this->entity;
     }
 
-    public function SetEntity($entity) {
+    public function SetEntity($entity)
+    {
         $this->entity = $entity;
     }
 

@@ -18,7 +18,7 @@ $APPLICATION->IncludeComponent(
     "REMOVE_OLD_CSS_FILES" => "Y", // Удалять старые скомпилированные css файлы?
     "TMP_FILE_MASK" => "tmp.less", // Маска файла для записи временого файла. (%s обязателен, он заменится на таймштамп файла)
     "TARGET_FILE_MASK" => "styles.less.css" // Маска файла для записи css файла. (%s обязателен, он заменится на таймштамп файла)
-    ), false, array(
-    "HIDE_ICONS" => "Y"
+), false, array(
+        "HIDE_ICONS" => "Y",
     )
 );
