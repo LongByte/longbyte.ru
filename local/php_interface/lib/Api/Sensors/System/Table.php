@@ -36,7 +36,7 @@ class Table extends ORM\Data\DataManager
             'ACTIVE' => (new ORM\Fields\BooleanField('UF_ACTIVE'))->configureTitle('Активность')->configureRequired(),
             'NAME' => (new ORM\Fields\StringField('UF_NAME'))->configureRequired()->configureTitle('Название'),
             'TOKEN' => (new ORM\Fields\StringField('UF_TOKEN'))->configureRequired()->configureTitle('Токен'),
-            'EMAIL' => (new ORM\Fields\StringField('UF_EMAIL'))->configureRequired()->configureTitle('E-mail для уведомлений'),
+            'EMAIL' => (new ORM\Fields\StringField('UF_EMAIL'))->configureTitle('E-mail для уведомлений'),
             'LAST_UPDATE' => (new ORM\Fields\DateTimeField('UF_LAST_UPDATE'))->configureRequired()->configureTitle('Последнее обновление данных'),
             'LAST_RECEIVE' => (new ORM\Fields\DateTimeField('UF_LAST_RECEIVE'))->configureRequired()->configureTitle('Последнее получение данных'),
             'USER_ID' => (new ORM\Fields\IntegerField('UF_USER_ID'))->configureRequired()->configureTitle('Пользователь'),

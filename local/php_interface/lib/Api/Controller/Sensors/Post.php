@@ -368,12 +368,9 @@ class Post extends \Api\Core\Base\Controller
     private function sendAlerts(): void
     {
         if (
-            strlen($this->obSystem->getEmail()) > 0 &&
-            (
-                is_null($this->obLastAlert)
-                ||
-                !is_null($this->obLastAlert) && $this->obLastAlert->getTimestamp() + $this->alertEvery < (new \Bitrix\Main\Type\DateTime())->getTimestamp()
-            )
+            is_null($this->obLastAlert)
+            ||
+            !is_null($this->obLastAlert) && $this->obLastAlert->getTimestamp() + $this->alertEvery < (new \Bitrix\Main\Type\DateTime())->getTimestamp()
         ) {
 
             $arEmailAlerts = array();
@@ -399,15 +396,17 @@ class Post extends \Api\Core\Base\Controller
                 $message = 'Контроль сенсоров на системе <a href="' . $strUrl . '">' . $this->obSystem->getName() . '</a>. Некоторые значения вне допустимого диапазона.<br><br>';
                 $message .= implode('<br>', $arEmailAlerts);
 
-                \Bitrix\Main\Mail\Event::send(array(
-                    'EVENT_NAME' => 'SENSORS_ALERT',
-                    'LID' => 's1',
-                    'C_FIELDS' => array(
-                        'EMAIL_TO' => $this->obSystem->getEmail(),
-                        'SUBJECT' => 'Оповещение системы контроля сенсоров на системе ' . $this->obSystem->getName(),
-                        'MESSAGE' => $message,
-                    ),
-                ));
+                if (strlen($this->obSystem->getEmail()) > 0) {
+                    \Bitrix\Main\Mail\Event::send(array(
+                        'EVENT_NAME' => 'SENSORS_ALERT',
+                        'LID' => 's1',
+                        'C_FIELDS' => array(
+                            'EMAIL_TO' => $this->obSystem->getEmail(),
+                            'SUBJECT' => 'Оповещение системы контроля сенсоров на системе ' . $this->obSystem->getName(),
+                            'MESSAGE' => $message,
+                        ),
+                    ));
+                }
 
                 /** @var \Api\Sensors\Telegram\Collection $obTelegrams */
                 $obTelegrams = \Api\Sensors\Telegram\Model::getAll(array(
