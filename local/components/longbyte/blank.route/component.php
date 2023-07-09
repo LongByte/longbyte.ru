@@ -17,7 +17,7 @@ $arComponentVariables = array(
     "ELEMENT_CODE",
 );
 
-$arComponentVariables = array_merge($arComponentVariables, $arParams['COMPONENT_VARS']);
+$arComponentVariables = array_merge($arComponentVariables, (array) $arParams['COMPONENT_VARS']);
 if (!isset($arParams['RETURN'])) {
     $arParams['RETURN'] = "N";
 }

@@ -62,7 +62,7 @@ class LongbyteChartComponent extends CBitrixComponent
         if (is_null($this->obTestTypes)) {
 
             /** @var \Api\Chart\Tests\Section\Collection $obTestTypes */
-            $obTestTypes = \Api\Chart\Tests\Section\Model::getAll(array('=ACTIVE' => 'Y'), array(
+            $obTestTypes = \Api\Chart\Tests\Section\Model::getAllSections(array('=ACTIVE' => 'Y'), array(
                 'order' => array('SORT' => 'ASC'),
             ));
             $this->obTestTypes = $obTestTypes;
@@ -75,7 +75,7 @@ class LongbyteChartComponent extends CBitrixComponent
         if (is_null($this->obTests)) {
 
             /** @var \Api\Chart\Tests\Element\Collection $obTests */
-            $obTests = \Api\Chart\Tests\Element\Model::getAll(array('=ACTIVE' => 'Y'));
+            $obTests = \Api\Chart\Tests\Element\Model::getAllElements(array('=ACTIVE' => 'Y'));
             $this->obTests = $obTests;
 
             /** @var \Api\Chart\Tests\Element\Entity $obTest */
@@ -94,7 +94,7 @@ class LongbyteChartComponent extends CBitrixComponent
     {
         if (is_null($this->obFirms)) {
             /** @var \Api\Chart\Firm\Collection $obFirms */
-            $obFirms = \Api\Chart\Firm\Model::getAll(array('=ACTIVE' => 'Y'));
+            $obFirms = \Api\Chart\Firm\Model::getAllElements(array('=ACTIVE' => 'Y'));
             $this->obFirms = $obFirms;
         }
         return $this->obFirms;
@@ -105,7 +105,7 @@ class LongbyteChartComponent extends CBitrixComponent
 
         if (is_null($this->obSystems)) {
             /** @var \Api\Chart\Systems\Element\Collection $obSystems */
-            $obSystems = \Api\Chart\Systems\Element\Model::getAll(array('=ACTIVE' => 'Y'));
+            $obSystems = \Api\Chart\Systems\Element\Model::getAllElements(array('=ACTIVE' => 'Y'));
             $this->obSystems = $obSystems;
 
             /** @var \Api\Chart\Systems\Element\Entity $obSystem */
@@ -133,7 +133,7 @@ class LongbyteChartComponent extends CBitrixComponent
     private function getResults(): void
     {
 
-        $obResults = \Api\Chart\Result\Element\Model::getAll(array('=ACTIVE' => 'Y'));
+        $obResults = \Api\Chart\Result\Element\Model::getAllElements(array('=ACTIVE' => 'Y'));
 
         /** @var \Api\Chart\Result\Element\Entity $obResult */
         foreach ($obResults as $obResult) {

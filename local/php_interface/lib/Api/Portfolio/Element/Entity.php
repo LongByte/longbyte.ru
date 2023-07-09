@@ -72,7 +72,7 @@ class Entity extends \Api\Core\Iblock\Element\Entity
         return $this;
     }
 
-    public function toArray(): array
+    public function toArray($arData = null): array
     {
         $arData = parent::toArray();
 

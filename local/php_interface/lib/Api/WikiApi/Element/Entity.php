@@ -62,7 +62,7 @@ class Entity extends \Api\Core\Iblock\Element\Entity
         $arResult = array();
 
         /** @var \Api\Core\Base\Collection $obSections */
-        $obSections = \Api\WikiApi\Section\Model::getAll();
+        $obSections = \Api\WikiApi\Section\Model::getAllSections();
 
         /** @var \Api\Core\Iblock\Property\Value\Collection $obReturns */
         $obReturns = $this->getReturn(true);

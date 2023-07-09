@@ -15,7 +15,7 @@ $arCache = \Api\Core\Main\Cache::getInstance()
         $obIblock->getMeta();
 
         /** @var \Api\Files\Section\Entity $obSection */
-        $obSection = \Api\Files\Section\Model::getOne(array(
+        $obSection = \Api\Files\Section\Model::getOneSection(array(
             'ACTIVE' => 'Y',
             '=CODE' => $arParams['SECTION_CODE'],
         ));
@@ -24,7 +24,7 @@ $arCache = \Api\Core\Main\Cache::getInstance()
             $obSection->getMeta();
         }
 
-        $obElements = \Api\Files\Element\Model::getAll(array(
+        $obElements = \Api\Files\Element\Model::getAllElements(array(
             'ACTIVE' => 'Y',
             'IBLOCK_SECTION_ID' => !is_null($obSection) ? $obSection->getId() : false,
         ));

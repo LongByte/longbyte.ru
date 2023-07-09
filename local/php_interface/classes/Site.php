@@ -157,7 +157,7 @@ class Site
         $arReturn = array();
 
         if (!is_array($picture) && !is_numeric($picture)) {
-            $destSrc = '/' . Option::get('main', 'upload_dir', 'upload') . '/tmp' . $picture;
+            $destSrc = '/' . \Bitrix\Main\Config\Option::get('main', 'upload_dir', 'upload') . '/tmp' . $picture;
             $destSrcFull = Application::getDocumentRoot() . $destSrc;
             $bResize = \CFile::ResizeImageFile(Application::getDocumentRoot() . $picture, $destSrcFull, array('width' => $arSize[0], 'height' => $arSize[1]), $method);
             if ($bResize) {

@@ -6,7 +6,7 @@ class YoutubeVideo
 {
 
     // инициализация пользовательского свойства для главного модуля
-    function GetMainUserTypeDescription()
+    public static function GetMainUserTypeDescription()
     {
         return array(
             "USER_TYPE_ID" => "YoutubeVideo",
@@ -16,7 +16,7 @@ class YoutubeVideo
         );
     }
 
-    function GetDBColumnType($arUserField)
+    public static function GetDBColumnType($arUserField)
     {
         global $DB;
         switch (strtolower($DB->type)) {
@@ -29,7 +29,7 @@ class YoutubeVideo
         }
     }
 
-    function GetUserTypeDescription()
+    public static function GetUserTypeDescription()
     {
         return array(
             "PROPERTY_TYPE" => "S",
@@ -40,7 +40,7 @@ class YoutubeVideo
     }
 
     // редактирование свойства в форме (главный модуль)
-    function GetEditFormHTML($arUserField, $arHtmlControl)
+    public static function GetEditFormHTML($arUserField, $arHtmlControl)
     {
         $chars = array(
             "abcdefghijklnmopqrstuvwxyz",
@@ -56,7 +56,7 @@ class YoutubeVideo
         return $html;
     }
 
-    function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName)
+    public static function GetPropertyFieldHtml($arProperty, $value, $strHTMLControlName)
     {
         $COL_COUNT = intval($arProperty['COL_COUNT'] > 0 ? $arProperty['COL_COUNT'] : '30');
         $chars = array(
@@ -76,7 +76,7 @@ class YoutubeVideo
         return $html;
     }
 
-    static function ReturnScript($id)
+    public static function ReturnScript($id)
     {
         ob_start();
         ?>
