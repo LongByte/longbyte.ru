@@ -36,7 +36,7 @@ class Webp
         $obServer = Context::getCurrent()->getServer();
         $arGDInfo = gd_info();
 
-        $bBrowserSupport = strpos($obServer->get('HTTP_ACCEPT'), 'image/webp') !== false || $_SESSION['WEBP_BROWSER_SUPPORT'] === true;
+        $bBrowserSupport = strpos((string) $obServer->get('HTTP_ACCEPT'), 'image/webp') !== false || $_SESSION['WEBP_BROWSER_SUPPORT'] === true;
         $_SESSION['WEBP_BROWSER_SUPPORT'] = $bBrowserSupport;
 
         return (
