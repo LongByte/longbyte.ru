@@ -12,11 +12,11 @@ if (in_array('log', $argv)) {
     $logEnable = true;
 }
 
-//if (function_exists('pcntl_async_signals')) {
-//    pcntl_async_signals(true);
-//    pcntl_signal(SIGTERM, "sig_handler");
-//    pcntl_signal(SIGUSR1, "sig_handler");
-//}
+if (function_exists('pcntl_async_signals')) {
+    pcntl_async_signals(true);
+    pcntl_signal(SIGTERM, "SIGTERM_handler");
+    pcntl_signal(SIGUSR1, "SIGTERM_handler");
+}
 
 date_default_timezone_set('Europe/Moscow');
 error_reporting(E_ALL);
@@ -79,8 +79,17 @@ do {
                         }
                     }
                 } else {
+                    if (!array_key_exists($key, $arBuffer)) {
+                        $arBuffer[$key] = '';
+                    }
                     $arBuffer[$key] .= $rawMessage;
-                    if ($arBuffer[$key] > 128 * 1024) {
+                    if (strpos($arBuffer[$key], '{"token"') > 0) {
+                        $arBuffer[$key] = substr(
+                            $arBuffer[$key],
+                            strpos($arBuffer[$key], '{"token"')
+                        );
+                    }
+                    if (strlen($arBuffer[$key]) > 128 * 1024) {
                         $arBuffer[$key] = '';
                     }
                     $arData = json_decode($arBuffer[$key], true);
@@ -90,7 +99,11 @@ do {
                         continue;
                     }
                     $strToken = $arData['token'];
-                    $strCommand = $arData['command'];
+                    if (array_key_exists('command', $arData)) {
+                        $strCommand = $arData['command'];
+                    } else {
+                        $strCommand = '';
+                    }
                     $arSensors = $arData['data'];
                     $jsonSensors = json_encode($arSensors);
 
@@ -126,7 +139,7 @@ do {
 
                     $dataLength = strlen($jsonResponse);
                     SocketLog($obLog, "Response: [{$dataLength}] {$jsonResponse}");
-                    socket_write($obClient, $jsonResponse, $dataLendth);
+                    socket_write($obClient, $jsonResponse, $dataLength);
                 }
             }
         }
