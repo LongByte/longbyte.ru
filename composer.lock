@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "828a26eb3f0b0400f6fec69640c0efd7",
+    "content-hash": "d393d7308c859df6330bee4270d662f5",
     "packages": [
         {
             "name": "composer/installers",
@@ -179,31 +179,33 @@
         },
         {
             "name": "telegram-bot/api",
-            "version": "3.0.0.x-dev",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/TelegramBot/Api.git",
-                "reference": "0d8774ecbe2af7446bf4fb28d62c4ec56d502e00"
+                "reference": "ead0e4dd8baa1b1238113b5e3bb388e23220601e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/TelegramBot/Api/zipball/0d8774ecbe2af7446bf4fb28d62c4ec56d502e00",
-                "reference": "0d8774ecbe2af7446bf4fb28d62c4ec56d502e00",
+                "url": "https://api.github.com/repos/TelegramBot/Api/zipball/ead0e4dd8baa1b1238113b5e3bb388e23220601e",
+                "reference": "ead0e4dd8baa1b1238113b5e3bb388e23220601e",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-json": "*",
-                "php": "^7.2"
+                "php": ">=5.5.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^8.5",
-                "squizlabs/php_codesniffer": "2.*"
+                "friendsofphp/php-cs-fixer": "^3.16",
+                "symfony/phpunit-bridge": "*",
+                "vimeo/psalm": "^5.9"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -218,7 +220,19 @@
             },
             "scripts": {
                 "test": [
-                    "phpunit"
+                    "vendor/bin/simple-phpunit --colors=always"
+                ],
+                "coverage": [
+                    "XDEBUG_MODE=coverage vendor/bin/simple-phpunit --coverage-html build/coverage"
+                ],
+                "psalm": [
+                    "vendor/bin/psalm"
+                ],
+                "cs-fix": [
+                    "vendor/bin/php-cs-fixer fix --allow-risky=yes --diff --ansi"
+                ],
+                "cs-check": [
+                    "vendor/bin/php-cs-fixer fix --allow-risky=yes --diff --ansi --dry-run"
                 ]
             },
             "license": [
@@ -241,16 +255,18 @@
                 "telegram"
             ],
             "support": {
-                "source": "https://github.com/TelegramBot/Api/tree/3.0.0",
+                "source": "https://github.com/TelegramBot/Api/tree/master",
                 "issues": "https://github.com/TelegramBot/Api/issues"
             },
-            "time": "2019-12-18T05:14:35+00:00"
+            "time": "2023-06-27T12:56:24+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "telegram-bot/api": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

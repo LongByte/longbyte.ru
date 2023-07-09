@@ -9,7 +9,7 @@ use Bitrix\Main\Application;
  */
 class Page
 {
-    public function onEndBufferContent(&$strContent)
+    public static function onEndBufferContent(&$strContent)
     {
         if (!defined('ADMIN_SECTION') && !Application::getInstance()->getContext()->getRequest()->get('AJAX_CALL') && !\CSite::InDir('/api/')) {
             self::modificateImages($strContent);
@@ -21,7 +21,7 @@ class Page
         }
     }
 
-    public function modificateImages(&$strContent)
+    public static function modificateImages(&$strContent)
     {
         $re = '/<img[^>]+>/m';
         preg_match_all($re, $strContent, $arMatches, PREG_SET_ORDER, 0);
@@ -34,7 +34,7 @@ class Page
         $content = str_replace("type='text/javascript'", '', $content);
     }
 
-    function deleteKernelJs(&$content)
+    public static function deleteKernelJs(&$content)
     {
         global $USER, $APPLICATION;
         if ((is_object($USER) && $USER->IsAuthorized()) || strpos($APPLICATION->GetCurDir(), "/bitrix/") !== false)
@@ -56,7 +56,7 @@ class Page
         $content = preg_replace("/\n{2,}/", "\n\n", $content);
     }
 
-    function deleteKernelCss(&$content)
+    public static function deleteKernelCss(&$content)
     {
 
         global $USER, $APPLICATION;

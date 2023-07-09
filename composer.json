@@ -3,12 +3,15 @@
     "description": "longbyte",
     "version": "1.0.0",
     "config": {
-        "vendor-dir": "./local/vendor"
+        "vendor-dir": "./local/vendor",
+        "allow-plugins": {
+            "composer/installers": true
+        }
     },
     "require": {
-        "php": ">=7.4",
-        "longbyte/api": "v2.0.*",
-        "telegram-bot/api": "3.0.*"
+        "php": ">=8.2",
+        "longbyte/api": "v3.0.*",
+        "telegram-bot/api": "dev-master"
     },
     "minimum-stability": "dev",
     "extra": {

@@ -55,7 +55,7 @@ class Entity extends \Api\Core\Iblock\Element\Entity
         return '';
     }
 
-    public function toArray(): array
+    public function toArray($arData = null): array
     {
         $arData = parent::toArray();
         $arData['is_image'] = $this->_isImage();

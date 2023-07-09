@@ -74,7 +74,7 @@ class Entity extends \Api\Core\Base\Entity
     protected bool $_bNew = false;
     protected ?\Api\Sensors\Sensor\Statistic\Entity $_obStatistic = null;
 
-    public function getFields(): array
+    public static function getFields(): array
     {
         return array_keys(static::getModel()::getTable()::getScalarFields());
     }
@@ -125,7 +125,7 @@ class Entity extends \Api\Core\Base\Entity
         return true;
     }
 
-    public function toArray(): array
+    public function toArray($arData = null): array
     {
         $arData = parent::toArray();
         $arData['alert'] = $this->getAlert()->toArray();

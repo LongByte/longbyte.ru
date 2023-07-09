@@ -8,7 +8,7 @@ namespace Api\Chart\Tests\Section;
 class Collection extends \Api\Core\Base\Collection
 {
 
-    public function getByKey($strKey): ?Entity
+    public function getByKey(mixed $strKey): ?Entity
     {
         return parent::getByKey($strKey);
     }

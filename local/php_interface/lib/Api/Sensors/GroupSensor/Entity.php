@@ -18,7 +18,7 @@ class Entity extends \Api\Core\Base\Entity
 
     protected ?\Api\Sensors\Sensor\Collection $_obSensorsCollection = null;
 
-    public function getFields(): array
+    public static function getFields(): array
     {
         return array_keys(static::getModel()::getTable()::getScalarFields());
     }
@@ -47,7 +47,7 @@ class Entity extends \Api\Core\Base\Entity
         return $this;
     }
 
-    public function toArray(): array
+    public function toArray($arData = null): array
     {
         $arData = parent::toArray();
         return $arData;

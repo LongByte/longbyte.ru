@@ -10,7 +10,7 @@ class Collection extends \Api\Core\Base\Collection
 
     protected array $arSystemIds = array();
 
-    public function addItem(Entity $obEntity): self
+    public function addItem(\Api\Core\Base\Entity $obEntity): self
     {
         parent::addItem($obEntity);
         $this->arSystemIds[] = $obEntity->getSystemId();
