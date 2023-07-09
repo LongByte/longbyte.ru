@@ -104,9 +104,9 @@ class Page
                 $strScript .= "$('div[data-hash=\"" . $strVideoHash . "\"]').replaceWith('" . $strVideoFrame . "');";
             }
             $strScript .= "}, 2000); });</script>";
-        }
 
-        $strContent = str_replace('</head>', $strScript . '</head>', $strContent);
+            $strContent = str_replace('</head>', $strScript . '</head>', $strContent);
+        }
     }
 
 }

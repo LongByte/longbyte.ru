@@ -57,10 +57,11 @@ class Webp
 
         if (self::checkSupport()) {
             $arPatterns = array(
-                '/<img[^>]* src="([^"]+\.(jpg|jpeg|png|bmp))"[^>]*>/i',
-                '/<source[^>]* srcset="([^"]+\.(jpg|jpeg|png|bmp))"[^>]*>/i',
-                '/<img[^>]* data-src="([^"]+\.(jpg|jpeg|png|bmp))"[^>]*>/i',
-                '/<[^>]*style="[^"]*url\(\'?([^)]+\.(jpg|jpeg|png|bmp))\'?\)[^"]*"[^>]*>/i',
+                '/<img[^>]* src="([^"]+\.(jpg|jpeg|png|bmp))"[^>]*>/',
+                '/<source[^>]* srcset="([^"]+\.(jpg|jpeg|png|bmp))"[^>]*>/',
+                '/<video[^>]* poster="([^"]+\.(jpg|jpeg|png|bmp))"[^>]*>/',
+                '/<img[^>]* data-src="([^"]+\.(jpg|jpeg|png|bmp))"[^>]*>/',
+                '/<[^>]*style="[^"]*url\(\'?([^)]+\.(jpg|jpeg|png|bmp))\'?\)[^"]*"[^>]*>/',
             );
 
             foreach ($arPatterns as $strPattern) {
@@ -87,7 +88,7 @@ class Webp
         $strUploadDir = Option::get('main', 'upload_dir', 'upload');
         $strToUploadDir = '';
         if (strpos($strSrc, '/' . $strUploadDir) !== 0) {
-            $strToUploadDir = '/' . $strUploadDir . '/webp';
+            $strToUploadDir = '/' . $strUploadDir . '/webp/' . SITE_ID;
         }
         $this->obSourceFile = new IO\File(Application::getDocumentRoot() . $strSrc);
         $this->obTargetFile = new IO\File(Application::getDocumentRoot() . $strToUploadDir . preg_replace('/\.[^\.]+$/i', '.webp', $strSrc));
@@ -132,7 +133,7 @@ class Webp
             $obImage = imagecreatefromjpeg($this->getSourceFile()->getPath());
         }
         if (!is_null($obImage)) {
-            $this->getTargetFile()->putContents(' ');   //создаем путь до файла и файл 
+            $this->getTargetFile()->putContents(' ');   //создаем путь до файла и файл
             imagewebp($obImage, $this->getTargetFile()->getPath(), 90);
             imagedestroy($obImage);
         }
@@ -203,7 +204,7 @@ class Webp
      */
     private function isPng()
     {
-        return strtolower($this->getSourceFile()->getExtension()) == 'png' && $this->getSourceFile()->getContentType() == 'image/png';
+        return $this->getSourceFile()->getExtension() == 'png' && $this->getSourceFile()->getContentType() == 'image/png';
     }
 
     /**
@@ -212,7 +213,7 @@ class Webp
      */
     private function isBmp()
     {
-        return strtolower($this->getSourceFile()->getExtension()) == 'bmp' && $this->getSourceFile()->getContentType() == 'image/bmp';
+        return $this->getSourceFile()->getExtension() == 'bmp' && $this->getSourceFile()->getContentType() == 'image/bmp';
     }
 
     /**
@@ -221,7 +222,7 @@ class Webp
      */
     private function isJpg()
     {
-        return in_array(strtolower($this->getSourceFile()->getExtension()), array('jpg', 'jpeg')) && $this->getSourceFile()->getContentType() == 'image/jpeg';
+        return in_array($this->getSourceFile()->getExtension(), array('jpg', 'jpeg')) && $this->getSourceFile()->getContentType() == 'image/jpeg';
     }
 
     /**
