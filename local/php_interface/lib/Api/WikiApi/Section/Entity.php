@@ -53,7 +53,7 @@ class Entity extends \Api\Core\Iblock\Section\Entity
     {
 
         /** @var \Api\Core\Base\Collection $obSections */
-        $obSections = \Api\WikiApi\Section\Model::getAll();
+        $obSections = \Api\WikiApi\Section\Model::getAllSections();
 
         $strLink = $this->getSectionPageUrl();
         $arClassPath = array();

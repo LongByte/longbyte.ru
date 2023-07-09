@@ -10,20 +10,17 @@ Loader::registerAutoLoadClasses(null, array(
     '\LongByte\Vue' => '/local/php_interface/classes/Longbyte/Vue.php',
     '\LongByte\Webp' => '/local/php_interface/classes/Longbyte/Webp.php',
     '\Longbyte\Page' => '/local/php_interface/classes/Longbyte/Page.php',
-    'Site' => '/local/php_interface/classes/Site.php',
+    '\Site' => '/local/php_interface/classes/Site.php',
     //Migration
     '\Migration\Builder\IblockBuilder' => '/local/php_interface/classes/Migration/Builder/IblockBuilder.php',
     '\Migration\Builder\UserField' => '/local/php_interface/classes/Migration/Builder/UserField.php',
     '\Migration\Builder\EventsBuilder' => '/local/php_interface/classes/Migration/Builder/EventsBuilder.php',
     '\Migration\Builder\FormBuilder' => '/local/php_interface/classes/Migration/Builder/FormBuilder.php',
     '\Migration\Builder\HLBuilder' => '/local/php_interface/classes/Migration/Builder/HLBuilder.php',
-    //orm
-    '\Bitrix\Iblock\ElementPropertyTable' => '/local/php_interface/lib/elementproperty.php',
 ));
 
-EventManager::getInstance()->addEventHandler('main', 'OnPageStart', array('Site', 'onPageStart'));
-EventManager::getInstance()->addEventHandler('main', 'onEpilog', array('Site', 'onEpilog'));
-EventManager::getInstance()->addEventHandler('main', 'OnEndBufferContent', array('Site', 'OnEndBufferContent'));
+EventManager::getInstance()->addEventHandler('main', 'OnPageStart', array('\Site', 'onPageStart'));
+EventManager::getInstance()->addEventHandler('main', 'onEpilog', array('\Site', 'onEpilog'));
 EventManager::getInstance()->addEventHandler('main', 'OnEndBufferContent', array('\LongByte\Webp', 'convertAllToWebp'));
 EventManager::getInstance()->addEventHandler('main', 'OnEndBufferContent', array('\Longbyte\Page', 'onEndBufferContent'));
 

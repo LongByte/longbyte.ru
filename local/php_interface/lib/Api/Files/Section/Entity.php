@@ -7,7 +7,6 @@ namespace Api\Files\Section;
  */
 class Entity extends \Api\Core\Iblock\Section\Entity
 {
-
     protected static array $arFields = array(
         'ID',
         'NAME',
@@ -20,7 +19,7 @@ class Entity extends \Api\Core\Iblock\Section\Entity
         return Model::class;
     }
 
-    public function toArray(): array
+    public function toArray($arData = null): array
     {
         $arData = parent::toArray();
         $arData['section_page_url'] = $this->getSectionPageUrl();

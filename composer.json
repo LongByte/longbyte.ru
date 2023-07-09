@@ -6,8 +6,8 @@
         "vendor-dir": "./local/vendor"
     },
     "require": {
-        "php": ">=7.4",
-        "longbyte/api": "v2.0.*",
+        "php": ">=8.2",
+        "longbyte/api": "v3.0.0beta",
         "telegram-bot/api": "3.0.*"
     },
     "minimum-stability": "dev",
