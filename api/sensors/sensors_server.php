@@ -12,11 +12,11 @@ if (in_array('log', $argv)) {
     $logEnable = true;
 }
 
-if (function_exists('pcntl_async_signals')) {
-    pcntl_async_signals(true);
-    pcntl_signal(SIGTERM, "sig_handler");
-    pcntl_signal(SIGUSR1, "sig_handler");
-}
+//if (function_exists('pcntl_async_signals')) {
+//    pcntl_async_signals(true);
+//    pcntl_signal(SIGTERM, "sig_handler");
+//    pcntl_signal(SIGUSR1, "sig_handler");
+//}
 
 date_default_timezone_set('Europe/Moscow');
 error_reporting(E_ALL);
