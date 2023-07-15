@@ -9,11 +9,6 @@ use Bitrix\Main\Type\DateTime;
  */
 class CollapseDay extends \Api\Core\Base\Controller
 {
-
-    private array $arResponse = array(
-        'success' => true,
-    );
-
     public function get()
     {
 
@@ -67,12 +62,11 @@ class CollapseDay extends \Api\Core\Base\Controller
                     $obValue->delete();
                 }
 
-                $fAvgValue = round($fSum / $iValuesCount, $obSensor->getPrecision());
-
-                $obCollepseValue = new \Api\Sensors\Data\Entity();
-
                 if ($iValuesCount > 0) {
-                    $obCollepseValue
+                    $fAvgValue = round($fSum / $iValuesCount, $obSensor->getPrecision());
+
+                    $obCollapseValue = new \Api\Sensors\Data\Entity();
+                    $obCollapseValue
                         ->setDate($obYesterday)
                         ->setSensorId($obSensor->getId())
                         ->setValueAvg($fAvgValue)
@@ -85,7 +79,7 @@ class CollapseDay extends \Api\Core\Base\Controller
             }
         }
 
-        return $this->arResponse;
+        return $this->exitAction();
     }
 
 }
