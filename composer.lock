@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d393d7308c859df6330bee4270d662f5",
+    "content-hash": "c4457acc24d865745c0d2fdb2c5eafb1",
     "packages": [
         {
             "name": "composer/installers",
@@ -160,22 +160,22 @@
         },
         {
             "name": "longbyte/api",
-            "version": "v2.0.1.x-dev",
+            "version": "3.0.0.x-dev",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.vdstech.ru:longbyte/longbyte.api.bx.git",
-                "reference": "8f9c6d5c7afed2327599be84b3fc49b423b97768"
+                "reference": "a1206062c19c7eea25d77856e6db4bfb30951115"
             },
             "require": {
                 "composer/installers": "~1.0",
-                "php": ">=7.2"
+                "php": ">=8.2"
             },
             "type": "cakephp-plugin",
             "extra": {
                 "installer-name": "Core"
             },
             "description": "longbyte.api core",
-            "time": "2022-05-15T19:15:54+00:00"
+            "time": "2023-07-20T19:43:30+00:00"
         },
         {
             "name": "telegram-bot/api",
@@ -270,7 +270,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.4"
+        "php": ">=8.2"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"
