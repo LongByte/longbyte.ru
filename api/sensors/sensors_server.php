@@ -19,7 +19,7 @@ if (function_exists('pcntl_async_signals')) {
 }
 
 date_default_timezone_set('Europe/Moscow');
-error_reporting(E_ALL);
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_WARNING);
 set_time_limit(0);
 ob_implicit_flush();
 
