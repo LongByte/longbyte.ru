@@ -7,16 +7,9 @@ namespace Api\Controller\Sensors;
  */
 class Post extends \Api\Core\Base\Controller
 {
-
     private int $saveEvery = 60;
     private int $alertEvery = 5 * 60;
     private ?string $token = null;
-
-    private array $arResponse = array(
-        'data' => array(),
-        'errors' => array(),
-        'success' => true,
-    );
 
     private ?\Api\Sensors\System\Entity $obSystem = null;
     private ?\Api\Sensors\Data\Collection $obTodayValues = null;
@@ -48,44 +41,76 @@ class Post extends \Api\Core\Base\Controller
                 ->setLastReceive(new \Bitrix\Main\Type\DateTime())
                 ->save()
             ;
-            $this->arResponse['success'] = false;
-            $this->arResponse['errors'][] = 'Некорректные данные';
+            $this->getResponse()->addError('Некорректные данные');
+            $this->getResponse()->addError(print_r($this->getPostData(), true));
             return $this->exitAction();
         }
 
         $this->insertSensorsData($arData);
-        return $this->exitAction();
     }
 
     public function get()
     {
-        $obHttp = new \Bitrix\Main\Web\HttpClient();
-        $rawGet = $obHttp->get('http://localhost:55555/');
-        $arData = json_decode($rawGet);
         if (!$this->getSystem()) {
             return $this->exitAction();
         }
 
-        if (!is_array($arData)) {
+        $arGetParams = array(
+            'token' => $this->token,
+        );
+
+        $strRemoteServer = 'http://longbyte.local';
+        $obCurl = curl_init($strRemoteServer . '/api/sensors/sensor/?' . http_build_query($arGetParams));
+        curl_setopt($obCurl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($obCurl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($obCurl, CURLOPT_HEADER, false);
+        curl_setopt($obCurl, CURLOPT_CONNECTTIMEOUT, $reconnectTimeOut);
+        $rawJson = curl_exec($obCurl);
+        curl_close($obCurl);
+        $arEnabledSensors = json_decode($rawJson, true)['data'];
+
+        $localSensorsServer = 'http://localhost:55555';
+        $jsonSensors = file_get_contents($localSensorsServer);
+        $arSensors = json_decode($jsonSensors, true);
+
+        $arValues = array();
+        foreach ($arSensors as $arSensor) {
+            foreach ($arEnabledSensors as $arEnabledSensor) {
+                if (
+                    $arEnabledSensor['sensor_app'] == $arSensor['SensorApp'] &&
+                    $arEnabledSensor['sensor_device'] == $arSensor['SensorClass'] &&
+                    $arEnabledSensor['sensor_name'] == $arSensor['SensorName']
+                ) {
+                    $obValue = new \stdClass();
+                    $obValue->id = (int) $arEnabledSensor['id'];
+                    $obValue->value = $arSensor['SensorValue'];
+                    $arValues[] = $obValue;
+                    break;
+                }
+            }
+        }
+
+        if (!is_array($arValues)) {
             $this->obSystem
                 ->setLastReceive(new \Bitrix\Main\Type\DateTime())
                 ->save()
             ;
-            $this->arResponse['success'] = false;
-            $this->arResponse['errors'][] = 'Некорректные данные';
+            $this->getResponse()->addError('Некорректные данные');
             return $this->exitAction();
         }
 
-        $this->insertSensorsData($arData);
-        return $this->exitAction();
+        $this->insertSensorsData($arValues);
     }
 
     public function emergencySave(): void
     {
         if (!is_null($this->obLastSave)) {
-            $this->obTodayValues->save($this->arResponse['errors']);
+            $arErrors = $this->getResponse()->getErrors();
+            $this->obTodayValues->save($arErrors);
             $this->obLastSave = new \Bitrix\Main\Type\DateTime();
-            $this->arResponse['data']['last_save'] = $this->obLastSave->format('H:i:s d.m.Y');
+            $this->getResponse()->setData(array(
+                'last_save' => $this->obLastSave->format('H:i:s d.m.Y')
+            ));
         }
     }
 
@@ -95,15 +120,14 @@ class Post extends \Api\Core\Base\Controller
             'post_data' => $this->getPostData(),
             'sensors' => !is_null($this->obSystem) ? $this->obSystem->getSensorsCollection()->toArray() : array(),
             'today_values' => !is_null($this->obTodayValues) ? $this->obTodayValues->toArray() : array(),
-            'response' => $this->arResponse,
+            'response' => $this->getResponse()->toArray(),
         ));
     }
 
     protected function exitAction(): string
     {
         $this->sendAlerts();
-        header('Content-Type: application/json');
-        return json_encode($this->arResponse);
+        return parent::exitAction();
     }
 
     private function getSystem(): bool
@@ -129,7 +153,8 @@ class Post extends \Api\Core\Base\Controller
             $obToday = new \Bitrix\Main\Type\Date();
             if (is_null($this->obTodayValues) || $obToday->getTimestamp() != $this->obTodayValues->getDate()->getTimestamp()) {
                 if (!is_null($this->obTodayValues) && $obToday->getTimestamp() != $this->obTodayValues->getDate()->getTimestamp()) {
-                    $this->obTodayValues->save($this->arResponse['errors']);
+                    $arErrors = $this->getResponse()->getErrors();
+                    $this->obTodayValues->save($arErrors);
                     $this->obLastSave = null;
                 }
 
@@ -155,8 +180,7 @@ class Post extends \Api\Core\Base\Controller
 
             return true;
         } else {
-            $this->arResponse['success'] = false;
-            $this->arResponse['errors'][] = 'Неверный токен';
+            $arErrors = $this->getResponse()->addError('Неверный токен');
         }
 
         return false;
@@ -196,44 +220,54 @@ class Post extends \Api\Core\Base\Controller
 
     private function insertSensorsData(array $arData): void
     {
-
         /** @var \Api\Sensors\Sensor\Collection $obSensors */
         /** @var \Api\Sensors\Sensor\Entity $obSensor */
         /** @var \Api\Sensors\Data\Collection $obValues */
         /** @var \Api\Sensors\Data\Entity $obValue */
         foreach ($arData as $obInputValue) {
-            $this->arResponse['data']['read_values']++;
-            $value = floatval(str_replace(',', '.', $obInputValue->SensorValue));
+//            $this->arResponse['data']['read_values']++;
 
-            $obSensor = $this->obSystem->getSensorsCollection()->getByParams($obInputValue->SensorApp, $obInputValue->SensorClass, $obInputValue->SensorName);
+            $bPost = property_exists($obInputValue, 'id');
+            if ($bPost) {
+                $obSensor = $this->obSystem->getSensorsCollection()->getByKey($obInputValue->id);
+                $value = floatval(str_replace(',', '.', $obInputValue->value));
 
-            if (is_null($obSensor)) {
-
-                $obSensor = new \Api\Sensors\Sensor\Entity();
-                $obSensor
-                    ->setActive(false)
-                    ->setSystem($this->obSystem)
-                    ->setSensorApp($obInputValue->SensorApp)
-                    ->setSensorDevice($obInputValue->SensorClass)
-                    ->setSensorName($obInputValue->SensorName)
-                    ->setSensorUnit($obInputValue->SensorUnit)
-                    ->setLogMode(\Api\Sensors\Sensor\Table::MODE_EACH_LAST_DAY)
-                    ->setAlertEnable(false)
-                    ->setSort($this->obSystem->getSensorsCollection()->getLastSort() + 10)
-                    ->save()
-                ;
-
-                if (!$obSensor->isExists()) {
-                    $this->arResponse['errors'][] = 'Невозможно создать сенсор. Ошибка: ' . print_r($obSensor->getDBResult()->getErrorMessages(), true) . '. Данные: ' . print_r($obSensor->toArray(), true);
+                if (!$obSensor || !$obSensor->getActive()) {
                     continue;
                 }
-
-                $obSensor->setNew();
-                $this->obSystem->getSensorsCollection()->addItem($obSensor);
-                continue;
             } else {
-                if (!$obSensor->getActive())
+                $value = floatval(str_replace(',', '.', $obInputValue->SensorValue));
+
+                $obSensor = $this->obSystem->getSensorsCollection()->getByParams($obInputValue->SensorApp, $obInputValue->SensorClass, $obInputValue->SensorName);
+
+                if (is_null($obSensor)) {
+
+                    $obSensor = new \Api\Sensors\Sensor\Entity();
+                    $obSensor
+                        ->setActive(false)
+                        ->setSystem($this->obSystem)
+                        ->setSensorApp($obInputValue->SensorApp)
+                        ->setSensorDevice($obInputValue->SensorClass)
+                        ->setSensorName($obInputValue->SensorName)
+                        ->setSensorUnit($obInputValue->SensorUnit)
+                        ->setLogMode(\Api\Sensors\Sensor\Table::MODE_EACH_LAST_DAY)
+                        ->setAlertEnable(false)
+                        ->setSort($this->obSystem->getSensorsCollection()->getLastSort() + 10)
+                        ->save()
+                    ;
+
+                    if (!$obSensor->isExists()) {
+                        $this->getResponse()->addError('Невозможно создать сенсор. Ошибка: ' . print_r($obSensor->getDBResult()->getErrorMessages(), true) . '. Данные: ' . print_r($obSensor->toArray(), true));
+                        continue;
+                    }
+
+                    $obSensor->setNew();
+                    $this->obSystem->getSensorsCollection()->addItem($obSensor);
                     continue;
+                } else {
+                    if (!$obSensor->getActive())
+                        continue;
+                }
             }
 
             try {
@@ -319,9 +353,12 @@ class Post extends \Api\Core\Base\Controller
         }
 
         if (is_null($this->obLastSave) || $this->obLastSave->getTimestamp() + $this->saveEvery < (new \Bitrix\Main\Type\DateTime())->getTimestamp()) {
-            $this->obTodayValues->save($this->arResponse['errors']);
+            $arErrors = $this->getResponse()->getErrors();
+            $this->obTodayValues->save($arErrors);
             $this->obLastSave = new \Bitrix\Main\Type\DateTime();
-            $this->arResponse['data']['last_save'] = $this->obLastSave->format('H:i:s d.m.Y');
+            $this->getResponse()->setData(array(
+                'last_save' => $this->obLastSave->format('H:i:s d.m.Y')
+            ));
 
             $this->loadSystem();
             $this->loadSensors();
@@ -335,7 +372,6 @@ class Post extends \Api\Core\Base\Controller
 
     private function checkAlert(\Api\Sensors\Data\Entity $obValue): void
     {
-
         $obSensor = $obValue->getSensor();
         /** @var \Api\Sensors\Alert\Entity $obAlert */
         $obAlert = $this->getAlertCollection()->getByKey($obSensor->getId());
@@ -432,8 +468,8 @@ class Post extends \Api\Core\Base\Controller
 
     private function resetResponse(): void
     {
-        $this->arResponse['errors'] = array();
-        $this->arResponse['success'] = true;
+        $this->getResponse()->setData(array());
+        $this->getResponse()->clearErrors();
     }
 
     private function getAlertCollection(): \Api\Core\Base\Collection

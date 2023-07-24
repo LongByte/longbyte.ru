@@ -229,4 +229,13 @@ class Entity extends \Api\Core\Base\Entity
         return $this;
     }
 
+    public function toSensor(): array
+    {
+        return array(
+            'id' => (int) $this->getId(),
+            'sensor_app' => $this->getSensorApp(),
+            'sensor_device' => $this->getSensorDevice(),
+            'sensor_name' => $this->getSensorName(),
+        );
+    }
 }

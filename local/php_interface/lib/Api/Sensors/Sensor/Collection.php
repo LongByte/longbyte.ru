@@ -33,4 +33,20 @@ class Collection extends \Api\Core\Base\Collection
         return 0;
     }
 
+    /**
+     * @return array|Entity[]
+     */
+    public function getCollection(): array
+    {
+        return parent::getCollection();
+    }
+
+    public function toSensor(): array
+    {
+        $arData = array();
+        foreach ($this->getCollection() as $obItem) {
+            $arData[] = $obItem->toSensor();
+        }
+        return $arData;
+    }
 }

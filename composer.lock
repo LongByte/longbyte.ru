@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c4457acc24d865745c0d2fdb2c5eafb1",
+    "content-hash": "a1f247919cdd5aa9ee2f73cc4e8bd863",
     "packages": [
         {
             "name": "composer/installers",
@@ -160,11 +160,11 @@
         },
         {
             "name": "longbyte/api",
-            "version": "3.0.0.x-dev",
+            "version": "3.1.0.x-dev",
             "source": {
                 "type": "git",
                 "url": "git@gitlab.vdstech.ru:longbyte/longbyte.api.bx.git",
-                "reference": "a1206062c19c7eea25d77856e6db4bfb30951115"
+                "reference": "749e7d694bc8f3ed98c5be4470dfeadc6cb2f822"
             },
             "require": {
                 "composer/installers": "~1.0",
@@ -175,7 +175,7 @@
                 "installer-name": "Core"
             },
             "description": "longbyte.api core",
-            "time": "2023-07-20T19:43:30+00:00"
+            "time": "2023-07-24T17:40:41+00:00"
         },
         {
             "name": "telegram-bot/api",
