@@ -7,14 +7,18 @@ namespace Api\Controller\Sensors;
  */
 class Post extends \Api\Core\Base\Controller
 {
+    private const MODE_SOCKET = 0;
+    private const MODE_POST = 1;
+
     private int $saveEvery = 60;
     private int $alertEvery = 5 * 60;
     private ?string $token = null;
+    private int $mode = self::MODE_SOCKET;
 
     private ?\Api\Sensors\System\Entity $obSystem = null;
     private ?\Api\Sensors\Data\Collection $obTodayValues = null;
     private ?\Bitrix\Main\Type\DateTime $obLastAlert = null;
-    private ?\Api\Core\Base\Collection $obAlerts = null;
+    private ?\Api\Sensors\Alert\Collection $obAlerts = null;
     private ?\Bitrix\Main\Type\DateTime $obLastSave = null;
 
     public function __construct(string $strToken = null)
@@ -24,7 +28,7 @@ class Post extends \Api\Core\Base\Controller
         if (!is_null($strToken)) {
             $this->token = $strToken;
         }
-        $this->obAlerts = new \Api\Core\Base\Collection();
+        $this->obAlerts = new \Api\Sensors\Alert\Collection();
         $this->obAlerts->setUniqueMode(true);
     }
 
@@ -180,7 +184,7 @@ class Post extends \Api\Core\Base\Controller
 
             return true;
         } else {
-            $arErrors = $this->getResponse()->addError('Неверный токен');
+            $this->getResponse()->addError('Неверный токен');
         }
 
         return false;
@@ -225,11 +229,37 @@ class Post extends \Api\Core\Base\Controller
         /** @var \Api\Sensors\Data\Collection $obValues */
         /** @var \Api\Sensors\Data\Entity $obValue */
         foreach ($arData as $obInputValue) {
-//            $this->arResponse['data']['read_values']++;
+            if (property_exists($obInputValue, 'id')) {
+                $this->mode = self::MODE_POST;
+            }
+            if ($this->isModePost()) {
+                if ($obInputValue->id == 0) {
+                    $obSensor = new \Api\Sensors\Sensor\Entity();
+                    $obSensor
+                        ->setActive(false)
+                        ->setSystem($this->obSystem)
+                        ->setSensorApp($obInputValue->SensorApp)
+                        ->setSensorDevice($obInputValue->SensorClass)
+                        ->setSensorName($obInputValue->SensorName)
+                        ->setSensorUnit($obInputValue->SensorUnit)
+                        ->setLogMode(\Api\Sensors\Sensor\Table::MODE_EACH_LAST_DAY)
+                        ->setAlertEnable(false)
+                        ->setSort($this->obSystem->getSensorsCollection()->getLastSort() + 10)
+                        ->save()
+                    ;
 
-            $bPost = property_exists($obInputValue, 'id');
-            if ($bPost) {
-                $obSensor = $this->obSystem->getSensorsCollection()->getByKey($obInputValue->id);
+                    if (!$obSensor->isExists()) {
+                        $this->getResponse()->addError('Невозможно создать сенсор. Ошибка: ' . print_r($obSensor->getDBResult()->getErrorMessages(), true) . '. Данные: ' . print_r($obSensor->toArray(), true));
+                        continue;
+                    }
+
+                    $obSensor->setNew();
+                    $this->obSystem->getSensorsCollection()->addItem($obSensor);
+                    continue;
+                } else {
+                    $obSensor = $this->obSystem->getSensorsCollection()->getByKey($obInputValue->id);
+                }
+
                 $value = floatval(str_replace(',', '.', $obInputValue->value));
 
                 if (!$obSensor || !$obSensor->getActive()) {
@@ -282,7 +312,7 @@ class Post extends \Api\Core\Base\Controller
                         }
                     }
                 }
-            } catch (\ParseError $exc) {
+            } catch (\ParseError $obException) {
 
             }
 
@@ -334,7 +364,16 @@ class Post extends \Api\Core\Base\Controller
                 ;
 
                 $this->obTodayValues->addItem($obValue);
+
+                $this->checkAlert($obValue);
             } else {
+                $fAvgValue = ($obValue->getValueAvg() * $obValue->getValuesCount() + $value) / ($obValue->getValuesCount() + 1);
+                $obValue->setValueAvg($fAvgValue);
+                $obValue->setValuesCount($obValue->getValuesCount() + 1);
+                $obValue->setSensor($obSensor);
+                $obValue->setValue($value);
+
+                $this->checkAlert($obValue);
 
                 if ($value < $obValue->getValueMin()) {
                     $obValue->setValueMin($value);
@@ -342,19 +381,15 @@ class Post extends \Api\Core\Base\Controller
                 if ($value > $obValue->getValueMax()) {
                     $obValue->setValueMax($value);
                 }
-                $fAvgValue = ($obValue->getValueAvg() * $obValue->getValuesCount() + $value) / ($obValue->getValuesCount() + 1);
-                $obValue->setValueAvg($fAvgValue);
-                $obValue->setValuesCount($obValue->getValuesCount() + 1);
-                $obValue->setSensor($obSensor);
-                $obValue->setValue($value);
             }
-
-            $this->checkAlert($obValue);
         }
 
         if (is_null($this->obLastSave) || $this->obLastSave->getTimestamp() + $this->saveEvery < (new \Bitrix\Main\Type\DateTime())->getTimestamp()) {
-            $arErrors = $this->getResponse()->getErrors();
+            $arErrors = array();
             $this->obTodayValues->save($arErrors);
+            foreach ($arErrors as $strError) {
+                $this->getResponse()->addError($strError);
+            }
             $this->obLastSave = new \Bitrix\Main\Type\DateTime();
             $this->getResponse()->setData(array(
                 'last_save' => $this->obLastSave->format('H:i:s d.m.Y')
@@ -385,7 +420,13 @@ class Post extends \Api\Core\Base\Controller
         }
 
         if ($obSensor->getAlertValueMin() != 0 && $obValue->getValue() < $obSensor->getAlertValueMin()) {
-            if ($obSensor->getAlert()->getValueMin() == 0 || $obValue->getValue() < $obSensor->getAlert()->getValueMin()) {
+            if (
+                $this->isModeSocket() &&
+                ($obSensor->getAlert()->getValueMin() == 0 || $obValue->getValue() < $obSensor->getAlert()->getValueMin())
+                ||
+                $this->isModePost() &&
+                ($obValue->getValue() < $obValue->getValueMin())
+            ) {
                 $obSensor->getAlert()->setAlert(true);
                 $obSensor->getAlert()->setTooLow();
                 $obSensor->getAlert()->setValueMin($obValue->getValue());
@@ -393,7 +434,13 @@ class Post extends \Api\Core\Base\Controller
         }
 
         if ($obSensor->getAlertValueMax() != 0 && $obValue->getValue() > $obSensor->getAlertValueMax()) {
-            if ($obSensor->getAlert()->getValueMax() == 0 || $obValue->getValue() > $obSensor->getAlert()->getValueMax()) {
+            if (
+                $this->isModeSocket() &&
+                ($obSensor->getAlert()->getValueMax() == 0 || $obValue->getValue() > $obSensor->getAlert()->getValueMax())
+                ||
+                $this->isModePost() &&
+                ($obValue->getValue() > $obValue->getValueMax())
+            ) {
                 $obSensor->getAlert()->setAlert(true);
                 $obSensor->getAlert()->setTooHigh();
                 $obSensor->getAlert()->setValueMax($obValue->getValue());
@@ -472,9 +519,18 @@ class Post extends \Api\Core\Base\Controller
         $this->getResponse()->clearErrors();
     }
 
-    private function getAlertCollection(): \Api\Core\Base\Collection
+    private function getAlertCollection(): \Api\Sensors\Alert\Collection
     {
         return $this->obAlerts;
     }
 
+    private function isModeSocket(): bool
+    {
+        return $this->mode == self::MODE_SOCKET;
+    }
+
+    private function isModePost(): bool
+    {
+        return $this->mode == self::MODE_POST;
+    }
 }

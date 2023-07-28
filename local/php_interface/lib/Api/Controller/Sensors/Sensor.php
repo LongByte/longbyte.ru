@@ -25,7 +25,6 @@ class Sensor extends \Api\Core\Base\Controller
 
         $obSensors = \Api\Sensors\Sensor\Model::getAll(array(
             'SYSTEM_ID' => $this->getSystem()->getId(),
-            'ACTIVE' => true,
         ), 0, 0, array(
             'order' => array('SORT' => 'ASC'),
         ));

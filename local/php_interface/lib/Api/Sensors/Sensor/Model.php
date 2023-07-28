@@ -23,4 +23,8 @@ class Model extends \Api\Core\Base\Model
         return str_replace(' ', '', $string);
     }
 
+    public static function getAll(array $arFilter = array(), int $iLimit = 0, int $iOffset = 0, array $arParams = array()): Collection
+    {
+        return parent::getAll($arFilter, $iLimit, $iOffset, $arParams);
+    }
 }

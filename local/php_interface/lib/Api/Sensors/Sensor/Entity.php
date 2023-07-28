@@ -233,6 +233,7 @@ class Entity extends \Api\Core\Base\Entity
     {
         return array(
             'id' => (int) $this->getId(),
+            'active' => $this->getActive(),
             'sensor_app' => $this->getSensorApp(),
             'sensor_device' => $this->getSensorDevice(),
             'sensor_name' => $this->getSensorName(),

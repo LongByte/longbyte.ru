@@ -9,26 +9,38 @@ $sendEverySecond = 1;
 $reconnectTimeOut = 5;
 $localSensorsServer = 'http://localhost:55555';
 
+$strRemoteServer = 'https://longbyte.ru';
 $strRemoteServer = 'http://longbyte.local';
 
 $arGetParams = array(
     'token' => $token,
 );
 
-$obCurl = curl_init($strRemoteServer . '/api/sensors/sensor/?' . http_build_query($arGetParams));
-curl_setopt($obCurl, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($obCurl, CURLOPT_SSL_VERIFYPEER, false);
-curl_setopt($obCurl, CURLOPT_HEADER, false);
-curl_setopt($obCurl, CURLOPT_CONNECTTIMEOUT, $reconnectTimeOut);
-$rawJson = curl_exec($obCurl);
-curl_close($obCurl);
-
-$arEnabledSensors = json_decode($rawJson, true)['data'];
+$arEnabledSensors = getSensors($strRemoteServer, $arGetParams, $reconnectTimeOut);
 if (!is_array($arEnabledSensors)) {
     echo "Не удалось получить данные сенсоров" . "\n";
     die;
 }
 
+$obLastGetSensors = new DateTime();
+
+function getSensors($strRemoteServer, $arGetParams, $reconnectTimeOut): ?array
+{
+    $obCurl = curl_init($strRemoteServer . '/api/sensors/sensor/?' . http_build_query($arGetParams));
+    curl_setopt($obCurl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($obCurl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($obCurl, CURLOPT_HEADER, false);
+    curl_setopt($obCurl, CURLOPT_CONNECTTIMEOUT, $reconnectTimeOut);
+    $rawJson = curl_exec($obCurl);
+    curl_close($obCurl);
+
+    $arEnabledSensors = json_decode($rawJson, true)['data'];
+    if (is_array($arEnabledSensors)) {
+        return $arEnabledSensors;
+    }
+
+    return null;
+}
 
 while (true) {
     $jsonSensors = file_get_contents($localSensorsServer);
@@ -42,13 +54,30 @@ while (true) {
                 $arEnabledSensor['sensor_device'] == $arSensor['SensorClass'] &&
                 $arEnabledSensor['sensor_name'] == $arSensor['SensorName']
             ) {
-                $arValues[] = array(
-                    'id' => (int) $arEnabledSensor['id'],
-                    'value' => $arSensor['SensorValue']
-                );
-                break;
+                if ($arEnabledSensor['active']) {
+                    $arValues[] = array(
+                        'id' => (int) $arEnabledSensor['id'],
+                        'value' => $arSensor['SensorValue']
+                    );
+                }
+                continue 2;
             }
         }
+        $arValues[] = array(
+            'id' => 0,
+            'value' => $arSensor['SensorValue'],
+            'SensorApp' => $arSensor['SensorApp'],
+            'SensorClass' => $arSensor['SensorClass'],
+            'SensorName' => $arSensor['SensorName'],
+            'SensorUnit' => $arSensor['SensorUnit'],
+        );
+        $arEnabledSensor[] = array(
+            'id' => 0,
+            'active' => false,
+            'sensor_app' => $arSensor['SensorApp'],
+            'sensor_device' => $arSensor['SensorClass'],
+            'sensor_name' => $arSensor['SensorName'],
+        );
     }
 
     $obCurl = curl_init($strRemoteServer . '/api/sensors/post/?' . http_build_query($arGetParams));
@@ -64,5 +93,12 @@ while (true) {
     curl_close($obCurl);
 
     sleep($sendEverySecond);
+
+    if ((new DateTime())->getTimestamp() > $obLastGetSensors->getTimestamp() + 5 * 60) {
+        $arTmpEnabledSensors = getSensors($strRemoteServer, $arGetParams, $reconnectTimeOut);
+        if (is_array($arTmpEnabledSensors)) {
+            $arEnabledSensors = $arTmpEnabledSensors;
+        }
+    }
 }
 
