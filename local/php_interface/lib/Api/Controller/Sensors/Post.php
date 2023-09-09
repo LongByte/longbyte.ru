@@ -234,28 +234,33 @@ class Post extends \Api\Core\Base\Controller
             }
             if ($this->isModePost()) {
                 if ($obInputValue->id == 0) {
-                    $obSensor = new \Api\Sensors\Sensor\Entity();
-                    $obSensor
-                        ->setActive(false)
-                        ->setSystem($this->obSystem)
-                        ->setSensorApp($obInputValue->SensorApp)
-                        ->setSensorDevice($obInputValue->SensorClass)
-                        ->setSensorName($obInputValue->SensorName)
-                        ->setSensorUnit($obInputValue->SensorUnit)
-                        ->setLogMode(\Api\Sensors\Sensor\Table::MODE_EACH_LAST_DAY)
-                        ->setAlertEnable(false)
-                        ->setSort($this->obSystem->getSensorsCollection()->getLastSort() + 10)
-                        ->save()
-                    ;
+                    $obSensor = $this->obSystem->getSensorsCollection()->getByParams($obInputValue->SensorApp, $obInputValue->SensorClass, $obInputValue->SensorName);
+                    if (!$obSensor) {
+                        $obSensor = new \Api\Sensors\Sensor\Entity();
+                        $obSensor
+                            ->setActive(false)
+                            ->setSystem($this->obSystem)
+                            ->setSensorApp($obInputValue->SensorApp)
+                            ->setSensorDevice($obInputValue->SensorClass)
+                            ->setSensorName($obInputValue->SensorName)
+                            ->setSensorUnit($obInputValue->SensorUnit)
+                            ->setLogMode(\Api\Sensors\Sensor\Table::MODE_EACH_LAST_DAY)
+                            ->setAlertEnable(false)
+                            ->setSort($this->obSystem->getSensorsCollection()->getLastSort() + 10)
+                            ->save()
+                        ;
 
-                    if (!$obSensor->isExists()) {
-                        $this->getResponse()->addError('Невозможно создать сенсор. Ошибка: ' . print_r($obSensor->getDBResult()->getErrorMessages(), true) . '. Данные: ' . print_r($obSensor->toArray(), true));
-                        continue;
+                        if (!$obSensor->isExists()) {
+                            $this->getResponse()->addError('Невозможно создать сенсор. Ошибка: ' . print_r($obSensor->getDBResult()->getErrorMessages(), true) . '. Данные: ' . print_r($obSensor->toArray(), true));
+                            continue;
+                        }
+
+                        $obSensor->setNew();
+                        $this->obSystem->getSensorsCollection()->addItem($obSensor);
                     }
 
-                    $obSensor->setNew();
-                    $this->obSystem->getSensorsCollection()->addItem($obSensor);
                     continue;
+
                 } else {
                     $obSensor = $this->obSystem->getSensorsCollection()->getByKey($obInputValue->id);
                 }
