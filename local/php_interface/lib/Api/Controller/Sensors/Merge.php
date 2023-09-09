@@ -41,13 +41,13 @@ class Merge extends Edit
                         ->setSensorId($obValueFrom->getSensorId())
                     ;
                 }
-                $fSumValues = $obValueTo->getValueAvg() * $obValueTo->getValuesCount() + $obValueFrom->getValueAvg() * $obValueFrom->getValuesCount();
+                $fSumValues = (float) $obValueTo->getValueAvg() * (int) $obValueTo->getValuesCount() + (float) $obValueFrom->getValueAvg() * (int) $obValueFrom->getValuesCount();
 
                 $obValueTo
                     ->setValueMin(min(array($obValueTo->getValueMin(), $obValueFrom->getValueMin())))
                     ->setValueMax(max(array($obValueTo->getValueMax(), $obValueFrom->getValueMax())))
-                    ->setValueAvg($fSumValues / ($obValueTo->getValuesCount() + $obValueFrom->getValuesCount()))
-                    ->setValuesCount($obValueTo->getValuesCount() + $obValueFrom->getValuesCount())
+                    ->setValueAvg($fSumValues / ((int) $obValueTo->getValuesCount() + (int) $obValueFrom->getValuesCount()))
+                    ->setValuesCount((int) $obValueTo->getValuesCount() + (int) $obValueFrom->getValuesCount())
                     ->save()
                 ;
 
