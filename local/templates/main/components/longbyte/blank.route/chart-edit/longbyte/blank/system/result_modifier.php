@@ -122,7 +122,7 @@ if (!$arSystem) {
     )->GetNextElement();
 
     $arSystem = $obSystem->GetFields();
-    $arSystem['PROPERTIES'] = $obSystem->GetProperties(false, false);
+    $arSystem['PROPERTIES'] = $obSystem->GetProperties(false, array());
 
     $arSections = array();
     $rsSections = SectionTable::getList(array(
