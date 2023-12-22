@@ -8,7 +8,7 @@ namespace Api\Sensors\Telegram;
 class Model extends \Api\Core\Base\Model
 {
 
-    private static string $token = '2013608355:AAFQx9HDR5GcOW-BBmELTn6XjtOIfYhajpU';
+    private static string $token = '---';
 
     public static function getTable(): string
     {
